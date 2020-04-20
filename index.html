@@ -14,7 +14,7 @@ Author: Rohan Scott––>
 	<script src="jQuery-3.3.1/jquery-3.3.1.min.js"></script>
 	<script src="DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
 	<script src="Chart/Chart.bundle.min.js"></script>
-	<script src="Chart/Chart.js"></script>
+	<script src="Chart/Chart.min.js"></script>
 	<script src="Select-1.3.1/js/dataTables.select.min.js"></script>
 	<script type="text/javascript" src="wordlists/oldtopik1list.js"></script>
 	<script type="text/javascript" src="wordlists/oldtopik2list.js"></script>
@@ -69,6 +69,7 @@ Author: Rohan Scott––>
 		var selectedVocabulary;
 		var myChart;
 		var global_total_words;
+		var unmarkJumpTimeout;
 		
 		const sort_by = (field, reverse, primer) => {
 
@@ -99,7 +100,7 @@ Author: Rohan Scott––>
 				var pasteArea = document.getElementById ("pasteArea");
 				pasteArea.contentEditable = false;
 
-				pasteArea.innerText = "Browser not supported. Try Firefox or Google Chrome.";
+				pasteArea.innerText = "Browser not supported. Try using Firefox or Google Chrome.";
 			}
 		}
 		
@@ -968,7 +969,7 @@ Author: Rohan Scott––>
 			}
 		}
 		
-		function AsyncChangeColour(word)
+		function AsyncChangeColour(word, incrementByOne)
 		{
 		
 							if(colourTimeout)
@@ -976,8 +977,8 @@ Author: Rohan Scott––>
 							clearTimeout(colourTimeout);
 						}
 						colourTimeout = setTimeout(function() {
-							changeColour(word, true);
-						}, 10);
+							changeColour(word, incrementByOne);
+						}, 50);
 		}
 	
 		
@@ -1076,7 +1077,7 @@ Author: Rohan Scott––>
 			instance.unmark(optionsDeleteJump);
 			if(word!="")
 			{
-				changeColour(word,false);
+				AsyncChangeColour(word,false);
 				//setCurrentColour(word,-1);
 			}
 		}
@@ -1102,6 +1103,9 @@ Author: Rohan Scott––>
 					jumpAttempts = 0;
 				}
 				
+				//unmarkJumpTimeout = setTimeout(function() {
+				//			UnmarkJump(items);
+				//		}, 200);
 				UnmarkJump(items);
 				var optionsJump = {
 					"accuracy": {
@@ -1111,7 +1115,11 @@ Author: Rohan Scott––>
 				};
 		
 			var instance = new Mark(document.querySelector("div.content"));
-			instance.mark(word,optionsJump);
+			
+			//unmarkJumpTimeout = setTimeout(function() {
+							instance.mark(word,optionsJump);
+			//			}, 50);
+			
 			
 			if(enableVoice)
 			{
@@ -1140,7 +1148,7 @@ Author: Rohan Scott––>
 						var divTop = divs[i].offsetTop;
 						var divBot = divTop+divs[i].offsetHeight;
 	
-						if(divBot>pageTop-400&&divTop<pageBot+400)
+						if(divBot>pageTop-800&&divTop<pageBot+800)
 						{
 							if(divs[i].marked)
 							{	
@@ -1354,7 +1362,14 @@ Author: Rohan Scott––>
 			{
 				var container = document.getElementById ("pasteArea");
 				const items = container.getElementsByClassName('jump');
-				UnmarkJump(items);
+				
+				
+				unmarkJumpTimeout = setTimeout(function() {
+							UnmarkJump(items);
+						}, 200);
+				
+				
+				
 				jumpMarked = false;
 			}
 			
@@ -1409,7 +1424,7 @@ Author: Rohan Scott––>
 					{
 							if(modifier==1&&enableHighlighting)
 							{
-								AsyncChangeColour(word);
+								AsyncChangeColour(word, true);
 							}
 							if(enableVoice)
 							{
@@ -1430,7 +1445,7 @@ Author: Rohan Scott––>
 				{
 					if(enableHighlighting)
 					{
-						AsyncChangeColour(selectedText);
+						AsyncChangeColour(selectedText, true);
 					}
 					if(enableVoice)
 					{
@@ -1628,7 +1643,7 @@ Author: Rohan Scott––>
 						}
 						vocabularyTimeout = setTimeout(function() {
 							CalculateVocabulary();
-						}, 100);
+						}, 200);
 						
 	  }
 	  else if(tabName=="CompareTab" && enableHighlighting)
@@ -1644,6 +1659,11 @@ Author: Rohan Scott––>
 	
 	function AsyncCalculateStatistics()
 	{
+	
+	
+	if(openedTab=="UnknownWordsTab"||openedTab=="LearningWordsTab"||openedTab=="KnownWordsTab"||openedTab=="AllWordsTab"||openedTab=="GraphTab")
+		{
+			
 								if(statisticsTimeout)
 						{	
 							clearTimeout(statisticsTimeout);
@@ -1651,6 +1671,9 @@ Author: Rohan Scott––>
 						statisticsTimeout = setTimeout(function() {
 							CalculateStatistics();
 						}, global_total_words/4); //TODO write a real async method for this
+		}
+	
+	
 	
 	}
 	
@@ -2107,7 +2130,7 @@ Author: Rohan Scott––>
 						var divTop = divs[i].offsetTop;
 						var divBot = divTop+divs[i].offsetHeight;
 	
-						if(divBot>pageTop-800&&divTop<pageBot+800)
+						if(divBot>pageTop-700&&divTop<pageBot+700)
 						{
 							if(divs[i].marked==false||divs[i].marked==null)
 							{	
@@ -2129,7 +2152,7 @@ Author: Rohan Scott––>
 							{
 								clearTimeout(colourTimeout);
 							}		
-							colourTimeout = setTimeout(markAll(toMark),50);
+							colourTimeout = setTimeout(markAll(toMark),20);
 						}
 		}
 	
