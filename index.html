@@ -67,9 +67,16 @@ Author: Rohan Scott––>
 		var voiceVolume;
 		var voiceSpeed;
 		var selectedVocabulary;
+		//var selectedIndex=-1;
+		//var selectedWord="";
 		var myChart;
 		var global_total_words;
 		var unmarkJumpTimeout;
+		var timeCalculateStatisticsBegin;
+		var timeCalculateStatisticsEnd;
+		var calculateStatisticsTimeout;
+	
+		
 		
 		const sort_by = (field, reverse, primer) => {
 
@@ -88,20 +95,20 @@ Author: Rohan Scott––>
 		  }
 		}
 		
-		function BrowserCheck()
+		function BrowserCheck() //allow all browsers for testing purposes 
 		{
-			if(IsFirefoxOrChrome())
-			{
-				init();
-			}
-			else
-			{
-				alert("Browser not supported. Try Firefox or Google Chrome.");
-				var pasteArea = document.getElementById ("pasteArea");
-				pasteArea.contentEditable = false;
+			//if(IsFirefoxOrChrome())
+			//{
+				init(); 
+			//}
+			//else
+			//{
+			//	alert("Browser not supported. Try Firefox or Google Chrome.");
+			//	var pasteArea = document.getElementById ("pasteArea");
+			//	pasteArea.contentEditable = false;
 
-				pasteArea.innerText = "Browser not supported. Try using Firefox or Google Chrome.";
-			}
+			//	pasteArea.innerText = "Browser not supported. Try using Firefox or Google Chrome.";
+			//}
 		}
 		
 		function IsFirefoxOrChrome()
@@ -139,6 +146,8 @@ Author: Rohan Scott––>
 			colourJump = colourJumpDefault;
 			selectedVocabulary=[];
 			global_total_words = 0;
+			calculateStatisticsTimeout = 50;
+
 			
 			
 			enableHighlighting = true; 
@@ -154,7 +163,7 @@ Author: Rohan Scott––>
 			document.getElementById("defaultOpen").click();
 			window.addEventListener('resize', OnResize);
 			$('html').keyup(function(e){
-				if(e.keyCode == 46 && enableHighlighting) {
+				if(e.keyCode == 46 && enableHighlighting && openedTab=="VocabularyTab") {
 				if(selectedVocabulary.length>0)
 				{
 					for(var i=0;i<selectedVocabulary.length;i++)
@@ -190,7 +199,7 @@ Author: Rohan Scott––>
 				var table = $('#unknownWordsDataTable').DataTable( {
 				    "scrollY":        "100%",
 					"scrollCollapse": true,
-					"paging":         false,
+					"paging":         true,
 					"info": false,
 					"order": [[ 0, "desc" ]],
 					select: 'single',
@@ -205,7 +214,7 @@ Author: Rohan Scott––>
 						{type: 'non-empty-string', targets: 3} // define 'name' column as non-empty-string type
 					]
 				} );
-				
+
 							var table2 = $('#learningWordsDataTable').DataTable( {
 				    "scrollY":        "100%",
 					"scrollCollapse": true,
@@ -388,30 +397,34 @@ Author: Rohan Scott––>
 				table
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table.rows( indexes ).data().toArray();
-					table.rows( { selected: true } ).deselect() 
+					table.rows( { selected: true } ).deselect()
 					JumpTo(rowData[0][1]);
 				} );
+
 				
 							table2
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table2.rows( indexes ).data().toArray();
-					table2.rows( { selected: true } ).deselect() 
+					table2.rows( { selected: true } ).deselect()				
 					JumpTo(rowData[0][1]);
 				} );
+
 				
 							table3
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table3.rows( indexes ).data().toArray();
-					table3.rows( { selected: true } ).deselect() 
+					table3.rows( { selected: true } ).deselect()					
 					JumpTo(rowData[0][1]);
 				} );
-				
+
+         				
 							table4
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table4.rows( indexes ).data().toArray();
 					table4.rows( { selected: true } ).deselect() 
 					JumpTo(rowData[0][1]);
 				} );
+
 				
 										table5
 				.on( 'select', function ( e, dt, type, indexes ) {
@@ -1007,22 +1020,70 @@ Author: Rohan Scott––>
 					if(remainder==0)
 					{
 						GetPageAndHighlight(w,0);
+						//RemoveFromStats(w,0);
 					}
 					else if(remainder==1)
 					{
 						GetPageAndHighlight(w,1);
+						//RemoveFromStats(w,1);
 					}
 					else if(remainder==2)
 					{
 						GetPageAndHighlight(w,2);
+						//RemoveFromStats(w,2);
 					}
 	
 	          } else {
 					addwordtodb(word);
 					GetPageAndHighlight(word,1);
+					//RemoveFromStats(word,1);
 	          }
 			  AsyncCalculateStatistics();
 	        };
+		}
+		
+		function RemoveFromStats(word,index) //delete
+		{
+		//console.log("Removing row "+selectedIndex+ " "+selectedWord);
+			
+			if(openedTab=="AllWordsTab" && selectedIndex!=-1)
+			{
+				if(selectedWord==word)
+				{
+					console.log("Removing row "+selectedIndex);
+					//table4.fnDeleteRow(index);
+					var oTable = $('#allWordsDataTable').dataTable();
+				var row = oTable.find('tr').eq(3);
+				oTable.fnDeleteRow(row[selectedIndex]);
+				}
+				
+			}
+			else if(openedTab=="UnknownWordsTab" && index==1 && selectedIndex!=-1)
+			{
+				console.log("Removing row "+selectedIndex);
+				//table.fnDeleteRow(index);
+				//table.row(selectedIndex).remove().draw();
+				var oTable = $('#unknownWordsDataTable').dataTable();
+				var row = oTable.find('tr').eq(3);
+				oTable.fnDeleteRow(row[selectedIndex]);
+				
+			}
+			else if(openedTab=="LearningWordsTab" && index==2 && selectedIndex!=-1)
+			{
+				console.log("Removing row "+selectedIndex);
+				//table2.fnDeleteRow(index);
+				var oTable = $('#learningWordsDataTable').dataTable();
+				var row = oTable.find('tr').eq(3);
+				oTable.fnDeleteRow(row[selectedIndex]);
+			}
+			else if(openedTab=="KnownWordsTab" && index==0 && selectedIndex!=-1)
+			{
+				console.log("Removing row "+selectedIndex);
+				//table3.fnDeleteRow(index);
+				var oTable = $('#knownWordsDataTable').dataTable();
+				var row = oTable.find('tr').eq(3);
+				oTable.fnDeleteRow(row[selectedIndex]);
+			}
 		}
 		
 		function setCurrentColour(word,pageNo)
@@ -1663,14 +1724,19 @@ Author: Rohan Scott––>
 	
 	if(openedTab=="UnknownWordsTab"||openedTab=="LearningWordsTab"||openedTab=="KnownWordsTab"||openedTab=="AllWordsTab"||openedTab=="GraphTab")
 		{
+		
 			
-								if(statisticsTimeout)
+						if(statisticsTimeout)
 						{	
 							clearTimeout(statisticsTimeout);
 						}
 						statisticsTimeout = setTimeout(function() {
+						
+						timeCalculateStatisticsBegin = new Date();
+			
+					
 							CalculateStatistics();
-						}, global_total_words/4); //TODO write a real async method for this
+						}, calculateStatisticsTimeout); //TODO write a real async method for this
 		}
 	
 	
@@ -1752,14 +1818,13 @@ Author: Rohan Scott––>
 			  
 			  if(last)
 			  {
-					
-					if(displaySortTimeout)
-					{	
-						clearTimeout(displaySortTimeout);
-					}
-					displaySortTimeout = setTimeout(function() {
+					//if(displaySortTimeout)
+					//{	
+					//	clearTimeout(displaySortTimeout);
+					//}
+					//displaySortTimeout = setTimeout(function() {
 					  DisplaySort();
-					}, 100);
+					//}, 1000);
 			  }
 	        };
 			
@@ -1786,6 +1851,7 @@ Author: Rohan Scott––>
 			knownArray = [];
 			allArray = [];
 			
+			
 			for(var i=0;i<wordArray.length;i++)
 			{
 				if(wordArray.length-1==i)
@@ -1797,6 +1863,7 @@ Author: Rohan Scott––>
 				}
 				
 			}
+			
 	
 	}
 	
@@ -1877,6 +1944,7 @@ Author: Rohan Scott––>
 	
 		var topikList = [];
 		
+					
 		for(var i=0;i<numberOfLists;i++)
 		{
 			var list = [];
@@ -1902,7 +1970,6 @@ Author: Rohan Scott––>
 			topikList[i] = splitWordList;
 		}
 		
-	
 		
 		var unknownCount=0;
 		var knownCount=0;
@@ -1965,6 +2032,7 @@ Author: Rohan Scott––>
 		document.getElementById("UnknownWordsTabButton").innerText="Unknown Words ("+percentUnknown+"%)";
 		document.getElementById("LearningWordsTabButton").innerText="Learning Words ("+percentLearning+"%)";
 		document.getElementById("KnownWordsTabButton").innerText="Known Words ("+percentKnown+"%)";
+		
 		
 		if(openedTab=="UnknownWordsTab")
 		{
@@ -2056,6 +2124,14 @@ Author: Rohan Scott––>
 		else if(openedTab=="GraphTab")
 		{
 			CreateGraph(allArray,knownArray.concat(learningArray));
+		}
+		
+		timeCalculateStatisticsEnd = new Date();
+		if(timeCalculateStatisticsBegin)
+		{
+			
+			calculateStatisticsTimeout = timeCalculateStatisticsEnd.getTime()-timeCalculateStatisticsBegin.getTime();
+			//console.log(calculateStatisticsTimeout);
 		}
 	}
 	
