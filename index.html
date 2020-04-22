@@ -1056,7 +1056,7 @@ Author: Rohan Scott––>
 		
 		function RemoveFromStats(word,index)
 		{
-		/* console.log("Removing row "+selectedIndex+ " "+selectedWord);
+		 console.log("Removing row "+selectedIndex+ " "+selectedWord);
 			
 			if(openedTab=="AllWordsTab" && selectedIndex!=-1)
 			{
@@ -1076,6 +1076,8 @@ Author: Rohan Scott––>
 			}
 			else if(openedTab=="UnknownWordsTab" && index==1 && selectedIndex!=-1)
 			{
+				if(selectedWord==word)
+				{
 				console.log("Removing row "+selectedIndex);
 				//table.fnDeleteRow(index);
 				//table.row(selectedIndex).remove().draw();
@@ -1084,10 +1086,13 @@ Author: Rohan Scott––>
 				setTimeout(function() {
 							oTable.fnDeleteRow(row[selectedIndex]);
 						}, 200);
+				}
 				
 			}
 			else if(openedTab=="LearningWordsTab" && index==2 && selectedIndex!=-1)
 			{
+				if(selectedWord==word)
+				{
 				console.log("Removing row "+selectedIndex);
 				//table2.fnDeleteRow(index);
 				var oTable = $('#learningWordsDataTable').dataTable();
@@ -1095,9 +1100,12 @@ Author: Rohan Scott––>
 				setTimeout(function() {
 							oTable.fnDeleteRow(row[selectedIndex]);
 						}, 200);
+				}
 			}
 			else if(openedTab=="KnownWordsTab" && index==0 && selectedIndex!=-1)
 			{
+				if(selectedWord==word)
+				{
 				console.log("Removing row "+selectedIndex);
 				//table3.fnDeleteRow(index);
 				var oTable = $('#knownWordsDataTable').dataTable();
@@ -1105,8 +1113,9 @@ Author: Rohan Scott––>
 				setTimeout(function() {
 							oTable.fnDeleteRow(row[selectedIndex]);
 						}, 200);
+				}
 			}
-			*/
+			
 		}
 		
 		function setCurrentColour(word,pageNo)
