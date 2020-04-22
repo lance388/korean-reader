@@ -67,8 +67,8 @@ Author: Rohan Scott––>
 		var voiceVolume;
 		var voiceSpeed;
 		var selectedVocabulary;
-		//var selectedIndex=-1;
-		//var selectedWord="";
+		var selectedIndex=-1;
+		var selectedWord="";
 		var myChart;
 		var global_total_words;
 		var unmarkJumpTimeout;
@@ -397,7 +397,9 @@ Author: Rohan Scott––>
 				table
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table.rows( indexes ).data().toArray();
-					table.rows( { selected: true } ).deselect()
+					table.rows( { selected: true } ).deselect();
+					selectedWord = rowData[0][1];
+					selectedIndex = indexes[0];
 					JumpTo(rowData[0][1]);
 				} );
 
@@ -405,7 +407,9 @@ Author: Rohan Scott––>
 							table2
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table2.rows( indexes ).data().toArray();
-					table2.rows( { selected: true } ).deselect()				
+					table2.rows( { selected: true } ).deselect();
+								selectedWord = rowData[0][1];
+					selectedIndex = indexes[0];
 					JumpTo(rowData[0][1]);
 				} );
 
@@ -413,7 +417,9 @@ Author: Rohan Scott––>
 							table3
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table3.rows( indexes ).data().toArray();
-					table3.rows( { selected: true } ).deselect()					
+					table3.rows( { selected: true } ).deselect();
+								selectedWord = rowData[0][1];
+					selectedIndex = indexes[0];
 					JumpTo(rowData[0][1]);
 				} );
 
@@ -421,7 +427,9 @@ Author: Rohan Scott––>
 							table4
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table4.rows( indexes ).data().toArray();
-					table4.rows( { selected: true } ).deselect() 
+					table4.rows( { selected: true } ).deselect();
+								selectedWord = rowData[0][1];
+					selectedIndex = indexes[0];
 					JumpTo(rowData[0][1]);
 				} );
 
@@ -1019,42 +1027,50 @@ Author: Rohan Scott––>
 					var remainder = a%3;
 					if(remainder==0)
 					{
+						RemoveFromStats(w,0);
 						GetPageAndHighlight(w,0);
-						//RemoveFromStats(w,0);
+						
 					}
 					else if(remainder==1)
 					{
+						RemoveFromStats(w,1);
 						GetPageAndHighlight(w,1);
-						//RemoveFromStats(w,1);
+						
 					}
 					else if(remainder==2)
 					{
+						RemoveFromStats(w,2);
 						GetPageAndHighlight(w,2);
-						//RemoveFromStats(w,2);
+						
 					}
 	
 	          } else {
+			  		RemoveFromStats(word,1);
 					addwordtodb(word);
 					GetPageAndHighlight(word,1);
-					//RemoveFromStats(word,1);
+					
 	          }
 			  AsyncCalculateStatistics();
 	        };
 		}
 		
-		function RemoveFromStats(word,index) //delete
+		function RemoveFromStats(word,index)
 		{
-		//console.log("Removing row "+selectedIndex+ " "+selectedWord);
+		console.log("Removing row "+selectedIndex+ " "+selectedWord);
 			
 			if(openedTab=="AllWordsTab" && selectedIndex!=-1)
 			{
 				if(selectedWord==word)
 				{
 					console.log("Removing row "+selectedIndex);
-					//table4.fnDeleteRow(index);
+					
 					var oTable = $('#allWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(3);
-				oTable.fnDeleteRow(row[selectedIndex]);
+					
+					setTimeout(function() {
+							oTable.fnDeleteRow(row[selectedIndex]);
+						}, 200);
+				
 				}
 				
 			}
@@ -1065,7 +1081,9 @@ Author: Rohan Scott––>
 				//table.row(selectedIndex).remove().draw();
 				var oTable = $('#unknownWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(3);
-				oTable.fnDeleteRow(row[selectedIndex]);
+				setTimeout(function() {
+							oTable.fnDeleteRow(row[selectedIndex]);
+						}, 200);
 				
 			}
 			else if(openedTab=="LearningWordsTab" && index==2 && selectedIndex!=-1)
@@ -1074,7 +1092,9 @@ Author: Rohan Scott––>
 				//table2.fnDeleteRow(index);
 				var oTable = $('#learningWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(3);
-				oTable.fnDeleteRow(row[selectedIndex]);
+				setTimeout(function() {
+							oTable.fnDeleteRow(row[selectedIndex]);
+						}, 200);
 			}
 			else if(openedTab=="KnownWordsTab" && index==0 && selectedIndex!=-1)
 			{
@@ -1082,7 +1102,9 @@ Author: Rohan Scott––>
 				//table3.fnDeleteRow(index);
 				var oTable = $('#knownWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(3);
-				oTable.fnDeleteRow(row[selectedIndex]);
+				setTimeout(function() {
+							oTable.fnDeleteRow(row[selectedIndex]);
+						}, 200);
 			}
 		}
 		
