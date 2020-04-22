@@ -74,6 +74,11 @@ Author: Rohan Scott––>
 		var timeCalculateStatisticsBegin;
 		var timeCalculateStatisticsEnd;
 		var calculateStatisticsTimeout;
+		var initialisationComplete = false;
+		var unknownWordsTabUpToDate = false;
+		var learningWordsTabUpToDate = false;
+		var knownWordsTabUpToDate = false;
+		var allWordsTabUpToDate = false;
 	
 		
 		
@@ -192,7 +197,7 @@ Author: Rohan Scott––>
 				}
 			});
 			
-			initdb();
+			
 			
 			$(document).ready(function() {
 				var table = $('#unknownWordsDataTable').DataTable( {
@@ -463,7 +468,7 @@ Author: Rohan Scott––>
 				}
 			} );
 				
-				
+				initdb();
 			}
 	
 			);
@@ -554,10 +559,12 @@ Author: Rohan Scott––>
 			  InitialiseRomanisation();
 			  InitialiseVoice();
 			  var pasteArea = document.getElementById ("pasteArea");
-			  pasteArea.innerText = "";		
-			  pasteArea.contentEditable = true;
+			  pasteArea.innerText = "";	
 			  LoadHTML();
 			  OnResize();
+			  initialisationComplete = true;
+			  pasteArea.contentEditable = true;
+
 			};
 			}
 		}
@@ -937,8 +944,8 @@ Author: Rohan Scott––>
 			request3.onerror = function(event) {
 				alert("Unable to retrieve data from database!");
 			};
-					
-				voiceDropDown.value=voiceDropDown.options[0];
+				
+				voiceDropDown.value=voiceDropDown.options[0].value;
 				
 				request3.onsuccess = function(event) {
 				if(request3.result) {
@@ -1032,30 +1039,42 @@ Author: Rohan Scott––>
 					var remainder = a%3;
 					if(remainder==0)
 					{
+						unknownWordsTabUpToDate = false;
+						knownWordsTabUpToDate = false;
+						allWordsTabUpToDate = false;
 						//RemoveFromStats(w,0);
 						GetPageAndHighlight(w,0);
 						
 					}
 					else if(remainder==1)
-					{
+					{	
+						unknownWordsTabUpToDate = false;
+						learningWordsTabUpToDate = false;
+						allWordsTabUpToDate = false;
 						//RemoveFromStats(w,1);
 						GetPageAndHighlight(w,1);
 						
 					}
 					else if(remainder==2)
 					{
+						knownWordsTabUpToDate = false;
+						learningWordsTabUpToDate = false;
+						allWordsTabUpToDate = false;
 						//RemoveFromStats(w,2);
 						GetPageAndHighlight(w,2);
 						
 					}
 	
 	          } else {
+					unknownWordsTabUpToDate = false;
+					allWordsTabUpToDate = false;
 					addwordtodb(word);
 					//RemoveFromStats(word,1);
 					GetPageAndHighlight(word,1);
 					
 	          }
 			  AsyncCalculateStatistics();
+			 
 	        };
 		}
 		
@@ -1063,7 +1082,10 @@ Author: Rohan Scott––>
 		{
 			
 		 console.log("Removing row "+selectedIndex+ " "+selectedWord);
-			
+		 //var oTable = $('#unkownWordsDataTable').dataTable();
+		 //$($(oTable).closest("tr")).remove();
+		 
+			/*
 			if(openedTab=="AllWordsTab" && selectedIndex!=-1)
 			{
 				if(selectedWord==word)
@@ -1125,6 +1147,8 @@ Author: Rohan Scott––>
 						//}, 1000);
 				}
 			}
+			
+			*/
 			selectedIndex = -1;
 			selectedWord = "";
 			
@@ -1166,6 +1190,7 @@ Author: Rohan Scott––>
 		
 		function UnmarkJump(items)
 		{
+		
 			var word="";
 			if(items.length > 0)
 			{
@@ -1185,6 +1210,7 @@ Author: Rohan Scott––>
 				AsyncChangeColour(word,false);
 				//setCurrentColour(word,-1);
 			}
+			
 		}
 		
 		function JumpTo(word)
@@ -1688,6 +1714,11 @@ Author: Rohan Scott––>
 	
 	function openTab(evt, tabName) {
 	
+	if(!initialisationComplete)
+	{
+		return false;
+	}
+	
 		openedTab = tabName;
 	  var i, tabcontent, tablinks;
 	
@@ -1731,7 +1762,7 @@ Author: Rohan Scott––>
 	  {
 		document.getElementById("UnknownWordsTabButton").click();
 	  }
-	  else if((tabName=="UnknownWordsTab"||tabName=="LearningWordsTab"||tabName=="KnownWordsTab"||tabName=="AllWordsTab")
+	  else if((tabName=="UnknownWordsTab"||tabName=="LearningWordsTab"||tabName=="KnownWordsTab"||tabName=="AllWordsTab"||tabName=="GraphTab")
 	  && enableHighlighting)
 	  {
 		AsyncCalculateStatistics();
@@ -1757,7 +1788,7 @@ Author: Rohan Scott––>
 	  }
 	  else if(tabName=="GraphTab" && enableHighlighting)
 	  {
-		AsyncCalculateStatistics();
+		//AsyncCalculateStatistics();
 	  }
 	}
 	
@@ -1766,8 +1797,8 @@ Author: Rohan Scott––>
 	{
 	
 	
-	if(openedTab=="UnknownWordsTab"||openedTab=="LearningWordsTab"||openedTab=="KnownWordsTab"||openedTab=="AllWordsTab"||openedTab=="GraphTab")
-		{
+	//if(openedTab=="UnknownWordsTab"||openedTab=="LearningWordsTab"||openedTab=="KnownWordsTab"||openedTab=="AllWordsTab"||openedTab=="GraphTab")
+	//	{
 		
 			
 						if(statisticsTimeout)
@@ -1781,7 +1812,7 @@ Author: Rohan Scott––>
 					
 							CalculateStatistics();
 						}, global_total_words/3); //TODO write a real async method for this
-		}
+		//}
 	
 	
 	
@@ -1897,7 +1928,9 @@ Author: Rohan Scott––>
 			knownArray = [];
 			allArray = [];
 			
+			
 			SortWords2(wordArray);
+			
 			//for(var i=0;i<wordArray.length;i++)
 			//{
 				
@@ -2038,13 +2071,13 @@ Author: Rohan Scott––>
 							//console.log(calculateStatisticsTimeout);
 						//}
 					
-					if(displaySortTimeout)
-					{	
-						clearTimeout(displaySortTimeout);
-					}
-					displaySortTimeout = setTimeout(function() {
+					//if(displaySortTimeout)
+					//{	
+					//	clearTimeout(displaySortTimeout);
+					//}
+					//displaySortTimeout = setTimeout(function() {
 					  DisplaySort();
-					}, 300);
+					//}, global_total_words/3);
 					
 				
 			  }
@@ -2229,7 +2262,7 @@ Author: Rohan Scott––>
 			//				console.log(calculateStatisticsTimeout);
 			//			}
 		
-		if(openedTab=="UnknownWordsTab")
+		if(/*openedTab=="UnknownWordsTab"&&*/!unknownWordsTabUpToDate)
 		{
 			var tt = $('#unknownWordsDataTableSummary').DataTable();
 			tt.clear().draw();
@@ -2248,9 +2281,10 @@ Author: Rohan Scott––>
 	        ] );
 			}
 			tt.draw();
-			t.draw();	
+			t.draw();
+			unknownWordsTabUpToDate = true;	
 		}
-		else if(openedTab=="LearningWordsTab")
+		else if(openedTab=="LearningWordsTab"&&!learningWordsTabUpToDate)
 		{
 		
 				var tt2 = $('#learningWordsDataTableSummary').DataTable();
@@ -2272,8 +2306,9 @@ Author: Rohan Scott––>
 			}
 			tt2.draw();
 			t2.draw();
+			learningWordsTabUpToDate = true;
 		}
-		else if(openedTab=="KnownWordsTab")
+		else if(openedTab=="KnownWordsTab"&&!knownWordsTabUpToDate)
 		{
 						var tt3 = $('#knownWordsDataTableSummary').DataTable();
 			tt3.clear().draw();
@@ -2293,8 +2328,9 @@ Author: Rohan Scott––>
 			}
 			tt3.draw();
 			t3.draw();
+			knownWordsTabUpToDate = true;
 		}
-		else if(openedTab=="AllWordsTab")
+		else if(openedTab=="AllWordsTab"&&!allWordsTabUpToDate)
 		{
 				var tt4 = $('#allWordsDataTableSummary').DataTable();
 			tt4.clear().draw();
@@ -2315,6 +2351,7 @@ Author: Rohan Scott––>
 			}
 			tt4.draw();
 			t4.draw();
+			allWordsTabUpToDate = true;
 		}
 		else if(openedTab=="GraphTab")
 		{
@@ -2338,6 +2375,10 @@ Author: Rohan Scott––>
 		SaveHTML(pasteArea.innerHTML);
 		paginate();
 		onScroll();
+		unknownWordsTabUpToDate = false;
+		learningWordsTabUpToDate = false;
+		knownWordsTabUpToDate = false;
+		allWordsTabUpToDate = false;
 		AsyncCalculateStatistics();
 	}
 	
