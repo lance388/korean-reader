@@ -1056,6 +1056,7 @@ Author: Rohan Scott––>
 		
 		function RemoveFromStats(word,index)
 		{
+			/*
 		 console.log("Removing row "+selectedIndex+ " "+selectedWord);
 			
 			if(openedTab=="AllWordsTab" && selectedIndex!=-1)
@@ -1067,9 +1068,9 @@ Author: Rohan Scott––>
 					var oTable = $('#allWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(selectedIndex);
 					
-					//setTimeout(function() {
+					setTimeout(function() {
 							oTable.fnDeleteRow(row[0]);
-						//}, 200);
+						}, 200);
 				
 				}
 				
@@ -1097,9 +1098,9 @@ Author: Rohan Scott––>
 				//table2.fnDeleteRow(index);
 				var oTable = $('#learningWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(selectedIndex);
-				//setTimeout(function() {
+				setTimeout(function() {
 							oTable.fnDeleteRow(row[0]);
-						//}, 200);
+						}, 200);
 				}
 			}
 			else if(openedTab=="KnownWordsTab" && index==0 && selectedIndex!=-1)
@@ -1110,13 +1111,14 @@ Author: Rohan Scott––>
 				//table3.fnDeleteRow(index);
 				var oTable = $('#knownWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(selectedIndex);
-				//setTimeout(function() {
+				setTimeout(function() {
 							oTable.fnDeleteRow(row[0]);
-						//}, 200);
+						}, 200);
 				}
 			}
 			selectedIndex = -1;
 			selectedWord = "";
+			*/
 		}
 		
 		function setCurrentColour(word,pageNo)
