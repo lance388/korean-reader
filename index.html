@@ -1065,10 +1065,10 @@ Author: Rohan Scott––>
 					console.log("Removing row "+selectedIndex);
 					
 					var oTable = $('#allWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(3);
+				var row = oTable.find('tr').eq(selectedIndex);
 					
 					setTimeout(function() {
-							oTable.fnDeleteRow(row[selectedIndex]);
+							oTable.fnDeleteRow(row[0]);
 						}, 200);
 				
 				}
