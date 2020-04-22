@@ -1062,14 +1062,14 @@ Author: Rohan Scott––>
 			{
 				if(selectedWord==word)
 				{
-					console.log("Removing row "+selectedIndex);
+					//console.log("Removing row "+selectedIndex);
 					
 					var oTable = $('#allWordsDataTable').dataTable();
 				var row = oTable.find('tr').eq(selectedIndex);
 					
-					setTimeout(function() {
+					//setTimeout(function() {
 							oTable.fnDeleteRow(row[0]);
-						}, 200);
+						//}, 200);
 				
 				}
 				
@@ -1078,13 +1078,13 @@ Author: Rohan Scott––>
 			{
 				if(selectedWord==word)
 				{
-				console.log("Removing row "+selectedIndex);
+				//console.log("Removing row "+selectedIndex);
 				//table.fnDeleteRow(index);
 				//table.row(selectedIndex).remove().draw();
 				var oTable = $('#unknownWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(3);
+				var row = oTable.find('tr').eq(selectedIndex);
 				setTimeout(function() {
-							oTable.fnDeleteRow(row[selectedIndex]);
+							oTable.fnDeleteRow(row[0]);
 						}, 200);
 				}
 				
@@ -1093,29 +1093,30 @@ Author: Rohan Scott––>
 			{
 				if(selectedWord==word)
 				{
-				console.log("Removing row "+selectedIndex);
+				//console.log("Removing row "+selectedIndex);
 				//table2.fnDeleteRow(index);
 				var oTable = $('#learningWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(3);
-				setTimeout(function() {
-							oTable.fnDeleteRow(row[selectedIndex]);
-						}, 200);
+				var row = oTable.find('tr').eq(selectedIndex);
+				//setTimeout(function() {
+							oTable.fnDeleteRow(row[0]);
+						//}, 200);
 				}
 			}
 			else if(openedTab=="KnownWordsTab" && index==0 && selectedIndex!=-1)
 			{
 				if(selectedWord==word)
 				{
-				console.log("Removing row "+selectedIndex);
+				//console.log("Removing row "+selectedIndex);
 				//table3.fnDeleteRow(index);
 				var oTable = $('#knownWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(3);
-				setTimeout(function() {
-							oTable.fnDeleteRow(row[selectedIndex]);
-						}, 200);
+				var row = oTable.find('tr').eq(selectedIndex);
+				//setTimeout(function() {
+							oTable.fnDeleteRow(row[0]);
+						//}, 200);
 				}
 			}
-			
+			selectedIndex = -1;
+			selectedWord = "";
 		}
 		
 		function setCurrentColour(word,pageNo)
