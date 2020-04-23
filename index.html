@@ -79,6 +79,7 @@ Author: Rohan Scott––>
 		var learningWordsTabUpToDate = false;
 		var knownWordsTabUpToDate = false;
 		var allWordsTabUpToDate = false;
+		var lastUsedStatsTab;
 	
 		
 		
@@ -151,6 +152,7 @@ Author: Rohan Scott––>
 			selectedVocabulary=[];
 			global_total_words = 0;
 			calculateStatisticsTimeout = 50;
+			lastUsedStatsTab = "UnknownWordsTab";
 
 			
 			
@@ -660,7 +662,6 @@ Author: Rohan Scott––>
 					var b = []
 					var body = (""+body);
 					b = body.trim().split(/[, ]+/);
-					//console.log("here1 "+b[2]);
 					var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
 					//innerHtml += '<tr><td>' + span + body + '</td></tr>';(Math.round(((b[2]/total)*100 + Number.EPSILON) * 100) / 100);
 					//innerHtml += '<tr><td>' +"Words: "+ b[2] +" ("+(Math.round(((b[2]/total)*100 + Number.EPSILON) * 100) / 100)+"%)"+ '</td></tr>';
@@ -1760,7 +1761,19 @@ Author: Rohan Scott––>
 	  
 	  if(tabName=="StatisticsTab")
 	  {
-		document.getElementById("UnknownWordsTabButton").click();
+		var button = "UnknownWordsTabButton";
+		
+		switch(lastUsedStatsTab)
+		{
+			case "LearningWordsTab": button = "LearningWordsTabButton"; break;
+			case "KnownWordsTab": button = "KnownWordsTabButton"; break;
+			case "AllWordsTab": button = "AllWordsTabButton"; break;
+			case "VocabularyTab": button = "VocabularyTabButton"; break;
+			case "CompareTab": button = "CompareTabButton"; break;
+			case "GraphTab": button = "GraphTabButton"; break;
+			
+		}
+		document.getElementById(button).click();
 	  }
 	  else if((tabName=="UnknownWordsTab"||tabName=="LearningWordsTab"||tabName=="KnownWordsTab"||tabName=="AllWordsTab"||tabName=="GraphTab")
 	  && enableHighlighting)
@@ -1790,6 +1803,19 @@ Author: Rohan Scott––>
 	  {
 		//AsyncCalculateStatistics();
 	  }
+	  
+	  switch(tabName)
+	  {
+			case "UnknownWordsTab": lastUsedStatsTab = "UnknownWordsTab"; break;
+			case "LearningWordsTab": lastUsedStatsTab = "LearningWordsTab"; break;
+			case "KnownWordsTab": lastUsedStatsTab = "KnownWordsTab"; break;
+			case "AllWordsTab": lastUsedStatsTab = "AllWordsTab"; break;
+			case "VocabularyTab": lastUsedStatsTab = "VocabularyTab"; break;
+			case "CompareTab": lastUsedStatsTab = "CompareTab"; break;
+			case "GraphTab": lastUsedStatsTab = "GraphTab"; break;
+		}
+	  
+	  
 	}
 	
 	
@@ -2262,7 +2288,7 @@ Author: Rohan Scott––>
 			//				console.log(calculateStatisticsTimeout);
 			//			}
 		
-		if(/*openedTab=="UnknownWordsTab"&&*/!unknownWordsTabUpToDate)
+		if((lastUsedStatsTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate)||(openedTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate))
 		{
 			var tt = $('#unknownWordsDataTableSummary').DataTable();
 			tt.clear().draw();
@@ -2282,9 +2308,10 @@ Author: Rohan Scott––>
 			}
 			tt.draw();
 			t.draw();
-			unknownWordsTabUpToDate = true;	
+			unknownWordsTabUpToDate = true;
+			//lastUsedStatsTab = "UnknownWordsTab";
 		}
-		else if(openedTab=="LearningWordsTab"&&!learningWordsTabUpToDate)
+		else if((lastUsedStatsTab=="LearningWordsTab"&&!learningWordsTabUpToDate)||(openedTab=="LearningWordsTab"&&!learningWordsTabUpToDate))
 		{
 		
 				var tt2 = $('#learningWordsDataTableSummary').DataTable();
@@ -2307,8 +2334,9 @@ Author: Rohan Scott––>
 			tt2.draw();
 			t2.draw();
 			learningWordsTabUpToDate = true;
+			//lastUsedStatsTab = "LearningWordsTab";
 		}
-		else if(openedTab=="KnownWordsTab"&&!knownWordsTabUpToDate)
+		else if((lastUsedStatsTab=="KnownWordsTab"&&!knownWordsTabUpToDate)||(openedTab=="KnownWordsTab"&&!knownWordsTabUpToDate))
 		{
 						var tt3 = $('#knownWordsDataTableSummary').DataTable();
 			tt3.clear().draw();
@@ -2329,8 +2357,9 @@ Author: Rohan Scott––>
 			tt3.draw();
 			t3.draw();
 			knownWordsTabUpToDate = true;
+			//lastUsedStatsTab = "KnownWordsTab";
 		}
-		else if(openedTab=="AllWordsTab"&&!allWordsTabUpToDate)
+		else if((lastUsedStatsTab=="AllWordsTab"&&!allWordsTabUpToDate)||(openedTab=="AllWordsTab"&&!allWordsTabUpToDate))
 		{
 				var tt4 = $('#allWordsDataTableSummary').DataTable();
 			tt4.clear().draw();
@@ -2352,6 +2381,7 @@ Author: Rohan Scott––>
 			tt4.draw();
 			t4.draw();
 			allWordsTabUpToDate = true;
+			//lastUsedStatsTab = "AllWordsTab";
 		}
 		else if(openedTab=="GraphTab")
 		{
