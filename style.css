@@ -162,6 +162,8 @@ html, body
         "tab"
 		"tabContainer";
     }
+	
+	
 
 .box {
   background-color: #ddd;
@@ -234,11 +236,20 @@ grid-area: tab;
   overflow: auto;
 
   background-color: #f1f1f1;
+  
+		display: grid;
+        grid-template-columns: 100%;
+		grid-template-rows: 33% 33% 33%;
+		grid-template-areas:
+        "tab1"
+		"tab2"
+		"tab3";
 }
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
-	font-size: .9em;
+	width:25%;
+	font-size: 0.6vw;
   background-color: inherit;
   float: left;
   border: none;
