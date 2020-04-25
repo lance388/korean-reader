@@ -1592,12 +1592,12 @@ Author: Rohan Scott-->
 				else
 				{
 				
-				
-				/*var selection = window.getSelection();	
+				/*
+				var selection = window.getSelection();	
 				if (!selection || selection.rangeCount < 1) return true;
 				var range = selection.getRangeAt(0);
 				var node = selection.anchorNode;
-				var word_regexp = regExp;;
+				var word_regexp = regExp;
 				
 				while ((range.startOffset > 0) && range.toString().match(word_regexp)) {
 				  range.setStart(node, (range.startOffset - 1));
@@ -1610,33 +1610,10 @@ Author: Rohan Scott-->
 				}
 				if (!range.toString().match(word_regexp)) {
 				  range.setEnd(node, range.endOffset - 1);
-				}*/
+				}
+				var word = range.toString(); 
+				*/
 				
-			/*	var sel=window.getSelection();
-			   //var word=sel.anchorNode.nodeValue,len=word.length, a=b=sel.anchorOffset;
-			   var word=sel.anchorNode.nodeValue,len=word.length, a=sel.anchorOffset, b = sel.anchorOffset;
-			   while(word[a]!=' '&&a--){}; if (word[a]==' ') a++; // start of word
-			   console.log("word[a] is >"+ word+"<");
-			   while(word[b]!=' '&&b++<len){};                   // end of word+1
-			    console.log("word[b] is >"+ word+"<");
-			   console.log("LEN "+ len);
-			  // console.log(word.substring(a,b));
-				//word = word.substring(a,b);				
-				//var word = range.toString(); */
-				
-			/*	 if (document.getSelection) {    // all browsers, except IE before version 9
-                var sel = document.getSelection ();
-                    // sel is a string in Firefox and Opera, 
-                    // and a selectionRange object in Google Chrome, Safari and IE from version 9
-                    // the alert method displays the result of the toString method of the passed object
-                alert (sel);
-            } 
-            else {
-                if (document.selection) {   // Internet Explorer before version 9
-                    var textRange = document.selection.createRange ();
-                    alert (textRange.text);
-                }
-            } */
 				
    var t = '';
     if (window.getSelection && (sel = window.getSelection()).modify) {
@@ -3297,9 +3274,9 @@ Author: Rohan Scott-->
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
 	<div class="wrapper">
 		<div class="box content" id="content">
-			<div class="editCell" contentEditable="false" onpaste="OnPaste_StripFormatting(this, event);" id="pasteArea" type="text" oninput="OnInput()">
+			<div class="editCell" contentEditable="false" id="pasteArea" type="text" oninput="OnInput()">
 			<script type="text/javascript">
-
+					/* onpaste="OnPaste_StripFormatting(this, event);"
 				var _onPaste_StripFormatting_IEPaste = false;
 
 				function OnPaste_StripFormatting(elem, e) {
@@ -3324,7 +3301,7 @@ Author: Rohan Scott-->
 						_onPaste_StripFormatting_IEPaste = false;
 					}
 
-				}
+				}*/
 
 			</script>
 			</div>
