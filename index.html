@@ -1623,13 +1623,21 @@ Author: Rohan Scott-->
 						// Webkit, Gecko
 						var s = window.getSelection();
 						if (s.isCollapsed) {
+							
 							//s.modify('move', 'forward', 'character');
-							s.modify('extend', 'forward', 'word');
-							//console.log(s.toString());
-							s.modify('move', 'backward', 'word');
-							//console.log(s.toString());
+							//s.modify('move', 'backward', 'word');
+							//s.modify('extend', 'forward', 'word');
+							
+							s.modify('move', 'backward', 'character');
+							s.modify('move', 'forward', 'word');
+							//s.modify('extend', 'backward', 'word');
+							s.modify('extend', 'backward', 'word');
+							
+							
+							
 							
 							t = s.toString();
+							console.log(t);
 						   // s.modify('move', 'forward', 'character'); //clear selection
 						}
 						else {
@@ -1659,7 +1667,7 @@ Author: Rohan Scott-->
 							
 						var word = t;
 		
-		}
+					}
 
 				//word=word.replace(replaceCharacters,"");		
 					if(word!="")
@@ -1987,7 +1995,7 @@ Author: Rohan Scott-->
 			
 					
 							CalculateStatistics();
-						}, global_total_words/2); //TODO write a real async method for this
+						}, global_total_words/4); //TODO write a real async method for this
 		//}
 	
 	
@@ -2235,25 +2243,9 @@ Author: Rohan Scott-->
 					
 				}
 				
-					//console.log("here "+unknownArray);
-					//console.log("here "+learningArray);
-					//console.log("here "+knownArray);
-					
-						//	timeCalculateStatisticsEnd = new Date();
-						//if(timeCalculateStatisticsBegin)
-						//{
-							
-						//	calculateStatisticsTimeout = (timeCalculateStatisticsEnd.getTime()-timeCalculateStatisticsBegin.getTime());
-							//console.log(calculateStatisticsTimeout);
-						//}
-					
-					//if(displaySortTimeout)
-					//{	
-					//	clearTimeout(displaySortTimeout);
-					//}
-					//displaySortTimeout = setTimeout(function() {
+				
 					  DisplaySort();
-					//}, global_total_words/3);
+				
 					
 				
 			  }
@@ -2540,8 +2532,7 @@ Author: Rohan Scott-->
 		
 		//timeCalculateStatisticsEnd = new Date();
 		//if(timeCalculateStatisticsBegin)
-		//{
-			
+		//{	
 		//	calculateStatisticsTimeout = (timeCalculateStatisticsEnd.getTime()-timeCalculateStatisticsBegin.getTime())*1.2;
 		//	console.log(calculateStatisticsTimeout);
 		//}
