@@ -1592,68 +1592,73 @@ Author: Rohan Scott-->
 				else
 				{
 				
-				/*
-				var selection = window.getSelection();	
-				if (!selection || selection.rangeCount < 1) return true;
-				var range = selection.getRangeAt(0);
-				var node = selection.anchorNode;
-				var word_regexp = regExp;
+				if(browser=="edge")
+				{
+					var selection = window.getSelection();	
+					if (!selection || selection.rangeCount < 1) return true;
+					var range = selection.getRangeAt(0);
+					var node = selection.anchorNode;
+					var word_regexp = regExp;
+					
+					while ((range.startOffset > 0) && range.toString().match(word_regexp)) {
+					  range.setStart(node, (range.startOffset - 1));
+					}
+					if (!range.toString().match(word_regexp)) {
+					  range.setStart(node, range.startOffset + 1);
+					}
+					while ((range.endOffset < node.length) && range.toString().match(word_regexp)) {
+					  range.setEnd(node, range.endOffset + 1);
+					}
+					if (!range.toString().match(word_regexp)) {
+					  range.setEnd(node, range.endOffset - 1);
+					}
+					var word = range.toString(); 
 				
-				while ((range.startOffset > 0) && range.toString().match(word_regexp)) {
-				  range.setStart(node, (range.startOffset - 1));
 				}
-				if (!range.toString().match(word_regexp)) {
-				  range.setStart(node, range.startOffset + 1);
-				}
-				while ((range.endOffset < node.length) && range.toString().match(word_regexp)) {
-				  range.setEnd(node, range.endOffset + 1);
-				}
-				if (!range.toString().match(word_regexp)) {
-				  range.setEnd(node, range.endOffset - 1);
-				}
-				var word = range.toString(); 
-				*/
+				else
+				{
 				
-				
-   var t = '';
-    if (window.getSelection && (sel = window.getSelection()).modify) {
-        // Webkit, Gecko
-        var s = window.getSelection();
-        if (s.isCollapsed) {
-            s.modify('move', 'forward', 'character');
-			//console.log(s.toString());
-            s.modify('move', 'backward', 'word');
-			//console.log(s.toString());
-            s.modify('extend', 'forward', 'word');
-            t = s.toString();
-           // s.modify('move', 'forward', 'character'); //clear selection
-        }
-        else {
-            t = s.toString();
-        }
-    } else if ((sel = document.selection) && sel.type != "Control") {
-        // IE 4+
-        var textRange = sel.createRange();
-        if (!textRange.text) {
-            textRange.expand("word");
-        }
-        // Remove trailing spaces
-       // while (/\s$/.test(textRange.text)) {
-        //    textRange.moveEnd("character", -1);
-        //}
-        t = textRange.text;
-    }
-		t=t.replace(replaceCharacters," ");
-		t=t.trim();
-		for (var i = 0; i < t.length; i++) {
-		  if(t.charAt(i)==" ")
-		  {
-			t = t.substring(0,i);
-			break;
-		  }
+				   var t = '';
+					if (window.getSelection && (sel = window.getSelection()).modify) {
+						// Webkit, Gecko
+						var s = window.getSelection();
+						if (s.isCollapsed) {
+							s.modify('move', 'forward', 'character');
+							//console.log(s.toString());
+							s.modify('move', 'backward', 'word');
+							//console.log(s.toString());
+							s.modify('extend', 'forward', 'word');
+							t = s.toString();
+						   // s.modify('move', 'forward', 'character'); //clear selection
+						}
+						else {
+							t = s.toString();
+						}
+					} else if ((sel = document.selection) && sel.type != "Control") {
+						// IE 4+
+						var textRange = sel.createRange();
+						if (!textRange.text) {
+							textRange.expand("word");
+						}
+						// Remove trailing spaces
+					   // while (/\s$/.test(textRange.text)) {
+						//    textRange.moveEnd("character", -1);
+						//}
+						t = textRange.text;
+					}
+						t=t.replace(replaceCharacters," ");
+						t=t.trim();
+						for (var i = 0; i < t.length; i++) {
+						  if(t.charAt(i)==" ")
+						  {
+							t = t.substring(0,i);
+							break;
+						  }
+						}
+							
+						var word = t;
+		
 		}
-			
-		var word = t;
 
 				//word=word.replace(replaceCharacters,"");		
 					if(word!="")
