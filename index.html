@@ -82,7 +82,7 @@ Author: Rohan Scott-->
 		var knownWordsTabUpToDate = false;
 		var allWordsTabUpToDate = false;
 		var lastUsedStatsTab;
-	
+		var browser ="unknown";
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -104,13 +104,19 @@ Author: Rohan Scott-->
 		
 		function BrowserCheck() //allow all browsers for testing purposes 
 		{
-			//if(IsFirefoxOrChrome())
-			//{
-				init(); 
+			browser = IsFirefoxOrChrome();
+			if(browser=="unknown")
+			{
+				if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+				   browser="edge";
+				}
+			}
+			console.log("Detected browser: "+browser);
+			init(); 
 			//}
 			//else
 			//{
-			//	alert("Browser not supported. Try Firefox or Google Chrome.");
+			//	alert("Browser not supported.");
 			//	var pasteArea = document.getElementById ("pasteArea");
 			//	pasteArea.contentEditable = false;
 
@@ -122,13 +128,17 @@ Author: Rohan Scott-->
 		{
 			var isFirefox = typeof InstallTrigger !== 'undefined';
 			var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-			if(isFirefox||isChrome)
+			if(isFirefox)
 			{
-				return true;
+				return "firefox";
+			}
+			else if(isChrome)
+			{
+				return "chrome";
 			}
 			else
 			{
-				return false;
+				return "unknown";
 			}
 		}
 		
@@ -1234,6 +1244,11 @@ Author: Rohan Scott-->
 		
 		function JumpTo(word)
 		{
+				if(browser=="edge")
+				{
+					return false;
+				}
+				
 				var container = document.getElementById ("pasteArea");
 				const items = container.getElementsByClassName('jump');
 				if(items.length > 0)
@@ -3332,29 +3347,29 @@ Author: Rohan Scott-->
 						<p>Please email bugs and suggestions to <a class="email" title="email" href="mailto:rohanlancescott@gmail.com">rohanlancescott@gmail.com</a></p> 
 					</div>
 					<div id="OptionsTab" class="tabcontent">
-						<input type="checkbox" id="enableHighlighting" name="enableHighlighting" checked onclick="toggleEnableHighlighting()">
+						<input type="checkbox" id="enableHighlighting" name="enableHighlighting" checked onclick="toggleEnableHighlighting();">
 						<label for="enableColours">Show Highlighting</label>
 						<br>
 						<br>Unknown Words Highlight Colour:
 						<input class="colourInputField" type="textField" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" id="fieldHC1" name="fieldHC1" onkeydown="if (event.keyCode == 13) { HC1Submit(); return false;}">
-						<button id="HC1SubmitButton" onclick="HC1Submit()">Enter</button>
+						<button id="HC1SubmitButton" onclick="HC1Submit();">Enter</button>
 						<br>
 						<br>Learning Words Highlight Colour:&nbsp
-						<input class="colourInputField" type="textField" id="fieldHC2" name="fieldHC2" onkeydown="if(event.keyCode == 13) { HC2Submit(); return false;}">
-						<button id="HC2SubmitButton" onclick="HC2Submit()">Enter</button>
+						<input class="colourInputField" type="textField" id="fieldHC2" onkeydown="if(event.keyCode == 13){ HC2Submit(); return false;}">
+						<button id="HC2SubmitButton" onclick="HC2Submit();">Enter</button>
 						<br>
 						<br>Known Words Highlight Colour:&nbsp&nbsp&nbsp&nbsp
 						<input class="colourInputField" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" type="textField" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" id="fieldHC3" name="fieldHC3" onkeydown="if (event.keyCode == 13) { HC3Submit(); return false;}">
-						<button id="HC3SubmitButton" onclick="HC3Submit()">Enter</button>
+						<button id="HC3SubmitButton" onclick="HC3Submit();">Enter</button>
 						<br>
 						<br>Jump Highlight Colour:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 						<input class="colourInputField" type="textField" id="fieldHC4" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" name="fieldHC4" onkeydown="if (event.keyCode == 13) { HC4Submit(); return false;}">
-						<button id="HC4SubmitButton" onclick="HC4Submit()">Enter</button>
+						<button id="HC4SubmitButton" onclick="HC4Submit();">Enter</button>
 						<br>
 						<hr>
 						<br>
 						<form>Font Size:
-							<select id="fontSizeOption" onchange="ChangeFont()">
+							<select id="fontSizeOption" onchange="ChangeFont();">
 								<option>1</option>
 								<option>2</option>
 								<option>3</option>
@@ -3367,7 +3382,7 @@ Author: Rohan Scott-->
 						</form>
 						<br>
 						<hr>Romanisation:
-						<select id="romanisationOption" onchange="ChangeRomanisation()">
+						<select id="romanisationOption" onchange="ChangeRomanisation();">
 							<option selected="selected">Off</option>
 							<option>On</option>
 						</select>
@@ -3375,12 +3390,12 @@ Author: Rohan Scott-->
 						<br>
 						<hr>
 						<br>
-						<input type="checkbox" id="enableVoice" name="enableVoice" onclick="toggleEnableVoice()">
+						<input type="checkbox" id="enableVoice" name="enableVoice" onclick="toggleEnableVoice();">
 						<label for="enableVoice">Enable Voice</label>
 						<br>
 						<br>
 						<form>Voice:
-							<select id="voiceOption" onchange="ChangeVoice()"></select>&nbsp(Locally installed TTS voice)</form>
+							<select id="voiceOption" onchange="ChangeVoice();"></select>&nbsp(Locally installed TTS voice)</form>
 						<br>
 						<div class="wrapper2">
 							<div>Volume:</div>
