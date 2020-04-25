@@ -1592,7 +1592,7 @@ Author: Rohan Scott-->
 				else
 				{
 				
-				if(browser=="edge")
+				if(browser=="edge"||browser=="firefox")
 				{
 					var selection = window.getSelection();	
 					if (!selection || selection.rangeCount < 1) return true;
@@ -1623,11 +1623,12 @@ Author: Rohan Scott-->
 						// Webkit, Gecko
 						var s = window.getSelection();
 						if (s.isCollapsed) {
-							s.modify('move', 'forward', 'character');
+							//s.modify('move', 'forward', 'character');
+							s.modify('extend', 'forward', 'word');
 							//console.log(s.toString());
 							s.modify('move', 'backward', 'word');
 							//console.log(s.toString());
-							s.modify('extend', 'forward', 'word');
+							
 							t = s.toString();
 						   // s.modify('move', 'forward', 'character'); //clear selection
 						}
