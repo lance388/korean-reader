@@ -1592,8 +1592,8 @@ Author: Rohan Scott-->
 				else
 				{
 				
-				if(browser=="edge"||browser=="firefox")
-				{
+				//if(browser=="edge"||browser=="firefox")
+				//{
 					var selection = window.getSelection();	
 					if (!selection || selection.rangeCount < 1) return true;
 					var range = selection.getRangeAt(0);
@@ -1602,6 +1602,7 @@ Author: Rohan Scott-->
 					
 					while ((range.startOffset > 0) && range.toString().match(word_regexp)) {
 					  range.setStart(node, (range.startOffset - 1));
+					  //range.setStart(node, (range.startOffset));
 					}
 					if (!range.toString().match(word_regexp)) {
 					  range.setStart(node, range.startOffset + 1);
@@ -1612,62 +1613,55 @@ Author: Rohan Scott-->
 					if (!range.toString().match(word_regexp)) {
 					  range.setEnd(node, range.endOffset - 1);
 					}
+				
 					var word = range.toString(); 
-				
-				}
-				else
-				{
-				
-				   var t = '';
-					if (window.getSelection && (sel = window.getSelection()).modify) {
-						// Webkit, Gecko
-						var s = window.getSelection();
-						if (s.isCollapsed) {
+					word=word.replace(replaceCharacters,"");
+					//console.log("word is >"+word+"<");
+				//}
+				//else
+				//{
+					if(word==""&&browser=="chrome")
+					{
+					   var t = '';
+						if (window.getSelection && (sel = window.getSelection()).modify) {
+							// Webkit, Gecko
+							var s = window.getSelection();
 							
-							//s.modify('move', 'forward', 'character');
-							//s.modify('move', 'backward', 'word');
-							//s.modify('extend', 'forward', 'word');
+								
+								//s.modify('move', 'forward', 'character');
+								//s.modify('move', 'backward', 'word');
+								//s.modify('extend', 'forward', 'word');
+
+								s.modify('extend', 'forward', 'word');
+								
+								
+								//s.modify('move', 'backward', 'character');
+								//s.modify('move', 'forward', 'word');
+								//s.modify('extend', 'backward', 'word');
+
+								
+								
+								
+								
+								t = s.toString();
+								//console.log(t);
+							   // s.modify('move', 'forward', 'character'); //clear selection
 							
-							s.modify('move', 'backward', 'character');
-							s.modify('move', 'forward', 'word');
-							//s.modify('extend', 'backward', 'word');
-							s.modify('extend', 'backward', 'word');
-							
-							
-							
-							
-							t = s.toString();
-							console.log(t);
-						   // s.modify('move', 'forward', 'character'); //clear selection
+							t=t.replace(replaceCharacters," ");
+							t=t.trim();
+							for (var i = 0; i < t.length; i++) {
+							  if(t.charAt(i)==" ")
+							  {
+								t = t.substring(0,i);
+								break;
+							  }
+							}
+								
+							word = t;
 						}
-						else {
-							t = s.toString();
-						}
-					} else if ((sel = document.selection) && sel.type != "Control") {
-						// IE 4+
-						var textRange = sel.createRange();
-						if (!textRange.text) {
-							textRange.expand("word");
-						}
-						// Remove trailing spaces
-					   // while (/\s$/.test(textRange.text)) {
-						//    textRange.moveEnd("character", -1);
-						//}
-						t = textRange.text;
 					}
-						t=t.replace(replaceCharacters," ");
-						t=t.trim();
-						for (var i = 0; i < t.length; i++) {
-						  if(t.charAt(i)==" ")
-						  {
-							t = t.substring(0,i);
-							break;
-						  }
-						}
-							
-						var word = t;
-		
-					}
+					//}
+					
 
 				//word=word.replace(replaceCharacters,"");		
 					if(word!="")
@@ -1995,7 +1989,7 @@ Author: Rohan Scott-->
 			
 					
 							CalculateStatistics();
-						}, global_total_words/4); //TODO write a real async method for this
+						}, global_total_words/2); //TODO write a real async method for this
 		//}
 	
 	
