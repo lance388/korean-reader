@@ -1,5 +1,5 @@
-<!–– Version 04022020
-Author: Rohan Scott––>
+<!-- Version 04022020 
+Author: Rohan Scott-->
 <!DOCTYPE html>
 <html>
 
@@ -14,6 +14,7 @@ Author: Rohan Scott––>
 	<script src="mark.min.js" charset="UTF-8"></script>
 	<script src="jQuery-3.3.1/jquery-3.3.1.min.js"></script>
 	<script src="DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+	<script src="IndexedDB-getAll-shim.js"></script>
 	<script src="Chart/Chart.bundle.min.js"></script>
 	<script src="Chart/Chart.min.js"></script>
 	<script src="Select-1.3.1/js/dataTables.select.min.js"></script>
@@ -1218,16 +1219,16 @@ Author: Rohan Scott––>
 			"className": 'jump'
 			}
 			
-	
+			if(word!="")
+			{
+				ChangeColour(word,false,true);
+				//AsyncChangeColour(word,false,true);
+				//setCurrentColour(word,-1);
+			}
 			
 			var instance = new Mark(document.querySelector("div.content"));
 			instance.unmark(optionsDeleteJump);
-			//if(word!="")
-			//{
-				//ChangeColour(word,false,true);
-				//AsyncChangeColour(word,false,true);
-				//setCurrentColour(word,-1);
-			//}
+			
 			
 		}
 		
@@ -3274,7 +3275,7 @@ Author: Rohan Scott––>
 				</div>
 				<div class="tabContainer">
 					<div id="DictionaryTab" class="tabcontent">
-						<iframe id="naverIframe" src="https://en.dict.naver.com/"></iframe>
+						<iframe id="naverIframe" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Naver_Logotype.svg"></iframe>
 					</div>
 					<div id="StatisticsTab" class="tabcontent"></div>
 					<div id="UnknownWordsTab" class="tabcontent">
@@ -3339,7 +3340,7 @@ Author: Rohan Scott––>
 						<button id="HC1SubmitButton" onclick="HC1Submit()">Enter</button>
 						<br>
 						<br>Learning Words Highlight Colour:&nbsp
-						<input class="colourInputField" type="textField" id="fieldHC2" name="fieldHC2" onkeydown="if (event.keyCode == 13) { HC2Submit(); return false;}">
+						<input class="colourInputField" type="textField" id="fieldHC2" name="fieldHC2" onkeydown="if(event.keyCode == 13) { HC2Submit(); return false;}">
 						<button id="HC2SubmitButton" onclick="HC2Submit()">Enter</button>
 						<br>
 						<br>Known Words Highlight Colour:&nbsp&nbsp&nbsp&nbsp
