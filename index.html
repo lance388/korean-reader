@@ -102,25 +102,6 @@ Author: Rohan Scott-->
 		  }
 		}
 		
-		(function ($) {
-
-	$(document).on('change keydown keypress input', 'div[data-placeholder]', function() {
-
-		if (this.textContent) {
-
-			this.dataset.divPlaceholderContent = 'true';
-
-		}
-
-		else {
-
-			delete(this.dataset.divPlaceholderContent);
-
-		}
-
-	});
-
-})(jQuery);
 		
 		
 		function BrowserCheck() //allow all browsers for testing purposes 
@@ -134,15 +115,6 @@ Author: Rohan Scott-->
 			}
 			console.log("Detected browser: "+browser);
 			init(); 
-			//}
-			//else
-			//{
-			//	alert("Browser not supported.");
-			//	var pasteArea = document.getElementById ("pasteArea");
-			//	pasteArea.contentEditable = false;
-
-			//	pasteArea.innerText = "Browser not supported. Try using Firefox or Google Chrome.";
-			//}
 		}
 		
 		function IsFirefoxOrChrome()
@@ -168,7 +140,6 @@ Author: Rohan Scott-->
 			var pasteArea = document.getElementById ("pasteArea");
 			pasteArea.contentEditable = false;
 			jumpMarked = false;
-			pasteArea.innerText = "Loading...";
 			romanisationMode = 0;
 			voicePitch = 1;
 			voiceVolume = 1;
@@ -2558,6 +2529,9 @@ Author: Rohan Scott-->
 	
 	function OnInput()
 	{
+		var pasteArea = document.getElementById ("pasteArea");
+	
+	
 		if(enableHighlighting)
 		{
 			unmark();
@@ -2578,6 +2552,21 @@ Author: Rohan Scott-->
 			pasteArea.style.fontSize = fontSize+"em";
 			SaveHTML(pasteArea.innerHTML);
 		}
+		
+		var innerhtml = document.getElementById("pasteArea").innerHTML;
+		if(innerhtml.length<100)
+		{
+			innerhtml=innerhtml.replace(replaceCharacters,"");
+			if(innerhtml=="")
+			{
+				document.getElementById ("pasteArea").innerHTML="";
+			}
+		//document.getElementById ("pasteArea").innerText=" ";
+		
+		//console.log(">"+document.getElementById ("pasteArea").innerHTML+"<");
+		//console.log(">"+document.getElementById ("pasteArea").innerText+"<");
+		}
+		
 	}
 	
 	function LoadHTML()
@@ -3322,7 +3311,7 @@ Author: Rohan Scott-->
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
 	<div class="wrapper">
 		<div class="box content" id="content">
-			<div class="editCell" contentEditable="false" data-placeholder="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
+			<div class="editCell" contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
 			</div>
 		</div>
 		<div class="box sidebar2 fixed topright">
