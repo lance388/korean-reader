@@ -102,6 +102,27 @@ Author: Rohan Scott-->
 		  }
 		}
 		
+		(function ($) {
+
+	$(document).on('change keydown keypress input', 'div[data-placeholder]', function() {
+
+		if (this.textContent) {
+
+			this.dataset.divPlaceholderContent = 'true';
+
+		}
+
+		else {
+
+			delete(this.dataset.divPlaceholderContent);
+
+		}
+
+	});
+
+})(jQuery);
+		
+		
 		function BrowserCheck() //allow all browsers for testing purposes 
 		{
 			browser = IsFirefoxOrChrome();
@@ -3301,36 +3322,7 @@ Author: Rohan Scott-->
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
 	<div class="wrapper">
 		<div class="box content" id="content">
-			<div class="editCell" contentEditable="false" id="pasteArea" type="text" oninput="OnInput()">
-			<script type="text/javascript">
-					/* onpaste="OnPaste_StripFormatting(this, event);"
-				var _onPaste_StripFormatting_IEPaste = false;
-
-				function OnPaste_StripFormatting(elem, e) {
-
-					if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
-						e.preventDefault();
-						var text = e.originalEvent.clipboardData.getData('text/plain');
-						window.document.execCommand('insertText', false, text);
-					}
-					else if (e.clipboardData && e.clipboardData.getData) {
-						e.preventDefault();
-						var text = e.clipboardData.getData('text/plain');
-						window.document.execCommand('insertText', false, text);
-					}
-					else if (window.clipboardData && window.clipboardData.getData) {
-						// Stop stack overflow
-						if (!_onPaste_StripFormatting_IEPaste) {
-							_onPaste_StripFormatting_IEPaste = true;
-							e.preventDefault();
-							window.document.execCommand('ms-pasteTextOnly', false);
-						}
-						_onPaste_StripFormatting_IEPaste = false;
-					}
-
-				}*/
-
-			</script>
+			<div class="editCell" contentEditable="false" data-placeholder="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
 			</div>
 		</div>
 		<div class="box sidebar2 fixed topright">
