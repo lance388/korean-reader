@@ -170,7 +170,7 @@ Author: Rohan Scott-->
 			limiters = limitersHangeul;
 			replaceCharacters = replaceCharactersHangeul;
 			regExp = /^\S*$/;
-			document.getElementById("defaultOpen").click();
+			document.getElementById("DictionaryTabButton").click();
 			window.addEventListener('resize', OnResize);
 			$('html').keyup(function(e){
 				if(e.keyCode == 46 && enableHighlighting && openedTab=="VocabularyTab") {
@@ -203,6 +203,8 @@ Author: Rohan Scott-->
 				}
 			});
 			
+			
+		
 			
 			
 			$(document).ready(function() {
@@ -504,7 +506,20 @@ Author: Rohan Scott-->
 						}
 						else
 						{
-							mouseUp(1);
+							switch (event.which) {
+							case 1:
+								mouseUp(1);
+								break;
+							case 2:
+								//mouseUp(1);
+								break;
+							case 3:
+								//mouseUp(2);
+								break;
+							default:
+								mouseUp(1);
+						}
+
 						}
 	
 					}, false);
@@ -583,12 +598,30 @@ Author: Rohan Scott-->
 			  pasteArea.innerText = "";	
 			  LoadHTML();
 			  OnResize();
+			  document.onkeyup = PresShortkey;
 			  initialisationComplete = true;
 			  pasteArea.contentEditable = true;
-
+			
 			};
 			}
 		}
+
+		function PresShortkey(e)
+		{
+           var keycode = (window.event) ? event.keyCode : e.keyCode;
+           if (keycode == 9)
+		   {
+					if(openedTab="DictionaryTab")
+					{
+						document.getElementById("StatisticsTabButton").click();
+					}
+					else
+					{
+						document.getElementById("DictionaryTabButton").click();
+					}
+					
+		   }
+       }		
 		
 		function CreateGraph(data,data2)
 		{
@@ -1544,11 +1577,6 @@ Author: Rohan Scott-->
 		}
 		
 		function mouseUp(modifier){
-			
-			
-
-			
-		
 			if(!all_marked&&enableHighlighting)
 			{
 				onScroll();
@@ -1678,6 +1706,16 @@ Author: Rohan Scott-->
 						
 					
 				}
+				
+				if(modifier==0)
+				{
+					if(openedTab!="DictionaryTab")
+					{
+						document.getElementById("DictionaryTabButton").click();
+					}
+					
+				}
+				
 			}
 			else
 			{
@@ -3318,10 +3356,10 @@ Author: Rohan Scott-->
 			<div class="wrapper3">
 				<div class="tab">
 					<div class="tab1">
-						<button class="tablinks" id="defaultOpen" onclick="openTab(event, 'DictionaryTab')">Dictionary</button>
-						<button class="tablinks" onclick="openTab(event, 'StatisticsTab')">Statistics</button>
-						<button class="tablinks" onclick="openTab(event, 'OptionsTab')">Options</button>
-						<button class="tablinks" onclick="openTab(event, 'AboutTab')">About</button>
+						<button class="tablinks" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab')">Dictionary</button>
+						<button class="tablinks" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab')">Statistics</button>
+						<button class="tablinks" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab')">Options</button>
+						<button class="tablinks" id="AboutTabButton" onclick="openTab(event, 'AboutTab')">About</button>
 					</div>
 					<div class="tab2">
 						<button id="UnknownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'UnknownWordsTab')">Unknown Words</button>
