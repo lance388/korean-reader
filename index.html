@@ -1751,16 +1751,39 @@ Author: Rohan Scott-->
 		function dictionaryLookup(word)
 		{
 			changeDictionarySrc(word);
+			changeImagesSrc(word);
 		}
 		
 		function changeDictionarySrc(text)
 		{
+			var maxLength = 30;
+			if(text.length>maxLength)
+			{
+				text = text.substring(0, maxLength);	
+			}
+			
 			var loc;
 			loc = "https://en.dict.naver.com/#/mini/search?query="+text;
 			naverIframe = document.getElementById('naverIframe');
 			if(naverIframe.src != loc)
 			{
 				naverIframe.src = loc;
+			}
+		}
+		
+		function changeImagesSrc(text)
+		{
+			var maxLength = 30;
+			if(text.length>maxLength)
+			{
+				text = text.substring(0, maxLength);	
+			}
+			var loc;
+			loc = "https://duckduckgo.com/?q="+text+"&t=hd&ia=images&iax=images";
+			imagesIframe = document.getElementById('imagesIframe');
+			if(imagesIframe.src != loc)
+			{
+				imagesIframe.src = loc;
 			}
 		}
 		
@@ -1926,7 +1949,7 @@ Author: Rohan Scott-->
 	
 	  
 	  
-	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab")
+	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab")
 	  {
 		document.getElementById("UnknownWordsTabButton").style.display="none";
 		document.getElementById("KnownWordsTabButton").style.display="none";
@@ -3357,6 +3380,7 @@ Author: Rohan Scott-->
 				<div class="tab">
 					<div class="tab1">
 						<button class="tablinks" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab')">Dictionary</button>
+						<button class="tablinks" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab')">Images</button>
 						<button class="tablinks" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab')">Statistics</button>
 						<button class="tablinks" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab')">Options</button>
 						<button class="tablinks" id="AboutTabButton" onclick="openTab(event, 'AboutTab')">About</button>
@@ -3376,6 +3400,9 @@ Author: Rohan Scott-->
 				<div class="tabContainer">
 					<div id="DictionaryTab" class="tabcontent">
 						<iframe id="naverIframe" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Naver_Logotype.svg"></iframe>
+					</div>
+					<div id="ImagesTab" class="tabcontent">
+						<iframe id="imagesIframe" src="https://en.wikipedia.org/wiki/DuckDuckGo#/media/File:DuckDuckGo_logo.svg"></iframe>
 					</div>
 					<div id="StatisticsTab" class="tabcontent"></div>
 					<div id="UnknownWordsTab" class="tabcontent">
