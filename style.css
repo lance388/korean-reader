@@ -130,7 +130,6 @@ html, body
     
 	
 }
-
 @media all and (orientation:portrait) 
 {
 .wrapper {
@@ -260,9 +259,9 @@ grid-area: tab;
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
-	width:25%;
+	width:20%;
 	height:100%;
-	font-size: .8vw;
+	font-size: .7vw;
   background-color: inherit;
   float: left;
   border: none;
@@ -358,6 +357,3 @@ canvas{
 			height: 10px;
 			margin-right: 10px;
 		}
-
-
-
