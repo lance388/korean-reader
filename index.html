@@ -998,9 +998,13 @@ Author: Rohan Scott-->
 				alert("Unable to retrieve data from database!");
 			};
 				
+			
 			if(voiceDropDown.options)
 			{
-				voiceDropDown.value=voiceDropDown.options[0].value;
+				if(voiceDropDown.options.length>0)
+				{
+					voiceDropDown.value=voiceDropDown.options[0].value;
+				}
 			}
 				
 				request3.onsuccess = function(event) {
