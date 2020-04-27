@@ -260,7 +260,7 @@ grid-area: tab;
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
-	width:25%;
+	width:20%;
 	height:100%;
 	font-size: .8vw;
   background-color: inherit;
