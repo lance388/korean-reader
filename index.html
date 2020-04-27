@@ -6,7 +6,6 @@ Author: Rohan Scott-->
 <head>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="datatables.min.css">
-	
 	<meta charset="UTF-8">
 	<meta name="description" content="home">
 	<meta name="author" content="Rohan Scott">
@@ -1136,7 +1135,7 @@ Author: Rohan Scott-->
 					{
 						unknownWordsTabUpToDate = false;
 						knownWordsTabUpToDate = false;
-						allWordsTabUpToDate = false;
+						//allWordsTabUpToDate = false;
 						//RemoveFromStats(w,0);
 						GetPageAndHighlight(w,0,skipJump);
 						
@@ -1145,7 +1144,7 @@ Author: Rohan Scott-->
 					{	
 						unknownWordsTabUpToDate = false;
 						learningWordsTabUpToDate = false;
-						allWordsTabUpToDate = false;
+						//allWordsTabUpToDate = false;
 						//RemoveFromStats(w,1);
 						GetPageAndHighlight(w,1,skipJump);
 						
@@ -1154,7 +1153,7 @@ Author: Rohan Scott-->
 					{
 						knownWordsTabUpToDate = false;
 						learningWordsTabUpToDate = false;
-						allWordsTabUpToDate = false;
+						//allWordsTabUpToDate = false;
 						//RemoveFromStats(w,2);
 						GetPageAndHighlight(w,2,skipJump);
 						
@@ -1162,7 +1161,7 @@ Author: Rohan Scott-->
 	
 	          } else {
 					unknownWordsTabUpToDate = false;
-					allWordsTabUpToDate = false;
+					//allWordsTabUpToDate = false;
 					addwordtodb(word);
 					//RemoveFromStats(word,1);
 					GetPageAndHighlight(word,1,skipJump);
@@ -2003,9 +2002,9 @@ Author: Rohan Scott-->
 					myChart.destroy();
 				}
 				
-			document.getElementById("UnknownWordsTabButton").innerText="Unknown Words";
-			document.getElementById("LearningWordsTabButton").innerText="Learning Words";
-			document.getElementById("KnownWordsTabButton").innerText="Known Words";
+			document.getElementById("UnknownWordsTabButton").innerText="[4] Unknown Words";
+			document.getElementById("LearningWordsTabButton").innerText="[5] Learning Words";
+			document.getElementById("KnownWordsTabButton").innerText="[6] Known Words";
 					
 				var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
 				var request = objectStore.get("enableHighlighting$");
@@ -2579,9 +2578,9 @@ Author: Rohan Scott-->
 		var percentUniqueLearning = Math.round(((learningArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 		var percentUniqueKnown = Math.round(((knownArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 	
-		document.getElementById("UnknownWordsTabButton").innerText="Unknown Words ("+percentUnknown+"%)";
-		document.getElementById("LearningWordsTabButton").innerText="Learning Words ("+percentLearning+"%)";
-		document.getElementById("KnownWordsTabButton").innerText="Known Words ("+percentKnown+"%)";
+		document.getElementById("UnknownWordsTabButton").innerText="[4] Unknown Words ("+percentUnknown+"%)";
+		document.getElementById("LearningWordsTabButton").innerText="[5] Learning Words ("+percentLearning+"%)";
+		document.getElementById("KnownWordsTabButton").innerText="[6] Known Words ("+percentKnown+"%)";
 		
 			//timeCalculateStatisticsEnd = new Date();
 			//			if(timeCalculateStatisticsBegin)
@@ -2614,7 +2613,7 @@ Author: Rohan Scott-->
 			unknownWordsTabUpToDate = true;
 			//lastUsedStatsTab = "UnknownWordsTab";
 		}
-		else if((lastUsedStatsTab=="LearningWordsTab"&&!learningWordsTabUpToDate)||(openedTab=="LearningWordsTab"&&!learningWordsTabUpToDate))
+		if((lastUsedStatsTab=="LearningWordsTab"&&!learningWordsTabUpToDate)||(openedTab=="LearningWordsTab"&&!learningWordsTabUpToDate))
 		{
 		
 				var tt2 = $('#learningWordsDataTableSummary').DataTable();
@@ -2639,7 +2638,7 @@ Author: Rohan Scott-->
 			learningWordsTabUpToDate = true;
 			//lastUsedStatsTab = "LearningWordsTab";
 		}
-		else if((lastUsedStatsTab=="KnownWordsTab"&&!knownWordsTabUpToDate)||(openedTab=="KnownWordsTab"&&!knownWordsTabUpToDate))
+		if((lastUsedStatsTab=="KnownWordsTab"&&!knownWordsTabUpToDate)||(openedTab=="KnownWordsTab"&&!knownWordsTabUpToDate))
 		{
 						var tt3 = $('#knownWordsDataTableSummary').DataTable();
 			tt3.clear();
@@ -2662,7 +2661,7 @@ Author: Rohan Scott-->
 			knownWordsTabUpToDate = true;
 			//lastUsedStatsTab = "KnownWordsTab";
 		}
-		else if((lastUsedStatsTab=="AllWordsTab"&&!allWordsTabUpToDate)||(openedTab=="AllWordsTab"&&!allWordsTabUpToDate))
+		if((lastUsedStatsTab=="AllWordsTab"&&!allWordsTabUpToDate)||(openedTab=="AllWordsTab"&&!allWordsTabUpToDate))
 		{
 				var tt4 = $('#allWordsDataTableSummary').DataTable();
 			tt4.clear();
@@ -2855,6 +2854,18 @@ Author: Rohan Scott-->
 		return(Aromanize.hangulToLatin(t, 'rr-translit'));
 	}
 	
+	/*
+	function stripHtml(html)
+	{
+		// Create a new div element
+		var temporalDivElement = document.createElement("div");
+		// Set the HTML content with the providen
+		temporalDivElement.innerHTML = html;
+		// Retrieve the text property of the element (cross-browser support)
+		return temporalDivElement.textContent || temporalDivElement.innerText || "";
+	}
+	*/
+	
 	function paginate() {
 		var b = document.getElementsByClassName('individualPage');
 		var pasteArea = document.getElementById("pasteArea");
@@ -2871,9 +2882,10 @@ Author: Rohan Scott-->
 			 parent.removeChild( b[ 0 ] );
 		}
 		
+		//var oldHTML = stripHtml(pasteArea.innerHTML;);
 		
 		
-		var oldHTML = pasteArea.innerHTML;
+		var oldHTML = pasteArea.innerText;
 		var replace = /[\n]/g;
 		var split = oldHTML.replace(replace,'<br>');
 		split = split.split('<br>');
@@ -3481,31 +3493,33 @@ Author: Rohan Scott-->
 </head>
 
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
+	
 	<div class="wrapper">
 		<div class="box content" id="content">
-			<div class="editCell" contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
+			<div class="editCell " contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
 			</div>
 		</div>
+		
 		<div class="box sidebar2 fixed topright">
 			<div class="wrapper3">
 				<div class="tab">
 					<div class="tab1">
-						<button class="tablinks" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab')">Dictionary</button>
-						<button class="tablinks" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab')">Images</button>
-						<button class="tablinks" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab')">Statistics</button>
+						<button class="tablinks" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab')">[1] Dictionary</button>
+						<button class="tablinks" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab')">[2] Images</button>
+						<button class="tablinks" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab')">[3] Statistics</button>
 						<button class="tablinks" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab')">Options</button>
 						<button class="tablinks" id="AboutTabButton" onclick="openTab(event, 'AboutTab')">About</button>
 					</div>
 					<div class="tab2">
-						<button id="UnknownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'UnknownWordsTab')">Unknown Words</button>
-						<button id="LearningWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'LearningWordsTab')">Learning Words</button>
-						<button id="KnownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'KnownWordsTab')">Known Words</button>
-						<button id="AllWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'AllWordsTab')">All Words</button>
-						<button id="VocabularyTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'VocabularyTab')">My Vocabulary</button>
+						<button id="UnknownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'UnknownWordsTab')">[4] Unknown Words</button>
+						<button id="LearningWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'LearningWordsTab')">[5] Learning Words</button>
+						<button id="KnownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'KnownWordsTab')">[6] Known Words</button>
+						<button id="AllWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'AllWordsTab')">[7] All Words</button>
+						<button id="VocabularyTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'VocabularyTab')">[8] My Vocabulary</button>
 					</div>
 					<div class="tab3">
-						<button id="CompareTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'CompareTab')">TOPIK</button>
-						<button id="GraphTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'GraphTab')">Graph - Current Text </button>
+						<button id="CompareTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'CompareTab')">[9] TOPIK</button>
+						<button id="GraphTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'GraphTab')">[0] Graph - Current Text </button>
 					</div>
 				</div>
 				<div class="tabContainer">
@@ -3648,6 +3662,7 @@ Author: Rohan Scott-->
 				</div>
 			</div>
 		</div>
+		
 </body>
 
 </html>

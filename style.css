@@ -337,8 +337,10 @@ canvas{
 			-moz-user-select: none;
 			-webkit-user-select: none;
 			-ms-user-select: none;
-		}
-		#chartjs-tooltip {
+}
+
+#chartjs-tooltip 
+{
 			opacity: 1;
 			position: absolute;
 			background: rgba(0, 0, 0, .7);
@@ -349,11 +351,15 @@ canvas{
 			pointer-events: none;
 			-webkit-transform: translate(-50%, 0);
 			transform: translate(-50%, 0);
-		}
+}
 
-		.chartjs-tooltip-key {
+.chartjs-tooltip-key
+{
 			display: inline-block;
 			width: 10px;
 			height: 10px;
 			margin-right: 10px;
-		}
+}
+
+		
+
