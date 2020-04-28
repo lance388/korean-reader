@@ -22,7 +22,9 @@ Author: Rohan Scott-->
 	<script type="text/javascript" src="wordlists/oldtopik3list.js"></script>
 	<script type="text/javascript" src="wordlists/topik1list.js"></script>
 	<script type="text/javascript" src="wordlists/topik2list.js"></script>
+	<script type="text/javascript" src="wordlists/stopik1.js"></script>
 	<script type="text/javascript" src="aromanize.js"></script>
+	
 	<script type="text/javascript">
 		var all_marked;
 		var db;
@@ -85,6 +87,7 @@ Author: Rohan Scott-->
 		var pendingLookup;
 		var imagesLookingUp;
 		var dictionaryLookingUp;
+		const printJSON = false;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -141,6 +144,9 @@ Author: Rohan Scott-->
 		{
 			var pasteArea = document.getElementById ("pasteArea");
 			pasteArea.contentEditable = false;
+			//document.body.style.cursor = 'wait !important';
+			$('*').css('cursor','wait');
+			
 			jumpMarked = false;
 			romanisationMode = 0;
 			voicePitch = 1;
@@ -614,6 +620,8 @@ Author: Rohan Scott-->
 			  LoadHTML();
 			  OnResize();
 			  initialisationComplete = true;
+			  //document.body.style.cursor = 'auto';
+				$('*').css('cursor','auto');
 			  pasteArea.contentEditable = true;
 			document.getElementById("DictionaryTabButton").click();
 				
@@ -779,7 +787,7 @@ Author: Rohan Scott-->
 						borderColor: 'rgba(153, 102, 255, .5)',
 						fill: true,
 				}, {
-					label: "My Words",
+					label: "My Vocabulary",
 						data: accumulativeWords2,
 						backgroundColor: 'rgba(255, 159, 64, .5)',
 						borderColor: 'rgba(255, 159, 64, .5)',
@@ -1820,7 +1828,7 @@ Author: Rohan Scott-->
 			}
 		}
 		
-		function RemoveSelection()
+		function RemoveSelection(index)
 		{
 			/*if (window.getSelection) {
 			  if (window.getSelection().empty) {  // Chrome
@@ -1831,8 +1839,21 @@ Author: Rohan Scott-->
 			} else if (document.selection) {  // IE?
 			  document.selection.empty();
 			}*/
-			var naverIframe = document.getElementById('naverIframe');
-			naverIframe.blur();
+			if(index==0)
+			{
+				var naverIframe = document.getElementById('naverIframe');
+				naverIframe.blur();
+			}
+			else
+			{
+				var body = document.getElementById('body');
+				body.blur;
+				//var imagesIframe = document.getElementById('imagesIframe');
+				//console.log(imagesIframe);
+				//imagesIframe.blur();
+				//var body = document.getElementById('body');
+				//body.focus();
+			}
 			//naverIframe.selection.empty();
 		}
 		
@@ -1870,7 +1891,18 @@ Author: Rohan Scott-->
 			
 			//dictionaryLookup(text);
 			
-				setTimeout(function() {RemoveSelection();},800);
+			setTimeout(function() {RemoveSelection(0);},100);
+			setTimeout(function() {RemoveSelection(0);},200);
+			setTimeout(function() {RemoveSelection(0);},300);
+			setTimeout(function() {RemoveSelection(0);},400);
+			setTimeout(function() {RemoveSelection(0);},500);
+			setTimeout(function() {RemoveSelection(0);},600);
+			setTimeout(function() {RemoveSelection(0);},700);
+			setTimeout(function() {RemoveSelection(0);},800);
+			setTimeout(function() {RemoveSelection(0);},900);
+			setTimeout(function() {RemoveSelection(0);},1000);
+			setTimeout(function() {RemoveSelection(0);},1500);
+			setTimeout(function() {RemoveSelection(0);},2000);
 	
 			
 			//}
@@ -1886,6 +1918,19 @@ Author: Rohan Scott-->
 			//{
 				imagesIframe.src = loc;
 			//}
+			
+			setTimeout(function() {RemoveSelection(1);},100);
+			setTimeout(function() {RemoveSelection(1);},200);
+			setTimeout(function() {RemoveSelection(1);},300);
+			setTimeout(function() {RemoveSelection(1);},400);
+			setTimeout(function() {RemoveSelection(1);},500);
+			setTimeout(function() {RemoveSelection(1);},600);
+			setTimeout(function() {RemoveSelection(1);},700);
+			setTimeout(function() {RemoveSelection(1);},800);
+			setTimeout(function() {RemoveSelection(1);},900);
+			setTimeout(function() {RemoveSelection(1);},1000);
+			setTimeout(function() {RemoveSelection(1);},1500);
+			setTimeout(function() {RemoveSelection(1);},2000);
 		}
 		
 		function toggleEnableVoice()
@@ -2115,7 +2160,18 @@ Author: Rohan Scott-->
 	  else if(tabName=="DictionaryTab")
 	  {
 		dictionaryLookup(pendingLookup);
-		setTimeout(function() {RemoveSelection();},800);
+		setTimeout(function() {RemoveSelection(0);},100);
+		setTimeout(function() {RemoveSelection(0);},200);
+		setTimeout(function() {RemoveSelection(0);},300);
+		setTimeout(function() {RemoveSelection(0);},400);
+		setTimeout(function() {RemoveSelection(0);},500);
+		setTimeout(function() {RemoveSelection(0);},600);
+		setTimeout(function() {RemoveSelection(0);},700);
+		setTimeout(function() {RemoveSelection(0);},800);
+		setTimeout(function() {RemoveSelection(0);},900);
+		setTimeout(function() {RemoveSelection(0);},1000);
+		setTimeout(function() {RemoveSelection(0);},1500);
+		setTimeout(function() {RemoveSelection(0);},2000);
 	  }
 	  else if(tabName=="ImagesTab")
 	  {
@@ -2672,17 +2728,38 @@ Author: Rohan Scott-->
 					var t4 = $('#allWordsDataTable').DataTable();
 			t4.clear();
 	
+			if(printJSON)
+				{
+					var json=[];
+					//console.log("[");
+				}						
 			for(var i=0;i<allArray.length;i++)
 			{
 			var wordPercent = Math.round(((allArray[i].occurances/totalWords)*100 + Number.EPSILON) * 100) / 100; 
 				
 				t4.row.add( [
 	            allArray[i].occurances,allArray[i].word,""+wordPercent+"%",allArray[i].topik
-	        ] );
+				] );
+				
+				if(printJSON)
+				{ 
+					//console.log('{"o":'+allArray[i].occurances+', "w":"'+allArray[i].word+'"},');
+					var ww = {o:allArray[i].occurances,w:allArray[i].word};
+					json.push(ww); 
+				}
 			}
+			
+			if(printJSON)
+				{
+					console.log(json);
+				}	
+				
 			tt4.draw();
 			t4.draw();
 			allWordsTabUpToDate = true;
+			
+			
+			
 			//lastUsedStatsTab = "AllWordsTab";
 		}
 		if(openedTab=="GraphTab")
@@ -2700,6 +2777,7 @@ Author: Rohan Scott-->
 	
 	function OnInput()
 	{
+		$('*').css('cursor','wait');
 		var pasteArea = document.getElementById ("pasteArea");
 	
 	
@@ -2737,7 +2815,7 @@ Author: Rohan Scott-->
 		//console.log(">"+document.getElementById ("pasteArea").innerHTML+"<");
 		//console.log(">"+document.getElementById ("pasteArea").innerText+"<");
 		}
-		
+		$('*').css('cursor','auto');
 	}
 	
 	function LoadHTML()
@@ -2906,16 +2984,14 @@ Author: Rohan Scott-->
 				{
 					newHTML = newHTML + '<div class="romanisedText" style="color:blue">' + RomaniseText(words) +'</div>';
 				}
+				newHTML+='<br>';
 			}
 			else
 			{
-				newHTML = newHTML + "<br>";
+				//newHTML = newHTML + "<br>";
 			}
 		}
-		
 
-		
-		
 		pasteArea.innerHTML = newHTML ;
 	}
 	
@@ -2942,6 +3018,7 @@ Author: Rohan Scott-->
 	
 	function ChangeRomanisation()
 	{
+		$('*').css('cursor','wait');
 		var mySelect = document.getElementById('romanisationOption');
 		switch(mySelect.value)
 		{
@@ -3401,6 +3478,10 @@ Author: Rohan Scott-->
 					//{	
 					//	clearTimeout(displaySortTimeout);
 					//}
+				var obj = stopik1();
+				console.log(obj);
+				console.log(obj[0].o);
+				//TODO
 		
 				var t = $('#compareDataTable').DataTable();
 				t.clear().draw();
@@ -3493,12 +3574,13 @@ Author: Rohan Scott-->
 </head>
 
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
-	
+	 
 	<div class="wrapper">
 		<div class="box content" id="content">
 			<div class="editCell " contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
 			</div>
 		</div>
+		
 		
 		<div class="box sidebar2 fixed topright">
 			<div class="wrapper3">
@@ -3515,7 +3597,7 @@ Author: Rohan Scott-->
 						<button id="LearningWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'LearningWordsTab')">[5] Learning Words</button>
 						<button id="KnownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'KnownWordsTab')">[6] Known Words</button>
 						<button id="AllWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'AllWordsTab')">[7] All Words</button>
-						<button id="VocabularyTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'VocabularyTab')">[8] My Vocabulary</button>
+						<button id="VocabularyTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'VocabularyTab')">[8] Vocabulary</button>
 					</div>
 					<div class="tab3">
 						<button id="CompareTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'CompareTab')">[9] TOPIK</button>
