@@ -6,6 +6,17 @@ Author: Rohan Scott-->
 <head>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="datatables.min.css">
+	<link href="fonts/Song+Myung.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Gamja+Flower.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Hi+Melody.css"  type="text/css" rel="stylesheet">
+	<link href="fonts/Nanum+Pen+Script.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Sunflower.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Nanum+Myeongjo.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Cute+Font.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Poor+Story.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Yeon+Sung.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Stylish.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Gothic+A1.css" type="text/css" rel="stylesheet">
 	<meta charset="UTF-8">
 	<meta name="description" content="home">
 	<meta name="author" content="Rohan Scott">
@@ -24,6 +35,8 @@ Author: Rohan Scott-->
 	<script type="text/javascript" src="wordlists/topikII.js"></script>
 	<script type="text/javascript" src="aromanize.js"></script>
 	
+	
+	
 	<script type="text/javascript">
 		var all_marked;
 		var db;
@@ -36,6 +49,7 @@ Author: Rohan Scott-->
 		var allArray= [];
 		var jumpMarked;
 		var jumpAttempts;
+		
 		var colourTimeout;
 		var scrollTimeout;
 		var vocabularyTimeout;
@@ -43,9 +57,11 @@ Author: Rohan Scott-->
 		var displayComparisonTimeout;
 		var statisticsTimeout;
 		var highlightTimeout;
+		var unmarkJumpTimeout;
+		var calculateStatisticsTimeout;
+		
 		var openedTab="";
 		var limiters;
-		
 		var limitersHangeul;
 		const fontSizeDefault = 6;
 		var fontSize;
@@ -72,10 +88,9 @@ Author: Rohan Scott-->
 		var selectedWord="";
 		var myChart;
 		var global_total_words;
-		var unmarkJumpTimeout;
+		
 		var timeCalculateStatisticsBegin;
 		var timeCalculateStatisticsEnd;
-		var calculateStatisticsTimeout;
 		var initialisationComplete = false;
 		var unknownWordsTabUpToDate = false;
 		var learningWordsTabUpToDate = false;
@@ -87,6 +102,8 @@ Author: Rohan Scott-->
 		var imagesLookingUp;
 		var dictionaryLookingUp;
 		const printJSON = false;
+		var dictionaryLanguage;
+		const dictionaryLanguageDefault="English";
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -167,6 +184,7 @@ Author: Rohan Scott-->
 			pendingLookup = "";
 			imagesLookingUp="";
 			dictionaryLookingUp="";
+			dictionaryLanguage = "English";
 
 
 			
@@ -510,6 +528,8 @@ Author: Rohan Scott-->
 				}
 			} );
 				
+
+
 				initdb();
 			}
 	
@@ -613,6 +633,8 @@ Author: Rohan Scott-->
 			  InitialiseFontSize();
 			  InitialiseRomanisation();
 			  InitialiseVoice();
+			  InitialiseFontType(0);
+			  InitialiseDictLanguage();
 			  
 			  var pasteArea = document.getElementById ("pasteArea");
 			  pasteArea.innerText = "";	
@@ -652,22 +674,189 @@ Author: Rohan Scott-->
 			case 105: document.getElementById("CompareTabButton").click(); e.preventDefault(); break;
 			case 96: document.getElementById("GraphTabButton").click(); e.preventDefault(); break;
 			case 27: Reset(); e.preventDefault(); break;
-			/* case 37: // left arrow key 
-			console.log("here1");
-			case 38: // up arrow key
-			console.log("here2");
-			  e.preventDefault(); // avoid browser scrolling due to pressed key
-			  // TODO: go to previous image
-			  return;
-			case 39: // right arrow key
-			console.log("here3");
-			case 40: // up arrow key
-			console.log("here4");
-			  e.preventDefault();
-			  // TODO: go to next image */
+
 			  return;
 		  }
-		});	
+		});
+		
+		/**
+			 * JavaScript code to detect available availability of a
+			 * particular font in a browser using JavaScript and CSS.
+			 *
+			 * Author : Lalit Patel
+			 * Website: http://www.lalit.org/lab/javascript-css-font-detect/
+			 * License: Apache Software License 2.0
+			 *          http://www.apache.org/licenses/LICENSE-2.0
+			 * Version: 0.15 (21 Sep 2009)
+			 *          Changed comparision font to default from sans-default-default,
+			 *          as in FF3.0 font of child element didn't fallback
+			 *          to parent element if the font is missing.
+			 * Version: 0.2 (04 Mar 2012)
+			 *          Comparing font against all the 3 generic font families ie,
+			 *          'monospace', 'sans-serif' and 'sans'. If it doesn't match all 3
+			 *          then that font is 100% not available in the system
+			 * Version: 0.3 (24 Mar 2012)
+			 *          Replaced sans with serif in the list of baseFonts
+			 */
+
+			/**
+			 * Usage: d = new Detector();
+			 *        d.detect('font name');
+			 */
+			var Detector = function() {
+				// a font will be compared against all the three default fonts.
+				// and if it doesn't match all 3 then that font is not available.
+				var baseFonts = ['monospace', 'sans-serif', 'serif'];
+
+				//we use m or w because these two characters take up the maximum width.
+				// And we use a LLi so that the same matching fonts can get separated
+				var testString = "mmmmmmmmmmlli";
+
+				//we test using 72px font size, we may use any size. I guess larger the better.
+				var testSize = '72px';
+
+				var h = document.getElementsByTagName("body")[0];
+
+				// create a SPAN in the document to get the width of the text we use to test
+				var s = document.createElement("span");
+				s.style.fontSize = testSize;
+				s.innerHTML = testString;
+				var defaultWidth = {};
+				var defaultHeight = {};
+				for (var index in baseFonts) {
+					//get the default width for the three base fonts
+					s.style.fontFamily = baseFonts[index];
+					h.appendChild(s);
+					defaultWidth[baseFonts[index]] = s.offsetWidth; //width for the default font
+					defaultHeight[baseFonts[index]] = s.offsetHeight; //height for the defualt font
+					h.removeChild(s);
+				}
+
+				function detect(font) {
+					var detected = false;
+					for (var index in baseFonts) {
+						s.style.fontFamily = font + ',' + baseFonts[index]; // name of the font along with the base font for fallback.
+						h.appendChild(s);
+						var matched = (s.offsetWidth != defaultWidth[baseFonts[index]] || s.offsetHeight != defaultHeight[baseFonts[index]]);
+						h.removeChild(s);
+						detected = detected || matched;
+					}
+					return detected;
+				}
+
+				this.detect = detect;
+			};
+
+		function sleep(ms) {
+		  return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		function InitialiseFontType(attempts)
+		{
+			
+		
+			var fontTypeDropDown = document.getElementById("fontTypeOption");
+			
+			for (a in fontTypeDropDown.options) { fontTypeDropDown.options.remove(0); }
+			
+			d = new Detector();
+			
+			
+			var fontList = [
+			'Arial, Helvetica, sans-serif',
+			'Gamja Flower',
+			'Song Myung',
+			'Hi Melody',
+			'Nanum Pen Script',
+			'Sunflower',
+			'Nanum Myeongjo',
+			'Cute Font',
+			'Poor Story',
+			'Yeon Sung',
+			'Stylish',
+			'Gothic A1'
+			];
+			
+			var chosenFont = 'Arial, Helvetica, sans-serif';
+			
+			for(var i=0;i<fontList.length;i++)
+			{
+				//console.log(fontList[i]);
+				var detection = d.detect(fontList[i]);
+				if(detection)
+				{
+					var opt = document.createElement('option');
+					opt.value = fontList[i];
+					opt.innerHTML = fontList[i];
+					fontTypeDropDown.appendChild(opt);
+				
+					
+					if(i==6)
+					{
+						fontTypeDropDown.value=fontList[i];
+						chosenFont= fontList[i];
+					}
+					
+				}
+				else if(attempts<30)
+				{
+					sleep(500).then(() => { InitialiseFontType(attempts+1); });
+					return;
+				}
+			}
+			
+			
+			//document.documentElement.style.setProperty('--font-type', 'Gamja Flower');
+			
+			
+			var objectStore3 = db.transaction(["wordsdb"]).objectStore("wordsdb");
+			var request3 = objectStore3.get("fonttype$");
+			request3.onerror = function(event) {
+				alert("Unable to retrieve data from database!");
+			};
+				request3.onsuccess = function(event) {
+				if(request3.result) {
+						var a = request3.result.appearances;
+					for(var i=0;i<fontTypeDropDown.options.length;i++)
+					{
+						if(fontTypeDropDown.options[i].value==a)
+						{
+							fontTypeDropDown.value=a;
+							chosenFont= a;
+						}
+					}
+						document.documentElement.style.setProperty('--font-type', chosenFont);
+					}
+	
+				};
+				
+				
+		}
+		
+		function InitialiseDictLanguage()
+		{
+				var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("dictlanguage$");
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+					
+					
+				request.onsuccess = function(event) {
+				if(request.result) {
+						var a = request.result.appearances;
+						dictionaryLanguage = a;					
+					}
+					else
+					{
+						dictionaryLanguage = dictionaryLanguageDefault;
+					}
+					var dropDown = document.getElementById("dictLanguageOption");
+					dropDown.value = dictionaryLanguage;
+				};
+		}
+
+		
 		
 		function Reset()
 		{
@@ -678,6 +867,8 @@ Author: Rohan Scott-->
 			clearTimeout(displayComparisonTimeout);
 			clearTimeout(statisticsTimeout);
 			clearTimeout(highlightTimeout);
+			clearTimeout(unmarkJumpTimeout);
+			clearTimeout(calculateStatisticsTimeout);
 			SaveHTML("");
 			var container = document.getElementById ("pasteArea");
 			container.innerHTML="";
@@ -1677,8 +1868,7 @@ Author: Rohan Scott-->
 			{
 				if(selectedText!="")
 				{
-					if(selectedText!="")
-					{
+
 						if(enableVoice)
 						{
 							SpeakWord(selectedText);
@@ -1686,7 +1876,6 @@ Author: Rohan Scott-->
 						dictionaryLookup(selectedText);
 						imagesLookup(selectedText);
 						pendingLookup = selectedText;
-					}
 				}
 				else
 				{
@@ -1902,12 +2091,70 @@ Author: Rohan Scott-->
 			}
 		}
 		
+		function ConvertLangCode(w)
+		{
+			var code;
+			switch(w)
+			{
+				case "Korean-Korean":code="ko"; break;
+				case "English":code="en"; break;
+				case "Japanese":code="ja"; break;
+				case "Chinese":code="zh"; break;
+				case "French":code="frkodict"; break;
+				case "Spanish":code="eskodict"; break;
+				case "German":code="dekodict"; break;
+				case "Vietnamese":code="vikodict"; break;
+				case "Nepali":code="nekodict"; break;
+				case "Mongolian":code="mnkodict"; break;
+				case "Burmese":code="mykodict"; break;
+				case "Swahili":code="swkodict"; break;
+				case "Arabic":code="arkodict"; break;
+				case "Uzbek":code="uzkodict"; break;
+				case "Bahasa Indonesian":code="idkodict"; break;
+				case "Cambodian":code="kmkodict"; break;
+				case "Thai":code="thkodict"; break;
+				case "Tetum":code="tetkodict"; break;
+				case "Persian":code="fakodict"; break;
+				case "Ancient Hebrew":code="hbokodict"; break;
+				case "Hindi":code="hikodict"; break;
+				case "Modern Greek":code="elkodict"; break;
+				case "Ancient Greek":code="grckodict"; break;
+				case "Dutch":code="nlkodict"; break;
+				case "Latin":code="lakodict"; break;
+				case "Russian":code="rukodict"; break;
+				case "Romanian":code="rokodict"; break;
+				case "Swedish":code="svkodict"; break;
+				case "Albanian":code="sqkodict"; break;
+				case "Ukrainian":code="ukkodict"; break;
+				case "Italian":code="itkodict"; break;
+				case "Gruziya":code="kakodict"; break;
+				case "Czech":code="cskodict"; break;
+				case "Turkish":code="trkodict"; break;
+				case "Portuguese":code="ptkodict"; break;
+				case "Polish":code="plkodict"; break;
+				case "Finnish":code="fikodict"; break;
+				case "Hungarian":code="hukodict"; break;
+				default: alert("Language code not found");
+			}
+			return code;
+		}
+		
 		function changeDictionarySrc(text)
 		{
 
 			
 			var loc;
-			loc = "https://en.dict.naver.com/#/mini/search?query="+text;
+			
+			var langCode = ConvertLangCode(dictionaryLanguage);
+			console.log(langCode+" "+langCode.length);
+			if(langCode.length==2)
+			{
+				loc = "https://"+langCode+".dict.naver.com/#/mini/search?query="+text;
+			}
+			else
+			{ 
+				loc = "https://dict.naver.com/"+langCode+"/#/mini/search?query="+text;
+			}
 			var naverIframe = document.getElementById('naverIframe');
 			//if(naverIframe.src != loc)
 			//{
@@ -2824,6 +3071,15 @@ Author: Rohan Scott-->
 		$('*').css('cursor','wait');
 		var pasteArea = document.getElementById ("pasteArea");
 	
+		clearTimeout(colourTimeout);
+			clearTimeout(scrollTimeout);
+			clearTimeout(vocabularyTimeout);
+			clearTimeout(displaySortTimeout);
+			clearTimeout(displayComparisonTimeout);
+			clearTimeout(statisticsTimeout);
+			clearTimeout(highlightTimeout);	
+			clearTimeout(unmarkJumpTimeout);
+			clearTimeout(calculateStatisticsTimeout);
 	
 		if(enableHighlighting)
 		{
@@ -2854,10 +3110,6 @@ Author: Rohan Scott-->
 			{
 				document.getElementById ("pasteArea").innerHTML="";
 			}
-		//document.getElementById ("pasteArea").innerText=" ";
-		
-		//console.log(">"+document.getElementById ("pasteArea").innerHTML+"<");
-		//console.log(">"+document.getElementById ("pasteArea").innerText+"<");
 		}
 		$('*').css('cursor','auto');
 	}
@@ -3567,48 +3819,7 @@ Author: Rohan Scott-->
 			}
 		}
 	}
-	
-	/*
-	function CompareLoop(index)
-	{
-		var list;
-		var name;
-		
-	
-		
-		switch(index)
-		{
-			case 0: list = Topik1Text();  name = GetTopikName(0); break;
-			case 1: list = Topik2Text(); name = GetTopikName(1); break;
-			case 2: list = OldTopik1Text(); name = GetTopikName(2); break;
-			case 3: list = OldTopik2Text(); name = GetTopikName(3); break;
-			case 4: list = OldTopik3Text(); name = GetTopikName(4); break;
-			default: index=-1;
-		}
-		
-		if(index!=-1)
-		{
-				unknownArray = [];
-				learningArray = [];
-				knownArray = [];
-				allArray = [];
-			
-			for(var i=0;i<list.length;i++)
-			{
-				var splitList = list[i].split(' ');
-				
-				if(list.length-1==i)
-					{
-						QuickSortWords(splitList[1],Number(splitList[0]),true,name,index);
-					}
-					else{
-						QuickSortWords(splitList[1],Number(splitList[0]),false,name,index);
-					}
-				
-			}
-		}
-	} */
-	
+
 	function DisplayComparison(listName, index)
 	{
 			var unknownCount=0;
@@ -3643,6 +3854,50 @@ Author: Rohan Scott-->
 			
 			t.draw();
 			CompareLoop(index+1);
+	}
+	
+	function ChangeFontType()
+	{
+		var mySelect = document.getElementById('fontTypeOption');
+		var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("fonttype$");
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+				request.onsuccess = function(event) {          
+					if(request.result)
+					{
+						request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "fonttype$",appearances: mySelect.value});
+					}
+					else
+					{
+						addwordtodb("fonttype$",mySelect.value);
+					}
+				}
+			document.documentElement.style.setProperty('--font-type', mySelect.value);
+		
+	}
+	
+	function ChangeDictLanguage()
+	{
+		var mySelect = document.getElementById('dictLanguageOption');
+		var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("dictlanguage$");
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+				request.onsuccess = function(event) {          
+					if(request.result)
+					{
+						request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "dictlanguage$",appearances: mySelect.value});
+					}
+					else
+					{
+						addwordtodb("dictlanguage$",mySelect.value);	
+					}
+					dictionaryLanguage = mySelect.value;
+				}
+			dictionaryLookingUp="";
 	}
 	
 	function OnResize()
@@ -3694,27 +3949,29 @@ Author: Rohan Scott-->
 					<div id="StatisticsTab" class="tabcontent"></div>
 					<div id="UnknownWordsTab" class="tabcontent">
 						<h4>List of unknown words from the current text.</h4>
-						<table id="unknownWordsDataTableSummary" class="cell-border compact" width="100%"></table>
-						<br>
 						<table id="unknownWordsDataTable" class="cell-border compact hover" width="100%"></table>
+						<br>
+						<table id="unknownWordsDataTableSummary" class="cell-border compact" width="100%"></table>
+						
 					</div>
 					<div id="KnownWordsTab" class="tabcontent">
 						<h4>List of known words from the current text.</h4>
-						<table id="knownWordsDataTableSummary" class="cell-border compact" width="100%"></table>
-						<br>
 						<table id="knownWordsDataTable" class="cell-border compact hover" width="100%"></table>
+						<br>
+						<table id="knownWordsDataTableSummary" class="cell-border compact" width="100%"></table>
+						
 					</div>
 					<div id="LearningWordsTab" class="tabcontent">
 						<h4>List of learning words from the current text.</h4>
-						<table id="learningWordsDataTableSummary" class="cell-border compact" width="100%"></table>
-						<br>
 						<table id="learningWordsDataTable" class="cell-border compact hover" width="100%"></table>
+						<br>
+						<table id="learningWordsDataTableSummary" class="cell-border compact" width="100%"></table>
 					</div>
 					<div id="AllWordsTab" class="tabcontent">
 						<h4>List of all words from the current text.</h4>
-						<table id="allWordsDataTableSummary" class="cell-border compact" width="100%"></table>
-						<br>
 						<table id="allWordsDataTable" class="cell-border compact hover" width="100%"></table>
+						<br>
+						<table id="allWordsDataTableSummary" class="cell-border compact" width="100%"></table>
 					</div>
 					<div id="VocabularyTab" class="tabcontent">
 					
@@ -3724,9 +3981,10 @@ Author: Rohan Scott-->
 					
 						<h4>A complete list of collected vocabulary items.</h4>
 		<p>To delete entries, select rows then press DEL key .</p>
-						<table id="vocabularyDataTableSummary" class="cell-border compact" width="100%"></table>
-						<br>
+						
 						<table id="vocabularyDataTable" class="cell-border compact hover" width="100%"></table>
+						<br>
+						<table id="vocabularyDataTableSummary" class="cell-border compact" width="100%"></table>
 					</div>
 					<div id="CompareTab" class="tabcontent">
 						<h4>See how one's vocabulary compares with past TOPIK papers.</h4>
@@ -3764,7 +4022,7 @@ Author: Rohan Scott-->
 						<br>Jump Highlight Colour:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 						<input class="colourInputField" type="textField" id="fieldHC4" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" name="fieldHC4" onkeydown="if (event.keyCode == 13) { HC4Submit(); return false;}">
 						<button id="HC4SubmitButton" onclick="HC4Submit();">Enter</button>
-						<br>
+						<br><br>
 						<hr>
 						<br>
 						<form>Font Size:
@@ -3780,13 +4038,19 @@ Author: Rohan Scott-->
 							</select>
 						</form>
 						<br>
-						<hr>Romanisation:
+						<form>Font:
+							<select id="fontTypeOption" onchange="ChangeFontType();">
+								
+							</select>
+						</form>
+						<br>
+						<hr><br>Romanisation:
 						<select id="romanisationOption" onchange="ChangeRomanisation();">
 							<option selected="selected">Off</option>
 							<option>On</option>
 						</select>
 						</form>&nbsp(For large texts this will take a while)
-						<br>
+						<br><br>
 						<hr>
 						<br>
 						<input type="checkbox" id="enableVoice" name="enableVoice" onclick="toggleEnableVoice();">
@@ -3819,6 +4083,60 @@ Author: Rohan Scott-->
 								<input type="range" min="0" max="20" value="10" class="slider" id="voicePitchSlider">
 							</div>
 						</div>
+						<br>
+						<hr><br>
+						<form>Dictionary Language:
+							<select id="dictLanguageOption" onchange="ChangeDictLanguage();">
+								<option>Korean-Korean</option>
+								<option selected="selected">English</option>
+								<option>Japanese</option>
+								<option>Chinese</option>
+								<option>French</option>
+								<option>Spanish</option>
+								<option>German</option>
+								<option>Vietnamese</option>
+								<option>Nepali</option>
+								<option>Mongolian</option>
+								<option>Burmese</option>
+								<option>Swahili</option>
+								<option>Arabic</option>
+								<option>Uzbek</option>
+								<option>Bahasa Indonesian</option>
+								<option>Cambodian</option>
+								<option>Thai</option>
+								<option>Tetum</option>
+								<option>Persian</option>
+								<option>Ancient Hebrew</option>
+								<option>Hindi</option>
+								<option>Modern Greek</option>
+								<option>Ancient Greek</option>
+								<option>Dutch</option>
+								<option>Latin</option>
+								<option>Russian</option>
+								<option>Romanian</option>
+								<option>Swedish</option>
+								<option>Albanian</option>
+								<option>Ukrainian</option>
+								<option>Italian</option>
+								<option>Gruziya</option>
+								<option>Czech</option>
+								<option>Turkish</option>
+								<option>Portuguese</option>
+								<option>Polish</option>
+								<option>Finnish</option>
+								<option>Hungarian</option>
+							</select>
+							
+							
+
+   
+
+
+							
+							
+							
+						</form>
+						<br>
 						<br>
 					</div>
 				</div>
