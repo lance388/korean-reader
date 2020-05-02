@@ -4,13 +4,13 @@ Copyright © 2020 Rohan Scott
 This source file is free software, available under the following license:
 MIT license - https://mit-license.org/
 This software uses the following plugins:
-	jQuery							JS Foundation and other contributors	jquery.org
-	mark.js							Julian Kühnel							https://markjs.io/
-	IndexedDB-getAll-shim.js		dumbmatter								https://www.npmjs.com/package/indexeddb-getall-shim
-	aromanize.js					Fajar Chandra							https://github.com/fujaru/aromanize-js
-	chart.js						Chart.js Contributors					https://www.chartjs.org
-	datatables						SpryMedia Ltd							http://www.datatables.net						
-	javascript-css-font-detect		Lalit Patel								http://www.lalit.org/lab/javascript-css-font-detect/
+	jQuery						JS Foundation & other contributors	jquery.org												MIT license
+	mark.js						Julian Kühnel						https://markjs.io/										MIT license
+	IndexedDB-getAll-shim.js	dumbmatter							https://www.npmjs.com/package/indexeddb-getall-shim		MIT license
+	aromanize.js				Fajar Chandra						https://github.com/fujaru/aromanize-js					MIT license
+	chart.js					Chart.js Contributors				https://www.chartjs.org									MIT license
+	datatables					SpryMedia Ltd						http://www.datatables.net								MIT license				
+	javascript-css-font-detect	Lalit Patel							http://www.lalit.org/lab/javascript-css-font-detect/	Apache Software License 2.0
 -->
 <!DOCTYPE html>
 <html>
@@ -80,7 +80,6 @@ This software uses the following plugins:
 		var allArray= [];
 		var jumpMarked;
 		var jumpAttempts;
-		
 		var colourTimeout;
 		var scrollTimeout;
 		var vocabularyTimeout;
@@ -90,16 +89,13 @@ This software uses the following plugins:
 		var highlightTimeout;
 		var unmarkJumpTimeout;
 		var calculateStatisticsTimeout;
-		
 		var openedTab="";
 		var limiters;
-		var limitersHangeul;
-		const fontSizeDefault = 6;
+		var limitersHangeul; 
+		const fontSizeDefault = 3;
 		var fontSize;
 		var romanisationMode;
 		var regExp;
-		//var regExpRomanisation;
-		
 		var replaceCharactersHangeul;
 		var convertedHTML;
 		var colourPrimary;
@@ -119,7 +115,6 @@ This software uses the following plugins:
 		var selectedWord="";
 		var myChart;
 		var global_total_words;
-		
 		var timeCalculateStatisticsBegin;
 		var timeCalculateStatisticsEnd;
 		var initialisationComplete = false;
@@ -135,7 +130,6 @@ This software uses the following plugins:
 		const printJSON = false;
 		var dictionaryLanguage;
 		const dictionaryLanguageDefault="English";
-		
 		
 		const sort_by = (field, reverse, primer) => {
 
@@ -191,9 +185,6 @@ This software uses the following plugins:
 		{
 			var pasteArea = document.getElementById ("pasteArea");
 			pasteArea.contentEditable = false;
-			//document.body.style.cursor = 'wait !important';
-			//$('*').css('cursor','wait');
-			
 			jumpMarked = false;
 			romanisationMode = 0;
 			voicePitch = 1;
@@ -216,8 +207,6 @@ This software uses the following plugins:
 			imagesLookingUp="";
 			dictionaryLookingUp="";
 			dictionaryLanguage = "English";
-
-
 			
 			enableHighlighting = true; 
 			replaceCharactersHangeul = /[\0-\│\:\…\］\<\>\,\'\+\~\s+\d\/\”\]\－\_\|\ㅡ\r\n|\n|\r\】\■\【\『\』\―\♡\─\®\♪\〈\△\♥\▶\▼\◀\&\〉\(\)\「\〔\{\}\㉡\*\㉢\1\2\3\4\5\6\7\8\9\0\㉣\=\㎏\·\」\%\》\[\〕\~\∼\《\～\“\❷\❶\❸\❹\●\㎞\○\㉠\#\$\?\.\‘\’\💛\x1F\x7F-\x9F\xAD\u0378\ufeff\u0379\u037F-\u0383\u038B\u038D\u03A2\u0528-\u0530\u0557\u0558\u0560\u0588\u058B-\u058E\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08A1\u08AD-\u08E3\u08FF\u0978\u0980\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0C00\u0C04\u0C0D\u0C11\u0C29\u0C34\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5A-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C81\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D01\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5F\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F5-\u13FF\u169D-\u169F\u16F1-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191D-\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7-\u1CFF\u1DE7-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BB-\u20CF\u20F1-\u20FF\u218A-\u218F\u23F4-\u23FF\u2427-\u243F\u244B-\u245F\u2700\u2B4D-\u2B4F\u2B5A-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E3C-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FCD-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA698-\uA69E\uA6F8-\uA6FF\uA78F\uA794-\uA79F\uA7AB-\uA7F7\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FC-\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9E0-\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAA7C-\uAA7F\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F-\uABBF\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE27-\uFE2F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF]/g;
@@ -231,14 +220,7 @@ This software uses the following plugins:
 			regExp = /^\S*$/;
 			document.getElementById("DictionaryTabButton").click();
 			window.addEventListener('resize', OnResize);
-			//$('html').keyup(function(e){
-				
-			//});
-			
-			
-		
-			
-			
+
 			$(document).ready(function() {
 				var table = $('#unknownWordsDataTable').DataTable( {
 					"paging":         true,
@@ -295,14 +277,9 @@ This software uses the following plugins:
 				} );
 				
 							var table4 = $('#allWordsDataTable').DataTable( {
-				//    "scrollY":        200,
-				//	"scrollCollapse": true,
 					"paging":         true,
 					"orderClasses": false,
-				//	"scroller":       true,
-				//	"autoWidth": false,
 					"deferRender": true,
-					//"pageLength": 20,
 					"info": false,
 					"order": [[ 0, "desc" ]],
 					select: 'single',
@@ -322,10 +299,7 @@ This software uses the following plugins:
 					"scrollCollapse": true,
 					"paging":         false,
 					"orderClasses": false,
-				//	"scroller":       true,
-				//	"autoWidth": false,
 					"deferRender": true,
-					//"pageLength": 20,
 					"info": false,
 					"order": [[ 0, "desc" ]],
 					select: true,
@@ -621,8 +595,6 @@ This software uses the following plugins:
 			  LoadHTML();
 			  OnResize();
 			  initialisationComplete = true;
-			  //document.body.style.cursor = 'auto';
-				//$('*').css('cursor','auto');
 			  pasteArea.contentEditable = true;
 			document.getElementById("DictionaryTabButton").click();
 				
@@ -799,7 +771,6 @@ This software uses the following plugins:
 			
 			for(var i=0;i<fontList.length;i++)
 			{
-				//console.log(fontList[i]);
 				var detection = d.detect(fontList[i]);
 				if(detection)
 				{
@@ -822,10 +793,6 @@ This software uses the following plugins:
 					return;
 				}
 			}
-			
-			
-			//document.documentElement.style.setProperty('--font-type', 'Gamja Flower');
-			
 			
 			var objectStore3 = db.transaction(["wordsdb"]).objectStore("wordsdb");
 			var request3 = objectStore3.get("fonttype$");
@@ -901,8 +868,6 @@ This software uses the following plugins:
 			}
 			data.sort(sort_by('occurances', true, parseInt));
 			data2.sort(sort_by('occurances', true, parseInt));
-			//var xAxisPercent=[];
-			//var accumulativeUniqueWords=[];
 			var accumulativeWords = [];
 			var xAxis=[];
 			var total=0;
@@ -911,11 +876,7 @@ This software uses the following plugins:
 				
 				total+=data[i].occurances
 				xAxis.push(i+1);
-				//var percentXAxis = Math.round(((i+1/data.length+1)*100 + Number.EPSILON) * 100) / 100;
-				//xAxisPercent.push(percentXAxis);
 				accumulativeWords.push(total);
-				//w=data.word;
-				//c=data.occurances;
 			}
 			var accumulativeWords2 = [];
 			var xAxis2=[];
@@ -925,11 +886,7 @@ This software uses the following plugins:
 				
 				total2+=data2[i].occurances
 				xAxis2.push(i+1);
-				//var percentXAxis = Math.round(((i+1/data.length+1)*100 + Number.EPSILON) * 100) / 100;
-				//xAxisPercent.push(percentXAxis);
 				accumulativeWords2.push(total2);
-				//w=data.word;
-				//c=data.occurances;
 			}
 			
 			var customTooltips = function(tooltip) {
@@ -984,9 +941,6 @@ This software uses the following plugins:
 					var b = []
 					var body = (""+body);
 					b = body.trim().split(/[, ]+/);
-					var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
-					//innerHtml += '<tr><td>' + span + body + '</td></tr>';(Math.round(((b[2]/total)*100 + Number.EPSILON) * 100) / 100);
-					//innerHtml += '<tr><td>' +"Words: "+ b[2] +" ("+(Math.round(((b[2]/total)*100 + Number.EPSILON) * 100) / 100)+"%)"+ '</td></tr>';
 					innerHtml += '<tr><td>' +span+ b[2] +" ("+(Math.round(((b[2]/total)*100 + Number.EPSILON) * 100) / 100)+"%)"+ '</td></tr>';
 				});
 				innerHtml += '</tbody>';
@@ -1268,19 +1222,6 @@ This software uses the following plugins:
 				alert("Unable to retrieve data from database!");
 			};
 				
-			/*
-			if(voiceDropDown.options)
-			{
-				if(voiceDropDown.options.length>0)
-				{
-					if(voiceDropDown.options[0]!=undefined)
-					{
-						voiceDropDown.value=voiceDropDown.options[0].value;
-					}
-				}
-			}
-			*/
-				
 				request3.onsuccess = function(event) {
 				if(request3.result) {
 						var a = request3.result.appearances;
@@ -1457,8 +1398,6 @@ This software uses the following plugins:
 			if(word!="")
 			{
 				ChangeColour(word,false,true);
-				//AsyncChangeColour(word,false,true);
-				//setCurrentColour(word,-1);
 			}
 			
 			var instance = new Mark(document.querySelector("div.content"));
@@ -1492,10 +1431,6 @@ This software uses the following plugins:
 				{
 					jumpAttempts = 0;
 				}
-				
-				//unmarkJumpTimeout = setTimeout(function() {
-				//			UnmarkJump(items);
-				//		}, 200);
 				UnmarkJump(items);
 				var optionsJump = {
 					"accuracy": {
@@ -1505,10 +1440,7 @@ This software uses the following plugins:
 				};
 		
 			var instance = new Mark(document.querySelector("div.content"));
-			
-			//unmarkJumpTimeout = setTimeout(function() {
-							instance.mark(word,optionsJump);
-			//			}, 50);
+			instance.mark(word,optionsJump);
 			
 			
 			if(enableVoice)
@@ -1544,19 +1476,9 @@ This software uses the following plugins:
 						{
 							if(divs[i].marked)
 							{	
-								//console.log("checking "+i);
 								AsyncHighlight(word,colorIndex,skipJump,i);
 							}
-							//if(divs[i].marked==false||divs[i].marked==null)
-							//{	
-								//divs[i].marked=false;
-								//toMark.push(i);
-							//}
 						}
-						//else
-						//{
-							//divs[i].marked=false;
-						//}
 					}
 		}
 		
@@ -1571,88 +1493,6 @@ This software uses the following plugins:
 		
 		function Highlight(word, colourIndex, skipJump, pageNo)
 		{
-			
-		
-		/*
-				var optionsTertiary = {
-					"accuracy": {
-						"value": "exactly",
-						"limiters": limiters
-					}, "className": 'tertiary',
-					"exclude":['tertiary', 'primary']
-				};
-		
-				var optionsSecondary = {
-					"accuracy": {
-						"value": "exactly",
-						"limiters": limiters
-					}, "className": 'secondary',
-					"exclude":['secondary', 'tertiary']
-				};
-				
-				var optionsPrimary = {
-					"accuracy": {
-						"value": "exactly",
-						"limiters": limiters
-					}, "className": 'primary',
-					"exclude":['secondary', 'primary']
-				};
-				
-				var optionsTertiarySkipColoured = {
-					"accuracy": {
-						"value": "exactly",
-						"limiters": limiters
-					}, "className": 'tertiary',
-					"exclude":['mark']
-					
-				};
-		
-				var optionsSecondarySkipColoured = {
-					"accuracy": {
-						"value": "exactly",
-						"limiters": limiters
-					}, "className": 'secondary',
-					"exclude":['mark']
-				};
-				
-				var optionsPrimarySkipColoured = {
-					"accuracy": {
-						"value": "exactly",
-						"limiters": limiters
-					}, "className": 'primary',
-					"exclude":['mark']
-					
-				};
-				
-				
-				
-				if(skipColoured)
-				{
-					if(pageNo==-1)
-					{
-						var instance = new Mark(document.querySelector("div.content"));
-					}
-					else
-					{
-						var instance = new Mark(GetPage(pageNo));
-					}
-					
-					if(colourIndex==0)
-					{
-						instance.mark(word,optionsPrimarySkipColoured);
-					}
-					else if (colourIndex==1)
-					{
-						instance.mark(word,optionsSecondarySkipColoured);
-					}
-					else if (colourIndex==2)
-					{
-						instance.mark(word,optionsTertiarySkipColoured);
-					}
-				}
-				else*/
-				//{
-				
 				if(skipJump)
 				{
 						var optionsTertiary = {
@@ -1702,18 +1542,8 @@ This software uses the following plugins:
 						}, "className": 'primary'
 					};
 				}
-					
-					
-					//var instance;
-					//if(pageNo==-1)
-					//{
-					//	instance = new Mark(document.querySelector("div.content"));
-					//}
-					//else
-					//{
-					//var instance = new Mark(document.querySelector("div.content"));
+
 						var instance = new Mark(GetPage(pageNo));
-					//}
 					
 					
 					if(colourIndex==0)
@@ -1813,9 +1643,6 @@ This software uses the following plugins:
 				}
 				else
 				{
-				
-				//if(browser=="edge"||browser=="firefox")
-				//{
 					var selection = window.getSelection();	
 					if (!selection || selection.rangeCount < 1) return true;
 					var range = selection.getRangeAt(0);
@@ -1824,7 +1651,6 @@ This software uses the following plugins:
 					
 					while ((range.startOffset > 0) && range.toString().match(word_regexp)) {
 					  range.setStart(node, (range.startOffset - 1));
-					  //range.setStart(node, (range.startOffset));
 					}
 					if (!range.toString().match(word_regexp)) {
 					  range.setStart(node, range.startOffset + 1);
@@ -1844,23 +1670,7 @@ This software uses the following plugins:
 						if (window.getSelection && (sel = window.getSelection()).modify) {
 							// Webkit, Gecko
 							var s = window.getSelection();
-							
-								
-								//s.modify('move', 'forward', 'character');
-								//s.modify('move', 'backward', 'word');
-								//s.modify('extend', 'forward', 'word');
-
 								s.modify('extend', 'forward', 'word');
-								
-								
-								//s.modify('move', 'backward', 'character');
-								//s.modify('move', 'forward', 'word');
-								//s.modify('extend', 'backward', 'word');
-
-								
-								
-								
-								
 								t = s.toString();
 							
 							t=t.replace(replaceCharacters," ");
@@ -1875,11 +1685,7 @@ This software uses the following plugins:
 								
 							word = t;
 						}
-					}
-					//}
-					
-
-				//word=word.replace(replaceCharacters,"");		
+					}	
 					if(word!="")
 					{
 							if(modifier==1&&enableHighlighting)
@@ -1963,24 +1769,11 @@ This software uses the following plugins:
 					changeDictionarySrc(word);
 				}
 				dictionaryLookingUp = word;
-				
-				
-				//RemoveSelection();
-				//document.getElementById("DictionaryTabButton").click();
 			}
 		}
 		
 		function RemoveSelection(index)
 		{
-			/*if (window.getSelection) {
-			  if (window.getSelection().empty) {  // Chrome
-				window.getSelection().empty();
-			  } else if (window.getSelection().removeAllRanges) {  // Firefox
-				window.getSelection().removeAllRanges();
-			  }
-			} else if (document.selection) {  // IE?
-			  document.selection.empty();
-			}*/
 			if(index==0)
 			{
 				var naverIframe = document.getElementById('naverIframe');
@@ -1991,7 +1784,6 @@ This software uses the following plugins:
 				var body = document.getElementById('body');
 				body.blur;
 			}
-			//naverIframe.selection.empty();
 		}
 		
 		function imagesLookup(word)
@@ -2078,12 +1870,7 @@ This software uses the following plugins:
 				loc = "https://dict.naver.com/"+langCode+"/#/mini/search?query="+text;
 			}
 			var naverIframe = document.getElementById('naverIframe');
-			//if(naverIframe.src != loc)
-			//{
 			naverIframe.src = loc;
-			
-			
-			//dictionaryLookup(text);
 			
 			setTimeout(function() {RemoveSelection(0);},100);
 			setTimeout(function() {RemoveSelection(0);},200);
@@ -2108,10 +1895,8 @@ This software uses the following plugins:
 			var loc;
 			loc = "https://www.bing.com/images/search?q="+text;
 			imagesIframe = document.getElementById('imagesIframe');
-			//if(imagesIframe.src != loc)
-			//{
-				imagesIframe.src = loc;
-			//}
+			imagesIframe.src = loc;
+
 			
 			setTimeout(function() {RemoveSelection(1);},100);
 			setTimeout(function() {RemoveSelection(1);},200);
@@ -2397,117 +2182,16 @@ This software uses the following plugins:
 	
 	function AsyncCalculateStatistics()
 	{
-	
-	
-	//if(openedTab=="UnknownWordsTab"||openedTab=="LearningWordsTab"||openedTab=="KnownWordsTab"||openedTab=="AllWordsTab"||openedTab=="GraphTab")
-	//	{
-		
-			
 						if(statisticsTimeout)
 						{	
 							clearTimeout(statisticsTimeout);
 						}
 						statisticsTimeout = setTimeout(function() {
-						
-						//timeCalculateStatisticsBegin = new Date();
-			
-					
+
 							CalculateStatistics();
-						}, global_total_words/2); //TODO write a real async method for this
-		//}
-	
-	
-	
+						}, global_total_words/2);
 	}
 	
-	/*
-	function SortWords(word,last)
-	{
-			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
-	        var request = objectStore.get(word);
-	        request.onerror = function(event) {
-	          alert("Unable to retrieve data from database!");
-	        };
-			
-	        request.onsuccess = function(event) {          
-	          if(request.result) {
-			  
-					var w = request.result.word;
-					var a = request.result.appearances;
-					var remainder = a%3;
-					if(remainder==0)
-					{
-						const found = unknownArray.findIndex(w => w.word === word);
-						if(found == -1)
-						{
-						var n = [];
-						n.word = w;
-						n.occurances = 1;
-						n.topik="";
-						unknownArray.push(n);
-						}
-						else
-						{
-						unknownArray[found].occurances++;
-						}
-					}
-					else if(remainder==1)
-					{
-						const found = learningArray.findIndex(w => w.word === word);
-						if(found == -1)
-						{
-						var n = [];
-						n.word = w;
-						n.occurances = 1;
-						n.topik="";
-						learningArray.push(n);
-						}
-						else
-						{
-						learningArray[found].occurances++;
-						}
-					}
-					else if(remainder==2)
-					{
-						const found = knownArray.findIndex(w => w.word === word);
-						if(found == -1)
-						{
-						var n = [];
-						n.word = w;
-						n.occurances = 1;
-						n.topik="";
-						knownArray.push(n);
-						}
-						else
-						{
-						knownArray[found].occurances++;
-						}
-					}
-	
-	          } 
-			  else 
-			  {
-						var n = [];
-						n.word = word;
-						n.occurances = 1;
-						n.topik="";
-						unknownArray.push(n);
-	          }
-			  
-			  if(last)
-			  {
-					if(displaySortTimeout)
-					{	
-						clearTimeout(displaySortTimeout);
-					}
-					displaySortTimeout = setTimeout(function() {
-					  DisplaySort();
-					}, 300);
-			  }
-	        };
-			
-	}
-	*/
 	
 	function CalculateStatistics()
 	{
@@ -2515,16 +2199,7 @@ This software uses the following plugins:
 			words=words.replace(replaceCharacters," ");
 	
 			var wordArray = words.trim().split(/[, ]+/);
-			
-					//if(displayComparisonTimeout)
-					/////{	
-					//	clearTimeout(displayComparisonTimeout);
-					//}
-					
-					//if(displaySortTimeout)
-					//{	
-					//	clearTimeout(displaySortTimeout);
-					//}
+
 			unknownArray = [];
 			learningArray = [];
 			knownArray = [];
@@ -2532,21 +2207,6 @@ This software uses the following plugins:
 			
 			
 			SortWords2(wordArray);
-			
-			//for(var i=0;i<wordArray.length;i++)
-			//{
-				
-				//if(wordArray.length-1==i)
-				//{
-				//	SortWords(wordArray[i],true);
-				//}
-				//else{
-				//	SortWords(wordArray[i],false);
-				//}
-				
-			//}
-			
-	
 	}
 	
 	function SortWords2(wordArray)
@@ -2568,7 +2228,6 @@ This software uses the following plugins:
 					var remainder = data[i].appearances%3;
 					if(remainder!=0)
 					{
-						//console.log("pushing "+data[i][1]);
 						filteredWords.push(data[i].word);
 						filteredRemainder.push(remainder);
 					}
@@ -2579,9 +2238,8 @@ This software uses the following plugins:
 						
 					
 					var remainder = filteredRemainder[index];
-					//console.log(remainder);
 					
-							var w = wordArray[i];
+					var w = wordArray[i];
 							
 					if(index > -1)
 					{
@@ -2656,12 +2314,8 @@ This software uses the following plugins:
 
 					
 				}
-				
-				
-					  DisplaySort();
-				
-					
-				
+
+				DisplaySort();
 			  }
 	        };
 	}
@@ -2751,8 +2405,6 @@ This software uses the following plugins:
 		{
 			topikList[i] = [];
 			var list = [];
-			//var splitList= [];
-			//var splitWordList= [];
 			
 			switch(i)
 			{
@@ -2764,21 +2416,6 @@ This software uses the following plugins:
 			{
 				topikList[i].push(list[j].w);
 			}
-			//console.log(topikList);
-			//topikList[i] = list;
-			
-			//for(var j=0;j<list.length;j++)
-			//{
-			//	splitList.push(list[j].split('/n'));
-			//}
-			
-			//for(var j=0;j<splitList.length;j++)
-			//{
-			//	var obj = ""+splitList[j]
-			//	obj = obj.split(' ');
-			//	splitWordList.push(obj[1]+"");
-			//}
-			//topikList[i] = splitWordList;
 		}
 		
 		
@@ -2793,11 +2430,8 @@ This software uses the following plugins:
 			
 			for(var j=topikList.length-1;j>-1;j--)
 			{
-				//console.log("here0 " +topikList[j]);
-				//console.log("here1 " +unknownArray[i].word);
 				if(topikList[j].includes(unknownArray[i].word))
 				{
-					//console.log("here2");
 					unknownArray[i].topik = GetTopikName(j);
 				}
 			}
@@ -2847,14 +2481,6 @@ This software uses the following plugins:
 		document.getElementById("LearningWordsTabButton").innerText="[5] Learning Words ("+percentLearning+"%)";
 		document.getElementById("KnownWordsTabButton").innerText="[6] Known Words ("+percentKnown+"%)";
 		
-			//timeCalculateStatisticsEnd = new Date();
-			//			if(timeCalculateStatisticsBegin)
-			//			{
-							
-			//				calculateStatisticsTimeout = (timeCalculateStatisticsEnd.getTime()-timeCalculateStatisticsBegin.getTime());
-			//				console.log(calculateStatisticsTimeout);
-			//			}
-		
 		if((lastUsedStatsTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate)||(openedTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate))
 		{
 			var tt = $('#unknownWordsDataTableSummary').DataTable();
@@ -2876,7 +2502,6 @@ This software uses the following plugins:
 			tt.draw();
 			t.draw();
 			unknownWordsTabUpToDate = true;
-			//lastUsedStatsTab = "UnknownWordsTab";
 		}
 		if((lastUsedStatsTab=="LearningWordsTab"&&!learningWordsTabUpToDate)||(openedTab=="LearningWordsTab"&&!learningWordsTabUpToDate))
 		{
@@ -2901,7 +2526,6 @@ This software uses the following plugins:
 			tt2.draw();
 			t2.draw();
 			learningWordsTabUpToDate = true;
-			//lastUsedStatsTab = "LearningWordsTab";
 		}
 		if((lastUsedStatsTab=="KnownWordsTab"&&!knownWordsTabUpToDate)||(openedTab=="KnownWordsTab"&&!knownWordsTabUpToDate))
 		{
@@ -2924,7 +2548,6 @@ This software uses the following plugins:
 			tt3.draw();
 			t3.draw();
 			knownWordsTabUpToDate = true;
-			//lastUsedStatsTab = "KnownWordsTab";
 		}
 		if((lastUsedStatsTab=="AllWordsTab"&&!allWordsTabUpToDate)||(openedTab=="AllWordsTab"&&!allWordsTabUpToDate))
 		{
@@ -2940,7 +2563,6 @@ This software uses the following plugins:
 			if(printJSON)
 				{
 					var json=[];
-					//console.log("[");
 				}						
 			for(var i=0;i<allArray.length;i++)
 			{
@@ -2952,7 +2574,6 @@ This software uses the following plugins:
 				
 				if(printJSON)
 				{ 
-					//console.log('{"o":'+allArray[i].occurances+', "w":"'+allArray[i].word+'"},');
 					var ww = {o:allArray[i].occurances,w:allArray[i].word};
 					json.push(ww); 
 				}
@@ -2966,27 +2587,15 @@ This software uses the following plugins:
 			tt4.draw();
 			t4.draw();
 			allWordsTabUpToDate = true;
-			
-			
-			
-			//lastUsedStatsTab = "AllWordsTab";
 		}
 		if(openedTab=="GraphTab")
 		{
 			CreateGraph(allArray,knownArray.concat(learningArray));
 		}
-		
-		//timeCalculateStatisticsEnd = new Date();
-		//if(timeCalculateStatisticsBegin)
-		//{	
-		//	calculateStatisticsTimeout = (timeCalculateStatisticsEnd.getTime()-timeCalculateStatisticsBegin.getTime())*1.2;
-		//	console.log(calculateStatisticsTimeout);
-		//}F
 	}
 	
 	function OnInput()
 	{
-		//$('*').css('cursor','wait');
 		var pasteArea = document.getElementById ("pasteArea");
 	
 		clearTimeout(colourTimeout);
@@ -3029,7 +2638,6 @@ This software uses the following plugins:
 				document.getElementById ("pasteArea").innerHTML="";
 			}
 		}
-		//$('*').css('cursor','auto');
 	}
 	
 	function LoadHTML()
@@ -3047,17 +2655,10 @@ This software uses the following plugins:
 						{
 							
 							document.getElementById ("pasteArea").innerHTML=a;
-							
-							//if(romanisationMode==0)
-							//{
-								
+
 								var $div = $('.romanisedText');
 								$div.empty();
 
-
-								//$( "pasteArea" ).removeClass( "romanised" );
-							//}
-							
 							OnInput();
 						}
 					}
@@ -3146,18 +2747,6 @@ This software uses the following plugins:
 		return(Aromanize.hangulToLatin(t, 'rr-translit'));
 	}
 	
-	/*
-	function stripHtml(html)
-	{
-		// Create a new div element
-		var temporalDivElement = document.createElement("div");
-		// Set the HTML content with the providen
-		temporalDivElement.innerHTML = html;
-		// Retrieve the text property of the element (cross-browser support)
-		return temporalDivElement.textContent || temporalDivElement.innerText || "";
-	}
-	*/
-	
 	String.prototype.isEmpty = function() 
 				{
 					return (this.length === 0 || !this.trim());
@@ -3178,8 +2767,7 @@ This software uses the following plugins:
 			}
 			 parent.removeChild( b[ 0 ] );
 		}
-		
-		//var oldHTML = stripHtml(pasteArea.innerHTML;);
+
 		var oldHTML = pasteArea.innerText;
 		var replace = /[\n]/g;
 		var split = oldHTML.replace(replace,'<br>');
@@ -3190,12 +2778,6 @@ This software uses the following plugins:
 			if(split[i].length>0)
 			{
 				var words = split[i];
-				
-				
-				//console.log(words.isEmpty());
-				
-				
-
 				
 				if(!words.isEmpty())
 				{
@@ -3237,7 +2819,6 @@ This software uses the following plugins:
 	
 	function ChangeRomanisation()
 	{
-		//$('*').css('cursor','wait');
 		var mySelect = document.getElementById('romanisationOption');
 		switch(mySelect.value)
 		{
@@ -3263,11 +2844,7 @@ This software uses the following plugins:
 				if(romanisationMode==0)
 							{
 								var $div = $('.romanisedText');
-								//console.log("here1 " + $div.html);
 								$div.empty();
-								//console.log("here2 "+$div.html);
-								//$('romanised').html(""); 
-								//$( "pasteArea" ).removeClass( "romanised" );
 							}
 				
 				OnInput();
@@ -3694,14 +3271,6 @@ This software uses the following plugins:
 	
 			var t = $('#compareDataTable').DataTable();
 				t.clear().draw();
-	
-				//var obj = stopik1();
-				//console.log(obj);
-				//console.log(obj[0].o);
-				//TODO
-		
-				
-		
 		CompareLoop(0);
 	}
 	
