@@ -4,17 +4,37 @@ Copyright © 2020 Rohan Scott
 This source file is free software, available under the following license:
 MIT license - https://mit-license.org/
 This software uses the following plugins:
-	jQuery
-	mark.js
-	IndexedDB-getAll-shim.js
-	aromanize.js
-	chart.js
-	datatables
+	jQuery							JS Foundation and other contributors	jquery.org
+	mark.js							Julian Kühnel							https://markjs.io/
+	IndexedDB-getAll-shim.js		dumbmatter								https://www.npmjs.com/package/indexeddb-getall-shim
+	aromanize.js					Fajar Chandra							https://github.com/fujaru/aromanize-js
+	chart.js						Chart.js Contributors					https://www.chartjs.org
+	datatables						SpryMedia Ltd							http://www.datatables.net						
+	javascript-css-font-detect		Lalit Patel								http://www.lalit.org/lab/javascript-css-font-detect/
 -->
 <!DOCTYPE html>
 <html>
 
 <head>
+
+<link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="icons/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="manifest" href="icons/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="DataTables-1.10.20/datatables.min.css">
 	<link href="fonts/Song+Myung.css" type="text/css" rel="stylesheet">
@@ -211,36 +231,9 @@ This software uses the following plugins:
 			regExp = /^\S*$/;
 			document.getElementById("DictionaryTabButton").click();
 			window.addEventListener('resize', OnResize);
-			$('html').keyup(function(e){
-				if(e.keyCode == 46 && enableHighlighting && openedTab=="VocabularyTab") {
-				if(selectedVocabulary.length>0)
-				{
-					for(var i=0;i<selectedVocabulary.length;i++)
-					{
-						var transaction = db.transaction(["wordsdb"], "readwrite");
-						transaction.onerror = function(event) {
-							console.log('Transaction not opened due to error: ' + transaction.error);
-						  };
-						var objectStore = transaction.objectStore("wordsdb");
-						var objectStoreRequest = objectStore.delete(selectedVocabulary[i]);
-					}
-						var t = $('#vocabularyDataTable').DataTable();
-						t.clear().draw();
-						
-						
-						if(vocabularyTimeout)
-						{	
-							clearTimeout(vocabularyTimeout);
-						}
-						vocabularyTimeout = setTimeout(function() {
-							CalculateVocabulary();
-						}, 50);
-	
-						}
-						selectedVocabulary = [];
-						OnInput();
-				}
-			});
+			//$('html').keyup(function(e){
+				
+			//});
 			
 			
 		
@@ -640,31 +633,69 @@ This software uses the following plugins:
 		$(window).keydown(function(e) {
 		//console.log(e.keyCode);
 		  switch (e.keyCode) {
-			case 49: document.getElementById("DictionaryTabButton").click(); e.preventDefault(); break; 
-			case 50: document.getElementById("ImagesTabButton").click(); e.preventDefault(); break; 
-			case 51: document.getElementById("StatisticsTabButton").click(); e.preventDefault(); break; 
-			case 52: document.getElementById("UnknownWordsTabButton").click(); e.preventDefault(); break;
-			case 53: document.getElementById("LearningWordsTabButton").click(); e.preventDefault(); break;
-			case 54: document.getElementById("KnownWordsTabButton").click(); e.preventDefault(); break;
-			case 55: document.getElementById("AllWordsTabButton").click(); e.preventDefault(); break;
-			case 56: document.getElementById("VocabularyTabButton").click(); e.preventDefault(); break;
-			case 57: document.getElementById("CompareTabButton").click(); e.preventDefault(); break;
-			case 48: document.getElementById("GraphTabButton").click(); e.preventDefault(); break;
-			case 97: document.getElementById("DictionaryTabButton").click(); e.preventDefault(); break; 
-			case 98: document.getElementById("ImagesTabButton").click(); e.preventDefault(); break; 
-			case 99: document.getElementById("StatisticsTabButton").click(); e.preventDefault(); break; 
-			case 100: document.getElementById("UnknownWordsTabButton").click(); e.preventDefault(); break;
-			case 101: document.getElementById("LearningWordsTabButton").click(); e.preventDefault(); break;
-			case 102: document.getElementById("KnownWordsTabButton").click(); e.preventDefault(); break;
-			case 103: document.getElementById("AllWordsTabButton").click(); e.preventDefault(); break;
-			case 104: document.getElementById("VocabularyTabButton").click(); e.preventDefault(); break;
-			case 105: document.getElementById("CompareTabButton").click(); e.preventDefault(); break;
-			case 96: document.getElementById("GraphTabButton").click(); e.preventDefault(); break;
+			case 49: if(openedTab!="OptionsTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
+			case 50: if(openedTab!="OptionsTab"){document.getElementById("ImagesTabButton").click(); e.preventDefault();} break; 
+			case 51: if(openedTab!="OptionsTab"){document.getElementById("StatisticsTabButton").click(); e.preventDefault();} break; 
+			case 52: if(openedTab!="OptionsTab"){document.getElementById("UnknownWordsTabButton").click(); e.preventDefault();} break;
+			case 53: if(openedTab!="OptionsTab"){document.getElementById("LearningWordsTabButton").click(); e.preventDefault();} break;
+			case 54: if(openedTab!="OptionsTab"){document.getElementById("KnownWordsTabButton").click(); e.preventDefault();} break;
+			case 55: if(openedTab!="OptionsTab"){document.getElementById("AllWordsTabButton").click(); e.preventDefault();} break;
+			case 56: if(openedTab!="OptionsTab"){document.getElementById("VocabularyTabButton").click(); e.preventDefault();} break;
+			case 57: if(openedTab!="OptionsTab"){document.getElementById("CompareTabButton").click(); e.preventDefault();} break;
+			case 48: if(openedTab!="OptionsTab"){document.getElementById("GraphTabButton").click(); e.preventDefault();} break;
+			case 97: if(openedTab!="OptionsTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
+			case 98: if(openedTab!="OptionsTab"){document.getElementById("ImagesTabButton").click(); e.preventDefault();} break; 
+			case 99: if(openedTab!="OptionsTab"){document.getElementById("StatisticsTabButton").click(); e.preventDefault();} break; 
+			case 100: if(openedTab!="OptionsTab"){document.getElementById("UnknownWordsTabButton").click(); e.preventDefault();} break;
+			case 101: if(openedTab!="OptionsTab"){document.getElementById("LearningWordsTabButton").click(); e.preventDefault();} break;
+			case 102: if(openedTab!="OptionsTab"){document.getElementById("KnownWordsTabButton").click(); e.preventDefault();} break;
+			case 103: if(openedTab!="OptionsTab"){document.getElementById("AllWordsTabButton").click(); e.preventDefault();} break;
+			case 104: if(openedTab!="OptionsTab"){document.getElementById("VocabularyTabButton").click(); e.preventDefault();} break;
+			case 105: if(openedTab!="OptionsTab"){document.getElementById("CompareTabButton").click(); e.preventDefault();} break;
+			case 96: if(openedTab!="OptionsTab"){document.getElementById("GraphTabButton").click(); e.preventDefault();} break;
+			case 46: DeleteVocabulary(); break;
+			case 8: DeleteVocabulary(); break;
 			case 27: Reset(); e.preventDefault(); break;
 
 			  return;
 		  }
 		});
+		
+		function DeleteVocabulary()
+		{
+			if(enableHighlighting && openedTab=="VocabularyTab") {
+				if(selectedVocabulary.length>0)
+				{
+					for(var i=0;i<selectedVocabulary.length;i++)
+					{
+						var transaction = db.transaction(["wordsdb"], "readwrite");
+						transaction.onerror = function(event) {
+							console.log('Transaction not opened due to error: ' + transaction.error);
+						  };
+						var objectStore = transaction.objectStore("wordsdb");
+						var objectStoreRequest = objectStore.delete(selectedVocabulary[i]);
+					}
+						
+						
+						
+						
+	
+						}
+						selectedVocabulary = [];
+						OnInput();
+						
+						var t = $('#vocabularyDataTable').DataTable();
+						t.clear().draw();
+						if(vocabularyTimeout)
+						{	
+							clearTimeout(vocabularyTimeout);
+						}
+						vocabularyTimeout = setTimeout(function() {
+							CalculateVocabulary();
+						}, 50);
+				}
+		
+		}
 		
 		/**
 			 * JavaScript code to detect available availability of a
@@ -877,7 +908,7 @@ This software uses the following plugins:
 			var total=0;
 			for(var i=0;i<data.length;i++)
 			{
-				//console.log(data[i].occurances);
+				
 				total+=data[i].occurances
 				xAxis.push(i+1);
 				//var percentXAxis = Math.round(((i+1/data.length+1)*100 + Number.EPSILON) * 100) / 100;
@@ -891,7 +922,7 @@ This software uses the following plugins:
 			var total2=0;
 			for(var i=0;i<data2.length;i++)
 			{
-				//console.log(data[i].occurances);
+				
 				total2+=data2[i].occurances
 				xAxis2.push(i+1);
 				//var percentXAxis = Math.round(((i+1/data.length+1)*100 + Number.EPSILON) * 100) / 100;
@@ -1346,8 +1377,6 @@ This software uses the following plugins:
 					{
 						unknownWordsTabUpToDate = false;
 						knownWordsTabUpToDate = false;
-						//allWordsTabUpToDate = false;
-						//RemoveFromStats(w,0);
 						GetPageAndHighlight(w,0,skipJump);
 						
 					}
@@ -1355,8 +1384,6 @@ This software uses the following plugins:
 					{	
 						unknownWordsTabUpToDate = false;
 						learningWordsTabUpToDate = false;
-						//allWordsTabUpToDate = false;
-						//RemoveFromStats(w,1);
 						GetPageAndHighlight(w,1,skipJump);
 						
 					}
@@ -1364,17 +1391,13 @@ This software uses the following plugins:
 					{
 						knownWordsTabUpToDate = false;
 						learningWordsTabUpToDate = false;
-						//allWordsTabUpToDate = false;
-						//RemoveFromStats(w,2);
 						GetPageAndHighlight(w,2,skipJump);
 						
 					}
 	
 	          } else {
 					unknownWordsTabUpToDate = false;
-					//allWordsTabUpToDate = false;
 					addwordtodb(word);
-					//RemoveFromStats(word,1);
 					GetPageAndHighlight(word,1,skipJump);
 					
 	          }
@@ -1382,82 +1405,6 @@ This software uses the following plugins:
 			  AsyncCalculateStatistics();
 			 
 	        };
-		}
-		
-		function RemoveFromStats(word,index)
-		{
-			
-		 console.log("Removing row "+selectedIndex+ " "+selectedWord);
-		 //var oTable = $('#unkownWordsDataTable').dataTable();
-		 //$($(oTable).closest("tr")).remove();
-		 
-			/*
-			if(openedTab=="AllWordsTab" && selectedIndex!=-1)
-			{
-				if(selectedWord==word)
-				{
-					//console.log("Removing row "+selectedIndex);
-					
-					var oTable = $('#allWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(selectedIndex);
-					
-					//setTimeout(function() {
-							oTable.fnDeleteRow(row[0]);
-							oTable.fnDraw();
-						//}, 1000);
-				
-				}
-				
-			}
-			else if(openedTab=="UnknownWordsTab" && index==1 && selectedIndex!=-1)
-			{
-				if(selectedWord==word)
-				{
-				//console.log("Removing row "+selectedIndex);
-				//table.fnDeleteRow(index);
-				//table.row(selectedIndex).remove().draw();
-				var oTable = $('#unknownWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(selectedIndex);
-				//setTimeout(function() {
-							oTable.fnDeleteRow(row[0]);
-							oTable.fnDraw();
-						//}, 1000);
-				}
-				
-			}
-			else if(openedTab=="LearningWordsTab" && index==2 && selectedIndex!=-1)
-			{
-				if(selectedWord==word)
-				{
-				//console.log("Removing row "+selectedIndex);
-				//table2.fnDeleteRow(index);
-				var oTable = $('#learningWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(selectedIndex);
-				//setTimeout(function() {
-							oTable.fnDeleteRow(row[0]);
-							oTable.fnDraw();
-						//}, 1000);
-				}
-			}
-			else if(openedTab=="KnownWordsTab" && index==0 && selectedIndex!=-1)
-			{
-				if(selectedWord==word)
-				{
-				//console.log("Removing row "+selectedIndex);
-				//table3.fnDeleteRow(index);
-				var oTable = $('#knownWordsDataTable').dataTable();
-				var row = oTable.find('tr').eq(selectedIndex);
-				//setTimeout(function() {
-							oTable.fnDeleteRow(row[0]);
-							oTable.fnDraw();
-						//}, 1000);
-				}
-			}
-			
-			*/
-			selectedIndex = -1;
-			selectedWord = "";
-			
 		}
 		
 		function setCurrentColour(word,pageNo)
@@ -1891,10 +1838,6 @@ This software uses the following plugins:
 				
 					var word = range.toString(); 
 					word=word.replace(replaceCharacters,"");
-					//console.log("word is >"+word+"<");
-				//}
-				//else
-				//{
 					if(word==""&&browser=="chrome")
 					{
 					   var t = '';
@@ -1919,8 +1862,6 @@ This software uses the following plugins:
 								
 								
 								t = s.toString();
-								//console.log(t);
-							   // s.modify('move', 'forward', 'character'); //clear selection
 							
 							t=t.replace(replaceCharacters," ");
 							t=t.trim();
@@ -2049,11 +1990,6 @@ This software uses the following plugins:
 			{
 				var body = document.getElementById('body');
 				body.blur;
-				//var imagesIframe = document.getElementById('imagesIframe');
-				//console.log(imagesIframe);
-				//imagesIframe.blur();
-				//var body = document.getElementById('body');
-				//body.focus();
 			}
 			//naverIframe.selection.empty();
 		}
@@ -2133,7 +2069,6 @@ This software uses the following plugins:
 			var loc;
 			
 			var langCode = ConvertLangCode(dictionaryLanguage);
-			console.log(langCode+" "+langCode.length);
 			if(langCode.length==2)
 			{
 				loc = "https://"+langCode+".dict.naver.com/#/mini/search?query="+text;
@@ -2627,10 +2562,6 @@ This software uses the following plugins:
 				data = request.result;
 				var filteredWords=[];
 				var filteredRemainder=[];
-				
-				//console.log(data);
-				//console.log(data[50].word);
-				//console.log(data[50].occurances);
 				
 				for(var i=0;i<data.length;i++)
 				{
