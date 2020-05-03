@@ -77,8 +77,13 @@ This software uses the following plugins:
 		var unknownArray= [];
 		var learningArray= [];
 		var allArray= [];
+		var knownArrayCompare = [];
+		var unknownArrayCompare= [];
+		var learningArrayCompare= [];
+		var allArrayCompare= [];
 		var jumpMarked;
 		var jumpAttempts;
+		var compareLoopTimeout=[];
 		var colourTimeout;
 		var scrollTimeout;
 		var vocabularyTimeout;
@@ -129,6 +134,8 @@ This software uses the following plugins:
 		const printJSON = false;
 		var dictionaryLanguage;
 		const dictionaryLanguageDefault="English";
+		var sidebarVisible;
+		var menuVisible;
 		
 		const sort_by = (field, reverse, primer) => {
 
@@ -206,6 +213,8 @@ This software uses the following plugins:
 			imagesLookingUp="";
 			dictionaryLookingUp="";
 			dictionaryLanguage = "English";
+			sidebarVisible = true;
+			menuVisible=false;
 			
 			enableHighlighting = true; 
 			replaceCharactersHangeul = /[\0-\│\:\…\］\<\>\,\'\+\~\s+\d\/\”\]\－\_\|\ㅡ\r\n|\n|\r\】\■\【\『\』\―\♡\─\®\♪\〈\△\♥\▶\▼\◀\&\〉\(\)\「\〔\{\}\㉡\*\㉢\1\2\3\4\5\6\7\8\9\0\㉣\=\㎏\·\」\%\》\[\〕\~\∼\《\～\“\❷\❶\❸\❹\●\㎞\○\㉠\#\$\?\.\‘\’\💛\x1F\x7F-\x9F\xAD\u0378\ufeff\u0379\u037F-\u0383\u038B\u038D\u03A2\u0528-\u0530\u0557\u0558\u0560\u0588\u058B-\u058E\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08A1\u08AD-\u08E3\u08FF\u0978\u0980\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0C00\u0C04\u0C0D\u0C11\u0C29\u0C34\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5A-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C81\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D01\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5F\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F5-\u13FF\u169D-\u169F\u16F1-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191D-\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7-\u1CFF\u1DE7-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BB-\u20CF\u20F1-\u20FF\u218A-\u218F\u23F4-\u23FF\u2427-\u243F\u244B-\u245F\u2700\u2B4D-\u2B4F\u2B5A-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E3C-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FCD-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA698-\uA69E\uA6F8-\uA6FF\uA78F\uA794-\uA79F\uA7AB-\uA7F7\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FC-\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9E0-\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAA7C-\uAA7F\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F-\uABBF\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE27-\uFE2F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF]/g;
@@ -223,7 +232,7 @@ This software uses the following plugins:
 			$(document).ready(function() {
 				var table = $('#unknownWordsDataTable').DataTable( {
 					"paging":         true,
-					"orderClasses": false,
+					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
 					"order": [[ 0, "desc" ]],
@@ -241,7 +250,7 @@ This software uses the following plugins:
 
 							var table2 = $('#learningWordsDataTable').DataTable( {
 					"paging":         true,
-					"orderClasses": false,
+					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
 					"order": [[ 0, "desc" ]],
@@ -259,7 +268,7 @@ This software uses the following plugins:
 				
 							var table3 = $('#knownWordsDataTable').DataTable( {
 					"paging":         true,
-					"orderClasses": false,
+					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
 					"order": [[ 0, "desc" ]],
@@ -277,7 +286,7 @@ This software uses the following plugins:
 				
 							var table4 = $('#allWordsDataTable').DataTable( {
 					"paging":         true,
-					"orderClasses": false,
+					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
 					"order": [[ 0, "desc" ]],
@@ -295,9 +304,8 @@ This software uses the following plugins:
 				
 							var table5 = $('#vocabularyDataTable').DataTable( {
 				    "scrollY":        300,
-					"scrollCollapse": true,
+					"scrollCollapse": false,
 					"paging":         false,
-					"orderClasses": false,
 					"deferRender": true,
 					"info": false,
 					"order": [[ 0, "desc" ]],
@@ -309,9 +317,9 @@ This software uses the following plugins:
 				} );
 				
 							var table6 = $('#compareDataTable').DataTable( {
-				    "scrollY":        "100%",
-					"scrollCollapse": true,
+					"scrollCollapse": false,
 					"paging":         false,
+					"deferRender": true,
 					"searching": false,
 					"info": false,
 					"order": [[ 3, "desc" ]],
@@ -327,8 +335,7 @@ This software uses the following plugins:
 				} );
 				
 				var table7 = $('#unknownWordsDataTableSummary').DataTable( {
-				    "scrollY":        "100%",
-					"scrollCollapse": true,
+					"scrollCollapse": false,
 					"paging":         false,
 					"targets": 'no-sort',
 					"bSort": false,
@@ -344,8 +351,7 @@ This software uses the following plugins:
 				} );
 				
 							var table8 = $('#learningWordsDataTableSummary').DataTable( {
-				    "scrollY":        "100%",
-					"scrollCollapse": true,
+				    "scrollCollapse": false,
 					"paging":         false,
 					"targets": 'no-sort',
 					"bSort": false,
@@ -361,8 +367,7 @@ This software uses the following plugins:
 				} );
 				
 							var table9 = $('#knownWordsDataTableSummary').DataTable( {
-				    "scrollY":        "100%",
-					"scrollCollapse": true,
+				    "scrollCollapse": false,
 					"paging":         false,
 					"targets": 'no-sort',
 					"bSort": false,
@@ -378,8 +383,7 @@ This software uses the following plugins:
 				} );
 				
 							var table10 = $('#allWordsDataTableSummary').DataTable( {
-				    "scrollY":        "100%",
-					"scrollCollapse": true,
+				    "scrollCollapse": false,
 					"paging":         false,
 					"targets": 'no-sort',
 					"bSort": false,
@@ -393,8 +397,7 @@ This software uses the following plugins:
 				} );
 				
 					var table11 = $('#vocabularyDataTableSummary').DataTable( {
-				    "scrollY":        "100%",
-					"scrollCollapse": true,
+				    "scrollCollapse": false,
 					"paging":         false,
 					"targets": 'no-sort',
 					"bSort": false,
@@ -604,6 +607,7 @@ This software uses the following plugins:
 		$(window).keydown(function(e) {
 		//console.log(e.keyCode);
 		  switch (e.keyCode) {
+		  
 			case 49: if(openedTab!="OptionsTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
 			case 50: if(openedTab!="OptionsTab"){document.getElementById("ImagesTabButton").click(); e.preventDefault();} break; 
 			case 51: if(openedTab!="OptionsTab"){document.getElementById("StatisticsTabButton").click(); e.preventDefault();} break; 
@@ -624,6 +628,90 @@ This software uses the following plugins:
 			case 104: if(openedTab!="OptionsTab"){document.getElementById("VocabularyTabButton").click(); e.preventDefault();} break;
 			case 105: if(openedTab!="OptionsTab"){document.getElementById("CompareTabButton").click(); e.preventDefault();} break;
 			case 96: if(openedTab!="OptionsTab"){document.getElementById("GraphTabButton").click(); e.preventDefault();} break;
+			
+			/*
+			case 49: if(openedTab!="OptionsTab"){
+			//lastUsedStatsTab = "DictionaryTab"; document.getElementById("StatisticsTabButton").click();
+			document.getElementById("DictionaryTabButton").click();
+			e.preventDefault();} break; 
+			case 50: if(openedTab!="OptionsTab"){
+			//lastUsedStatsTab = "DictionaryTab"; document.getElementById("StatisticsTabButton").click();
+			document.getElementById("ImagesTabButton").click();
+			e.preventDefault();} break; 
+			case 51: if(openedTab!="OptionsTab"){
+			//lastUsedStatsTab = "DictionaryTab"; document.getElementById("StatisticsTabButton").click();
+			document.getElementById("StatisticsTabButton").click();
+			e.preventDefault();} break; 
+			case 52: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "UnknownWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("UnknownWordsTabButton").click();
+			e.preventDefault();} break;
+			case 53: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "LearningWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("LearningWordsTabButton").click();
+			e.preventDefault();} break;
+			case 54: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "KnownWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("KnownWordsTabButton").click();
+			e.preventDefault();} break;
+			case 55: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "AllWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("AllWordsTabButton").click();
+			e.preventDefault();} break;
+			case 56: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "VocabularyTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("VocabularyTabButton").click();
+			e.preventDefault();} break;
+			case 57: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "CompareTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("CompareTabButton").click();
+			e.preventDefault();} break;
+			case 48: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "GraphTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("GraphTabButton").click();
+			e.preventDefault();} break;
+			case 97: if(openedTab!="OptionsTab"){
+			//lastUsedStatsTab = "DictionaryTab"; document.getElementById("StatisticsTabButton").click();
+			document.getElementById("DictionaryTabButton").click();
+			e.preventDefault();} break; 
+			case 98: if(openedTab!="OptionsTab"){
+			//lastUsedStatsTab = "DictionaryTab"; document.getElementById("StatisticsTabButton").click();
+			document.getElementById("ImagesTabButton").click();
+			e.preventDefault();} break; 
+			case 99: if(openedTab!="OptionsTab"){
+			//lastUsedStatsTab = "DictionaryTab"; document.getElementById("StatisticsTabButton").click();
+			document.getElementById("StatisticsTabButton").click();
+			e.preventDefault();} break; 
+			case 100: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "UnknownWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("UnknownWordsTabButton").click();
+			e.preventDefault();} break;
+			case 101: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "LearningWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("LearningWordsTabButton").click();
+			e.preventDefault();} break;
+			case 102: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "KnownWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("KnownWordsTabButton").click();
+			e.preventDefault();} break;
+			case 103: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "AllWordsTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("AllWordsTabButton").click();
+			e.preventDefault();} break;
+			case 104: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "VocabularyTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("VocabularyTabButton").click();
+			e.preventDefault();} break;
+			case 105: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "CompareTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("CompareTabButton").click();
+			e.preventDefault();} break;
+			case 96: if(openedTab!="OptionsTab"){
+			lastUsedStatsTab = "GraphTabButton"; document.getElementById("StatisticsTabButton").click();
+			//document.getElementById("GraphTabButton").click();
+			e.preventDefault();} break;
+			*/
+			
 			case 46: DeleteVocabulary(); break;
 			case 8: DeleteVocabulary(); break;
 			case 27: Reset(); e.preventDefault(); break;
@@ -853,6 +941,7 @@ This software uses the following plugins:
 			clearTimeout(highlightTimeout);
 			clearTimeout(unmarkJumpTimeout);
 			clearTimeout(calculateStatisticsTimeout);
+			clearTimeout(compareLoopTimeout);
 			SaveHTML("");
 			var container = document.getElementById ("pasteArea");
 			container.innerHTML="";
@@ -1605,6 +1694,12 @@ This software uses the following plugins:
 		}
 		
 		function mouseUp(modifier){
+		
+			if(menuVisible)
+			{
+				ShowMenu(false);
+			}
+		
 			if(!all_marked&&enableHighlighting)
 			{
 				onScroll();
@@ -2051,55 +2146,99 @@ This software uses the following plugins:
 					myChart.destroy();
 				}
 				
-			document.getElementById("UnknownWordsTabButton").innerText="[4] Unknown Words";
-			document.getElementById("LearningWordsTabButton").innerText="[5] Learning Words";
-			document.getElementById("KnownWordsTabButton").innerText="[6] Known Words";
+			document.getElementById("UnknownWordsTabButton").innerText="Unknown Words [4]";
+			document.getElementById("LearningWordsTabButton").innerText="Learning Words [5]";
+			document.getElementById("KnownWordsTabButton").innerText="Known Words [6]";
 	}
 	
-	function openTab(evt, tabName) {
+	function openTab(evt, tabName, tabLink) {
 	
 	if(!initialisationComplete)
 	{
 		return false;
 	}
 	
-		openedTab = tabName;
-	  var i, tabcontent, tablinks;
+	ShowMenu(false);
 	
-	  tabcontent = document.getElementsByClassName("tabcontent");
-	  for (i = 0; i < tabcontent.length; i++) {
-	    tabcontent[i].style.display = "none";
+	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="StatisticsTab"))
+	||
+	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ImagesTab"))
+	)
+	{
+		ShowSidebar(false); 
+		openedTab="";
+		tabcontent = document.getElementsByClassName("tabcontent");
+		  for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		  }
+		  tablinks = document.getElementsByClassName(tabLink);
+		  for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		  }
+		  return;
+	}
+	else
+	{
+		ShowSidebar(true);
+		openedTab = tabName;
+		  var i, tabcontent, tablinks;
+		
+		  tabcontent = document.getElementsByClassName("tabcontent");
+		  for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		  }
+		  tablinks = document.getElementsByClassName(tabLink);
+		  for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		  }
+		  document.getElementById(tabName).style.display = "block";
+		  evt.currentTarget.className += " active";
+		  
 	  }
-	  tablinks = document.getElementsByClassName("tablinks");
-	  for (i = 0; i < tablinks.length; i++) {
-	    tablinks[i].className = tablinks[i].className.replace(" active", "");
-	  }
-	  document.getElementById(tabName).style.display = "block";
-	  evt.currentTarget.className += " active";
 	  
 	
 	  
 	  
 	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab")
 	  {
-		document.getElementById("UnknownWordsTabButton").style.display="none";
+		document.documentElement.style.setProperty('--tab-top-percent', '0%');
+		document.documentElement.style.setProperty('--tab-bot-percent', '100%');
+		/*document.getElementById("UnknownWordsTabButton").style.display="none";
 		document.getElementById("KnownWordsTabButton").style.display="none";
 		document.getElementById("AllWordsTabButton").style.display="none";
 		document.getElementById("LearningWordsTabButton").style.display="none";
 		document.getElementById("VocabularyTabButton").style.display="none";
 		document.getElementById("CompareTabButton").style.display="none";
-		document.getElementById("GraphTabButton").style.display="none";
+		document.getElementById("GraphTabButton").style.display="none";*/
 		
 	  }
 	  else
 	  {
-		document.getElementById("UnknownWordsTabButton").style.display="block";
+	  tablinks = document.getElementsByClassName('topbarbutton');
+		for (i = 0; i < tablinks.length; i++)
+		{
+			
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+			
+			if(tablinks[i].id=="StatisticsTabButton")
+			{
+				tablinks[i].className+= " active";
+			}
+			
+			//console.log(tablinks[i]);
+			//tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+	  
+		document.documentElement.style.setProperty('--tab-top-percent', '15%');
+		document.documentElement.style.setProperty('--tab-bot-percent', '85%');
+		/*document.getElementById("UnknownWordsTabButton").style.display="block";
 		document.getElementById("KnownWordsTabButton").style.display="block";
 		document.getElementById("AllWordsTabButton").style.display="block";
 		document.getElementById("LearningWordsTabButton").style.display="block";
 			document.getElementById("VocabularyTabButton").style.display="block";
 		document.getElementById("CompareTabButton").style.display="block";
-		document.getElementById("GraphTabButton").style.display="block";
+		document.getElementById("GraphTabButton").style.display="block";*/
 	  }
 	  
 	  if(tabName=="StatisticsTab")
@@ -2476,9 +2615,9 @@ This software uses the following plugins:
 		var percentUniqueLearning = Math.round(((learningArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 		var percentUniqueKnown = Math.round(((knownArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 	
-		document.getElementById("UnknownWordsTabButton").innerText="[4] Unknown Words ("+percentUnknown+"%)";
-		document.getElementById("LearningWordsTabButton").innerText="[5] Learning Words ("+percentLearning+"%)";
-		document.getElementById("KnownWordsTabButton").innerText="[6] Known Words ("+percentKnown+"%)";
+		document.getElementById("UnknownWordsTabButton").innerText="Unknown Words ("+percentUnknown+"%) [4]";
+		document.getElementById("LearningWordsTabButton").innerText="Learning Words ("+percentLearning+"%) [5]";
+		document.getElementById("KnownWordsTabButton").innerText="Known Words ("+percentKnown+"%) [6]";
 		
 		if((lastUsedStatsTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate)||(openedTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate))
 		{
@@ -3192,47 +3331,47 @@ This software uses the following plugins:
 					var remainder = a%3;
 					if(remainder==0)
 					{
-						const found = unknownArray.findIndex(w => w.word === word);
+						const found = unknownArrayCompare.findIndex(w => w.word === word);
 						if(found == -1)
 						{
 						var n = [];
 						n.word = w;
 						n.occurances = appearances;
-						unknownArray.push(n);
+						unknownArrayCompare.push(n);
 						}
 						else
 						{
-						unknownArray[found].occurances+=appearances;
+						unknownArrayCompare[found].occurances+=appearances;
 						}
 					}
 					else if(remainder==1)
 					{
-						const found = learningArray.findIndex(w => w.word === word);
+						const found = learningArrayCompare.findIndex(w => w.word === word);
 						if(found == -1)
 						{
 						var n = [];
 						n.word = w;
 						n.occurances = appearances;
-						learningArray.push(n);
+						learningArrayCompare.push(n);
 						}
 						else
 						{
-						learningArray[found].occurances+=appearances;
+						learningArrayCompare[found].occurances+=appearances;
 						}
 					}
 					else if(remainder==2)
 					{
-						const found = knownArray.findIndex(w => w.word === word);
+						const found = knownArrayCompare.findIndex(w => w.word === word);
 						if(found == -1)
 						{
 						var n = [];
 						n.word = w;
 						n.occurances = appearances;
-						knownArray.push(n);
+						knownArrayCompare.push(n);
 						}
 						else
 						{
-						knownArray[found].occurances+=appearances;
+						knownArrayCompare[found].occurances+=appearances;
 						}
 					}
 	
@@ -3242,12 +3381,12 @@ This software uses the following plugins:
 						var n = [];
 						n.word = word;
 						n.occurances = appearances;
-						unknownArray.push(n);
+						unknownArrayCompare.push(n);
 	          }
 			  
 			  if(last)
 			  {
-					allArray = knownArray.concat(learningArray).concat(unknownArray);
+					allArrayCompare = knownArrayCompare.concat(learningArrayCompare).concat(unknownArrayCompare);
 					if(displayComparisonTimeout)
 					{	
 						clearTimeout(displayComparisonTimeout);
@@ -3268,9 +3407,17 @@ This software uses the following plugins:
 				clearTimeout(statisticsTimeout);
 			}
 	
-			var t = $('#compareDataTable').DataTable();
-				t.clear().draw();
-		CompareLoop(0);
+			
+				
+		if(compareLoopTimeout)
+					{	
+						clearTimeout(compareLoopTimeout);
+					}
+					compareLoopTimeout = setTimeout(function() {
+						var t = $('#compareDataTable').DataTable();
+					t.clear().draw();
+					  CompareLoop(0);
+					}, 50);		
 	}
 	
 	function CompareLoop(index)
@@ -3290,10 +3437,10 @@ This software uses the following plugins:
 		
 		if(index!=-1)
 		{
-				unknownArray = [];
-				learningArray = [];
-				knownArray = [];
-				allArray = [];
+				unknownArrayCompare = [];
+				learningArrayCompare = [];
+				knownArrayCompare = [];
+				allArrayCompare = [];
 			
 			for(var i=0;i<list.length;i++)
 			{
@@ -3317,17 +3464,17 @@ This software uses the following plugins:
 		var knownCount=0;
 		var learningCount=0;
 		
-		for(var i=0;i<unknownArray.length;i++)
+		for(var i=0;i<unknownArrayCompare.length;i++)
 		{
-			unknownCount+=unknownArray[i].occurances;
+			unknownCount+=unknownArrayCompare[i].occurances;
 		}
-			for(var i=0;i<learningArray.length;i++)
+			for(var i=0;i<learningArrayCompare.length;i++)
 		{
-			learningCount+=learningArray[i].occurances;
+			learningCount+=learningArrayCompare[i].occurances;
 		}
-			for(var i=0;i<knownArray.length;i++)
+			for(var i=0;i<knownArrayCompare.length;i++)
 		{
-			knownCount+=knownArray[i].occurances;
+			knownCount+=knownArrayCompare[i].occurances;
 		}
 		
 		var totalWords = knownCount + learningCount + unknownCount;
@@ -3336,11 +3483,11 @@ This software uses the following plugins:
 		var percentLearning = Math.round(((learningCount/totalWords)*100 + Number.EPSILON) * 100) / 100;
 		var percentKnown = Math.round(((knownCount/totalWords)*100 + Number.EPSILON) * 100) / 100;
 		
-		var percentUniqueUnknown = Math.round(((unknownArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
+		var percentUniqueUnknown = Math.round(((unknownArrayCompare.length/allArrayCompare.length)*100 + Number.EPSILON) * 100) / 100;
 				var t = $('#compareDataTable').DataTable();
 				t.row.add( [
 	            listName,percentUnknown,percentLearning,percentKnown,
-				unknownArray.length +" ("+percentUniqueUnknown+"%)",allArray.length
+				unknownArrayCompare.length +" ("+percentUniqueUnknown+"%)",allArrayCompare.length
 	        ] );
 			
 			t.draw();
@@ -3394,12 +3541,89 @@ This software uses the following plugins:
 	function OnResize()
 	{
 		var c = document.getElementsByClassName("wrapper3");
-		c[0].style.height = (window.innerHeight-45)+"px";
+		//c[0].style.height = "100%"; // $('#topbar').height()
+		//c[0].style.height = (window.innerHeight-$('#topbar').height()-(window.innerHeight-$('#topbar').height()))+"px";
+		c[0].style.height = (window.innerHeight-(window.innerHeight*.05)-38)+"px";
 	}
+	
+	function ToggleOpenMenu()
+	{
+
+	
+		if(menuVisible)
+		{
+			ShowMenu(false)
+			
+		}
+		else
+		{
+			ShowMenu(true)
+		}
+	
+	}
+	
+		function ShowMenu(show)
+	{
+		if(show)
+		{
+			var tablinks = document.getElementsByClassName('topbarbutton');
+			
+			//if(openedTab!="OptionsTab"&&openedTab!="AboutTab")
+			//{
+				//for (i = 0; i < tablinks.length; i++)
+				//{
+				//	tablinks[i].className = tablinks[i].className.replace(" active", "");
+				//	openedTab="";
+				//}
+			//}
+			
+			
+			//ShowSidebar(false);
+			document.getElementById("menu").style.visibility="visible";
+			menuVisible = true;
+			
+			
+		}
+		else
+		{
+			//var tablinks = document.getElementsByClassName('topbarbutton');
+			//for (i = 0; i < tablinks.length; i++)
+			//{
+				
+			//	tablinks[i].className = tablinks[i].className.replace(" active", "");
+				
+			//}
+		
+			document.getElementById("menu").style.visibility="hidden";
+			menuVisible = false;
+		}
+	
+	}
+
+	function ShowSidebar(show)
+	{
+		if(show&&!sidebarVisible)
+		{
+			document.getElementById("sidebar2").style.display="block";
+			sidebarVisible = true;
+			document.documentElement.style.setProperty('--pasteArea-percent', '70%');
+			
+		}
+		else if(!show&&sidebarVisible)
+		{
+			document.getElementById("sidebar2").style.display="none";
+			sidebarVisible = false;
+			document.documentElement.style.setProperty('--pasteArea-percent', '100%');
+		}
+	}
+
 	</script>
 </head>
 
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
+	
+	 
+	 
 	 
 	<div class="wrapper">
 		<div class="box content" id="content">
@@ -3410,26 +3634,27 @@ This software uses the following plugins:
 		</div>
 		
 		
-		<div class="box sidebar2 fixed topright">
+		<div class="box sidebar2 topright" id="sidebar2">
 			<div class="wrapper3">
 				<div class="tab">
-					<div class="tab1">
+			<!--		<div class="tab1">
 						<button class="tablinks" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab')">[1] Dictionary</button>
 						<button class="tablinks" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab')">[2] Images</button>
 						<button class="tablinks" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab')">[3] Statistics ▼</button>
 						<button class="tablinks" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab')">Options</button>
 						<button class="tablinks" id="AboutTabButton" onclick="openTab(event, 'AboutTab')">About</button>
 					</div>
+			-->
 					<div class="tab2">
-						<button id="UnknownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'UnknownWordsTab')">[4] Unknown Words</button>
-						<button id="LearningWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'LearningWordsTab')">[5] Learning Words</button>
-						<button id="KnownWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'KnownWordsTab')">[6] Known Words</button>
-						<button id="AllWordsTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'AllWordsTab')">[7] All Words</button>
-						<button id="VocabularyTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'VocabularyTab')">[8] Vocabulary</button>
+						<button id="UnknownWordsTabButton" class="tablinks" onclick="openTab(event, 'UnknownWordsTab','tablinks')">Unknown Words [4]</button>
+						<button id="LearningWordsTabButton" class="tablinks"  onclick="openTab(event, 'LearningWordsTab','tablinks')">Learning Words [5]</button>
+						<button id="KnownWordsTabButton" class="tablinks"  onclick="openTab(event, 'KnownWordsTab','tablinks')">Known Words [6]</button>
+						<button id="AllWordsTabButton" class="tablinks"  onclick="openTab(event, 'AllWordsTab','tablinks')">All Words [7]</button>
+						<button id="VocabularyTabButton" class="tablinks"  onclick="openTab(event, 'VocabularyTab','tablinks')">Vocabulary [8]</button>
 					</div>
 					<div class="tab3">
-						<button id="CompareTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'CompareTab')">[9] TOPIK</button>
-						<button id="GraphTabButton" class="tablinks" style="display: none;" onclick="openTab(event, 'GraphTab')">[0] Graph - Current Text </button>
+						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK [9]</button>
+						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph - Current Text [0]</button>
 					</div>
 				</div>
 				<div class="tabContainer">
@@ -3490,10 +3715,10 @@ This software uses the following plugins:
 					
 					<div id="AboutTab" class="tabcontent">
 						<p>Korean Reader aims to make learning Korean from texts as effective as possible.</p>
-						<p>Paste a text in the text area. All new words start as "unknown". Click to mark them as "learning", and again to mark them as "known".</p>
-						<p>Unknown words may be unknown, difficult, or not important to remember for the timebeing.</p>
-						<p>Learning words are words where the meaning  can be guessed without confidence, and perhaps need their meaning confirmed with a dictionary lookup.</p>
-						<p>Known words are words where the meaning is known instantly with confidence.</p><br>
+						<p>Paste a text in the text area. All new words start as <b>unknown</b>. Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
+						<p><b>Unknown</b> words may be unknown, difficult, or not important to remember for the timebeing.</p>
+						<p><b>Learning</b> words are words where the meaning  can be guessed without confidence, and perhaps need their meaning confirmed with a dictionary lookup.</p>
+						<p><b>Known</b> words are words where the meaning is known instantly with confidence.</p><br>
 					
 					</div>
 					<div id="OptionsTab" class="tabcontent">
@@ -3635,7 +3860,35 @@ This software uses the following plugins:
 				</div>
 			</div>
 		</div>
-
+ <div class="topbar" id="topbar">
+		 <div class="empty"></div>
+		 <div class="topbarbutton" onclick="Reset()"><b>Clear [ESC]</b></div>
+		 <div class="empty"></div>
+		 <div class="logo"><b>Korean Reader</b></div>
+		 <div class="empty"></div>
+		 <div class="topbarbutton" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab','topbarbutton')"><b>Dictionary [1]</b></div>
+		 <div class="empty"></div>
+		 <div class="topbarbutton" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','topbarbutton')"><b>Images [2]</b></div>
+		 <div class="empty"></div>
+		 <div class="topbarbutton" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','topbarbutton')"><b>Statistics [3]</b></div>
+		 <div class="empty"></div>
+		 <div class="container" onclick="ToggleOpenMenu()">
+			<div class="empty"></div>	
+			<div class="bar"></div>
+			<div class="empty"></div>
+			<div class="bar"></div>
+			<div class="empty"></div>
+			<div class="bar"></div>
+			<div class="empty"></div>
+		 </div>
+		 <div class="empty"></div>
+		 
+		<div class="menu" id="menu">
+			<div class="topbarbutton" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab','topbarbutton')"><b>Options</b></div>
+			<div class="empty"></div>
+			<div class="topbarbutton" id="AboutTabButton" onclick="openTab(event, 'AboutTab','topbarbutton')"><b>About</b></div>
+		</div>
+	 </div>
 </body>
 
 
