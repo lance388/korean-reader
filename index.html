@@ -938,12 +938,10 @@ This software uses the following plugins:
 			clearTimeout(scrollTimeout);
 			clearTimeout(vocabularyTimeout);
 			clearTimeout(displaySortTimeout);
-			clearTimeout(displayComparisonTimeout);
 			clearTimeout(statisticsTimeout);
 			clearTimeout(highlightTimeout);
 			clearTimeout(unmarkJumpTimeout);
 			clearTimeout(calculateStatisticsTimeout);
-			clearTimeout(compareLoopTimeout);
 			SaveHTML("");
 			var container = document.getElementById ("pasteArea");
 			container.innerHTML="";
@@ -2742,7 +2740,6 @@ This software uses the following plugins:
 			clearTimeout(scrollTimeout);
 			clearTimeout(vocabularyTimeout);
 			clearTimeout(displaySortTimeout);
-			clearTimeout(displayComparisonTimeout);
 			clearTimeout(statisticsTimeout);
 			clearTimeout(highlightTimeout);	
 			clearTimeout(unmarkJumpTimeout);
@@ -3389,10 +3386,10 @@ This software uses the following plugins:
 			  if(last)
 			  {
 					allArrayCompare = knownArrayCompare.concat(learningArrayCompare).concat(unknownArrayCompare);
-					if(displayComparisonTimeout)
-					{	
-						clearTimeout(displayComparisonTimeout);
-					}
+					//if(displayComparisonTimeout)
+					//{	
+					//	clearTimeout(displayComparisonTimeout);
+					//}
 					displayComparisonTimeout = setTimeout(function() {
 					  DisplayComparison(listName,index,unknownArrayCompare,learningArrayCompare,knownArrayCompare,allArrayCompare);
 					}, 50);
