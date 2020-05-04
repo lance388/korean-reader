@@ -4,7 +4,9 @@ Author: Rohan Scott*/
 :root
 {
 	--document-bg: #0066CC;
+	--statbuttons-bg:#f1f1f1;
 	--primary-bg: #F5A9E1;
+	--editcell-bg:#fffeee;
 	--secondary-bg: #FFFF66;
 	--tertiary-bg: #99FF00;
 	--jump-bg: #00ffff;
@@ -64,7 +66,7 @@ html, body
 
 .editCell{
 	color: black;
-	background-color: #fffeee;
+	background-color: var(--editcell-bg);
 	padding: 0.2em;
 	min-height: 2em;
 	font-size:5em;
@@ -250,7 +252,7 @@ grid-area: tab;
   overflow: auto;
   margin:0;
 
-  background-color: #f1f1f1;
+  background-color: var(--statbuttons-bg);
   
 		display: grid;
         grid-template-columns: 100%;
