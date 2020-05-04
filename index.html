@@ -314,7 +314,7 @@ This software uses the following plugins:
 					select: true,
 					columns: [
 						{ title: "Word" },
-						{ title: "Learning/Known" }
+						{ title: "State" }
 					]
 				} );
 				
@@ -407,9 +407,11 @@ This software uses the following plugins:
 					"searching": false,
 					"info": false,
 					columns: [
-						{ title: "Total Vocabulary" },
+						{ title: "Unknown" },
+						{ title: "Learning" },
 						{ title: "Known" },
-						{ title: "Learning" }
+						{ title: "Total"},
+						{ title: "Total Learning + Known"}
 					]
 				} );
 				
@@ -2445,6 +2447,7 @@ This software uses the following plugins:
 			
 			var arrLearning = [];
 			var arrKnown = [];
+			var arrUnknown = [];
 			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
 	        var request = objectStore.getAll();
 	        request.onerror = function(event) {
@@ -2462,7 +2465,14 @@ This software uses the following plugins:
 						{
 							
 							var remainder = a%3;
-								if(remainder==1)
+							if(remainder==0)
+								{
+								arrUnknown.push(w);
+								
+								t.row.add( [
+								w,"Unknown"] );
+							}
+							else if(remainder==1)
 								{
 								arrLearning.push(w);
 								
@@ -2480,7 +2490,7 @@ This software uses the following plugins:
 				  }
 				  			tt.clear().draw();
 			tt.row.add( [
-	            arrKnown.length+arrLearning.length,arrKnown.length,arrLearning.length
+	            arrUnknown.length,arrLearning.length, arrKnown.length,arrUnknown.length+arrKnown.length+arrLearning.length, arrKnown.length+arrLearning.length
 	        ] );
 				  
 				  tt.draw();
@@ -3067,6 +3077,7 @@ This software uses the following plugins:
 						document.getElementById("enableHighlightingKnown").checked = false;
 						SetHighlightingKnown(false,true);
 						
+						
 					}
 					else
 					{
@@ -3100,17 +3111,17 @@ This software uses the following plugins:
 		if(activated)
 		{
 							var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
-				var request = objectStore.get("enableHighlightingKnown$");
+				var request = objectStore.get("highlightingknown$");
 				request.onerror = function(event) {
 				  alert("Unable to retrieve data from database!");
 				};
 				request.onsuccess = function(event) {          
 					if(request.result) {
-					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "enableHighlightingKnown$",appearances: 1});
+					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "highlightingknown$",appearances: 1});
 					}
 					else
 					{
-						addwordtodb("enableHighlightingKnown$",1);
+						addwordtodb("highlightingknown$",1);
 					}
 					
 				}
@@ -3122,28 +3133,20 @@ This software uses the following plugins:
 		else
 		{
 							var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
-				var request = objectStore.get("enableHighlightingKnown$");
+				var request = objectStore.get("highlightingknown$");
 				request.onerror = function(event) {
 				  alert("Unable to retrieve data from database!");
 				};
 				request.onsuccess = function(event) {          
 					if(request.result) {
-					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "enableHighlightingKnown$",appearances: 0});
+					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "highlightingknown$",appearances: 0});
 					}
 					else
 					{
-						addwordtodb("enableHighlightingKnown$",0);
+						addwordtodb("highlightingknown$",0);
 					}
-					//var tertiaryField = document.getElementById("fieldHC3");
-					//console.log(document.documentElement.style.getPropertyValue("--document-bg")); getComputedStyle(document.documentElement).getPropertyValue("--my-var");
 					var documentColour = getComputedStyle(document.documentElement).getPropertyValue('--editcell-bg')
-					//documentColour=documentColour.replace("#","");
-					//console.log(documentColour);
-					//tertiaryField.value = documentColour;
 					document.documentElement.style.setProperty('--tertiary-bg', documentColour);
-					//console.log(tertiaryField.value);
-					//HC3Submit();
-					//document.documentElement.style.setProperty(document.documentElement.style.getPropertyValue("--document-bg"), //colourTertiary);
 				}
 		}
 	}
@@ -3834,14 +3837,14 @@ function ChangeStartingMark()
 		var mySelect = document.getElementById('startingMarkOption');
 		var s = mySelect.value;
 		var sIndex = 0;
-		var toDelete = false;
+		//var toDelete = false;
 		
 		switch(s)
 		{
-						case "Unknown": sIndex = 0; if(sIndex!=startingMark){toDelete=true;} break;
-						case "Learning": sIndex = 1; if(sIndex!=startingMark){toDelete=true;}break;
-						case "Known": sIndex = 2; if(sIndex!=startingMark){toDelete=true;}break;
-						default: sIndex = 0; if(sIndex!=startingMark){toDelete=true;}
+						case "Unknown": sIndex = 0;  break;
+						case "Learning": sIndex = 1; break;
+						case "Known": sIndex = 2; break;
+						default: sIndex = 0; 
 		}
 		//console.log(sIndex +" "+startingMark);
 		
@@ -3867,10 +3870,10 @@ function ChangeStartingMark()
 				unknownWordsTabUpToDate = false;
 				learningWordsTabUpToDate = false;
 				knownWordsTabUpToDate = false;
-				if(toDelete)
-				{
-					DeleteAllVocabulary();
-				}
+				//if(toDelete)
+				//{
+				//	DeleteAllVocabulary();
+				//}
 				
 }
 	</script>
@@ -3971,7 +3974,7 @@ function ChangeStartingMark()
 					
 					<div id="AboutTab" class="tabcontent">
 						<p>Korean Reader aims to make learning Korean from texts as effective as possible.</p>
-						<p>Paste a text in the text area. All new words start as <b>unknown</b>. Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
+						<p>Paste a text in the text area. All new words start as <b>unknown</b> (unless you change this in options). Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
 						<p><b>Unknown</b> words may be unknown, difficult, or not important to remember for the timebeing.</p>
 						<p><b>Learning</b> words are words where the meaning  can be guessed without confidence, and perhaps need their meaning confirmed with a dictionary lookup.</p>
 						<p><b>Known</b> words are words where the meaning is known instantly with confidence.</p><br>
@@ -3982,7 +3985,7 @@ function ChangeStartingMark()
 						<label for="enableColours">Enable Highlighting</label>
 						<br><br>
 						<input type="checkbox" id="enableHighlightingKnown" name="enableHighlightingKnown" checked onclick="ToggleEnableHighlightingKnown();">
-						<label for="enableColours">Show Highlighting For Known Words</label>
+						<label for="enableHighlightingKnown">Show Highlighting For Known Words</label>
 						<br>
 						<br>Unknown Words Highlight Colour:
 						<input class="colourInputField" type="textField" type="text" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" id="fieldHC1" name="fieldHC1" onkeydown="if (event.keyCode == 13) { HC1Submit(); return false;}">
@@ -4007,7 +4010,7 @@ function ChangeStartingMark()
 								<option>Learning</option>
 								<option>Known</option>
 							</select>
-						</form> (<b>WARNING:</b> Vocabulary will be wiped!)
+						</form> (You may like to <b>clear vocabulary</b> after changing this)
 						
 						<hr>
 						<br>
@@ -4111,16 +4114,7 @@ function ChangeStartingMark()
 								<option>Polish</option>
 								<option>Finnish</option>
 								<option>Hungarian</option>
-							</select>
-							
-							
-
-   
-
-
-							
-							
-							
+							</select>	
 						</form>
 						<br>
 						<br>
