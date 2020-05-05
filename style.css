@@ -4,6 +4,7 @@ Author: Rohan Scott*/
 :root
 {
 	--document-bg: #0066CC;
+	--alt-document-bg: #2266CC;
 	--statbuttons-bg:#f1f1f1;
 	--primary-bg: #F5A9E1;
 	--editcell-bg:#fffeee;
@@ -480,7 +481,7 @@ canvas{
 	visibility:hidden;
 	width:20%;
 	height:10%;
-	background:var(--document-bg);
+	background:var(--alt-document-bg);
 	position:fixed;
 	top:5vh;
 	right:0;
