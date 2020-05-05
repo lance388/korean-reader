@@ -3974,10 +3974,17 @@ function ChangeStartingMark()
 					
 					<div id="AboutTab" class="tabcontent">
 						<p>Korean Reader aims to make learning Korean from texts as effective as possible.</p>
-						<p>Paste a text in the text area. All new words start as <b>unknown</b> (unless you change this in options). Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
+						<p>Paste a text in the text area. All new words start as <b>unknown</b> (unless you change this in settings). Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
 						<p><b>Unknown</b> words may be unknown, difficult, or not important to remember for the timebeing.</p>
 						<p><b>Learning</b> words are words where the meaning  can be guessed without confidence, and perhaps need their meaning confirmed with a dictionary lookup.</p>
 						<p><b>Known</b> words are words where the meaning is known instantly with confidence.</p><br>
+						
+						<br>
+						<br>
+						
+						<h2>FAQ</h2>
+						<h3>Can I mark an entire word family when I click on a word instead of marking each word individually?</h3>
+						I Would love to add this option in the future, however calculating the base word out of conjugated Korean words is a difficult technical task. I haven't been able to find a sufficiently reliable and free API to allow me to add this feature.
 					
 					</div>
 					<div id="OptionsTab" class="tabcontent">
@@ -4010,7 +4017,7 @@ function ChangeStartingMark()
 								<option>Learning</option>
 								<option>Known</option>
 							</select>
-						</form> (You may like to <b>clear vocabulary</b> after changing this)
+						</form> <br> Words already added to vocabulary list will not be altered with this setting. After changing this setting you may want to consider using <b>delete vocabulary - current text</b> or <b>delete vocabulary - all</b>.
 						
 						<hr>
 						<br>
@@ -4146,7 +4153,7 @@ function ChangeStartingMark()
 		 <div class="empty"></div>
 		 
 		<div class="menu" id="menu">
-			<div class="topbarbutton" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab','topbarbutton')"><b>Options</b></div>
+			<div class="topbarbutton" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab','topbarbutton')"><b>Settings</b></div>
 			<div class="empty"></div>
 			<div class="topbarbutton" id="AboutTabButton" onclick="openTab(event, 'AboutTab','topbarbutton')"><b>About</b></div>
 		</div>
