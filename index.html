@@ -1010,7 +1010,7 @@ This software uses the following plugins:
 						borderColor: 'rgba(153, 102, 255, .5)',
 						fill: true,
 				}, {
-					label: "My Vocabulary",
+					label: "Known Words",
 						data: accumulativeWords2,
 						backgroundColor: 'rgba(255, 159, 64, .5)',
 						borderColor: 'rgba(255, 159, 64, .5)',
@@ -1021,7 +1021,7 @@ This software uses the following plugins:
 					responsive: true,
 				title: {
 					display: true,
-					text: 'Total Words vs Unique Words'
+					text: 'Cumulative Word Total vs Unique Words'
 				},
 				tooltips: {
 						enabled: false,
@@ -2158,7 +2158,7 @@ This software uses the following plugins:
 	  }
 	  else
 	  {
-	  tablinks = document.getElementsByClassName('topbarbutton');
+	  tablinks = document.getElementsByClassName('toptabs');
 		for (i = 0; i < tablinks.length; i++)
 		{
 			
@@ -2715,7 +2715,7 @@ This software uses the following plugins:
 		}
 		if(openedTab=="GraphTab")
 		{
-			CreateGraph(allArray,knownArray.concat(learningArray));
+			CreateGraph(allArray,knownArray);
 		}
 		if(openedTab=="VocabularyTab")
 		{
@@ -3672,7 +3672,7 @@ This software uses the following plugins:
 	{
 		if(show)
 		{
-			var tablinks = document.getElementsByClassName('topbarbutton');
+			var tablinks = document.getElementsByClassName('toptabs');
 			
 			//if(openedTab!="OptionsTab"&&openedTab!="AboutTab")
 			//{
@@ -3761,20 +3761,26 @@ function InitialiseStartingMark()
 				};
 }
 
+function ButtonDeleteCurrentTextSubmit()
+{
+	var r = confirm("Delete current text's words from vocabulary?");
+	if (r == true) {
+	  DeleteCurrentTextVocabulary();
+	}
+}
+
+function ButtonDeleteAllSubmit()
+{
+
+	var r = confirm("Delete all words from vocabulary?");
+	if (r == true) {
+	  DeleteAllVocabulary();
+	}
+}
+
+
 function DeleteAllVocabulary()
 {
-	/*for(var i=0;i<selectedVocabulary.length;i++)
-					{
-						var transaction = db.transaction(["wordsdb"], "readwrite");
-						transaction.onerror = function(event) {
-							console.log('Transaction not opened due to error: ' + transaction.error);
-						  };
-						var objectStore = transaction.objectStore("wordsdb");
-						var objectStoreRequest = objectStore.delete(selectedVocabulary[i]);
-					}
-					*/
-					
-					//console.log("here1");
 			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
 	        var request = objectStore.getAll();
 	        request.onerror = function(event) {
@@ -3784,51 +3790,70 @@ function DeleteAllVocabulary()
 	        request.onsuccess = function(event) {  
 	          if(request.result) {
 			  		var req = request.result;
-					//console.log("here2 "+req.length);
 					for(var i=0;i<req.length;i++)
 					{
 						var w = req[i].word;
-						//var a = req[i].appearances;
-						//console.log(w);
 						if(!w.includes("$"))
 						{
 							selectedVocab.push(w);
-							//console.log('here2');
-							/*
-							var remainder = a%3;
-								if(remainder==1)
-								{
-								arrLearning.push(w);
-								
-								t.row.add( [
-								w,"Learning"] );
-							}
-							else if(remainder==2)
-							{
-								arrKnown.push(w);
-								
-								t.row.add( [
-								w,"Known"] );
-							}
-							*/
 						}
 				  }
 			  }
 			  
 					for(var i=0;i<selectedVocab.length;i++)
 					{
-					//console.log("deleting word "+selectedVocab[i]);
 						var transaction2 = db.transaction(["wordsdb"], "readwrite");
 						transaction2.onerror = function(event) {
-							//console.log('Transaction not opened due to error: ' + transaction2.error);
 						  };
 						var objectStore2 = transaction2.objectStore("wordsdb");
 						var objectStoreRequest2 = objectStore2.delete(selectedVocab[i]);
 					}
 					OnInput();					
-			  };
-									
-					
+			  };										
+}
+
+function DeleteCurrentTextVocabulary()
+{
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	        /*var request = objectStore.getAll();
+	        request.onerror = function(event) {
+	          alert("Unable to retrieve data from database!");
+	        };
+			var selectedVocab=[];
+	        request.onsuccess = function(event) {  
+	          if(request.result) {
+			  		var req = request.result;
+					for(var i=0;i<req.length;i++)
+					{
+						var w = req[i].word;
+						if(!w.includes("$"))
+						{
+							selectedVocab.push(w);
+						}
+				  }
+			  }
+			  */
+					var pasteArea = document.getElementById ("pasteArea");
+					var words = pasteArea.innerText;
+						words=words.replace(replaceCharacters," ");
+	
+						var wordArray = words.trim().split(/[, ]+/);
+						//for(var j=0;j<wordArray.length;j++)
+						//{
+						//	setCurrentColour(wordArray[j],toMark[i]);
+						//}
+			  
+			  
+					for(var i=0;i<wordArray.length;i++)
+					{
+						var transaction2 = db.transaction(["wordsdb"], "readwrite");
+						transaction2.onerror = function(event) {
+						  };
+						var objectStore2 = transaction2.objectStore("wordsdb");
+						var objectStoreRequest2 = objectStore2.delete(wordArray[i]);
+					}
+					OnInput();					
+			  //};										
 }
 
 
@@ -4011,15 +4036,6 @@ function ChangeStartingMark()
 						<button id="HC4SubmitButton" onclick="HC4Submit();">Enter</button>
 						<br><br>
 						<hr>
-						<form>All new words are initially marked: 
-							<select id="startingMarkOption" onchange="ChangeStartingMark();">
-								<option selected="selected">Unknown</option>
-								<option>Learning</option>
-								<option>Known</option>
-							</select>
-						</form> <br> Words already added to vocabulary list will not be altered with this setting. After changing this setting you may want to consider using <b>delete vocabulary - current text</b> or <b>delete vocabulary - all</b>.
-						
-						<hr>
 						<br>
 						<form>Font Size:
 							<select id="fontSizeOption" onchange="ChangeFont();">
@@ -4045,7 +4061,7 @@ function ChangeStartingMark()
 							<option selected="selected">Off</option>
 							<option>On</option>
 						</select>
-						</form>&nbsp(For large texts this will take a while)
+						</form>&nbsp(For large texts this will take a while).
 						<br><br>
 						<hr>
 						<br>
@@ -4124,22 +4140,37 @@ function ChangeStartingMark()
 							</select>	
 						</form>
 						<br>
+						<hr>
 						<br>
+						<form>All new words are initially marked: 
+							<select id="startingMarkOption" onchange="ChangeStartingMark();">
+								<option selected="selected">Unknown</option>
+								<option>Learning</option>
+								<option>Known</option>
+							</select>
+						</form> <br> Changes how words encountered for the first time will be initially marked. Words previously encountered will not be altered - to acheive this consider <b>clearing vocabulary</b>.
+						<br>
+						<hr>
+						<br>
+						<button id="deleteVocabularyCurrentTextButton" onclick="ButtonDeleteCurrentTextSubmit();">
+						Clear Vocabulary - Current Text</button><br>Deletes all words in vocabulary that are present in the current text.<br><br>
+						<button id="deleteVocabularyAllTextButton" onclick="ButtonDeleteAllSubmit();">Clear Vocabulary - All</button><br>Deletes all words from vocabulary.
+						<br><br>
 					</div>
 				</div>
 			</div>
 		</div>
  <div class="topbar" id="topbar">
 		 <div class="empty"></div>
-		 <div class="topbarbutton" onclick="Reset(true)"><b>Clear [ESC]</b></div>
+		 <div class="topbarbutton toptabs" onclick="Reset(true)"><b>Clear [ESC]</b></div>
 		 <div class="empty"></div>
 		 <div class="logo"><b>Korean Reader</b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab','topbarbutton')"><b>Dictionary [1]</b></div>
+		 <div class="topbarbutton toptabs" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab','toptabs')"><b>Dictionary [1]</b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','topbarbutton')"><b>Images [2]</b></div>
+		 <div class="topbarbutton toptabs" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','toptabs')"><b>Images [2]</b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','topbarbutton')"><b>Statistics [3]</b></div>
+		 <div class="topbarbutton toptabs" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','toptabs')"><b>Statistics [3]</b></div>
 		 <div class="empty"></div>
 		 <div class="container" onclick="ToggleOpenMenu()">
 			<div class="empty"></div>	
@@ -4153,9 +4184,9 @@ function ChangeStartingMark()
 		 <div class="empty"></div>
 		 
 		<div class="menu" id="menu">
-			<div class="topbarbutton" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab','topbarbutton')"><b>Settings</b></div>
+			<div class="topbarbutton2 toptabs" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab','toptabs')"><b>Settings</b></div>
 			<div class="empty"></div>
-			<div class="topbarbutton" id="AboutTabButton" onclick="openTab(event, 'AboutTab','topbarbutton')"><b>About</b></div>
+			<div class="topbarbutton2 toptabs" id="AboutTabButton" onclick="openTab(event, 'AboutTab','toptabs')"><b>About</b></div>
 		</div>
 	 </div>
 </body>
