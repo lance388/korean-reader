@@ -89,6 +89,7 @@ This software uses the following plugins:
 		var highlightTimeout;
 		var unmarkJumpTimeout;
 		var calculateStatisticsTimeout;
+		var achievementsTimeout;
 		var openedTab="";
 		var limiters;
 		var limitersHangeul; 
@@ -236,6 +237,7 @@ This software uses the following plugins:
 					"paging":         true,
 					"scrollCollapse": false,
 					"deferRender": true,
+					"iDisplayLength": 25,
 					"info": false,
 					"order": [[ 0, "desc" ]],
 					select: 'single',
@@ -255,6 +257,7 @@ This software uses the following plugins:
 					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
+					"iDisplayLength": 25,
 					"order": [[ 0, "desc" ]],
 					select: 'single',
 					columns: [
@@ -273,6 +276,7 @@ This software uses the following plugins:
 					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
+					"iDisplayLength": 25,
 					"order": [[ 0, "desc" ]],
 					select: 'single',
 					columns: [
@@ -291,6 +295,7 @@ This software uses the following plugins:
 					"scrollCollapse": false,
 					"deferRender": true,
 					"info": false,
+					"iDisplayLength": 25,
 					"order": [[ 0, "desc" ]],
 					select: 'single',
 					columns: [
@@ -305,7 +310,7 @@ This software uses the following plugins:
 				} );
 				
 							var table5 = $('#vocabularyDataTable').DataTable( {
-				    "scrollY":        300,
+				    "scrollY":        400,
 					"scrollCollapse": false,
 					"paging":         false,
 					"deferRender": true,
@@ -403,7 +408,7 @@ This software uses the following plugins:
 					"paging":         false,
 					"targets": 'no-sort',
 					"bSort": false,
-					"order": [],
+					"order": [[ 0, "desc" ]],
 					"searching": false,
 					"info": false,
 					columns: [
@@ -412,6 +417,21 @@ This software uses the following plugins:
 						{ title: "Known" },
 						{ title: "Total"},
 						{ title: "Total Learning + Known"}
+					]
+				} );
+				
+						var table12 = $('#achievementsDataTable').DataTable( {
+				    "scrollY":        300,
+					"scrollCollapse": false,
+					"paging":         false,
+					"searching": false,
+					"deferRender": true,
+					"info": false,
+					"order": [[ 0, "desc" ]],
+					select: true,
+					columns: [
+						{ title: "Known Vocabulary" },
+						{ title: "Date Achieved" }
 					]
 				} );
 				
@@ -619,7 +639,6 @@ This software uses the following plugins:
 			  InitialiseDictLanguage();
 			  InitialiseHighlightingKnown();
 			  
-			  
 			  var pasteArea = document.getElementById ("pasteArea");
 			  pasteArea.innerText = "";	
 			  LoadHTML();
@@ -656,7 +675,7 @@ This software uses the following plugins:
 			case 104: if(openedTab!="OptionsTab"){document.getElementById("VocabularyTabButton").click(); e.preventDefault();} break;
 			case 105: if(openedTab!="OptionsTab"){document.getElementById("CompareTabButton").click(); e.preventDefault();} break;
 			case 96: if(openedTab!="OptionsTab"){document.getElementById("GraphTabButton").click(); e.preventDefault();} break;
-			
+			case 173: if(openedTab!="OptionsTab"){document.getElementById("AchievementsTabButton").click(); e.preventDefault();} break;
 			
 			case 46: DeleteVocabulary(); break;
 			case 8: DeleteVocabulary(); break;
@@ -1489,7 +1508,7 @@ This software uses the following plugins:
 			
 			if (items.length > 0) {
 			  scrollTo({
-				top: items[jumpAttempts].offsetTop,
+				top: items[jumpAttempts].offsetTop-(window.innerHeight*.1),
 			behavior: 'auto'
 			  });
 			}
@@ -1507,7 +1526,7 @@ This software uses the following plugins:
 						var divTop = divs[i].offsetTop;
 						var divBot = divTop+divs[i].offsetHeight;
 	
-						if(divBot>pageTop-800&&divTop<pageBot+800)
+						if(divBot>pageTop-300&&divTop<pageBot+300)
 						{
 							if(divs[i].marked)
 							{	
@@ -2090,9 +2109,9 @@ This software uses the following plugins:
 					myChart.destroy();
 				}
 				
-			document.getElementById("UnknownWordsTabButton").innerText="Unknown Words [4]";
-			document.getElementById("LearningWordsTabButton").innerText="Learning Words [5]";
-			document.getElementById("KnownWordsTabButton").innerText="Known Words [6]";
+			document.getElementById("UnknownWordsTabButton").innerHTML='Unknown Words <sup>[4]</sup>';
+			document.getElementById("LearningWordsTabButton").innerHTML="Learning Words <sup>[5]</sup>";
+			document.getElementById("KnownWordsTabButton").innerHTML="Known Words <sup>[6]</sup>";
 	}
 	
 	function openTab(evt, tabName, tabLink) {
@@ -2246,6 +2265,10 @@ This software uses the following plugins:
 	  {
 		imagesLookup(pendingLookup);
 	  }
+	  else if(tabName=="AchievementsTab")
+	  {
+		AsyncCalculateStatistics();
+	  }
 	  
 	  switch(tabName)
 	  {
@@ -2256,6 +2279,7 @@ This software uses the following plugins:
 			case "VocabularyTab": lastUsedStatsTab = "VocabularyTab"; break;
 			case "CompareTab": lastUsedStatsTab = "CompareTab"; break;
 			case "GraphTab": lastUsedStatsTab = "GraphTab"; break;
+			case "AchievementsTab": lastUsedStatsTab = "AchievementsTab"; break;
 		}
 	  
 	  
@@ -2518,9 +2542,6 @@ This software uses the following plugins:
 	
 	function DisplaySort()
 	{
-	
-	
-	
 		const numberOfLists = 2;
 	
 		var topikList = [];
@@ -2602,9 +2623,9 @@ This software uses the following plugins:
 		var percentUniqueLearning = Math.round(((learningArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 		var percentUniqueKnown = Math.round(((knownArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 	
-		document.getElementById("UnknownWordsTabButton").innerText="Unknown Words ("+percentUnknown+"%) [4]";
-		document.getElementById("LearningWordsTabButton").innerText="Learning Words ("+percentLearning+"%) [5]";
-		document.getElementById("KnownWordsTabButton").innerText="Known Words ("+percentKnown+"%) [6]";
+		document.getElementById("UnknownWordsTabButton").innerHTML="Unknown Words ("+percentUnknown+"%) <sup>[4]</sup>";
+		document.getElementById("LearningWordsTabButton").innerHTML="Learning Words ("+percentLearning+"%) <sup>[5]</sup>";
+		document.getElementById("KnownWordsTabButton").innerHTML="Known Words ("+percentKnown+"%) <sup>[6]</sup>";
 		
 		if((lastUsedStatsTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate)||(openedTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate))
 		{
@@ -2726,6 +2747,28 @@ This software uses the following plugins:
 						vocabularyTimeout = setTimeout(function() {
 							CalculateVocabulary();
 						}, 200);
+		}
+		if(openedTab=="AchievementsTab")
+		{
+		
+			if(achievementsTimeout)
+			{	
+				clearTimeout(achievementsTimeout);
+			}
+						achievementsTimeout = setTimeout(function() {
+							CountAndDrawAchievements();
+						}, 500);
+			
+		}
+		else
+		{
+			if(achievementsTimeout)
+			{	
+				clearTimeout(achievementsTimeout);
+			}
+						achievementsTimeout = setTimeout(function() {
+							CountAndDrawAchievements();
+						}, 10000);
 		}
 	}
 	
@@ -3894,13 +3937,150 @@ function ChangeStartingMark()
 				startingMark = sIndex;
 				unknownWordsTabUpToDate = false;
 				learningWordsTabUpToDate = false;
-				knownWordsTabUpToDate = false;
-				//if(toDelete)
-				//{
-				//	DeleteAllVocabulary();
-				//}
-				
+				knownWordsTabUpToDate = false;	
 }
+
+function CountAndDrawAchievements()
+{
+	var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	        var request = objectStore.getAll();
+	        request.onerror = function(event) {
+	          alert("Unable to retrieve data from database!");
+	        };
+			var count=0;
+	        request.onsuccess = function(event) {  
+	          if(request.result) {
+			  		var reqe = request.result;
+					for(var i=0;i<reqe.length;i++)
+					{
+						var w = reqe[i].word;
+						var a = reqe[i].appearances;
+						
+						if(!w.includes("$"))
+						{
+							var remainder = a%3;
+							if(remainder==2)
+							{
+								count++;
+								
+							}
+						}
+				  }
+				  DrawAchievements(count);
+			  }
+			};
+			
+}
+
+function DrawAchievements(count)
+{
+		var awardEvery = 1000;
+
+		var tttt = $('#achievementsDataTable').DataTable();
+		if(openedTab=="AchievementsTab")
+		{
+			//tttt.draw();
+			tttt.clear().draw();
+		}
+		
+		var achievementsArray;
+
+		var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("achievements$");
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+				request.onsuccess = function(event) 
+				{
+					if(request.result) {
+						achievementsArray = request.result.appearances;
+					}
+					else
+					{
+						achievementsArray=[];
+					}
+					
+					
+					count = count/awardEvery;
+					//console.log(count);
+					for(var i=achievementsArray.length;i<count;i++)
+					{
+						var d = new Date();
+						achievementsArray.push(d);
+					}
+					
+					
+					for(var i=1;i<achievementsArray.length;i++)
+					{
+						tttt.row.add( [
+							i*awardEvery, DateFormat(achievementsArray[i])
+						] );
+					}
+					
+				if(request.result) {
+				request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "achievements$",appearances: achievementsArray});
+					}
+					else
+					{
+						//console.log("adding to db "+sIndex);
+						addwordtodb("achievements$",achievementsArray);
+					}
+					if(openedTab=="AchievementsTab")
+					{
+						tttt.draw();
+					}  
+					
+				};
+}
+
+function DateFormat(d)
+{
+	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	var minutes = d.getMinutes();
+	if(minutes<10)
+	{
+		minutes = "0"+minutes;
+	}
+	var string = d.getHours()+":"+minutes+"   "+months[d.getMonth()] + " "+d.getDate()+" "+d.getFullYear();
+	return string;
+}
+
+function ButtonDeleteAchievementsSubmit()
+{
+	var r = confirm("Delete all achievements?");
+	if (r == true) {
+	  DeleteAllAchievements();
+	}
+	
+}
+
+function DeleteAllAchievements()
+{
+	clearTimeout(achievementsTimeout);
+
+
+	var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("achievements$");
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+				var emptyArray = [];
+				request.onsuccess = function(event) 
+				{
+				if(request.result) {
+				request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "achievements$",appearances: emptyArray});
+					}
+					else
+					{
+						//console.log("adding to db "+sIndex);
+						addwordtodb("achievements$",emptyArray);
+					}
+
+	var tttt = $('#achievementsDataTable').DataTable();
+	tttt.clear().draw();
+	};
+}
+
 	</script>
 </head>
 
@@ -3930,15 +4110,16 @@ function ChangeStartingMark()
 					</div>
 			-->
 					<div class="tab2">
-						<button id="UnknownWordsTabButton" class="tablinks" onclick="openTab(event, 'UnknownWordsTab','tablinks')">Unknown Words [4]</button>
-						<button id="LearningWordsTabButton" class="tablinks"  onclick="openTab(event, 'LearningWordsTab','tablinks')">Learning Words [5]</button>
-						<button id="KnownWordsTabButton" class="tablinks"  onclick="openTab(event, 'KnownWordsTab','tablinks')">Known Words [6]</button>
-						<button id="AllWordsTabButton" class="tablinks"  onclick="openTab(event, 'AllWordsTab','tablinks')">All Words [7]</button>
-						<button id="VocabularyTabButton" class="tablinks"  onclick="openTab(event, 'VocabularyTab','tablinks')">Vocabulary [8]</button>
+						<button id="UnknownWordsTabButton" class="tablinks" onclick="openTab(event, 'UnknownWordsTab','tablinks')">Unknown Words <sup>[4]</sup></button>
+						<button id="LearningWordsTabButton" class="tablinks"  onclick="openTab(event, 'LearningWordsTab','tablinks')">Learning Words <sup>[5]</sup></button>
+						<button id="KnownWordsTabButton" class="tablinks"  onclick="openTab(event, 'KnownWordsTab','tablinks')">Known Words <sup>[6]</sup></button>
+						<button id="AllWordsTabButton" class="tablinks"  onclick="openTab(event, 'AllWordsTab','tablinks')">All Words <sup>[7]</sup></button>
+						<button id="VocabularyTabButton" class="tablinks"  onclick="openTab(event, 'VocabularyTab','tablinks')">Vocabulary <sup>[8]</sup></button>
 					</div>
 					<div class="tab3">
-						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK [9]</button>
-						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph - Current Text [0]</button>
+						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK <sup>[9]</sup></button>
+						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph - Current Text <sup>[0]</sup></button>
+						<button id="AchievementsTabButton" class="tablinks" onclick="openTab(event, 'AchievementsTab','tablinks')">Achievements <sup>[-]</sup></button>
 					</div>
 				</div>
 				<div class="tabContainer">
@@ -3987,6 +4168,15 @@ function ChangeStartingMark()
 						<table id="vocabularyDataTable" class="cell-border compact hover" width="100%"></table>
 						<br>
 						<table id="vocabularyDataTableSummary" class="cell-border compact" width="100%"></table>
+						
+						<br>
+						<br>
+						<hr><br>
+						<button id="deleteVocabularyCurrentTextButton" onclick="ButtonDeleteCurrentTextSubmit();">
+						Clear Vocabulary - Current Text</button><br>Deletes all words that are present in the current text from vocabulary.<br><br>
+						<button id="deleteVocabularyAllTextButton" onclick="ButtonDeleteAllSubmit();">Clear Vocabulary - All</button><br>Deletes all words from vocabulary.
+						<br>
+						
 					</div>
 					<div id="CompareTab" class="tabcontent">
 						<h4>See how one's vocabulary compares with past TOPIK papers.</h4>
@@ -3995,6 +4185,14 @@ function ChangeStartingMark()
 					
 					<div id="GraphTab" class="tabcontent">
 						<canvas id="myChart" width="100%" height="100%"></canvas>
+					</div>
+					
+					<div id="AchievementsTab" class="tabcontent">
+						<h4>List of vocabulary milestones.</h4>
+						<table id="achievementsDataTable" class="cell-border compact" width="100%"></table>
+						<br><br>
+						<br>
+						<button id="deleteAchievementsButton" onclick="ButtonDeleteAchievementsSubmit();">Clear Achievements</button><br><br>
 					</div>
 					
 					<div id="AboutTab" class="tabcontent">
@@ -4009,7 +4207,7 @@ function ChangeStartingMark()
 						
 						<h2>FAQ</h2>
 						<h3>Can I mark an entire word family when I click on a word instead of marking each word individually?</h3>
-						I Would love to add this option in the future, however calculating the base word out of conjugated Korean words is a difficult technical task. I haven't been able to find a sufficiently reliable and free API to allow me to add this feature.
+						No, I am still trying to find a sufficiently accurate API to allow me to add this feature.
 					
 					</div>
 					<div id="OptionsTab" class="tabcontent">
@@ -4153,24 +4351,25 @@ function ChangeStartingMark()
 						<hr>
 						<br>
 						<button id="deleteVocabularyCurrentTextButton" onclick="ButtonDeleteCurrentTextSubmit();">
-						Clear Vocabulary - Current Text</button><br>Deletes all words in vocabulary that are present in the current text.<br><br>
+						Clear Vocabulary - Current Text</button><br>Deletes all words that are present in the current text from vocabulary.<br><br>
 						<button id="deleteVocabularyAllTextButton" onclick="ButtonDeleteAllSubmit();">Clear Vocabulary - All</button><br>Deletes all words from vocabulary.
 						<br><br>
+						<button id="deleteAchievementsButton" onclick="ButtonDeleteAchievementsSubmit();">Clear Achievements</button><br><br>
 					</div>
 				</div>
 			</div>
 		</div>
  <div class="topbar" id="topbar">
 		 <div class="empty"></div>
-		 <div class="topbarbutton toptabs" onclick="Reset(true)"><b>Clear [ESC]</b></div>
+		 <div class="topbarbutton toptabs" onclick="Reset(true)"><b>Clear <sup>[ESC]</sup></b></div>
 		 <div class="empty"></div>
 		 <div class="logo"><b>Korean Reader</b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton toptabs" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab','toptabs')"><b>Dictionary [1]</b></div>
+		 <div class="topbarbutton toptabs" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab','toptabs')"><b>Dictionary <sup>[1]</sup></b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton toptabs" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','toptabs')"><b>Images [2]</b></div>
+		 <div class="topbarbutton toptabs" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','toptabs')"><b>Images <sup>[2]</sup></b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton toptabs" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','toptabs')"><b>Statistics [3]</b></div>
+		 <div class="topbarbutton toptabs" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','toptabs')"><b>Statistics <sup>[3]</sup></b></div>
 		 <div class="empty"></div>
 		 <div class="container" onclick="ToggleOpenMenu()">
 			<div class="empty"></div>	
