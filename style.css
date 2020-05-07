@@ -477,6 +477,8 @@ canvas{
         "empty" "bar" "empty"  "bar" "empty"  "bar" "empty";
 }
 
+
+
 .container:hover
 {
 	background-color:rgba(255, 255, 255, 0.5);
@@ -516,7 +518,43 @@ canvas{
         "topbarbutton2"
 		"empty"
 		"topbarbutton2";
+}
+
+	.topbarbutton2
+	{
+		font-size:1.2em;
+	}
+
+@media only screen and (max-width: 900px)
+{
+	.menu
+	{
+		visibility:hidden;
+		width:50%;
+		height:15%;
+		padding:.2em;
+		padding-top:.5em;
+		padding-bottom:.5em;
+		background:var(--alt-document-bg);
+		position:fixed;
+		top:5vh;
+		right:.5em;
+		margin: 0;
+		
+				display: grid;
+			grid-template-columns: 100%;
+			grid-template-rows: 48% 4% 48%;
+			grid-template-areas:
+			"topbarbutton2"
+			"empty"
+			"topbarbutton2";
+		
+	}
 	
+	.topbarbutton2
+	{
+		font-size:2em;
+	}
 }
 
 		
