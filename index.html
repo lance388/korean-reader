@@ -198,7 +198,7 @@ This software uses the following plugins:
 			voiceVolume = 1;
 			enableVoice=false;
 			voiceSpeed = 1;
-			fontSize = 6;
+			fontSize = fontSizeDefault;
 			lookingUp="";
 			convertedHTML="";
 			all_marked = false;
@@ -633,6 +633,7 @@ This software uses the following plugins:
 			};
 			request.onsuccess = function() {
 			  db = request.result;
+			  OnResize();
 			  InitialiseColourInputField();
 			  InitialiseStartingMark();
 			  InitialiseHighlighting();
@@ -642,12 +643,11 @@ This software uses the following plugins:
 			  InitialiseFontType(0);
 			  InitialiseDictLanguage();
 			  InitialiseHighlightingKnown();
-			  
+			  InitialiseFontSize();
 			  var pasteArea = document.getElementById ("pasteArea");
 			  pasteArea.innerText = "";	
 			  LoadHTML();
-			  OnResize();
-			  InitialiseFontSize();
+			  
 			  initialisationComplete = true;
 			  pasteArea.contentEditable = true;
 			document.getElementById("DictionaryTabButton").click();
@@ -2197,20 +2197,10 @@ This software uses the following plugins:
 			{
 				tablinks[i].className+= " active";
 			}
-			
-			//console.log(tablinks[i]);
-			//tablinks[i].className = tablinks[i].className.replace(" active", "");
 		}
 	  
 		document.documentElement.style.setProperty('--tab-top-percent', '15%');
 		document.documentElement.style.setProperty('--tab-bot-percent', '85%');
-		/*document.getElementById("UnknownWordsTabButton").style.display="block";
-		document.getElementById("KnownWordsTabButton").style.display="block";
-		document.getElementById("AllWordsTabButton").style.display="block";
-		document.getElementById("LearningWordsTabButton").style.display="block";
-			document.getElementById("VocabularyTabButton").style.display="block";
-		document.getElementById("CompareTabButton").style.display="block";
-		document.getElementById("GraphTabButton").style.display="block";*/
 	  }
 	  
 	  if(tabName=="StatisticsTab")
@@ -3019,7 +3009,6 @@ This software uses the following plugins:
 				}
 				var pasteArea = document.getElementById ("pasteArea");
 			pasteArea.style.fontSize = fontSize+"em";
-				//OnInput();
 	}
 	
 	function ChangeRomanisation()
@@ -3093,8 +3082,7 @@ This software uses the following plugins:
 					
 				request.onsuccess = function(event) {
 				if(request.result) {
-						var a = request.result.appearances;
-											
+						var a = request.result.appearances;				
 						if(a>0) 
 						{
 							fontSize = a;
