@@ -16,7 +16,7 @@ Author: Rohan Scott*/
 	--tab-bot-percent: 100%;
 	--pasteArea-percent: 70%;
 	--sidebar2-percent: 30%;
-	--sidebar2-padding: 1em;
+	--sidebar2-padding: 0.1em;
 }
 
 mark{
