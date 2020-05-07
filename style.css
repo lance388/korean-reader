@@ -16,8 +16,8 @@ Author: Rohan Scott*/
 	--tab-bot-percent: 100%;
 	--pasteArea-percent: 70%;
 	--sidebar2-percent: 30%;
-	--sidebar2-padding: 0.1em;
-	--tabcontent-padding:1em;
+	--sidebar2-padding: 0;
+	--tabcontent-padding:1vh;
 }
 
 mark{
@@ -48,8 +48,8 @@ div:empty::before {
   color: grey;
 }
 
-th { font-size: 1em; }
-td { font-size: 1em; }
+th { font-size: 1vw; }
+td { font-size: 1vw; }
 
 th {
   text-align: left;
@@ -58,7 +58,7 @@ th {
 iframe
 {
 	background-color: #fff;
-	border:0.1em;
+	border:0.1vh;
 	width:100%;
 	height: 100%;
 }
@@ -75,9 +75,9 @@ html, body
 .editCell{
 	color: black;
 	background-color: var(--editcell-bg);
-	padding: 0.2em;
+	padding: 0.5vh;
 	min-height: 2em;
-	font-size:5em;
+	font-size:3em;
 	white-space: pre-wrap;
 	word-break: keep-all;
 	font-family: var(--font-type);
@@ -154,14 +154,14 @@ html, body
   background-color: var(--document-bg);
   margin-top:5vh;
   padding-top: 0;
-  padding-bottom: 0.4em;
-  padding-left: 0.4em;
-  padding-right: 0.4em;
+  padding-bottom: 0.4vh;
+  padding-left: 0.4vh;
+  padding-right: 0.4vh;
 }
 
 p
 {
-	font-size: 1.2em;
+	font-size: 1.2vw;
 }
 
 a {
@@ -251,7 +251,7 @@ grid-area: tab;
   border: 0.05vw solid #404040;
   outline: none;
   cursor: pointer;
-  padding: .6em .8em;
+  padding: .6vh .8vh;
   transition: 0.3s;
   border-radius: 0.2em;
 }
@@ -503,13 +503,13 @@ canvas{
 	visibility:hidden;
 	width:20%;
 	height:8%;
-	padding:.2em;
-	padding-top:.5em;
-	padding-bottom:.5em;
+	padding:.5vh;
+	padding-top:.5vh;
+	padding-bottom:.5vh;
 	background:var(--alt-document-bg);
 	position:fixed;
 	top:5vh;
-	right:.5em;
+	right:.5vh;
 	margin: 0;
 	
 			display: grid;
@@ -523,7 +523,7 @@ canvas{
 
 	.topbarbutton2
 	{
-		font-size:1.2em;
+		font-size:1vw;
 	}
 
 @media only screen and (max-width: 900px)
@@ -533,13 +533,13 @@ canvas{
 		visibility:hidden;
 		width:50%;
 		height:15%;
-		padding:.2em;
-		padding-top:.5em;
-		padding-bottom:.5em;
+		padding:.2vh;
+		padding-top:.5vh;
+		padding-bottom:.5vh;
 		background:var(--alt-document-bg);
 		position:fixed;
 		top:5vh;
-		right:.5em;
+		right:.5vh;
 		margin: 0;
 		
 				display: grid;
@@ -554,7 +554,7 @@ canvas{
 	
 	.topbarbutton2
 	{
-		font-size:2em;
+		font-size:1vw;
 	}
 }
 

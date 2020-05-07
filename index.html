@@ -3702,15 +3702,12 @@ This software uses the following plugins:
 	
 	function OnResize()
 	{
-		var c = document.getElementsByClassName("wrapper3");
-		c[0].style.height = (window.innerHeight-(window.innerHeight*.05)-38)+"px";
-		
 		if (/Mobi/.test(navigator.userAgent)||window.innerWidth<900)
 		{
 			mobileMode =true;
-			document.documentElement.style.setProperty('--pasteArea-percent', '60%');
+			document.documentElement.style.setProperty('--pasteArea-percent', '59%');
 			document.documentElement.style.setProperty('--sidebar2-percent', '40%');
-			document.documentElement.style.setProperty('--tabcontent-padding', '.1em');
+			//document.documentElement.style.setProperty('--tabcontent-padding', '.1vh');
 			
 		}
 		else
@@ -3718,8 +3715,20 @@ This software uses the following plugins:
 			mobileMode =false;
 			document.documentElement.style.setProperty('--sidebar2-percent', '30%');
 			SetCurrentSidebar();
-			document.documentElement.style.setProperty('--tabcontent-padding', '1em');
+			//document.documentElement.style.setProperty('--tabcontent-padding', '.1vh');
 		}
+		
+		var c = document.getElementsByClassName("wrapper3");
+		//var t = document.getElementById("topbar");
+		//c[0].style.height = (window.innerHeight-(window.innerHeight*.09))+"px";
+		//c[0].style.height = 100+"%";
+		//console.log(t.innerHeight);
+		//console.log($("topbar").height());
+		//c[0].style.height = window.innerHeight;
+		//c[0].style.height = window.outerHeight;
+		//console.log($(window).height());
+		//c[0].style.height = $(window).height()-32+"px";
+		c[0].style.height = $(window).height()-($(window).height()*.075)+"px";
 	}
 	
 	function ToggleOpenMenu()
