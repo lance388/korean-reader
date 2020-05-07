@@ -1922,7 +1922,7 @@ This software uses the following plugins:
 			var loc;
 			
 			var langCode = ConvertLangCode(dictionaryLanguage);
-			if(langCode.length==2)
+			if(langCode.length==2&&!mobileMode)
 			{
 				loc = "https://"+langCode+".dict.naver.com/#/mini/search?query="+text;
 			}
