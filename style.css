@@ -409,7 +409,7 @@ canvas{
   margin: 0;
   width:100%;
   height:100%;
-  font-size:2vh;
+  font-size:.7vw;
   text-align:center;
   display: flex;
   justify-content: center;
@@ -435,7 +435,7 @@ canvas{
   margin: 0;
   width:100%;
   height:100%;
-  font-size:2vh;
+  font-size:.7vw;
   text-align:center;
   display: flex;
   justify-content: center;
