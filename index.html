@@ -636,7 +636,7 @@ This software uses the following plugins:
 			  InitialiseColourInputField();
 			  InitialiseStartingMark();
 			  InitialiseHighlighting();
-			  InitialiseFontSize();
+			  
 			  InitialiseRomanisation();
 			  InitialiseVoice();
 			  InitialiseFontType(0);
@@ -647,6 +647,7 @@ This software uses the following plugins:
 			  pasteArea.innerText = "";	
 			  LoadHTML();
 			  OnResize();
+			  InitialiseFontSize();
 			  initialisationComplete = true;
 			  pasteArea.contentEditable = true;
 			document.getElementById("DictionaryTabButton").click();
@@ -3100,12 +3101,26 @@ This software uses the following plugins:
 						}
 						else
 						{
-							fontSize = fontSizeDefault;
+							if(mobileMode)
+							{
+								fontSize = 1;
+							}
+							else
+							{
+								fontSize = fontSizeDefault;
+							}
 						}
 					}
 					else
 					{
-						fontSize = fontSizeDefault;
+						if(mobileMode)
+							{
+								fontSize = 1;
+							}
+							else
+							{
+								fontSize = fontSizeDefault;
+							}
 					}
 					var dropDown = document.getElementById("fontSizeOption");
 					dropDown.value = fontSize;
@@ -3705,11 +3720,13 @@ This software uses the following plugins:
 			mobileMode =true;
 			document.documentElement.style.setProperty('--pasteArea-percent', '50%');
 			document.documentElement.style.setProperty('--sidebar2-percent', '50%');
+			document.documentElement.style.setProperty('--sidebar2-padding', '2px');
 		}
 		else
 		{
 			mobileMode =false;
 			SetCurrentSidebar();
+			document.documentElement.style.setProperty('--sidebar2-padding', '1em');
 		}
 	}
 	
@@ -4346,13 +4363,21 @@ function FocusSidebar2()
 						<br>
 						<form>Font Size:
 							<select id="fontSizeOption" onchange="ChangeFont();">
+								<option>0.5</option>
 								<option>1</option>
+								<option>1.5</option>
 								<option>2</option>
+								<option>2.5</option>
 								<option>3</option>
+								<option>3.5</option>
 								<option>4</option>
+								<option>4.5</option>
 								<option>5</option>
+								<option>5.5</option>
 								<option selected="selected">6</option>
+								<option>6.5</option>
 								<option>7</option>
+								<option>7.5</option>
 								<option>8</option>
 							</select>
 						</form>
