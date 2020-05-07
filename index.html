@@ -3708,13 +3708,17 @@ This software uses the following plugins:
 		if (/Mobi/.test(navigator.userAgent)||window.innerWidth<900)
 		{
 			mobileMode =true;
-			document.documentElement.style.setProperty('--pasteArea-percent', '50%');
-			document.documentElement.style.setProperty('--sidebar2-percent', '50%');
+			document.documentElement.style.setProperty('--pasteArea-percent', '60%');
+			document.documentElement.style.setProperty('--sidebar2-percent', '40%');
+			document.documentElement.style.setProperty('--tabcontent-padding', '.1em');
+			
 		}
 		else
 		{
 			mobileMode =false;
+			document.documentElement.style.setProperty('--sidebar2-percent', '30%');
 			SetCurrentSidebar();
+			document.documentElement.style.setProperty('--tabcontent-padding', '1em');
 		}
 	}
 	
@@ -3782,15 +3786,15 @@ This software uses the following plugins:
 				sidebarVisible = true;
 			
 				document.documentElement.style.setProperty('--pasteArea-percent', '70%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '30%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '30%');
 			}
 			else
 			{
 				document.getElementById("sidebar2").style.display="block";
 				sidebarVisible = true;
 			
-				document.documentElement.style.setProperty('--pasteArea-percent', '50%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '50%');
+				document.documentElement.style.setProperty('--pasteArea-percent', '60%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '40%');
 			}
 			
 		}
@@ -3802,7 +3806,7 @@ This software uses the following plugins:
 				sidebarVisible = false;
 			
 				document.documentElement.style.setProperty('--pasteArea-percent', '100%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '30%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '30%');
 			}
 			else
 			{
@@ -3810,7 +3814,7 @@ This software uses the following plugins:
 				sidebarVisible = false;
 			
 				document.documentElement.style.setProperty('--pasteArea-percent', '100%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '50%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '40%');
 			}
 		}
 	}
@@ -3826,15 +3830,15 @@ This software uses the following plugins:
 				sidebarVisible = true;
 			
 				document.documentElement.style.setProperty('--pasteArea-percent', '70%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '30%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '30%');
 			}
 			else
 			{
 				document.getElementById("sidebar2").style.display="block";
 				sidebarVisible = true;
 			
-				document.documentElement.style.setProperty('--pasteArea-percent', '30%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '70%');
+				document.documentElement.style.setProperty('--pasteArea-percent', '60%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '40%');
 			}
 			
 		}
@@ -3846,7 +3850,7 @@ This software uses the following plugins:
 				sidebarVisible = false;
 			
 				document.documentElement.style.setProperty('--pasteArea-percent', '100%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '30%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '30%');
 			}
 			else
 			{
@@ -3854,7 +3858,7 @@ This software uses the following plugins:
 				sidebarVisible = false;
 			
 				document.documentElement.style.setProperty('--pasteArea-percent', '100%');
-				document.documentElement.style.setProperty('--sidebar2-percent', '70%');
+				//document.documentElement.style.setProperty('--sidebar2-percent', '40%');
 			}
 		}
 	}
@@ -4174,24 +4178,6 @@ function DeleteAllAchievements()
 	};
 }
 
-function FocusPasteArea()
-{
-	if (mobileMode)
-	{
-		document.documentElement.style.setProperty('--pasteArea-percent', '50%');
-		document.documentElement.style.setProperty('--sidebar2-percent', '50%');
-	}
-}
-
-function FocusSidebar2()
-{
-	if (mobileMode)
-	{
-		document.documentElement.style.setProperty('--pasteArea-percent', '50%');
-		document.documentElement.style.setProperty('--sidebar2-percent', '50%');
-	}
-}
-
 	</script>
 </head>
 
@@ -4202,7 +4188,7 @@ function FocusSidebar2()
 	 
 	<div class="wrapper">
 		<div class="box content" id="content">
-			<div class="editCell " contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" onfocus="FocusPasteArea()" onblur="FocusSidebar2()" oninput="OnInput()">
+			<div class="editCell " contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
 			</div>
 
 

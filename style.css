@@ -17,6 +17,7 @@ Author: Rohan Scott*/
 	--pasteArea-percent: 70%;
 	--sidebar2-percent: 30%;
 	--sidebar2-padding: 0.1em;
+	--tabcontent-padding:1em;
 }
 
 mark{
@@ -271,7 +272,7 @@ grid-area: tab;
 /* Style the tab content */
 .tabcontent {
 	
-	padding:1em;
+	padding:var(--tabcontent-padding);
 	overflow: auto;
   height:100%;
   border-top: none;
