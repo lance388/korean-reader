@@ -4210,14 +4210,6 @@ function FocusSidebar2()
 		<div class="box sidebar2 topright" id="sidebar2">
 			<div class="wrapper3">
 				<div class="tab">
-			<!--		<div class="tab1">
-						<button class="tablinks" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab')">[1] Dictionary</button>
-						<button class="tablinks" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab')">[2] Images</button>
-						<button class="tablinks" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab')">[3] Statistics ▼</button>
-						<button class="tablinks" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab')">Options</button>
-						<button class="tablinks" id="AboutTabButton" onclick="openTab(event, 'AboutTab')">About</button>
-					</div>
-			-->
 					<div class="tab2">
 						<button id="UnknownWordsTabButton" class="tablinks" onclick="openTab(event, 'UnknownWordsTab','tablinks')">Unknown Words <sup>[4]</sup></button>
 						<button id="LearningWordsTabButton" class="tablinks"  onclick="openTab(event, 'LearningWordsTab','tablinks')">Learning Words <sup>[5]</sup></button>
@@ -4308,6 +4300,7 @@ function FocusSidebar2()
 					</div>
 					
 					<div id="AboutTab" class="tabcontent">
+					<h2>About</h2><hr>
 						<p>Korean Reader aims to make learning Korean from texts as effective as possible.</p>
 						<p>Paste a text in the text area. All new words start as <b>unknown</b> (unless you change this in settings). Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
 						<p><b>Unknown</b> words may be unknown, difficult, or not important to remember for the timebeing.</p>
@@ -4316,13 +4309,10 @@ function FocusSidebar2()
 						
 						<br>
 						<br>
-						
-						<h2>FAQ</h2>
-						<h3>Can I mark an entire word family when I click on a word instead of marking each word individually?</h3>
-						No, I am still trying to find a sufficiently accurate API to allow me to add this feature.
 					
 					</div>
 					<div id="OptionsTab" class="tabcontent">
+					<h2>Settings</h2><hr>
 						<input type="checkbox" id="enableHighlighting" name="enableHighlighting" checked onclick="toggleEnableHighlighting();">
 						<label for="enableColours">Enable Highlighting</label>
 						<br><br>
@@ -4467,14 +4457,14 @@ function FocusSidebar2()
 								<option>Known</option>
 							</select>
 						</form> <br> Changes how words encountered for the first time will be initially marked. Words previously encountered will not be altered - to acheive this consider <b>clearing vocabulary</b>.
-						<br>
+						<br><br>
 						<hr>
 						<br>
 						<button id="deleteVocabularyCurrentTextButton" onclick="ButtonDeleteCurrentTextSubmit();">
 						Clear Vocabulary - Current Text</button><br>Deletes all words that are present in the current text from vocabulary.<br><br>
 						<button id="deleteVocabularyAllTextButton" onclick="ButtonDeleteAllSubmit();">Clear Vocabulary - All</button><br>Deletes all words from vocabulary.
 						<br><br>
-						<button id="deleteAchievementsButton" onclick="ButtonDeleteAchievementsSubmit();">Clear Achievements</button><br><br>
+						<button id="deleteAchievementsButton" onclick="ButtonDeleteAchievementsSubmit();">Clear Achievements</button><br><br><br><br>
 					</div>
 				</div>
 			</div>
