@@ -3741,16 +3741,8 @@ This software uses the following plugins:
 		}
 		
 		var c = document.getElementsByClassName("wrapper3");
-		//var t = document.getElementById("topbar");
-		//c[0].style.height = (window.innerHeight-(window.innerHeight*.09))+"px";
-		//c[0].style.height = 100+"%";
-		//console.log(t.innerHeight);
-		//console.log($("topbar").height());
-		//c[0].style.height = window.innerHeight;
-		//c[0].style.height = window.outerHeight;
-		//console.log($(window).height());
-		//c[0].style.height = $(window).height()-32+"px";
-		c[0].style.height = $(window).height()-($(window).outerHeight()-$(window).innerHeight())-($(window).height()*.075)+"px";
+		//c[0].style.height = $(window).height()-($(window).height()*.075)+"px";
+		c[0].style.height = $(window).outerHeight()-($(window).outerHeight()*.075)+"px";
 	}
 	
 	function ToggleOpenMenu()
@@ -4331,9 +4323,9 @@ function DeleteAllAchievements()
 						<hr>
 						<br>
 						Korean Reader was created as a personal project to keep track of progress, gauge the difficulty of texts, identify important words, and speed up dictionary lookups. Sharing it online for free, I hope that it can be useful to all other learners out there.<br><br><br>
-						To report bugs or give suggestions, send an email: <a href="mailto:rohanlancescott@gmail.com">rohanlancescott@gmail.com</a><br><br><br>
+						Report bugs or give suggestions to this email: <a href="mailto:rohanlancescott@gmail.com?subject=Feedback%20for%20Korean%20Reader">rohanlancescott@gmail.com</a><br><br><br>
 						
-						If you would like to donate money to help with website hosting costs and to support the development of Korean Reader, please click below:
+						If you would like to donate money to help with the website hosting costs and to support the development of Korean Reader, please click below:
 						<br><br>
 						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 						<input type="hidden" name="cmd" value="_donations" />
