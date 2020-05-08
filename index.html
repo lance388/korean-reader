@@ -3728,7 +3728,7 @@ This software uses the following plugins:
 		//c[0].style.height = window.outerHeight;
 		//console.log($(window).height());
 		//c[0].style.height = $(window).height()-32+"px";
-		c[0].style.height = $(window).height()-($(window).height()*.075)+"px";
+		c[0].style.height = $(window).height()-($(window).outerHeight()-$(window).innerHeight())-($(window).height()*.075)+"px";
 	}
 	
 	function ToggleOpenMenu()
