@@ -570,6 +570,28 @@ This software uses the following plugins:
 				
 		}
 		
+		function NavigateFirstVisit()
+		{
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	        var request = objectStore.get("firstvisit$");
+	        request.onerror = function(event) {
+	          alert("Unable to retrieve data from database!");
+	        };
+	        request.onsuccess = function(event) {          
+	          if(request.result) {
+					document.getElementById("DictionaryTabButton").click();
+					
+			}
+			else
+			{
+				addwordtodb("firstvisit$",1);
+				document.getElementById("AboutTabButton").click();
+			}
+	
+				
+			}
+		}
+		
 		function InitialiseHighlighting()
 		{
 			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
@@ -650,7 +672,7 @@ This software uses the following plugins:
 			  
 			  initialisationComplete = true;
 			  pasteArea.contentEditable = true;
-			document.getElementById("DictionaryTabButton").click();
+			NavigateFirstVisit();
 				
 			};
 			}
@@ -4298,14 +4320,31 @@ function DeleteAllAchievements()
 					
 					<div id="AboutTab" class="tabcontent">
 					<h2>About</h2><hr>
-						<p>Korean Reader aims to make learning Korean from texts as effective as possible.</p>
-						<p>Paste a text in the text area. All new words start as <b>unknown</b> (unless you change this in settings). Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.</p>
-						<p><b>Unknown</b> words may be unknown, difficult, or not important to remember for the timebeing.</p>
-						<p><b>Learning</b> words are words where the meaning  can be guessed without confidence, and perhaps need their meaning confirmed with a dictionary lookup.</p>
-						<p><b>Known</b> words are words where the meaning is known instantly with confidence.</p><br>
+					<h3>Usage Guide</h3>
+						Paste a text in the text area. All new words start as <b>unknown</b> (unless you change this in settings). Click to mark them as <b>learning</b>, and again to mark them as <b>known</b>.<br><br>
+						<h4>Suggested Interpretations:</h4>
+						&nbsp&nbsp&nbsp <b id="unknownCircle">Unknown</b> words may be unknown, difficult, or not important to remember for the timebeing.<br><br>
+						&nbsp&nbsp&nbsp <b id="learningCircle">Learning</b> words are words that feel fuzzy. The meaning can be guessed without confidence and perhaps needs to be confirmed with a dictionary lookup.<br><br>
+						&nbsp&nbsp&nbsp <b id="knownCircle">Known</b> words are words where the meaning is known instantly and accurately.<br><br>
+						<br>
+						<br>
+						<hr>
+						<br>
+						Korean Reader was created as a personal project to keep track of progress, gauge the difficulty of texts, identify important words, and speed up dictionary lookups. Sharing it online for free, I hope that it can be useful to all other learners out there.<br><br><br>
+						To report bugs or give suggestions, send an email: <a href="mailto:rohanlancescott@gmail.com">rohanlancescott@gmail.com</a><br><br><br>
 						
+						If you would like to donate money to help with website hosting costs and to support the development of Korean Reader, please click below:
+						<br><br>
+						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+						<input type="hidden" name="cmd" value="_donations" />
+						<input type="hidden" name="business" value="GAJYAPJCG8KLS" />
+						<input type="hidden" name="item_name" value="Support the development of Korean Reader" />
+						<input type="hidden" name="currency_code" value="AUD" />
+						<input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+						<img alt="" border="0" src="https://www.paypal.com/en_AU/i/scr/pixel.gif" width="1" height="1" />
+						</form>
 						<br>
-						<br>
+						Thank you very much.
 					
 					</div>
 					<div id="OptionsTab" class="tabcontent">

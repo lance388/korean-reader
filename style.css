@@ -558,5 +558,18 @@ canvas{
 	}
 }
 
-		
+#unknownCircle
+{
+	background-color: var(--primary-bg);
+}
+#learningCircle
+{
+	background-color: var(--secondary-bg);
+	
+}
+
+#knownCircle
+{
+	background-color: var(--tertiary-bg);
+}
 
