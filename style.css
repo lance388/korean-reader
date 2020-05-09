@@ -501,8 +501,8 @@ canvas{
 .menu
 {
 	visibility:hidden;
-	width:20%;
-	height:8%;
+	width:22%;
+	height:12%;
 	padding:.5vh;
 	padding-top:.5vh;
 	padding-bottom:.5vh;
@@ -514,9 +514,11 @@ canvas{
 	
 			display: grid;
         grid-template-columns: 100%;
-		grid-template-rows: 48% 4% 48%;
+		grid-template-rows: 31.33% 3% 31.33% 3% 31.33%;
 		grid-template-areas:
         "topbarbutton2"
+		"empty"
+		"topbarbutton2"
 		"empty"
 		"topbarbutton2";
 }
@@ -532,7 +534,7 @@ canvas{
 	{
 		visibility:hidden;
 		width:50%;
-		height:15%;
+		height:30%;
 		padding:.2vh;
 		padding-top:.5vh;
 		padding-bottom:.5vh;
@@ -544,8 +546,10 @@ canvas{
 		
 				display: grid;
 			grid-template-columns: 100%;
-			grid-template-rows: 48% 4% 48%;
+			grid-template-rows: 31.33% 3% 31.33% 3% 31.33%;
 			grid-template-areas:
+			"topbarbutton2"
+			"empty"
 			"topbarbutton2"
 			"empty"
 			"topbarbutton2";
