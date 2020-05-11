@@ -501,11 +501,11 @@ canvas{
 .menu
 {
 	visibility:hidden;
-	width:22%;
+	width:28%;
 	height:12%;
-	padding:.5vh;
-	padding-top:.5vh;
-	padding-bottom:.5vh;
+	padding:.8vh;
+	padding-top:1.2vh;
+	padding-bottom:1.2vh;
 	background:var(--alt-document-bg);
 	position:fixed;
 	top:5vh;
@@ -533,11 +533,11 @@ canvas{
 	.menu
 	{
 		visibility:hidden;
-		width:50%;
+		width:60%;
 		height:30%;
-		padding:.2vh;
-		padding-top:.5vh;
-		padding-bottom:.5vh;
+		padding:.6vh;
+		padding-top:1vh;
+		padding-bottom:1vh;
 		background:var(--alt-document-bg);
 		position:fixed;
 		top:5vh;
