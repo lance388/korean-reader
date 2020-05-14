@@ -504,8 +504,8 @@ canvas{
 	width:28%;
 	height:12%;
 	padding:.8vh;
-	padding-top:1.2vh;
-	padding-bottom:1.2vh;
+	padding-top:.4vh;
+	padding-bottom:.4vh;
 	background:var(--alt-document-bg);
 	position:fixed;
 	top:5vh;
@@ -514,9 +514,11 @@ canvas{
 	
 			display: grid;
         grid-template-columns: 100%;
-		grid-template-rows: 31.33% 3% 31.33% 3% 31.33%;
+		grid-template-rows: 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬%;
 		grid-template-areas:
         "topbarbutton2"
+		"empty"
+		"topbarbutton2"
 		"empty"
 		"topbarbutton2"
 		"empty"
@@ -534,7 +536,7 @@ canvas{
 	{
 		visibility:hidden;
 		width:60%;
-		height:30%;
+		height:40%;
 		padding:.6vh;
 		padding-top:1vh;
 		padding-bottom:1vh;
@@ -546,8 +548,10 @@ canvas{
 		
 				display: grid;
 			grid-template-columns: 100%;
-			grid-template-rows: 31.33% 3% 31.33% 3% 31.33%;
+			grid-template-rows: 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬%;
 			grid-template-areas:
+			"topbarbutton2"
+			"empty"
 			"topbarbutton2"
 			"empty"
 			"topbarbutton2"

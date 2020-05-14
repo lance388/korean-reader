@@ -18,6 +18,8 @@ This software uses the following plugins, please take note of their individual l
 <html>
 <head>
 <meta charset="UTF-8"/>
+<meta name="description" content="Learn Korean through reading. Look up words, track progress, and view statistics.">
+<meta name="keywords" content="Korean, Language, Reader, Texts, Read, Reading, Study, Studying, Learn, Learning">
 <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
@@ -146,6 +148,7 @@ This software uses the following plugins, please take note of their individual l
 		var vocabularyFilter;
 		var chosenExportWordlist;
 		var toExport ="";
+		var importWordlistFilter;
 		
 		
 		
@@ -233,6 +236,13 @@ This software uses the following plugins, please take note of their individual l
 			mobileMode = false;
 			vocabularyFilter="Known";
 			chosenExportWordlist="Vocabulary - Learning";
+			importWordlistFilter="Known";
+			
+			const fileSelector = document.getElementById('importWordlistButton');
+						  fileSelector.addEventListener('change', (event) => {
+							const file = event.target.files[0];
+							ReadFile(file);
+						  });
 			
 			//console.log(document.getElementById("fieldHC1").style.backgroundColor);
 			$('#colorpicker1').colpick({
@@ -739,6 +749,7 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseVocabulary();
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
+			  InitialiseImport();
 			  var pasteArea = document.getElementById ("pasteArea");
 			  pasteArea.innerText = "";	
 			  LoadHTML();
@@ -1513,7 +1524,7 @@ This software uses the following plugins, please take note of their individual l
 	
 	          } else {
 					unknownWordsTabUpToDate = false;
-					addwordtodb(word);
+					addwordtodb(word,((startingMark+1)%3));
 					GetPageAndHighlight(word,((startingMark+1)%3),skipJump);
 					
 	          }
@@ -1754,7 +1765,7 @@ This software uses the following plugins, please take note of their individual l
 					var page = GetPage(toMark[i]);
 					if(page.marked==false)
 					{
-						var words = page.textContent;
+						var words = page.innerText;
 						words=words.replace(replaceCharacters," ");
 	
 						var wordArray = words.trim().split(/[, ]+/);
@@ -2246,9 +2257,9 @@ This software uses the following plugins, please take note of their individual l
 	
 	ShowMenu(false);
 	
-	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="StatisticsTab"||tabName=="ExportTab"))
+	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"))
 	||
-	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"))
+	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"))
 	)
 	{
 		ShowSidebar(false); 
@@ -2285,7 +2296,7 @@ This software uses the following plugins, please take note of their individual l
 	
 	  
 	  
-	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab")
+	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab")
 	  {
 		document.documentElement.style.setProperty('--tab-top-percent', '0%');
 		document.documentElement.style.setProperty('--tab-bot-percent', '100%');
@@ -2338,7 +2349,7 @@ This software uses the following plugins, please take note of their individual l
 	  {
 		AsyncCalculateStatistics();
 	  }
-	  else if ((tabName=="VocabularyTab"||tabName=="ExportTab") && enableHighlighting)
+	  else if ((tabName=="VocabularyTab"||tabName=="ExportTab"||tabName=="ImportTab") && enableHighlighting)
 	  {
 	  
 	  
@@ -2408,11 +2419,20 @@ This software uses the following plugins, please take note of their individual l
 	
 	function CalculateStatistics()
 	{
-			var words = document.getElementById ("content").textContent;
+			//var words = document.getElementById ("content").textContent;
+			var words = document.getElementById ("content").innerText;
+			//console.log(words);
 			words=words.replace(replaceCharacters," ");
-	
+			
+			
+			
 			var wordArray = words.trim().split(/[, ]+/);
 
+			//for(var i=0;i<wordArray.length;i++)
+			//{
+			//	console.log(wordArray[i]); //todo words put together!!!
+			//}
+			
 			unknownArray = [];
 			learningArray = [];
 			knownArray = [];
@@ -2642,7 +2662,7 @@ This software uses the following plugins, please take note of their individual l
 			  
 			  	switch(toExport)
 				{
-					case "Vocabulary - All":Export(arrUnknown.concat(arrLearning).concat(arrUnknown),"Vocabulary - All"); break;
+					case "Vocabulary - All":Export(arrUnknown.concat(arrLearning).concat(arrKnown),"Vocabulary - All"); break;
 					case "Vocabulary - Unknown":Export(arrUnknown,"Vocabulary - Unknown"); break;
 					case "Vocabulary - Learning":Export(arrLearning,"Vocabulary - Learning"); break;
 					case "Vocabulary - Known":Export(arrKnown,"Vocabulary - Known"); break;
@@ -2913,8 +2933,6 @@ This software uses the following plugins, please take note of their individual l
 							CountAndDrawAchievements();
 						}, 10000);
 		}
-		
-		
 		
 		switch(toExport)
 		{
@@ -3926,7 +3944,10 @@ This software uses the following plugins, please take note of their individual l
 	 
 	function ToggleOpenMenu()
 	{
-
+		if(!initialisationComplete)
+		{
+			return false;
+		}
 	
 		if(menuVisible)
 		{
@@ -4447,6 +4468,108 @@ function HC4OnInput()
 		}
 }
 
+function ChangeFilterImport()
+{
+
+	var importDropDown = document.getElementById("filterImportOption");
+	importWordlistFilter=importDropDown.value;
+}
+
+function ButtonImportSubmit()
+{
+	var w = document.getElementById("importTextArea").value;
+	
+	var wordArray = w.trim().split(/[, ]+/);
+	
+	if(wordArray.length>0)
+	{
+		var state = 0;
+		switch(importWordlistFilter)
+		{
+			case "Unknown": state = 0;break;
+			case "Learning": state = 1;break;
+			case "Known": state = 2; break;
+		}
+		
+		for(var j=0;j<wordArray.length;j++)
+		{
+			//console.log(wordArray[j]);
+			if(j==wordArray.length-1)
+			{
+				UpdateOrAddDBRow(wordArray[j],state,1); //last iteration
+			}
+			else
+			{
+				UpdateOrAddDBRow(wordArray[j],state,0);
+			}
+		}
+		
+		
+		document.getElementById("importTextArea").value="";
+	}
+}
+
+function ReadFile(f) 
+{
+  
+  if (!f) {
+        alert("Failed to load file");
+    } else if (!f.type.match('text.*')) {
+		    alert(f.name + " is not a valid text file.");
+    }
+	else
+	{
+		var reader = new FileReader();
+		reader.onload = function(event)
+		{
+			var words = reader.result;
+			words=words.replace(replaceCharacters," ");
+			document.getElementById("importTextArea").value=words;
+			//console.log('here-1 ' +document.getElementById("importTextArea").value);
+		};
+		
+		reader.readAsText(f);
+	}
+}
+
+function InitialiseImport()
+{
+	var importDropDown = document.getElementById("filterImportOption");
+	importDropDown.value=importWordlistFilter;
+}
+
+function UpdateOrAddDBRow(w,a,last)
+{
+
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	        var request = objectStore.get(w);
+	        request.onerror = function(event) {
+	          alert("Unable to retrieve data from database!");
+	        };
+	        request.onsuccess = function(event) {          
+	          if(request.result) {
+					
+					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: w,appearances: a});
+	
+	          } else
+			  {
+					
+					addwordtodb(w,a);
+					
+	          }
+			  
+			  if(last==1)
+			  {
+				OnInput();
+			  }
+	        };
+}
+
+function ClearImportSubmit()
+{
+	document.getElementById("importTextArea").value="";
+}
+
 	</script>
 </head>
 
@@ -4581,6 +4704,30 @@ function HC4OnInput()
 						</form>
 						<br>
 						Thank you very much.
+					</div>
+					
+					<div id="ImportTab" class="tabcontent">
+					<h2>Import</h2><hr>
+					<br><br>
+					Choose a wordlist to import, or paste words into the text box:
+					
+						<br><br>
+						
+						<input type="file" id="importWordlistButton">
+						</input> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <button id="clearImportButton" onclick="ClearImportSubmit();">Clear</button>
+						<br><br>
+							<textarea id="importTextArea" style="width: 100%; padding: 10px; height: 200px; 
+							display: block; font-family:Sans-serif; font-size:1.2em;">
+							</textarea><br><br>
+						<form>
+							Import to:
+							<select id="filterImportOption" onchange="ChangeFilterImport();">
+								<option>Unknown</option>
+								<option>Learning</option>
+								<option>Known</option>
+							</select>
+						</form><br><br><button id="importButton" onclick="ButtonImportSubmit();">Import</button> &nbsp
+						<br>
 					</div>
 					
 					<div id="ExportTab" class="tabcontent">
@@ -4790,9 +4937,12 @@ function HC4OnInput()
 		<div class="menu" id="menu">
 			<div class="topbarbutton2 toptabs" id="OptionsTabButton" onclick="openTab(event, 'OptionsTab','toptabs')"><b>Settings</b></div>
 			<div class="empty"></div>
-			<div class="topbarbutton2 toptabs" id="AboutTabButton" onclick="openTab(event, 'AboutTab','toptabs')"><b>About</b></div>
+			<div class="topbarbutton2 toptabs" id="ImportTabButton" onclick="openTab(event, 'ImportTab','toptabs')"><b>Import</b></div>
 			<div class="empty"></div>
 			<div class="topbarbutton2 toptabs" id="ExportTabButton" onclick="openTab(event, 'ExportTab','toptabs')"><b>Export</b></div>
+			<div class="empty"></div>
+			<div class="topbarbutton2 toptabs" id="AboutTabButton" onclick="openTab(event, 'AboutTab','toptabs')"><b>About</b></div>
+			<div class="empty"></div>
 		</div>
 	 </div>
 </body>
