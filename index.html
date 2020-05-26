@@ -20,6 +20,7 @@ This software uses the following plugins, please take note of their individual l
 <meta charset="UTF-8"/>
 <meta name="description" content="Learn Korean through reading. Look up words, track progress, and view statistics."/>
 <meta name="keywords" content="Korean, Language, Reader, Texts, Read, Reading, Study, Studying, Learn, Learning"/>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
 	<meta name="description" content="home"/>
 	<meta name="author" content="Rohan Scott"/>
@@ -2402,7 +2403,7 @@ This software uses the following plugins, please take note of their individual l
 						statisticsTimeout = setTimeout(function() {
 
 							CalculateStatistics();
-						}, global_total_words/2);
+						}, global_total_words/1);
 	}
 	
 	
@@ -2571,8 +2572,15 @@ This software uses the following plugins, please take note of their individual l
 
 					
 				}
+				//if(displaySortTimeout)
+				//		{	
+				//			clearTimeout(displaySortTimeout);
+				//		}
+				//		displaySortTimeout = setTimeout(function() {
 
-				DisplaySort();
+							DisplaySort();
+				//		}, global_total_words/3);
+				
 			  }
 	        };
 	}
@@ -3119,7 +3127,7 @@ This software uses the following plugins, please take note of their individual l
 							{
 								clearTimeout(colourTimeout);
 							}		
-							colourTimeout = setTimeout(markAll(toMark),20);
+							colourTimeout = setTimeout(markAll(toMark),500);
 							
 							if(openedTab=="VocabularyTab")
 							{
@@ -3129,7 +3137,7 @@ This software uses the following plugins, please take note of their individual l
 								}	
 								vocabularyTimeout = setTimeout(function() {
 									CalculateVocabulary();
-								}, 500);
+								}, 700);
 							}
 						}
 		}
