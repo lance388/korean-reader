@@ -1117,6 +1117,7 @@ This software uses the following plugins, please take note of their individual l
 					var b = []
 					var body = (""+body);
 					b = body.trim().split(/[, ]+/);
+					var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
 					innerHtml += '<tr><td>' +span+ b[2] +" ("+(Math.round(((b[2]/total)*100 + Number.EPSILON) * 100) / 100)+"%)"+ '</td></tr>';
 				});
 				innerHtml += '</tbody>';
