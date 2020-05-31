@@ -160,7 +160,7 @@ This software uses the following plugins, please take note of their individual l
 		var chosenExportWordlist;
 		var toExport ="";
 		var importWordlistFilter;
-
+		var fileSelector;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -250,7 +250,7 @@ This software uses the following plugins, please take note of their individual l
 			importWordlistFilter="Known";
 			
 			
-			const fileSelector = document.getElementById('importWordlistButton');
+			fileSelector = document.getElementById('importWordlistButton');
 						  fileSelector.addEventListener('change', (event) => {
 							const file = event.target.files[0];
 							ReadFile(file);
@@ -925,7 +925,6 @@ This software uses the following plugins, please take note of their individual l
 			
 			d = new Detector();
 			
-			
 			var fontList = [
 			'Arial, Helvetica, sans-serif',
 			'Gamja Flower',
@@ -938,10 +937,15 @@ This software uses the following plugins, please take note of their individual l
 			'Poor Story',
 			'Yeon Sung',
 			'Stylish',
-			'Gothic A1'
+			'Gothic A1',
+			'Batang',
+			'Dotum',
+			'Gulim',
+			'Gungsuh'
 			];
 			
 			var chosenFont = 'Arial, Helvetica, sans-serif';
+			fontTypeDropDown.value='Arial, Helvetica, sans-serif';
 			
 			for(var i=0;i<fontList.length;i++)
 			{
@@ -952,14 +956,6 @@ This software uses the following plugins, please take note of their individual l
 					opt.value = fontList[i];
 					opt.innerHTML = fontList[i];
 					fontTypeDropDown.appendChild(opt);
-				
-					
-					if(i==6)
-					{
-						fontTypeDropDown.value=fontList[i];
-						chosenFont= fontList[i];
-					}
-					
 				}
 				else if(attempts<30)
 				{
@@ -4567,6 +4563,7 @@ function UpdateOrAddDBRow(w,a,last)
 function ClearImportSubmit()
 {
 	document.getElementById("importTextArea").value="";
+	fileSelector.value="";
 }
 
 	</script>
