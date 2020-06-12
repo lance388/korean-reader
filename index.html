@@ -52,7 +52,6 @@ This software uses the following plugins, please take note of their individual l
 <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
 <link rel="manifest" href="icons/manifest.json">
 
-
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="DataTables-1.10.20/datatables.min.css">
 	<link rel="stylesheet" type="text/css" href="colpick/colpick.css">
@@ -161,6 +160,7 @@ This software uses the following plugins, please take note of their individual l
 		var toExport ="";
 		var importWordlistFilter;
 		var fileSelector;
+		const uidefault = "English";
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -758,6 +758,8 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseDictLanguage();
 			  InitialiseHighlightingKnown();
 			  InitialiseVocabulary();
+			  SetDefaultReaderLanguage();
+			  InitialiseUILanguage();
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
 			  InitialiseImport();
@@ -2245,9 +2247,9 @@ This software uses the following plugins, please take note of their individual l
 	
 	ShowMenu(false);
 	
-	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"))
+	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
 	||
-	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"))
+	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
 	)
 	{
 		ShowSidebar(false); 
@@ -2284,7 +2286,7 @@ This software uses the following plugins, please take note of their individual l
 	
 	  
 	  
-	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab")
+	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab")
 	  {
 		document.documentElement.style.setProperty('--tab-top-percent', '0%');
 		document.documentElement.style.setProperty('--tab-bot-percent', '100%');
@@ -4568,6 +4570,74 @@ function ClearImportSubmit()
 	fileSelector.value="";
 }
 
+function ChangeUILanguage()
+{
+	var mySelect = document.getElementById('uiLanguageOption');
+		var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("uilanguage$");
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+				request.onsuccess = function(event) {          
+					if(request.result)
+					{
+						request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "uilanguage$",appearances: mySelect.value});
+					}
+					else
+					{
+						addwordtodb("uilanguage$",mySelect.value);	
+					}
+					SetUILanguage(mySelect.value);
+				}
+}
+
+function InitialiseUILanguage()
+{
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("uilanguage$");
+		var uilanguage="";
+		request.onerror = function(event) {
+			alert("Unable to retrieve data from database!");
+		};
+					
+					
+				request.onsuccess = function(event) {
+				if(request.result) {
+						var a = request.result.appearances;
+						uilanguage=a;
+										
+					}
+					else
+					{
+						uilanguage = uidefault;
+					}
+					SetUILanguage(uilanguage);
+					var dropDown = document.getElementById("uiLanguageOption");
+					dropDown.value = uilanguage;
+				};
+}
+
+function ChangeReaderLanguage()
+{
+	var lang = document.getElementById("readerLanguageOption").value;
+	switch(lang)
+	{
+		case "English": document.location.href = "https://lance388.github.io/reader/en/index.html"; break;
+		case "Chinese": document.location.href = "https://lance388.github.io/reader/zh/index.html"; break;
+		case "Korean": break;
+	}
+}
+
+function SetDefaultReaderLanguage()
+{
+	document.getElementById("readerLanguageOption").value = "Korean";
+}
+
+function SetUILanguage(lang) //TODO
+{
+
+}
+
 	</script>
 </head>
 
@@ -4598,6 +4668,67 @@ function ClearImportSubmit()
 					</div>
 				</div>
 				<div class="tabContainer">
+					<div id="LanguageTab" class="tabcontent">
+					<h2>Language Settings</h2><hr><br>
+					<form>User Interface Language:
+							<select id="uiLanguageOption" onchange="ChangeUILanguage();">
+								<option>English</option>
+							</select>	
+						</form>
+					<br><br>
+					
+						<form>Dictionary Language:
+							<select id="dictLanguageOption" onchange="ChangeDictLanguage();">
+								<option>Korean-Korean</option>
+								<option selected="selected">English</option>
+								<option>Japanese</option>
+								<option>Chinese</option>
+								<option>French</option>
+								<option>Spanish</option>
+								<option>German</option>
+								<option>Vietnamese</option>
+								<option>Nepali</option>
+								<option>Mongolian</option>
+								<option>Burmese</option>
+								<option>Swahili</option>
+								<option>Arabic</option>
+								<option>Uzbek</option>
+								<option>Bahasa Indonesian</option>
+								<option>Cambodian</option>
+								<option>Thai</option>
+								<option>Tetum</option>
+								<option>Persian</option>
+								<option>Ancient Hebrew</option>
+								<option>Hindi</option>
+								<option>Modern Greek</option>
+								<option>Ancient Greek</option>
+								<option>Dutch</option>
+								<option>Latin</option>
+								<option>Russian</option>
+								<option>Romanian</option>
+								<option>Swedish</option>
+								<option>Albanian</option>
+								<option>Ukrainian</option>
+								<option>Italian</option>
+								<option>Gruziya</option>
+								<option>Czech</option>
+								<option>Turkish</option>
+								<option>Portuguese</option>
+								<option>Polish</option>
+								<option>Finnish</option>
+								<option>Hungarian</option>
+							</select>	
+						</form>
+						<br><br>
+						<form>Reader Language:
+							<select id="readerLanguageOption" onchange="ChangeReaderLanguage();">
+								<option>English</option>
+								<option>Chinese</option>
+								<option>Korean</option>
+							</select>	
+						</form>
+					<br>
+					</div>
 					<div id="DictionaryTab" class="tabcontent">
 						<iframe id="naverIframe" src="https://en.dict.naver.com"></iframe>
 					</div>
@@ -4701,11 +4832,6 @@ function ClearImportSubmit()
 						<img alt="" border="0" src="https://www.paypal.com/en_AU/i/scr/pixel.gif" width="1" height="1" />
 						</form>
 						<br>
-						Thank you very much.
-						<br>
-						<hr>
-						<br>
-						<a href="https://lance388.github.io/reader/">Browse readers for other languages</a>
 					</div>
 					
 					<div id="ImportTab" class="tabcontent">
@@ -4848,49 +4974,6 @@ function ClearImportSubmit()
 							</div>
 						</div>
 						<br>
-						<hr><br>
-						<form>Dictionary Language:
-							<select id="dictLanguageOption" onchange="ChangeDictLanguage();">
-								<option>Korean-Korean</option>
-								<option selected="selected">English</option>
-								<option>Japanese</option>
-								<option>Chinese</option>
-								<option>French</option>
-								<option>Spanish</option>
-								<option>German</option>
-								<option>Vietnamese</option>
-								<option>Nepali</option>
-								<option>Mongolian</option>
-								<option>Burmese</option>
-								<option>Swahili</option>
-								<option>Arabic</option>
-								<option>Uzbek</option>
-								<option>Bahasa Indonesian</option>
-								<option>Cambodian</option>
-								<option>Thai</option>
-								<option>Tetum</option>
-								<option>Persian</option>
-								<option>Ancient Hebrew</option>
-								<option>Hindi</option>
-								<option>Modern Greek</option>
-								<option>Ancient Greek</option>
-								<option>Dutch</option>
-								<option>Latin</option>
-								<option>Russian</option>
-								<option>Romanian</option>
-								<option>Swedish</option>
-								<option>Albanian</option>
-								<option>Ukrainian</option>
-								<option>Italian</option>
-								<option>Gruziya</option>
-								<option>Czech</option>
-								<option>Turkish</option>
-								<option>Portuguese</option>
-								<option>Polish</option>
-								<option>Finnish</option>
-								<option>Hungarian</option>
-							</select>	
-						</form>
 						<br>
 						<hr>
 						<br>
@@ -4924,6 +5007,10 @@ function ClearImportSubmit()
 		 <div class="topbarbutton toptabs" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','toptabs')"><b>Images <sup>[2]</sup></b></div>
 		 <div class="empty"></div>
 		 <div class="topbarbutton toptabs" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','toptabs')"><b>Statistics <sup>[3]</sup></b></div>
+		 <div class="empty"></div>
+		 <div class="topbarbutton toptabs" id="LanguageTabButton" onclick="openTab(event, 'LanguageTab','toptabs')">
+		 <img id="languageicon" src="icons/languageicon.png"></img>
+		 </div>
 		 <div class="empty"></div>
 		 <div class="container" onclick="ToggleOpenMenu()">
 			<div class="empty"></div>	

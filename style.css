@@ -437,10 +437,10 @@ canvas{
 	padding: 0.5vh;
 	
 			display: grid;
-        grid-template-columns: 0.5% 10% 32.5% 14% 7.25% 10% 0.5% 10% 0.5% 10% 0.5% 3% 1.25%;
+        grid-template-columns: 0.5% 7% 33.5% 14% 7.25% 10% 0.5% 10% 0.5% 10% 0.5% 2% 0.5% 3% 1.25%;
 		grid-template-rows: 100%;
 		grid-template-areas:
-        "empty" "topbarbutton" "empty" "logo" "empty" "topbarbutton" "empty"  "topbarbutton" "empty"  "topbarbutton" "empty" "container" "empty";
+        "empty" "topbarbutton" "empty" "logo" "empty" "topbarbutton" "empty"  "topbarbutton" "empty"  "topbarbutton" "empty"  "topbarbutton" "empty" "container" "empty";
 	
 }
 
@@ -455,12 +455,17 @@ canvas{
 		padding: 0.5vh;
 		
 				display: grid;
-			grid-template-columns: 0% 15% 5.875% 20% 5.875% 15% 0% 15% 0% 15% 0% 6% 1.25%;
+			grid-template-columns: 0% 15% 2.875% 21% 2.875% 15% 0% 15% 0% 15% 0% 5% 0% 6% 1.25%;
 			grid-template-rows: 100%;
 			grid-template-areas:
-			"empty" "topbarbutton" "empty" "logo" "empty" "topbarbutton" "empty"  "topbarbutton" "empty"  "topbarbutton" "empty" "container" "empty";
+			"empty" "topbarbutton" "empty" "logo" "empty" "topbarbutton" "empty"  "topbarbutton" "empty"  "topbarbutton" "empty"  "topbarbutton" "empty" "container" "empty";
 		
 	}
+}
+
+#languageicon
+{
+	height:100%;
 }
 
 .container {
