@@ -161,6 +161,8 @@ This software uses the following plugins, please take note of their individual l
 		var importWordlistFilter;
 		var fileSelector;
 		const uidefault = "English";
+		var grammarPoints =[];
+		var grammarPointsHangul =[];
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -249,6 +251,9 @@ This software uses the following plugins, please take note of their individual l
 			chosenExportWordlist="Vocabulary - Learning";
 			importWordlistFilter="Known";
 			
+			
+			SetGrammarPoints();
+			SetHangulGrammarTriggers();
 			
 			fileSelector = document.getElementById('importWordlistButton');
 						  fileSelector.addEventListener('change', (event) => {
@@ -528,6 +533,44 @@ This software uses the following plugins, please take note of their individual l
 					]
 				} );
 				
+						var table13 = $('#grammarDataTable1').DataTable( {
+				    "scrollY":        280,
+					"scrollCollapse": false,
+					"paging":         false,
+					"searching": false,
+					"deferRender": true,
+					"info": false,
+//					"order": [[ 0, "desc" ]],
+					select: true,
+					"language": {
+					  "emptyTable": "Grammar patterns not detected."
+					},
+					columns: [
+						{ title: "#" },
+						{ title: "Pattern" },
+						{ title: "Description"}
+					]
+				} );
+				
+					var table14 = $('#grammarDataTable2').DataTable( {
+				    "scrollY":        280,
+					"scrollCollapse": false,
+					"paging":         false,
+					"searching": true,
+					"deferRender": true,
+					"info": false,
+//					"order": [[ 0, "desc" ]],
+					select: true,
+					"language": {
+					  "emptyTable": "Loading..."
+					},
+					columns: [
+						{ title: "#" },
+						{ title: "Pattern" },
+						{ title: "Description"}
+					]
+				} );
+				
 				var events = $('#events');
 				
 				table
@@ -800,7 +843,8 @@ This software uses the following plugins, please take note of their individual l
 			case 105: if(openedTab!="OptionsTab"){document.getElementById("CompareTabButton").click(); e.preventDefault();} break;
 			case 96: if(openedTab!="OptionsTab"){document.getElementById("GraphTabButton").click(); e.preventDefault();} break;
 			case 173: if(openedTab!="OptionsTab"){document.getElementById("AchievementsTabButton").click(); e.preventDefault();} break;
-			
+			case 71: if(openedTab!="OptionsTab"){document.getElementById("GrammarTabButton").click(); e.preventDefault();} break;
+			case 61: if(openedTab!="OptionsTab"){document.getElementById("GrammarTabButton").click(); e.preventDefault();} break;
 			case 46: DeleteVocabulary(); break;
 			case 8: DeleteVocabulary(); break;
 			case 27: Reset(); e.preventDefault(); break;
@@ -1626,7 +1670,7 @@ This software uses the following plugins, please take note of their individual l
 			dictionaryLookup(word);
 			imagesLookup(word);
 			pendingLookup = word;
-	
+			GrammarLookup(word);
 			
 			if (items.length > 0) {
 			  scrollTo({
@@ -1817,6 +1861,7 @@ This software uses the following plugins, please take note of their individual l
 						dictionaryLookup(selectedText);
 						imagesLookup(selectedText);
 						pendingLookup = selectedText;
+						GrammarLookup(selectedText);
 				}
 				else
 				{
@@ -1878,6 +1923,7 @@ This software uses the following plugins, please take note of their individual l
 							dictionaryLookup(word);
 							imagesLookup(word);
 							pendingLookup = word;
+							GrammarLookup(word);
 							
 							var selection = window.getSelection ? window.getSelection() : document.selection ? document.selection : null;
 							if(!!selection) selection.empty ? selection.empty() : selection.removeAllRanges();
@@ -1912,6 +1958,7 @@ This software uses the following plugins, please take note of their individual l
 					dictionaryLookup(selectedText);
 					imagesLookup(selectedText);
 					pendingLookup = selectedText;
+					GrammarLookup(selectedText);
 				}
 				var selection = window.getSelection ? window.getSelection() : document.selection ? document.selection : null;
 				if(!!selection) selection.empty ? selection.empty() : selection.removeAllRanges();
@@ -2247,9 +2294,9 @@ This software uses the following plugins, please take note of their individual l
 	
 	ShowMenu(false);
 	
-	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
+	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="GrammarTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
 	||
-	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
+	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="GrammarTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
 	)
 	{
 		ShowSidebar(false); 
@@ -2286,7 +2333,7 @@ This software uses the following plugins, please take note of their individual l
 	
 	  
 	  
-	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab")
+	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"||tabName=="GrammarTab")
 	  {
 		document.documentElement.style.setProperty('--tab-top-percent', '0%');
 		document.documentElement.style.setProperty('--tab-bot-percent', '100%');
@@ -2376,6 +2423,10 @@ This software uses the following plugins, please take note of their individual l
 	  else if(tabName=="ImagesTab")
 	  {
 		imagesLookup(pendingLookup);
+	  }
+	  else if(tabName=="GrammarTab")
+	  {
+		PopulateGrammarTab();
 	  }
 	  
 	  switch(tabName)
@@ -4633,10 +4684,1033 @@ function SetDefaultReaderLanguage()
 	document.getElementById("readerLanguageOption").value = "Korean";
 }
 
+function PopulateGrammarTab()
+{	
+	var tt = $('#grammarDataTable1').DataTable();
+	tt.clear();
+//	tt.row.add( [
+//		"here1","here2","here3"
+//	] );	
+	
+	var t = $('#grammarDataTable2').DataTable();
+	t.clear();
+	for(var i=0;i<grammarPoints.length;i++)
+	{	
+		t.row.add( [
+			grammarPoints[i].num,grammarPoints[i].point,grammarPoints[i].des
+		] );
+	}
+	tt.draw();
+	t.draw();
+}
+
+function SetHangulGrammarTriggers()
+{
+	var numGrammar=8;
+	
+	for(var i=0;i<numGrammar;i++)
+	{
+		var n=[];
+		var rx = [];
+		
+		switch(i)
+		{
+			case 0:
+				n.num = 18;
+				rx.push(/에/);
+				n.point = "N에";
+				n.des="Particle denoting direction or time";
+			break;	
+			case 1:
+				n.num = 12;
+				rx.push(/은(?=\s)/);
+				rx.push(/는(?=\s)/);
+				n.point = "N은/는";
+				n.des="Topic marking particle";
+			break;
+			case 2:
+				n.num = 11;
+				rx.push(/이(?=\s)/);
+				rx.push(/가(?=\s)/);
+				n.point = "N이/가";
+				n.des="Subject marking particle";
+			break;
+			case 3:
+				n.num = 17;
+				rx.push(/의(?=\s)/);
+				n.point = "N의";
+				n.des="Particle denoting possession";
+			break;
+			case 4:
+				n.num = 14;
+				rx.push(/와(?=\s)/);
+				rx.push(/과(?=\s)/);
+				n.point = "N와/과";
+				n.des="Particle denoting 'and'";
+			break;
+			case 5:
+				n.num = 22;
+				rx.push(/에게/);
+				n.point = "N에게";
+				n.des="Particle denoting a recipient";
+			break;
+			case 6:
+				n.num = 13;
+				rx.push(/를(?=\s)/);
+				rx.push(/을(?=\s)/);
+				n.point = "N을/를";
+				n.des="Object marking particle";
+			break;
+			case 7:
+				n.num = 19;
+				rx.push(/에서/);
+				n.point = "N에서";
+				n.des="Particle denoting location/'from...'";
+			break;
+			case 8:
+				n.num = 126;
+				rx.push(/야(?=\s)/);
+				rx.push(/아(?=\s)/);
+				n.point = "-야, -아";
+				n.des="Particle used in casual speech when calling someone by name";
+			break;			
+			
+			
+			default: console.log("index out of bounds");
+		}
+		n.regex=rx;
+		grammarPointsHangul.push(n);
+	}
+}
+
+
+function SetGrammarPoints()
+{
+	/*NOTE
+	(?=\s) look ahead 1 character, pass if that character is a space
+	
+		//TODO PUT IN (?=\s) for particles, but must fix
+	*/
+	
+	var numGrammar=151;
+	
+	for(var i=0;i<numGrammar;i++)
+	{
+		var n=[];
+		n.num = i+1;
+		var rx = [];
+		
+		switch(i)
+		{
+			
+			case 0:
+				rx.push(/kkeseo(?=\s)/);
+				n.point = "N께서";
+				n.des="Honorific form of 이/가";
+			break;
+			
+			case 1:
+				rx.push(/kkeseoneun(?=\s)/);
+				n.point = "N께서는";
+				n.des="Honorific form of 은/는";
+			break;
+			
+			case 2:
+				rx.push(/kke(?=\s)/);
+				n.point = "N께";
+				n.des="Honorific form of 에게(한테)";
+			break;
+			
+			case 3:
+				rx.push(/bnida(?=\s)/);
+				rx.push(/bnikka(?=\s)/);
+				n.point = "A/V-(스)ㅂ니다";
+				n.des="Formal polite style";
+			break;
+			
+			case 4:
+				rx.push(/ayo(?=\s)/);
+				rx.push(/eoyo(?=\s)/);
+				rx.push(/haeyo(?=\s)/);
+				rx.push(/yeyo(?=\s)/);
+				rx.push(/ieyo(?=\s)/);
+				n.point = "A/V-아/어요";
+				n.des="Informal polite style";
+			break;
+			
+			case 5:
+				rx.push(/ass/);
+				rx.push(/eoss/);
+				rx.push(/haess/);
+				rx.push(/yess/);
+				rx.push(/iess/);
+				n.point = "A/V-았/었어요";
+				n.des="Past tense";
+			break;
+			case 6:
+				rx.push(/l geo/);
+				n.point = "V-(으)ㄹ 거예요";
+				n.des="Future tense";
+			break;
+			case 7:
+				rx.push(/go iss/);
+				n.point = "V-고 있다";
+				n.des="Progressive tense";
+			break;
+			case 8:
+				rx.push(/ass-eoss/);
+				rx.push(/eoss-eoss/);
+				rx.push(/aess-eoss/);
+				n.point = "A/V-았/었었어요";
+				n.des="Past perfect tense";
+			break;
+			case 9:
+				rx.push(/ji an/);
+				rx.push(/ji mos/);
+				n.point = "A/V-지 않아요 / V-지 못해요";
+				n.des="Negation with 지";
+			break;
+			case 10:
+				n.point = "N이/가";
+				n.des="Subject marking particle";
+			break;
+			case 11:
+				n.point = "N은/는";
+				n.des="Topic marking particle";
+			break;
+			case 12:
+				n.point = "N을/를";
+				n.des="Object marking particle";
+			break;
+			case 13:
+				n.point = "N와/과";
+				n.des="Particle denoting 'and'";
+			break;
+			case 14:
+				rx.push(/lang(?=\s)/);
+				n.point = "N(이)랑";
+				n.des="Particle denoting 'and'";
+			break;
+			case 15:
+				rx.push(/hago(?=\s)/);
+				n.point = "N하고";
+				n.des="Particle denoting 'and'";
+			break;
+			case 16:
+				n.point = "N의";
+				n.des="Particle denoting possession";
+			break;
+			case 17:
+				n.point = "N에";
+				n.des="Particle denoting direction or time";
+			break;
+			case 18:
+				n.point = "N에서";
+				n.des="Particle denoting location/'from...'";
+			break;
+			case 19:
+				rx.push(/kkaji(?=\s)/);
+				n.point = "N까지";
+				n.des="Particle denoting 'until'";
+			break;
+			case 20:
+				rx.push(/buteo/);
+				n.point = "N부터";
+				n.des="Particle denoting 'from...'";
+			break;
+			case 21:
+				n.point = "N에게";
+				n.des="Particle denoting a recipient";
+			break;
+			case 22:
+				rx.push(/hante(?=\s)/);
+				n.point = "N한테";
+				n.des="Particle denoting a recipient";
+			break;
+			case 23:
+				rx.push(/do(?=\s)/);
+				n.point = "N도";
+				n.des="Particle denoting the listing of something";
+			break;
+			case 24:
+				rx.push(/man(?=\s)/);
+				n.point = "N만";
+				n.des="Particle denoting 'only'";
+			break;
+			case 25:
+				rx.push(/bakk-e(?=\s)/);
+				n.point = "N밖에";
+				n.des="Particle denoting 'nothing but'";
+			break;
+			case 26:
+				rx.push(/lo(?=\s)/);
+				n.point = "N(으)로";
+				n.des="Particle denoting direction";
+			break;
+			case 27:
+				rx.push(/na(?=\s)/);
+				n.point = "N(이)나";
+				n.des="Particle denoting 'or'/'no less than'";
+			break;
+			case 28:
+				rx.push(/jjeum(?=\s)/);
+				n.point = "N쯤";
+				n.des="Particle denoting approximation";
+			break;
+			case 29:
+				rx.push(/cheoleom(?=\s)/);
+				n.point = "N처럼";
+				n.des="Particle denoting similarity";
+			break;
+			case 30:
+				rx.push(/gat-i(?=\s)/);
+				n.point = "N같이";
+				n.des="Particle denoting similarity";
+			break;
+			case 31:
+				rx.push(/boda(?=\s)/);
+				n.point = "N보다";
+				n.des="Particle denoting comparision";
+			break;
+			case 32:
+				rx.push(/mada(?=\s)/);
+				n.point = "N마다";
+				n.des="Particle denoting 'every'";
+			break;
+			case 33:
+				rx.push(/go(?=\s)/);
+				n.point = "A/V-고";
+				n.des="'And'";
+			break;
+			case 34:
+				rx.push(/geona(?=\s)/);
+				n.point = "V-거나";
+				n.des="'Or'";
+			break;
+			case 35:
+				rx.push(/jiman(?=\s)/);
+				n.point = "A/V-지만, -기는 하지만, -기는 -지만";
+				n.des="'But'";
+			break;
+			case 36:
+				rx.push(/nde/);
+				n.point = "A/V-(으)ㄴ/는데";
+				n.des="'But'/'so'/'therefore'/'and'";
+			break;
+			case 37:
+				rx.push(/jeon-e/);
+				n.point = "N전에";
+				n.des="'Before'";
+			break;
+			case 38:
+				rx.push(/gi jeon-e/);
+				n.point = "V-기 전에";
+				n.des="'Before'";
+			break;
+			case 39:
+				rx.push(/hue/);
+				n.point = "N후에";
+				n.des="'After'";
+			break;
+			case 40:
+				rx.push(/n hue/);
+				n.point = "V-(으)ㄴ 후에";
+				n.des="'After'";
+			break;
+			case 41:
+				rx.push(/go naseo/);
+				n.point = "V-고 나서";
+				n.des="'And then'";
+			break;
+			case 42:
+				rx.push(/aeseo(?=\s)/);
+				rx.push(/eoseo(?=\s)/);
+				rx.push(/aseo(?=\s)/);
+				n.point = "V-아/어서";
+				n.des="'(In order) to'";
+			break;
+			case 43:
+				rx.push(/ttae/);
+				n.point = "N때, A/V-(으)ㄹ 때";
+				n.des="'When'";
+			break;
+			case 44:
+				rx.push(/myeonseo/);
+				n.point = "V-(으)면서";
+				n.des="'While'";
+			break;
+			case 45:
+				rx.push(/jung/);
+				n.point = "N중 V-는 중";
+				n.des="'Currently doing'/'in the middle of'";
+			break;
+			case 46:
+				rx.push(/jamaja/);
+				n.point = "V-자마자";
+				n.des="'As soon as'/'right after'";
+			break;
+			case 47:
+				rx.push(/dong-an/);
+				n.point = "N동안, V-는 동안";
+				n.des="During";
+			break;
+			case 48:
+				rx.push(/n ji(?=\s)/);
+				n.point = "V-(으)ㄴ 지";
+				n.des="'Since'";
+			break;
+			case 49:
+				rx.push(/l su iss/);
+				n.point = "V-(으)ㄹ 수 있다/없다";
+				n.des="'Can'";
+			break;
+			case 50:
+				rx.push(/r jul al/);
+				n.point = "V-(으)ㄹ 줄 알다/모르다";
+				n.des="'Know how to'/'not know how to'";
+			break;
+			case 51:
+				rx.push(/seyo(?=\s)/);
+				n.point = "V-(으)세요";
+				n.des="Polite request";
+			break;
+			case 52:
+				rx.push(/sibsio(?=\s)/);
+				n.point = "V-(으)십시오";
+				n.des="Polite request";
+			break;
+			case 53:
+				rx.push(/maseyo(?=\s)/);
+				n.point = "V-지 마세요";
+				n.des="Polite request not to do something";
+			break;
+			case 54:
+				rx.push(/masibsio(?=\s)/);
+				n.point = "V-지 마십시오";
+				n.des="Polite request not to do something";
+			break;
+			case 55:
+				rx.push(/ya doi/);
+				rx.push(/ya ha/);
+				rx.push(/ya doae/);
+				n.point = "A/V-아/어야 되다/하다";
+				n.des="'Must'/'have to'";
+			break;
+			case 56:
+				rx.push(/do doi/);
+				rx.push(/do doae/);
+				n.point = "A/V-아/어도 되다";
+				n.des="'May'/'be allowed to'";
+			break;
+			case 57:
+				rx.push(/myeon an doi/);
+				rx.push(/myeon an doae/);
+				rx.push(/myeon andoi/);
+				rx.push(/myeon andoae/);
+				n.point = "A/V-(으)면 안 되다";
+				n.des="'May not'/'not allowed to'";
+			break;
+			case 58:
+				rx.push(/ji anh-ado doi/);
+				rx.push(/ji anh-ado doae/);
+				rx.push(/ji anh-adodoi/);
+				rx.push(/ji anh-adodoae/);
+				n.point = "A/V-지 않아도 되다";
+				n.des="'Does not have to'";
+			break;
+			case 59:
+				rx.push(/go sip/);
+				n.point = "V-고 싶다";
+				n.des="'Want to'";
+			break;
+			case 60:
+				rx.push(/ss-eumyeon johgess/);
+				n.point = "A/V-았/었으면 좋겠다";
+				n.des="'It would be good if something is true'";
+			break;
+			case 61:
+				rx.push(/aseo/);
+				rx.push(/eoseo/);
+				rx.push(/aeseo/);
+				n.point = "A/V-아/어서";
+				n.des="'Because'";
+			break;
+			case 62:
+				rx.push(/ttaemun-e/);
+				n.point = "N 때문에, A/V-기 때문에";
+				n.des="'Because'";
+			break;
+			case 63:
+				rx.push(/nikka(?=\s)/);
+				n.point = "A/V-(으)니까";
+				n.des="'Because'/'when'/'(do something) only to discover'";
+			break;
+			
+			case 64:
+				rx.push(/juse/);
+				n.point = "V-아/어 주세요";
+				n.des="'Please'/'would you'";
+			break;
+			case 65:
+				rx.push(/jusigess(?=\s)/);
+				n.point = "V-아/어 주시겠어요?";
+				n.des="'Please'/'would you'";
+			break;
+			case 66:
+				rx.push(/julge(?=\s)/);
+				n.point = "V-아/어 줄게요";
+				n.des="'Shall I'/'allow me'";
+			break;
+			case 67:
+				rx.push(/julkka(?=\s)/);
+				n.point = "V-아/어 줄까요?";
+				n.des="'Shall I'/'allow me'";
+			break;
+			case 68:
+				rx.push(/a bo/);
+				rx.push(/eo bo/);
+				rx.push(/ae bo/);
+				n.point = "V-아/어 보다";
+				n.des="'Experesses trying something'";
+			break;
+			case 69:
+				rx.push(/n jeog-i iss/);
+				n.point = "V-(으)ㄴ 적이 있다/없다";
+				n.des="'Have done'/'haven't done'";
+			break;
+			
+			case 70:
+				rx.push(/lkka/);
+				n.point = "V-(으)ㄹ까요?";
+				n.des="'Shall we'/'shall I'?";
+			break;
+			case 71:
+				rx.push(/bsida(?=\s)/);
+				n.point = "V-(으)ㅂ시다";
+				n.des="'Let's'/'shall we'";
+			break;
+			case 72:
+				rx.push(/sigess/);
+				n.point = "V-(으)시겠어요?";
+				n.des="'Would you (mind/like to)'/'why not?'";
+			break;
+			case 73:
+				rx.push(/llae/);
+				n.point = "V-(으)ㄹ래요?";
+				n.des="'How about?'";
+			break;
+			case 74:
+				rx.push(/gess/);
+				n.point = "A/V-겠어요";
+				n.des="'(I) plan to'/'(I) am going to'";
+			break;
+			case 75:
+				rx.push(/lge/);
+				n.point = "V-(으)ㄹ게요";
+				n.des="'(I) will (do)'";
+			break;
+			case 76:
+				rx.push(/llae/);
+				n.point = "V-(으)ㄹ래요";
+				n.des="'Be going to'/'will'";
+			break;
+			case 77:
+				rx.push(/leo(?=\s)/);
+				n.point = "V-(으)러 가다/오다/다니다...";
+				n.des="'(Go/come/etc.) in order to'";
+			break;
+			case 78:
+				rx.push(/lyeogo(?=\s)/);
+				n.point = "V-(으)려고";
+				n.des="'In order to'/'so that'";
+			break;
+			case 79:
+				rx.push(/lyeogo ha/);
+				n.point = "V-(으)려고 하다";
+				n.des="'Plan to'/'intend to'";
+			break;
+			case 80:
+				rx.push(/l uihae/);
+				n.point = "N을/를 위해(서)";
+				n.des="'For the sake of'/'in order to'";
+			break;
+			case 81:
+				rx.push(/gi uihae/);
+				n.point = "V-기 위해(서)";
+				n.des="'For the sake of'/'in order to'";
+			break;
+			case 82:
+				rx.push(/gilo ha/);
+				n.point = "V-기로 하다";
+				n.des="Indicates a decision or promise";
+			break;
+			case 83:
+				rx.push(/myeon(?=\s)/);
+				n.point = "A/V-(으)면";
+				n.des="'If'/'when'/'once'";
+			break;
+			case 84:
+				rx.push(/lyeomyeon(?=\s)/);
+				n.point = "V-(으)려면";
+				n.des="'If (you) want to'/'if (your) intention is to'";
+			break;
+			case 85:
+				rx.push(/ado(?=\s)/);
+				rx.push(/eodo(?=\s)/);
+				rx.push(/aedo(?=\s)/);
+				n.point = "A/V-아/어도";
+				n.des="'Even if'/'regardless whether'";
+			break;
+			case 86:
+				rx.push(/gess-eo/);
+				n.point = "A/V-겠어요";
+				n.des="'Appears that'";
+			break;
+			case 87:
+				rx.push(/l geoye/);
+				n.point = "A/V-(으)ㄹ 거예요";
+				n.des="'Will'";
+			break;
+			case 88:
+				rx.push(/lkka/);
+				n.point = "A/V-(으)ㄹ까요?";
+				n.des="'Do (you) think...?'";
+			break;
+			case 89:
+				rx.push(/geos gat/);
+				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 것 같다";
+				n.des="'Appears that'";
+			break;
+			case 90:
+				rx.push(/n(?=\s)/);
+				rx.push(/l(?=\s)/);
+				n.point = "A/V-(으)ㄴ/-는/-(으)ㄹ N";
+				n.des="Noun modifying form";
+			break;
+			case 91:
+				rx.push(/gi(?=\s)/);
+				n.point = "A/V-기";
+				n.des="Turns A/V into N";
+			break;
+			case 92:
+				rx.push(/ge(?=\s)/);
+				n.point = "A-게";
+				n.des="'In a...manner'";
+			break;
+			case 93:
+				rx.push(/aha/);
+				rx.push(/oeha/);
+				rx.push(/haeha/);
+				n.point = "A-아/어하다";
+				n.des="'Appears to be'/'seems'";
+			break;
+			case 94:
+				rx.push(/a iss/);
+				rx.push(/eo iss/);
+				rx.push(/ae iss/);
+				n.point = "V-아/어 있다";
+				n.des="Expresses a continuing state of a completed action";
+			break;
+			case 95:
+				rx.push(/aji/);
+				rx.push(/eoji/);
+				rx.push(/aeji/);
+				n.point = "A-아/어지다";
+				n.des="Expresses a change in state over time";
+			break;
+			case 96:
+				rx.push(/ge doi/);
+				rx.push(/ge doae/);
+				n.point = "V-게 되다";
+				n.des="Expresses a change from one state to another";
+			break;
+			case 97:
+				rx.push(/nji(?=\s)/);
+				n.point = "A/V-(으)ㄴ/는지";
+				n.des="Connects a clause requiring additional information";
+			break;
+			case 98:
+				rx.push(/neun de(?=\s)/);
+				n.point = "V-는 데 걸리다/들다";
+				n.des="takes/requires/costs...to do";
+			break;
+			case 99:
+				rx.push(/jiyo(?=\s)/);
+				rx.push(/ji(?=\s)/);
+				n.point = "A/V-지요?";
+				n.des="'Isn't it?'";
+			break;
+			case 100:
+				rx.push(/gun/);
+				rx.push(/neungun/);
+				n.point = "A/V-군요/는군요";
+				n.des="Expresses wonder or surprise";
+			break;
+			case 101:
+				rx.push(/ne(?=\s)/);
+				rx.push(/neyo(?=\s)/);
+				n.point = "A/V-네요";
+				n.des="Expresses wonder or surprise";
+			break;
+			case 102:
+				rx.push(/nga(?=\s)/);
+				rx.push(/ngayo(?=\s)/);
+				n.point = "A-(으)ㄴ가요";
+				n.des="Used to politely and gently ask a question";
+			break;
+			case 103:
+				rx.push(/na(?=\s)/);
+				rx.push(/nayo(?=\s)/);
+				n.point = "V-나요";
+				n.des="Used to politely and gently ask a question";
+			break;
+			case 104:
+				rx.push(/nde(?=\s)/);
+				n.point = "A/V-(으)ㄴ/는데요";
+				n.des="Expresses one's disagreement";
+			break;
+			case 105:
+				rx.push(/hago(?=\s)/);
+				rx.push(/lago(?=\s)/);
+				n.point = "-하고/-라고";
+				n.des="Direct quotation";
+			break;
+			case 106:
+				rx.push(/jago/);
+				rx.push(/dago/);
+				rx.push(/nyago/);
+				rx.push(/lago/);
+				rx.push(/dae/);
+				rx.push(/jae/);
+				rx.push(/lae/);
+				rx.push(/nyae/);
+				n.point = "-자고/-다고/-라고/냐고/-재/-대/-래/-냬";
+				n.des="Indirect quotation";
+			break;
+			case 107:
+				rx.push(/a boi/);
+				rx.push(/eo boi/);
+				rx.push(/ae boi/);
+				n.point = "A-아/어 보이다";
+				n.des="Indicates one's conjecture based on the outward appearance of something";
+			break;
+			case 108:
+				rx.push(/n moyang/);
+				n.point = "A/V-(으)ㄴ/는 모양이다";
+				n.des="'shape'/'appearance'";
+			break;
+			case 109:
+				rx.push(/l tende/);
+				n.point = "A/V-(으)ㄹ 텐데";
+				n.des="Expresses a future situation or intention";
+			break;
+			case 110:
+				rx.push(/l tenikka/);
+				n.point = "A/V-(으)ㄹ 테니까";
+				n.des="Expresses a reason for giving a particular suggestion or advice";
+			break;
+			case 111:
+				rx.push(/lgeol/);
+				n.point = "A/V-(으)ㄹ걸요";
+				n.des="Expresses an unconfirmed assumption about a future event";
+			break;
+			case 112:
+				rx.push(/n jul mollass/);
+				rx.push(/l jul mollass/);
+				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 줄 몰랐다";
+				n.des="Expresses something the speaker was not aware of or did not anticipate";
+			break;
+			case 113:
+				rx.push(/n jul al-ass/);
+				rx.push(/l jul al-ass/);
+				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 줄 알았다";
+				n.des="Expresses the speaker's realisation that their assumption was incorrect";
+			break;
+			case 114:
+				rx.push(/ljido mol/);
+				rx.push(/lji mol/);
+				n.point = "A/V-ㄹ지(도) 모르다";
+				n.des="Expresses the speaker's view that something might happen";
+			break;
+			case 115:
+				rx.push(/n banmyeon-e/);
+				n.point = "A/V-(으)ㄴ/는 반면에";
+				n.des="Expresses that two things are opposites";
+			break;
+			case 116:
+				rx.push(/ndedo/);
+				n.point = "A/V-(으)ㄴ/는데도";
+				n.des="Expresses an unexpected state of affairs";
+			break;
+			case 117:
+				rx.push(/da(?=\s)/);
+				rx.push(/ssda(?=\s)/);
+				rx.push(/nda(?=\s)/);
+				rx.push(/l geos/);
+				n.point = "-았/었다, -다, -(느)ㄴ다, -(으)ㄹ 것이다";
+				n.des="Narration";
+			break;
+			case 118:
+				rx.push(/ya(?=\s)/);
+				rx.push(/ni(?=\s)/);
+				n.point = "-아/어, -(이)야, -니";
+				n.des="Casual speech";
+			break;
+			case 119:
+				rx.push(/eo la(?=\s)/);
+				rx.push(/a la(?=\s)/);
+				rx.push(/ji ma(?=\s)/);
+				rx.push(/ji mala(?=\s)/);
+				n.point = "-아/어 라, -지 마, -지 마라";
+				n.des="Casual speech - imperative";
+			break;
+			case 120:
+				rx.push(/ja(?=\s)/);
+				rx.push(/ji malja(?=\s)/);
+				n.point = "-자, 지 말자";
+				n.des="Casual speech - propositive";
+			break;
+			case 121:
+				rx.push(/ja(?=\s)/);
+				rx.push(/ji malja(?=\s)/);
+				n.point = "-자, 지 말자";
+				n.des="Casual speech - propositive";
+			break;
+			case 122:
+				rx.push(/nae(?=\s)/);
+				n.point = "내";
+				n.des="Contraction of 나의";
+			break;
+			case 123:
+				rx.push(/je(?=\s)/);
+				n.point = "제";
+				n.des="Contraction of 저의";
+			break;
+			case 124:
+				rx.push(/ne(?=\s)/);
+				n.point = "네";
+				n.des="Contraction of 너의";
+			break;
+			case 125:
+				n.point = "-야, -아";
+				n.des="Particle used in casual speech when calling someone by name";
+			break;
+			case 126:
+				rx.push(/geodeun/);
+				n.point = "A/V-거든요";
+				n.des="Used to respond to a question or add to a statement";
+			break;
+			case 127:
+				rx.push(/janh-a/);
+				n.point = "A/V-잖아요";
+				n.des="Used to state a reason that the listener should be aware of";
+			break;
+			case 128:
+				rx.push(/neula/);
+				n.point = "V-느라고";
+				n.des="Used to state a reason";
+			break;
+			case 129:
+				rx.push(/n balam/);
+				n.point = "V-는 바람에";
+				n.des="Used to state a reason";
+			break;
+			case 130:
+				rx.push(/n tas-e/);
+				n.point = "A/V-(으)ㄴ/는 탓에";
+				n.des="Used to state a reason";
+			break;
+			case 131:
+				rx.push(/go haeseo/);
+				n.point = "A/V-고 해서";
+				n.des="Used to state a reason, while hinting that there are a number of other reasons";
+			break;
+			case 132:
+				rx.push(/lkka boa/);
+				n.point = "A/V-(으)ㄹ까 봐";
+				n.des="Indicates that the reason for an action was due to worry about something";
+			break;
+			case 133:
+				rx.push(/damyeons/);
+				n.point = "A/V-다면서요?";
+				n.des="Used to confirm what the speaker has heard from a third party";
+			break;
+			case 134:
+				rx.push(/deonde/);
+				n.point = "A/V-던데";
+				n.des="Indicates recollection";
+			break;
+			case 135:
+				rx.push(/dani/);
+				rx.push(/lani/);
+				rx.push(/nyani/);
+				rx.push(/jani/);
+				n.point = "A/V-다니요";
+				n.des="Expresses surprise towards what somebody has said";
+			break;
+			case 136:
+				rx.push(/lkka(?=\s)/);
+				n.point = "A/V-(으)ㄹ까";
+				n.des="Indicates a reason";
+			break;
+			case 137:
+				rx.push(/goja(?=\s)/);
+				n.point = "V-고자";
+				n.des="Indicates a reason";
+			break;
+			case 138:
+				rx.push(/lyeodeon cham/);
+				n.point = "V-(으)려던 참이다";
+				n.des="Indicates that the speaker was already about to do what another person suggested";
+			break;
+			case 139:
+				rx.push(/gyeom/);
+				n.point = "V-(으)ㄹ 겸/N 겸";
+				n.des="Indicates the speaker's intention to do a number of actions";
+			break;
+			case 140:
+				rx.push(/yaji/);
+				n.point = "V-아/어야지요";
+				n.des="Used to make a promise to oneself";
+			break;
+			case 141:
+				rx.push(/l manh/);
+				n.point = "V-(으)ㄹ 만하다";
+				n.des="Indicates that something is worth doing";
+			break;
+			case 142:
+				rx.push(/dolog ha/);
+				n.point = "V-도록 하다";
+				n.des="Used to give a suggestion";
+			break;
+			case 143:
+				rx.push(/ji geul/);
+				n.point = "V-지 그래요";
+				n.des="Used to give a suggestion";
+			break;
+			case 144:
+				rx.push(/deon/);
+				n.point = "V-던";
+				n.des="Indicates recollection";
+			break;
+			case 145:
+				rx.push(/deolago/);
+				n.point = "A/V-더라고요";
+				n.des="Indicates recollection";
+			break;
+			case 146:
+				rx.push(/aji/);
+				rx.push(/eoji/);
+				rx.push(/aeji/);
+				rx.push(/ajyeo/);
+				rx.push(/eojyeo/);
+				rx.push(/aejyeo/);
+				n.point = "V-아/어지다";
+				n.des="Used when the subject's actions occur because of an action performed by somebody else";
+			break;
+			case 147:
+				rx.push(/ge do/);
+				n.point = "V-게 되다";
+				n.des="Expresses the passive in cases in which the subject's will is not involved";
+			break;
+			case 148:
+				rx.push(/ge ha/);
+				n.point = "A/V-게 하다";
+				n.des="Indicates that the subject makes somebody else do some behavior";
+			break;
+			case 149:
+				rx.push(/a ya/);
+				rx.push(/eo ya/);
+				rx.push(/ae ya/);
+				n.point = "A/V-아/어야";
+				n.des="Used to state a condition that must be met for a certain outcome";
+			break;
+			case 150:
+				rx.push(/geodeun/);
+				n.point = "A/V-거든";
+				n.des="Expresses if some statement is true, then...";
+			break;
+			
+			
+			
+			
+			
+			
+			default: console.log("index out of bounds");
+			
+		}
+		n.regex=rx;
+		grammarPoints.push(n);
+	}
+}
+
+function GrammarLookup(word)
+{
+	//TODO also check the hangul for certain words that often give false positives, e.g. -에
+	var wordHangul = word.replace(replaceCharacters," ");
+	wordHangul = wordHangul.trim();
+	wordHangul = " "+wordHangul+" ";
+
+	if(openedTab!="GrammarTab")
+	{
+		return;
+	}
+	var w = word.replace(replaceCharacters," ");
+	w=w.trim();
+	w=" "+w+" ";
+	var wordRomanised = RomaniseText(w);
+	
+	var tt = $('#grammarDataTable1').DataTable();
+	tt.clear();
+	
+	
+	for(var i=0;i<grammarPoints.length;i++)
+	{	for(var j=0;j<grammarPoints[i].regex.length;j++)
+		{
+			console.log("conparing: "+wordRomanised+" and "+grammarPoints[i].regex[j]);
+			var regex = RegExp(grammarPoints[i].regex[j]);
+			var result = regex.test(wordRomanised);
+			
+			if(result)
+			{
+				//console.log('MATCHED '+grammarPoints[i].regex[j]);
+					
+				tt.row.add( [
+					grammarPoints[i].num,grammarPoints[i].point,grammarPoints[i].des
+				] );
+				break;
+			}
+		}
+	}
+	
+	for(var i=0;i<grammarPointsHangul.length;i++)
+	{	for(var j=0;j<grammarPointsHangul[i].regex.length;j++)
+		{
+			//console.log("conparing: "+wordHangul+" and "+grammarPointsHangul[i].regex[j]);
+			var regex = RegExp(grammarPointsHangul[i].regex[j]);
+			var result = regex.test(wordHangul);
+			
+			if(result)
+			{
+				//console.log('MATCHED '+grammarPointsHangul[i].regex[j]);
+					//TODO make sure not already added earlier
+				tt.row.add( [
+					grammarPointsHangul[i].num,grammarPointsHangul[i].point,grammarPointsHangul[i].des
+				] );
+				break;
+			}
+		}
+	}
+	
+	tt.draw();
+}
+
 function SetUILanguage(lang) //TODO
 {
 
 }
+
+
 
 	</script>
 </head>
@@ -4662,7 +5736,7 @@ function SetUILanguage(lang) //TODO
 						<button id="VocabularyTabButton" class="tablinks"  onclick="openTab(event, 'VocabularyTab','tablinks')">Vocabulary <sup>[8]</sup></button>
 					</div>
 					<div class="tab3">
-						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK <sup>[9]</sup></button>
+						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK <sup>[9]</sup></button>=
 						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph - Current Text <sup>[0]</sup></button>
 						<button id="AchievementsTabButton" class="tablinks" onclick="openTab(event, 'AchievementsTab','tablinks')">Achievements <sup>[-]</sup></button>
 					</div>
@@ -4670,7 +5744,17 @@ function SetUILanguage(lang) //TODO
 				<div class="tabContainer">
 				
 					<div id="LoadingTab" class="tabcontent">
-						Loading data, please wait...
+						<h3>Loading data, please wait...</h3>
+					</div>
+					
+					<div id="GrammarTab" class="tabcontent">
+						<h2>Grammar</h2>
+						<h3>This section is under development</h3>
+						Highlight some text, and detected grammar points will appear below. Note that the results will include false positives.
+						<table id="grammarDataTable1" class="cell-border compact hover" width="100%"></table>
+						<br><br>
+						Full list:
+						<table id="grammarDataTable2" class="cell-border compact" width="100%"></table>
 					</div>
 				
 					<div id="LanguageTab" class="tabcontent">
@@ -5012,6 +6096,8 @@ function SetUILanguage(lang) //TODO
 		 <div class="topbarbutton toptabs" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','toptabs')"><b>Images <sup>[2]</sup></b></div>
 		 <div class="empty"></div>
 		 <div class="topbarbutton toptabs" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','toptabs')"><b>Statistics <sup>[3]</sup></b></div>
+		 <div class="empty"></div>
+		 <div class="topbarbutton toptabs" id="GrammarTabButton" onclick="openTab(event, 'GrammarTab','toptabs')"><b>Grammar <sup>[g]</sup></b></div>
 		 <div class="empty"></div>
 		 <div class="topbarbutton toptabs" id="LanguageTabButton" onclick="openTab(event, 'LanguageTab','toptabs')">
 		 <img id="languageicon" src="icons/languageicon.png"></img>
