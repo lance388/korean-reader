@@ -4688,6 +4688,7 @@ function PopulateGrammarTab()
 {	
 	var tt = $('#grammarDataTable1').DataTable();
 	tt.clear();
+	GrammarLookup(pendingLookup);
 //	tt.row.add( [
 //		"here1","here2","here3"
 //	] );	
@@ -4706,7 +4707,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=8;
+	var numGrammar=9;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4792,7 +4793,7 @@ function SetGrammarPoints()
 		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=151;
+	var numGrammar=204;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4853,7 +4854,7 @@ function SetGrammarPoints()
 				n.des="Future tense";
 			break;
 			case 7:
-				rx.push(/go iss/);
+				rx.push(/go i/);
 				n.point = "V-고 있다";
 				n.des="Progressive tense";
 			break;
@@ -4945,7 +4946,7 @@ function SetGrammarPoints()
 			case 26:
 				rx.push(/lo(?=\s)/);
 				n.point = "N(으)로";
-				n.des="Particle denoting direction";
+				n.des="Particle denoting direction/method/way/means";
 			break;
 			case 27:
 				rx.push(/na(?=\s)/);
@@ -5337,8 +5338,9 @@ function SetGrammarPoints()
 			case 99:
 				rx.push(/jiyo(?=\s)/);
 				rx.push(/ji(?=\s)/);
-				n.point = "A/V-지요?";
-				n.des="'Isn't it?'";
+				rx.push(/jyo(?=\s)/);
+				n.point = "A/V-지요/죠?";
+				n.des="'Isn't it?'/Indicates a tag question";
 			break;
 			case 100:
 				rx.push(/gun/);
@@ -5430,7 +5432,7 @@ function SetGrammarPoints()
 				rx.push(/ljido mol/);
 				rx.push(/lji mol/);
 				n.point = "A/V-ㄹ지(도) 모르다";
-				n.des="Expresses the speaker's view that something might happen";
+				n.des="Expresses the speaker's view that something might happen or be true";
 			break;
 			case 115:
 				rx.push(/n banmyeon-e/);
@@ -5589,8 +5591,8 @@ function SetGrammarPoints()
 				n.des="Used to give a suggestion";
 			break;
 			case 144:
-				rx.push(/deon/);
-				n.point = "V-던";
+				rx.push(/ssdeon/);
+				n.point = "A/V-았/었던";
 				n.des="Indicates recollection";
 			break;
 			case 145:
@@ -5630,10 +5632,783 @@ function SetGrammarPoints()
 				n.point = "A/V-거든";
 				n.des="Expresses if some statement is true, then...";
 			break;
+			case 151:
+				rx.push(/nde/);
+				n.point = "A/V-(으)ㄴ/는데요";
+				n.des="Used to give an explanation";
+			break;
+			case 152:
+				rx.push(/l ppunman anila/);
+				n.point = "A/V-(으)ㄹ 뿐만 아니라";
+				n.des="'Not only... but also...'";
+			break;
+			case 153:
+				rx.push(/n deda/);
+				n.point = "A/V-(으)ㄴ/는 데다가";
+				n.des="Used to express actions occuring at the same time";
+			break;
+			case 154:
+				rx.push(/jocha/);
+				n.point = "N조차";
+				n.des="'Even'";
+			break;
+			case 155:
+				rx.push(/man haedo/);
+				n.point = "N만 해도";
+				n.des="Used to give examples to explain something";
+			break;
+			case 156:
+				rx.push(/n gil-e/);
+				n.point = "V-는 길에";
+				n.des="Used when the speaker does an action while in the process of going somewhere";
+			break;
+			case 157:
+				rx.push(/daga(?=\s)/);
+				rx.push(/da(?=\s)/);
+				n.point = "V-다가/-다";
+				n.des="Expresses an interruption of action to immediately start doing another";
+			break;
+			case 158:
+				rx.push(/l jeongdolo/);
+				n.point = "A/V-(으)ㄹ 정도로";
+				n.des="'To the extent'";
+			break;
+			case 159:
+				rx.push(/man ha/);
+				n.point = "N만 하다";
+				n.des="Describes one object as approximately the same size, amount, or degree as another";
+			break;
+			case 160:
+				rx.push(/mankeum/);
+				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 만큼, N만큼";
+				n.des="Describes two objects as equivalent";
+			break;
+			case 161:
+				rx.push(/amu/);
+				n.point = "아무+(이)나";
+				n.des="'Anyone'";
+			break;
+			case 162:
+				rx.push(/amu/);
+				n.point = "아무+도";
+				n.des="'Nobody'";
+			break;
+			case 163:
+				rx.push(/na(?=\s)/);
+				n.point = "N(으)나";
+				n.des="Indicates that something is not really one's first choice";
+			break;
+			case 164:
+				rx.push(/lado(?=\s)/);
+				n.point = "N(으)라도";
+				n.des="Indicates that something will suffice even though it is not the best choice";
+			break;
+			case 165:
+				rx.push(/deunji/);
+				n.point = "N/A/V-든지 -든지";
+				n.des="Indicates that any of the stated choices are fine";
+			break;
+			case 166:
+				rx.push(/daesin/);
+				n.point = "A/V-(으)ㄴ/는 대신에,N 대신에";
+				n.des="Indicates that an action can be substituted by another action";
+			break;
+			case 167:
+				rx.push(/man-e/);
+				n.point = "N만에";
+				n.des="Expresses that something happened a certain amount of time after a previous action";
+			break;
+			case 168:
+				rx.push(/gajigo/);
+				n.point = "V-아/어 가지고";
+				n.des="Indicates the doing of an action following the completion of another action";
+			break;
+			case 169:
+				rx.push(/aedaga/);
+				rx.push(/adaga/);
+				rx.push(/eodaga/);
+				rx.push(/aeda/);
+				rx.push(/ada/);
+				rx.push(/eoda/);
+				n.point = "V-아/어다가";
+				n.des="Indicates the doing of an action following the completion of another action";
+			break;
+			case 170:
+				rx.push(/goseo/);
+				n.point = "V-고서";
+				n.des="Indicates that the first action completed before the second action started";
+			break;
+			case 171:
+				rx.push(/go boni/);
+				n.point = "V-고 보니";
+				n.des="Indicates that the speaker learned something new";
+			break;
+			case 172:
+				rx.push(/da bon/);
+				rx.push(/daga bon/);
+				n.point = "V-다 보니, V-다가 보니";
+				n.des="Indicates that the speaker learned something new after doing some action continuously in the past";
+			break;
+			case 173:
+				rx.push(/da bomyeon/);
+				rx.push(/daga bomyeon/);
+				n.point = "V-다 보면, V-다가 보면";
+				n.des="Indicates that if an action continues, then over time the result will occur";
+			break;
+			case 174:
+				rx.push(/deoni/);
+				n.point = "A/V-더니, A/V-더니만";
+				n.des="Used to refer to something directly experienced or seen in the past when describing how that thing subsequently changed";
+			break;
+			case 175:
+				rx.push(/ssdeoni/);
+				n.point = "V-았/었더니";
+				n.des="Indicates that something happened as a result of something the speaker did or said previously";
+			break;
+			case 176:
+				rx.push(/daganeun/);
+				n.point = "A/V-다가는";
+				n.des="Expresses that if an action continues, then an adverse result will occur in the future";
+			break;
+			case 177:
+				rx.push(/n sen-/);
+				n.point = "A/V-(으)ㄴ/는 센이다";
+				n.des="Indicates that something could be considered equivalent";
+			break;
+			case 178:
+				rx.push(/n chaelo/);
+				n.point = "V-(으)ㄴ 채로";
+				n.des="Used to describe an action performed while in a certain state";
+			break;
+			case 179:
+				rx.push(/eo noh/);
+				rx.push(/ae noh/);
+				rx.push(/a noh/);
+				n.point = "V-아/어 놓다";
+				n.des="Indicates the continuation of a state";
+			break;
+			case 180:
+				rx.push(/eo du/);
+				rx.push(/ae du/);
+				rx.push(/a du/);
+				n.point = "V-아/어 두다";
+				n.des="Indicates the continuation of a state following the completion of an action";
+			break;
+			case 181:
+				rx.push(/daelo/);
+				n.point = "V-(으)ㄴ/는 대로, N대로";
+				n.des="'In accordance with'";
+			break;
+			case 182:
+				rx.push(/n pyeon/);
+				n.point = "A/V-(으)ㄴ/는 편이다";
+				n.des="Used to state a characteristic";
+			break;
+			case 183:
+				rx.push(/seuleob/);
+				n.point = "N스럽다";
+				n.des="Expresses having the same qualities of a certain noun";
+			break;
+			case 184:
+				rx.push(/dab/);
+				n.point = "N답다";
+				n.des="Expresses having the same qualities of a certain noun";
+			break;
+			case 185:
+				rx.push(/nji mol/);
+				n.point = "얼마나 A/V-(으)ㄴ/는지 모르다";
+				n.des="Used to exphasise the degree of a particular situation or state of affairs";
+			break;
+			case 186:
+				rx.push(/l subakk-e eobs/);
+				n.point = "A/V-(으)ㄹ 수밖에 없다";
+				n.des="Expresses there is no other choice but to do the action";
+			break;
+			case 187:
+				rx.push(/l ppun-i/);
+				n.point = "A/V-(으)ㄹ 뿐이다";
+				n.des="Expresses there is only one available course of action or state";
+			break;
+			case 188:
+				rx.push(/yamallo/);
+				n.point = "N(이)야말로";
+				n.des="Strongly emphasises the meaning of a noun";
+			break;
+			case 189:
+				rx.push(/ge(?=\s)/);
+				n.point = "A/V-게";
+				n.des="Indicates the following action is necessary to realise the preceding action or state";
+			break;
+			case 190:
+				rx.push(/dolog/);
+				n.point = "A/V-도록";
+				n.des="Indicates the following action is necessary to realise the preceding action or state";
+			break;
+			case 191:
+				rx.push(/ssdaga/);
+				n.point = "V-았/었다가";
+				n.des="Indicates that the subject performs the second action after the first action is complete";
+			break;
+			case 192:
+				rx.push(/na mana/);
+				n.point = "V-(으)나 마나";
+				n.des="Expresses that an action is of no value or use";
+			break;
+			case 193:
+				rx.push(/eo beol/);
+				rx.push(/ae beol/);
+				rx.push(/a beol/);
+				n.point = "V-아/어 버리다";
+				n.des="Indicates the complete and thorough finishing of an action or event";
+			break;
+			case 194:
+				rx.push(/go mal/);
+				n.point = "V-고 말다";
+				n.des="Refers to an unplanned action or event that continued until it was complete and thoroughly finished";
+			break;
+			case 195:
+				rx.push(/boassja/);
+				n.point = "A/V-아/어 봤자";
+				n.des="Expresses that there is no use even to try to do a certain action";
+			break;
+			case 196:
+				rx.push(/ndamyeon/);
+				n.point = "A/V-(느)ㄴ다면";
+				n.des="Used to refer to a hypothetical situation";
+			break;
+			case 197:
+				rx.push(/ssdeolamyeon/);
+				n.point = "A/V-았/었더라면";
+				n.des="Used to refer to a hypothetical situation in the past that is opposite of what actually happened";
+			break;
+			case 198:
+				rx.push(/l ppeonha/);
+				n.point = "V-(으)ㄹ 뻔하다";
+				n.des="Indicates that an action almost happened, but did not";
+			break;
+			case 199:
+				rx.push(/lgeol geulaess/);
+				n.point = "V-(으)ㄹ걸 그랬다";
+				n.des="Used to express regret";
+			break;
+			case 200:
+				rx.push(/ss-eoya haessneunde/);
+				n.point = "A/V-았/었어야 했는데";
+				n.des="Used to express regret";
+			break;
+			case 201:
+				rx.push(/gon ha/);
+				rx.push(/goneun ha/);
+				n.point = "V-곤 하다, V-고는 하다";
+				n.des="Used to describe something that occurs repeatedly";
+			break;
+			case 202:
+				rx.push(/gineun/);
+				rx.push(/gin-yo/);
+				n.point = "A/V-기는요, N(이)기는요";
+				n.des="Expresses a polite disagreement";
+			break;
+			case 203:
+				rx.push(/n cheogha/);
+				n.point = "A/V-(으)ㄴ/는 척하다, N인 척하다";
+				n.des="'To act'/'to pretend'";
+			break;
+			case 204:
+				rx.push(/neuni/);
+				n.point = "A/V-느니";
+				n.des="";
+			break;
+			case 205:
+				rx.push(/l baeya/);
+				n.point = "A/V-(으)ㄹ 바에야";
+				n.des="";
+			break;
+			case 206:
+				rx.push(/geon(?=\s)/);
+				n.point = "A/V-건 -건";
+				n.des="";
+			break;
+			case 207:
+				rx.push(/ndagibodaneun/);
+				n.point = "A/V-(느)ㄴ다기보다는";
+				n.des="";
+			break;
+			case 208:
+				rx.push(/bogo/);
+				n.point = "A/V-보고";
+				n.des="";
+			break;
+			case 209:
+				rx.push(/ndani/);
+				n.point = "A/V-(느)ㄴ다니까";
+				n.des="";
+			break;
+			case 210:
+				rx.push(/ndamyeonseo/);
+				n.point = "A/V-(느)ㄴ다면서";
+				n.des="";
+			break;
+			case 211:
+				rx.push(/euihamyeon/);
+				n.point = "A/V-에 의하면";
+				n.des="";
+			break;
+			case 212:
+				rx.push(/m(?=\s)/);
+				n.point = "A/V-(으)ㅁ";
+				n.des="";
+			break;
+			case 213:
+				rx.push(/n de(?=\s)/);
+				n.point = "A/V-는 데";
+				n.des="";
+			break;
+			case 214:
+				rx.push(/n ba(?=\s)/);
+				n.point = "A/V-는 바";
+				n.des="";
+			break;
+			case 215:
+				rx.push(/inhaeseo/);
+				n.point = "A/V-(이)로 인해서";
+				n.des="";
+			break;
+			case 216:
+				rx.push(/n tong-e/);
+				n.point = "A/V-는 통에";
+				n.des="";
+			break;
+			case 217:
+				rx.push(/malmiam-a/);
+				n.point = "A/V-(으)로 말미암아";
+				n.des="";
+			break;
+			case 218:
+				rx.push(/neunimankeum/);
+				n.point = "A/V-느니만큼";
+				n.des="";
+			break;
+			case 219:
+				rx.push(/n isang/);
+				n.point = "A/V-는 이상";
+				n.des="";
+			break;
+			case 220:
+				rx.push(/giloseoni/);
+				n.point = "A/V-기로서니";
+				n.des="";
+			break;
+			case 221:
+				rx.push(/mangjeong-iji/);
+				n.point = "A/V-기에 망정이지";
+				n.des="";
+			break;
+			case 222:
+				rx.push(/ndabsigo/);
+				n.point = "A/V-(느)ㄴ답시고";
+				n.des="";
+			break;
+			case 223:
+				rx.push(/eulosseo/);
+				n.point = "A/V-(으)ㅁ으로써";
+				n.des="";
+			break;
+			case 224:
+				rx.push(/gie/);
+				n.point = "A/V-기에";
+				n.des="";
+			break;
+			case 225:
+				rx.push(/gillae/);
+				n.point = "A/V-길래";
+				n.des="";
+			break;
+			case 226:
+				rx.push(/deolado/);
+				n.point = "A/V-더라도";
+				n.des="";
+			break;
+			case 227:
+				rx.push(/ljilado/);
+				n.point = "A/V-(으)ㄹ지라도";
+				n.des="";
+			break;
+			case 228:
+				rx.push(/ndeul/);
+				n.point = "A/V-(으)ㄴ들";
+				n.des="";
+			break;
+			case 229:
+				rx.push(/lmangjeong/);
+				n.point = "A/V-(으)ㄹ망정";
+				n.des="";
+			break;
+			case 230:
+				rx.push(/ndago chida/);
+				n.point = "A/V-(느)ㄴ다고 치다";
+				n.des="";
+			break;
+			case 231:
+				rx.push(/semchida/);
+				n.point = "A/V-는 셈치다";
+				n.des="";
+			break;
+			case 232:
+				rx.push(/museobge/);
+				n.point = "A/V-기가 무섭게";
+				n.des="";
+			break;
+			case 233:
+				rx.push(/ja(?=\s)/);
+				n.point = "A/V-자";
+				n.des="";
+			break;
+			case 234:
+				rx.push(/n han/);
+				n.point = "A/V-는 한";
+				n.des="";
+			break;
+			case 235:
+				rx.push(/lachimyeon/);
+				n.point = "A/V-(으)ㄹ라치면";
+				n.des="";
+			break;
+			case 236:
+				rx.push(/nolamyeon/);
+				n.point = "A/V-노라면";
+				n.des="";
+			break;
+			case 237:
+				rx.push(/neunyae dallyeo/);
+				n.point = "A/V-느냐에 달려 있다";
+				n.des="";
+			break;
+			case 238:
+				rx.push(/gi naleum/);
+				n.point = "A/V-기 나름이다";
+				n.des="";
+			break;
+			case 239:
+				rx.push(/n daelo/);
+				n.point = "A/V-은/는 대로";
+				n.des="";
+			break;
+			case 240:
+				rx.push(/n gim-e/);
+				n.point = "A/V-는 김에";
+				n.des="";
+			break;
+			case 241:
+				rx.push(/geonman/);
+				n.point = "A/V-건만";
+				n.des="";
+			break;
+			case 242:
+				rx.push(/godo/);
+				n.point = "A/V-고도";
+				n.des="";
+			break;
+			case 243:
+				rx.push(/bulguhago/);
+				n.point = "A/V-(으)ㅁ에도 불구하고";
+				n.des="";
+			break;
+			case 244:
+				rx.push(/deus-i/);
+				n.point = "A/V-듯이";
+				n.des="";
+			break;
+			case 245:
+				rx.push(/dasipi/);
+				n.point = "A/V-다시피 하다";
+				n.des="";
+			break;
+			case 246:
+				rx.push(/geonioa/);
+				n.point = "A/V-거니와";
+				n.des="";
+			break;
+			case 247:
+				rx.push(/gineunkeonyeong/);
+				n.point = "A/V-기는커녕";
+				n.des="";
+			break;
+			//////////////////////////////////////////////////////
+			case 248:
+				rx.push(/ /);
+				n.point = "";
+				n.des="";
+			break;
+			case 249:
+				rx.push(/ /);
+				n.point = "";
+				n.des="";
+			break;
+			//////////////////////////////////////////////////////
+			case 250:
+				rx.push(/lppundeoli/);
+				n.point = "A/V-(으)ㄹ뿐더리";
+				n.des="";
+			break;
+			case 251:
+				rx.push(/doi(?=\s)/);
+				n.point = "A/V-되";
+				n.des="";
+			break;
+			case 252:
+				rx.push(/majeo/);
+				n.point = "A/V-마저";
+				n.des="";
+			break;
+			case 253:
+				rx.push(/l biloshaeseo/);
+				n.point = "A/V-을/를 비롯해서";
+				n.des="";
+			break;
+			case 254:
+				rx.push(/a dae/);
+				rx.push(/ae dae/);
+				rx.push(/eo dae/);
+				n.point = "A/V-아/어 대다";
+				n.des="";
+			break;
+			case 255:
+				rx.push(/gi ilssu/);
+				n.point = "A/V-기 일쑤이다";
+				n.des="";
+			break;
+			case 256:
+				rx.push(/n dung h/);
+				n.point = "A/V-는 둥 하다";
+				n.des="";
+			break;
+			case 257:
+				rx.push(/limanchi/);
+				n.point = "A/V-(으)리만치";
+				n.des="";
+			break;
+			case 258:
+				rx.push(/da moshae/);
+				n.point = "A/V-다 못해";
+				n.des="";
+			break;
+			case 259:
+				rx.push(/ndaneun geos/);
+				n.point = "A/V-(느)ㄴ다는 것이";
+				n.des="";
+			break;
+			case 260:
+				rx.push(/lyeogo deulda/);
+				n.point = "A/V-(으)려고 들다";
+				n.des="";
+			break;
+			case 261:
+				rx.push(/lyeodaga/);
+				n.point = "A/V-(으)려다가";
+				n.des="";
+			break;
+			case 262:
+				rx.push(/n deus-i/);
+				n.point = "A/V-는 듯이";
+				n.des="";
+			break;
+			case 263:
+				rx.push(/ndaneun deus-i/);
+				n.point = "A/V-(느)ㄴ다는 듯이";
+				n.des="";
+			break;
+			case 264:
+				rx.push(/n deusha/);
+				n.point = "A/V-는 듯하다";
+				n.des="";
+			break;
+			case 265:
+				rx.push(/l ge ppeonha/);
+				n.point = "A/V-(으)ㄹ 게 뻔하다";
+				n.des="";
+			break;
+			case 266:
+				rx.push(/l beobha/);
+				n.point = "A/V-(으)ㄹ 법하다";
+				n.des="";
+			break;
+			case 267:
+				rx.push(/liga eobs/);
+				n.point = "A/V-(으)ㄹ 리가 없다";
+				n.des="";
+			break;
+			case 268:
+				rx.push(/gi sibsang/);
+				n.point = "A/V-기 십상이다";
+				n.des="";
+			break;
+			case 269:
+				rx.push(/gi mayeon/);
+				n.point = "A/V-기 마연이다";
+				n.des="";
+			break;
+			case 270:
+				rx.push(/n beob-i/);
+				n.point = "A/V-는 법이다";
+				n.des="";
+			break;
+			case 271:
+				rx.push(/nga hamyeon/);
+				n.point = "A/V-는가 하면";
+				n.des="";
+			break;
+			case 272:
+				rx.push(/neuni/);
+				n.point = "A/V-느니 -느니 하다";
+				n.des="";
+			break;
+			case 273:
+				rx.push(/lya(?=\s)/);
+				n.point = "A/V-(으)랴 -(으)랴";
+				n.des="";
+			break;
+			case 274:
+				rx.push(/myeo(?=\s)/);
+				n.point = "A/V-(이)며 -(이)며";
+				n.des="";
+			break;
+			case 275:
+				rx.push(/n kkeut-e/);
+				n.point = "A/V-(으)ㄴ 끝에";
+				n.des="";
+			break;
+			case 276:
+				rx.push(/eo nae/);
+				rx.push(/ae nae/);
+				rx.push(/a nae/);
+				n.point = "A/V-아/어 내다";
+				n.des="";
+			break;
+			case 277:
+				rx.push(/n nameoj/);
+				n.point = "A/V-(으)ㄴ 나머지";
+				n.des="";
+			break;
+			case 278:
+				rx.push(/deyo(?=\s)/);
+				rx.push(/de/);
+				n.point = "A/V-데요";
+				n.des="";
+			break;
+			case 279:
+				rx.push(/n gaunde/);
+				n.point = "A/V-는 가운데";
+				n.des="";
+			break;
+			case 280:
+				rx.push(/n madang-e/);
+				n.point = "A/V-는 마당에";
+				n.des="";
+			break;
+			case 281:
+				rx.push(/chigo/);
+				n.point = "A/V-치고";
+				n.des="";
+			break;
+			case 282:
+				rx.push(/e ttala/);
+				n.point = "A/V-(으)ㅁ에 따라";
+				n.des="";
+			break;
+			case 283:
+				rx.push(/ji anh/);
+				n.point = "여간 -지 않다";
+				n.des="";
+			break;
+			case 284:
+				rx.push(/de eobs/);
+				n.point = "A/V-기가 이를 데 없다";
+				n.des="";
+			break;
+			case 285:
+				rx.push(/suga eobs/);
+				n.point = "A/V-(으)ㄹ래야 -(으)ㄹ 수가 없다";
+				n.des="";
+			break;
+	/*		case 286:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 287:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 288:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 289:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 290:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 291:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 292:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 293:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 294:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 295:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 296:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 297:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 298:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 299:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
+			case 300:
+				rx.push(/ /);
+				n.point = "A/V-";
+				n.des="";
+			break;
 			
-			
-			
-			
+		*/	
+		
+		
 			
 			
 			default: console.log("index out of bounds");
@@ -5663,11 +6438,12 @@ function GrammarLookup(word)
 	var tt = $('#grammarDataTable1').DataTable();
 	tt.clear();
 	
+	console.log(wordRomanised);
 	
 	for(var i=0;i<grammarPoints.length;i++)
 	{	for(var j=0;j<grammarPoints[i].regex.length;j++)
 		{
-			console.log("conparing: "+wordRomanised+" and "+grammarPoints[i].regex[j]);
+			
 			var regex = RegExp(grammarPoints[i].regex[j]);
 			var result = regex.test(wordRomanised);
 			
@@ -5750,7 +6526,7 @@ function SetUILanguage(lang) //TODO
 					<div id="GrammarTab" class="tabcontent">
 						<h2>Grammar</h2>
 						<h3>This section is under development</h3>
-						Highlight some text, and detected grammar points will appear below. Note that the results will include false positives.
+						Highlight some text, and detected grammar points will appear below. Note the results include some false positives, please use your own discretion. 
 						<table id="grammarDataTable1" class="cell-border compact hover" width="100%"></table>
 						<br><br>
 						Full list:
