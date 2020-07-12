@@ -4808,7 +4808,7 @@ function SetGrammarPoints()
 		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=300;
+	var numGrammar=302;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5011,7 +5011,7 @@ function SetGrammarPoints()
 			case 36:
 				rx.push(/nde/);
 				n.point = "A/V-(으)ㄴ/는데";
-				n.des="'But'/'so'/'therefore'/'and'";
+				n.des="'But', 'so', 'therefore', 'and'";
 			break;
 			case 37:
 				rx.push(/jeon-e/);
@@ -5888,7 +5888,7 @@ function SetGrammarPoints()
 				n.des="Expresses that there is no use even to try to do a certain action";
 			break;
 			case 196:
-				rx.push(/ndamyeon/);
+				rx.push(/damyeon/);
 				n.point = "A/V-(느)ㄴ다면";
 				n.des="Used to refer to a hypothetical situation";
 			break;
@@ -6434,6 +6434,14 @@ function SetGrammarPoints()
 				rx.push(/geub/);
 				n.point = "N급";
 				n.des="Indicates the class or grade of a noun";
+			break;
+			case 301:
+				rx.push(/ndaneun(?=\s)/);
+				rx.push(/njaneun(?=\s)/);
+				rx.push(/nnyaneun(?=\s)/);
+				rx.push(/nlaneun(?=\s)/);
+				n.point = "-은/는다는 것";
+				n.des="Indirect quotation";
 			break;
 			
 			
