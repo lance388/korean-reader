@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html lang="en">
+	<head>
+		<title>Korean Reader Blog</title>
+		<link rel="stylesheet" href="format.css"/>
+		<meta http-equiv="Content-Type" name="viewport" charset="utf-8" content="text/html, width=device-width, initial-scale=2.0">
+		<link rel="stylesheet" type="text/css" href="DataTables-1.10.20/datatables.min.css">
+  <script src="jQuery-3.3.1/jquery-3.3.1.min.js"></script>
+  <script src="DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+	</head>
+	
+	<script>
+				$(document).ready(function() {
+							var table1 = $('#table1').DataTable( {
+					"scrollCollapse": false,
+					"paging":         false,
+					"deferRender": true,
+					"searching": false,
+					"info": false,
+					"order": [[ 3, "desc" ]],
+					select: false,
+					columns: [
+						{ title: "Word List" },
+						{ title: "Unknown %" },
+						{ title: "Learning %" },
+						{ title: "Known %" },
+						{ title: "Unknown Unique Words" },
+						{ title: "Total Unique Words" }
+					]
+				} );
+					
+					var t = $('#table1').DataTable();
+					t.clear();
+					
+					t.row.add( ['TOPIK I',	'50.39',	'0.83',	'48.78',	'2297 (77.65%)',	'2958']);
+					t.row.add( ['(S)-TOPIK 1',	'51.63',	'0.7',	'47.68',	'2925 (80.96%)',	'3613'] );
+					t.row.add( ['(S)-TOPIK 2',	'62.3',	'1.04',	'36.66',	'7400 (89.71%)',	'8249'] );
+					t.row.add( ['TOPIK II',	'68.93',	'0.71',	'30.37',	'9884 (92.26%)',	'10713'] );
+					t.row.add( ['(S)-TOPIK 3',	'70.71',	'0.98',	'28.32',	'9702 (92.72%)',	'10464'] );
+					t.row.add( ['Rodong Sinmun',	'83.93',	'0.67',	'15.4',	'5787 (95.43%)',	'6064'] );
+					t.row.add( ['Yanbian Daily',	'82.57',	'0.82',	'16.61',	'5775 (93.98%)',	'6145'] );
+					t.row.add( ['The Dong-a Ilbo',	'78.96',	'0.99',	'20.05',	'5559 (93.15%)',	'5968'] );
+					t.row.add( ['Jeju Sori',	'78.9',	'0.86',	'20.24',	'5548 (92.93%)',	'5970'] );
+					t.row.add( ['Kids Dong-a',	'77.36',	'1.32',	'21.31',	'5711 (92.37%)',	'6183'] );
+					t.row.add( ['MBC Weather',	'76.38',	'0.84',	'22.78',	'1294 (89.12%)',	'1452'] );
+					
+					
+					
+
+
+
+
+					
+					t.draw();
+				});
+					
+					
+			
+			</script>
+	
+	<body>
+		<div class="content">
+		
+		
+			<div class="menu">
+					<ul id="nav">
+						<li><a href="index.html">Blog</a></li>
+					</ul>
+			</div>
+		<div class="main" id="blog">
+		
+		<h4>
+		Korean Progress Update - 2000 Words
+		</h4>
+		<small>
+		 July 20, 2020
+		</small>
+		<p>
+		In this first update I will putting down my stats at the 2000 known words mark of learning Korean.
+		</p>
+		<table id="table1" class="cell-border compact hover" width="100%"></table>
+		</div>	
+		</body>
+		
+	<footer>
+		<p class="footer"></p>
+	</footer>
