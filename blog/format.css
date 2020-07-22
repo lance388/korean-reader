@@ -8,7 +8,7 @@ html
 }
 
 p{
-	font-size:0.8em;
+	font-size:2em;
 }
 
 h2{
@@ -91,6 +91,11 @@ left:22.5%;
 	padding-top:0.8em;
 }
 
+.date
+{
+	text-align: right;
+	padding-right:1em;
+}
 
 /*  MENU  */
 .menu{
@@ -200,7 +205,7 @@ height:2em;
 
 .mytable td, .mytable th { 
    text-align: center;  
-    font-size: 0.8em;
+    font-size: 1.5em;
 	padding:0.1em;
 }
 
@@ -220,7 +225,7 @@ height:2em;
 }
 
 #blog p{
-	font-size:.6em;
+	font-size:1.5em;
 }
 
 
@@ -239,7 +244,7 @@ left:22.5%;
 }
 @media only screen and (max-width: 800px) {
 .content{
-font-size:.9em;
+font-size:1.5em;
 	width:65%;
 }
 .banner{
@@ -248,14 +253,14 @@ left:17.5%;
 }
 
 .mytable td, .mytable th { 
-    font-size: 0.9em;
+    font-size: 1.5em;
 }
 
 }
 
 @media only screen and (max-width: 600px) {
 .content {
-font-size:.8em;
+font-size:1em;
 	width:90%;
 }
 .banner{
@@ -263,11 +268,11 @@ width:90%;
 left:5%;
 }
 .footer{
-font-size:.7em;
+font-size:1em;
 }
 
 .mytable td, .mytable th { 
-    font-size: 0.8em;
+    font-size: 1em;
 }
 
 }
@@ -275,7 +280,7 @@ font-size:.7em;
 @media only screen and (max-width: 500px) {
 
 .mytable td, .mytable th { 
-    font-size: 0.7em;
+    font-size: .7em;
 }
 
 .content {
@@ -317,7 +322,7 @@ font-size:.7em;
 }
 
 .mytable td, .mytable th { 
-    font-size: .5em;
+    font-size: .7em;
 }
 
 .banner{
@@ -325,7 +330,7 @@ width:100%;
 left:0;
 }
 #nav li a {
-	font-size:.8em;
+	font-size:.7em;
 }
 
 .subdiv{
