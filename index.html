@@ -4809,7 +4809,7 @@ function SetGrammarPoints()
 		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=322;
+	var numGrammar=323;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4866,7 +4866,9 @@ function SetGrammarPoints()
 			break;
 			case 6:
 				rx.push(/l geo/);
-				n.point = "V-(으)ㄹ 거예요";
+				rx.push(/lgeoya/);
+				rx.push(/lgeoye/);
+				n.point = "V-(으)ㄹ 거예요/V-(으)ㄹ 거야";
 				n.des="Future tense";
 			break;
 			case 7:
@@ -5375,7 +5377,7 @@ function SetGrammarPoints()
 			case 102:
 				rx.push(/nga(?=\s)/);
 				rx.push(/ngayo(?=\s)/);
-				n.point = "A-(으)ㄴ가요";
+				n.point = "A-(으)ㄴ가(요)";
 				n.des="Used to politely and gently ask a question";
 			break;
 			case 103:
@@ -5721,7 +5723,8 @@ function SetGrammarPoints()
 			break;
 			case 165:
 				rx.push(/deunji/);
-				n.point = "N/A/V-든지 -든지";
+				rx.push(/deun(?=\s)/);
+				n.point = "N/A/V-든(지)";
 				n.des="Indicates that any of the stated choices are fine";
 			break;
 			case 166:
@@ -6533,22 +6536,27 @@ function SetGrammarPoints()
 			case 318:
 				rx.push(/laneun/);
 				n.point = "-(이)라는";
-				n.des="Shortened form of -(이)라고 하는";
+				n.des="Direct or indirect quotation， shortened form of -(이)라고 하는";
 			break;
 			case 319:
 				rx.push(/daneun/);
 				n.point = "-(이)다는";
-				n.des="Shortened form of -(이)다고 하는";
+				n.des="Indirect quotation， shortened form of -(이)다고 하는";
 			break;
 			case 320:
 				rx.push(/janeun/);
 				n.point = "-(이)자는";
-				n.des="Shortened form of -(이)자고 하는";
+				n.des="Indirect quotation， shortened form of -(이)자고 하는";
 			break;
 			case 321:
 				rx.push(/nyaneun/);
 				n.point = "-(이)냐는";
-				n.des="Shortened form of -(이)냐고 하는";
+				n.des="Indirect quotation， shortened form of -(이)냐고 하는";
+			break;
+			case 322:
+				rx.push(/nyaneun/);
+				n.point = "-성";
+				n.des="'性', used with some Sino-Korean words to indicate something's property or essense";
 			break;
 			
 			
