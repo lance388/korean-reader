@@ -4707,7 +4707,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=11;
+	var numGrammar=12;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4792,7 +4792,15 @@ function SetHangulGrammarTriggers()
 				rx.push(/니(?=\s)/);
 				n.point = "-아/어, -(이)야, -니";
 				n.des="Casual speech";
-			break;			
+			break;
+			case 11:
+				n.num = 92;
+				rx.push(/기/);
+				n.point = "A/V-기";
+				n.des="Particle that turns adjectives and verbs into nouns";
+			break;
+
+			
 			default: console.log("index out of bounds");
 		}
 		n.regex=rx;
@@ -4809,7 +4817,7 @@ function SetGrammarPoints()
 		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=323;
+	var numGrammar=335;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4861,7 +4869,7 @@ function SetGrammarPoints()
 				rx.push(/haess/);
 				rx.push(/yess/);
 				rx.push(/iess/);
-				n.point = "A/V-았/었어요";
+				n.point = "A/V-았/었어(요)";
 				n.des="Past tense";
 			break;
 			case 6:
@@ -4880,13 +4888,13 @@ function SetGrammarPoints()
 				rx.push(/ass-eoss/);
 				rx.push(/eoss-eoss/);
 				rx.push(/aess-eoss/);
-				n.point = "A/V-았/었었어요";
+				n.point = "A/V-았/었었어(요)";
 				n.des="Past perfect tense";
 			break;
 			case 9:
 				rx.push(/ji an/);
 				rx.push(/ji mos/);
-				n.point = "A/V-지 않아요 / V-지 못해요";
+				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
 			case 10:
@@ -5176,12 +5184,12 @@ function SetGrammarPoints()
 			break;
 			case 66:
 				rx.push(/julge(?=\s)/);
-				n.point = "V-아/어 줄게요";
+				n.point = "V-아/어 줄게(요)";
 				n.des="'Shall I', 'allow me'";
 			break;
 			case 67:
 				rx.push(/julkka(?=\s)/);
-				n.point = "V-아/어 줄까요?";
+				n.point = "V-아/어 줄까(요)?";
 				n.des="'Shall I', 'allow me'";
 			break;
 			case 68:
@@ -5189,7 +5197,7 @@ function SetGrammarPoints()
 				rx.push(/eo bo/);
 				rx.push(/e bo/);
 				n.point = "V-아/어 보다";
-				n.des="'Experesses trying something'";
+				n.des="Experesses trying something";
 			break;
 			case 69:
 				rx.push(/n jeog-i iss/);
@@ -5199,7 +5207,7 @@ function SetGrammarPoints()
 			
 			case 70:
 				rx.push(/lkka/);
-				n.point = "V-(으)ㄹ까요?";
+				n.point = "V-(으)ㄹ까(요)?";
 				n.des="'Shall we', 'shall I'?";
 			break;
 			case 71:
@@ -5209,27 +5217,27 @@ function SetGrammarPoints()
 			break;
 			case 72:
 				rx.push(/sigess/);
-				n.point = "V-(으)시겠어요?";
+				n.point = "V-(으)시겠어(요)?";
 				n.des="'Would you (mind/like to)', 'why not?'";
 			break;
 			case 73:
 				rx.push(/llae/);
-				n.point = "V-(으)ㄹ래요?";
+				n.point = "V-(으)ㄹ래(요)?";
 				n.des="'How about?'";
 			break;
 			case 74:
 				rx.push(/gess/);
-				n.point = "A/V-겠어요";
+				n.point = "A/V-겠어(요)";
 				n.des="'(I) plan to', '(I) am going to'";
 			break;
 			case 75:
 				rx.push(/lge/);
-				n.point = "V-(으)ㄹ게요";
+				n.point = "V-(으)ㄹ게(요)";
 				n.des="'(I) will (do)'";
 			break;
 			case 76:
 				rx.push(/llae/);
-				n.point = "V-(으)ㄹ래요";
+				n.point = "V-(으)ㄹ래(요)";
 				n.des="'Be going to', 'will'";
 			break;
 			case 77:
@@ -5281,17 +5289,17 @@ function SetGrammarPoints()
 			break;
 			case 86:
 				rx.push(/gess-eo/);
-				n.point = "A/V-겠어요";
+				n.point = "A/V-겠어(요)";
 				n.des="'Appears that'";
 			break;
 			case 87:
-				rx.push(/l geoye/);
-				n.point = "A/V-(으)ㄹ 거예요";
-				n.des="'Will'";
+				rx.push(/dam/);
+				n.point = "담";
+				n.des="'Next', shortened form of 다음";
 			break;
 			case 88:
 				rx.push(/lkka/);
-				n.point = "A/V-(으)ㄹ까요?";
+				n.point = "A/V-(으)ㄹ까(요)?";
 				n.des="'Do (you) think...?'";
 			break;
 			case 89:
@@ -5306,9 +5314,8 @@ function SetGrammarPoints()
 				n.des="Noun modifying form";
 			break;
 			case 91:
-				rx.push(/gi/);
 				n.point = "A/V-기";
-				n.des="Turns adjectives and verbs into nouns";
+				n.des="Particle that turns adjectives and verbs into nouns";
 			break;
 			case 92:
 				rx.push(/ge(?=\s)/);
@@ -5359,19 +5366,19 @@ function SetGrammarPoints()
 				rx.push(/jiyo(?=\s)/);
 				rx.push(/ji(?=\s)/);
 				rx.push(/jyo(?=\s)/);
-				n.point = "A/V-지요/죠?";
+				n.point = "A/V-지(요)/죠?";
 				n.des="'Isn't it?', indicates a tag question";
 			break;
 			case 100:
 				rx.push(/gun/);
 				rx.push(/neungun/);
-				n.point = "A/V-군요/는군요/구나/군";
+				n.point = "A/V-군(요)/는군(요)/구나/군";
 				n.des="Expresses wonder or surprise";
 			break;
 			case 101:
 				rx.push(/ne(?=\s)/);
 				rx.push(/neyo(?=\s)/);
-				n.point = "A/V-네요";
+				n.point = "A/V-네(요)";
 				n.des="Expresses wonder or surprise";
 			break;
 			case 102:
@@ -5383,12 +5390,12 @@ function SetGrammarPoints()
 			case 103:
 				rx.push(/na(?=\s)/);
 				rx.push(/nayo(?=\s)/);
-				n.point = "V-나요";
+				n.point = "V-나(요)";
 				n.des="Used to politely and gently ask a question";
 			break;
 			case 104:
 				rx.push(/nde(?=\s)/);
-				n.point = "A/V-(으)ㄴ/는데요";
+				n.point = "A/V-(으)ㄴ/는데(요)";
 				n.des="Expresses one's disagreement";
 			break;
 			case 105:
@@ -5433,7 +5440,7 @@ function SetGrammarPoints()
 			break;
 			case 111:
 				rx.push(/lgeol/);
-				n.point = "A/V-(으)ㄹ걸요";
+				n.point = "A/V-(으)ㄹ걸(요)";
 				n.des="Expresses an unconfirmed assumption about a future event";
 			break;
 			case 112:
@@ -5517,12 +5524,12 @@ function SetGrammarPoints()
 			break;
 			case 126:
 				rx.push(/geodeun/);
-				n.point = "A/V-거든요";
+				n.point = "A/V-거든(요)";
 				n.des="Used to respond to a question or add to a statement";
 			break;
 			case 127:
 				rx.push(/janh-a/);
-				n.point = "A/V-잖아요";
+				n.point = "A/V-잖아(요)";
 				n.des="Used to state a reason that the listener should be aware of";
 			break;
 			case 128:
@@ -5552,7 +5559,7 @@ function SetGrammarPoints()
 			break;
 			case 133:
 				rx.push(/damyeons/);
-				n.point = "A/V-다면서요?";
+				n.point = "A/V-다면서(요)?";
 				n.des="Used to confirm what the speaker has heard from a third party";
 			break;
 			case 134:
@@ -5565,7 +5572,7 @@ function SetGrammarPoints()
 				rx.push(/lani/);
 				rx.push(/nyani/);
 				rx.push(/jani/);
-				n.point = "A/V-다니요";
+				n.point = "A/V-다니(요)";
 				n.des="Expresses surprise towards what somebody has said";
 			break;
 			case 136:
@@ -5590,7 +5597,7 @@ function SetGrammarPoints()
 			break;
 			case 140:
 				rx.push(/yaji/);
-				n.point = "V-아/어야지요";
+				n.point = "V-아/어야지(요)";
 				n.des="Used to make a promise to oneself";
 			break;
 			case 141:
@@ -5605,7 +5612,7 @@ function SetGrammarPoints()
 			break;
 			case 143:
 				rx.push(/ji geul/);
-				n.point = "V-지 그래요";
+				n.point = "V-지 그래(요)";
 				n.des="Used to give a suggestion";
 			break;
 			case 144:
@@ -5615,7 +5622,7 @@ function SetGrammarPoints()
 			break;
 			case 145:
 				rx.push(/deolago/);
-				n.point = "A/V-더라고요";
+				n.point = "A/V-더라고(요)";
 				n.des="Indicates recollection";
 			break;
 			case 146:
@@ -5652,7 +5659,7 @@ function SetGrammarPoints()
 			break;
 			case 151:
 				rx.push(/nde/);
-				n.point = "A/V-(으)ㄴ/는데요";
+				n.point = "A/V-(으)ㄴ/는데(요)";
 				n.des="Used to give an explanation";
 			break;
 			case 152:
@@ -5924,7 +5931,7 @@ function SetGrammarPoints()
 			case 202:
 				rx.push(/gineun/);
 				rx.push(/gin-yo/);
-				n.point = "A/V-기는요, N(이)기는요";
+				n.point = "A/V-기는(요), N(이)기는(요)";
 				n.des="Expresses a polite disagreement";
 			break;
 			case 203:
@@ -6318,7 +6325,7 @@ function SetGrammarPoints()
 			case 278:
 				rx.push(/deyo(?=\s)/);
 				rx.push(/de(?=\s)/);
-				n.point = "A/V-데요";
+				n.point = "A/V-데(요)";
 				n.des="Expresses recollection";
 			break;
 			case 279:
@@ -6430,7 +6437,7 @@ function SetGrammarPoints()
 			break;
 			case 299:
 				rx.push(/goyo/);
-				n.point = "A/V-고요";
+				n.point = "A/V-고(요)";
 				n.des="Used to add additional information to something stated earlier";
 			break;
 			case 300:
@@ -6557,6 +6564,66 @@ function SetGrammarPoints()
 				rx.push(/nyaneun/);
 				n.point = "-성";
 				n.des="'性', used with some Sino-Korean words to indicate something's property or essense";
+			break;
+			case 323:
+				rx.push(/mueol/);
+				n.point = "뭘";
+				n.des="'What', shortened form of 무엇을";
+			break;
+			case 324:
+				rx.push(/mueo/);
+				n.point = "뭐";
+				n.des="'What', shortened form of 무엇";
+			break;
+			case 325:
+				rx.push(/eottae/);
+				n.point = "어때";
+				n.des="'How is...', shortened form of 어떻다 or 어떻게";
+			break;
+			case 326:
+				rx.push(/geulgo/);
+				n.point = "글고";
+				n.des="'And', shortened form of 그리고";
+			break;
+			case 327:
+				rx.push(/cheom/);
+				n.point = "첨";
+				n.des="'First', shortened form of 처음";
+			break;
+			case 328:
+				rx.push(/il-yol/);
+				n.point = "일욜";
+				n.des="'Sunday', shortened form of 일요일";
+			break;
+			case 329:
+				rx.push(/nael/);
+				n.point = "낼";
+				n.des="'Tomorrow', shortened form of 내일";
+			break;
+			case 330:
+				rx.push(/gyang/);
+				n.point = "걍";
+				n.des="'Just', shortened form of 그냥";
+			break;
+			case 331:
+				rx.push(/alsseo/);
+				n.point = "알써";
+				n.des="'(I) Know', shortened form of 알았어";
+			break;
+			case 332:
+				rx.push(/molgess/);
+				n.point = "몰겠어";
+				n.des="'(I) don't know', shortened form of 모르겠어";
+			break;
+			case 333:
+				rx.push(/neom/);
+				n.point = "넘";
+				n.des="'Very', shortened form of 너무";
+			break;
+			case 334:
+				rx.push(/jim/);
+				n.point = "짐";
+				n.des="'Now', shortened form of 지금";
 			break;
 			
 			
