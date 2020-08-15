@@ -5087,7 +5087,7 @@ function SetGrammarPoints()
 				n.des="'Since'";
 			break;
 			case 49:
-				rx.push(/l su iss/);
+				rx.push(/l su/);
 				n.point = "V-(으)ㄹ 수 있다/없다";
 				n.des="'Can'";
 			break;
@@ -5118,7 +5118,7 @@ function SetGrammarPoints()
 			break;
 			case 55:
 				rx.push(/ya(?=\s)/);
-				n.point = "A/V-아/어야 되다/하다";
+				n.point = "A/V-아/어야 (되다/하다)";
 				n.des="'Must', 'have to'";
 			break;
 			case 56:
@@ -5166,9 +5166,9 @@ function SetGrammarPoints()
 				n.des="'Because'";
 			break;
 			case 63:
-				rx.push(/nikka(?=\s)/);
+				rx.push(/nikka/);
 				rx.push(/ni(?=\s)/);
-				n.point = "A/V-(으)니까, A/V-(으)니";
+				n.point = "A/V-(으)니까(요), A/V-(으)니";
 				n.des="'Because', 'when', '(do something) only to discover'";
 			break;
 			
@@ -5267,7 +5267,7 @@ function SetGrammarPoints()
 			break;
 			case 82:
 				rx.push(/gilo(?=\s)/);
-				n.point = "V-기로 하다";
+				n.point = "V-기로 (하다)";
 				n.des="Indicates a decision or promise";
 			break;
 			case 83:
@@ -6733,7 +6733,7 @@ function SetUILanguage(lang) //TODO
 					</div>
 					<div class="tab3">
 						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK <sup>[9]</sup></button>
-						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph - Current Text <sup>[0]</sup></button>
+						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph <sup>[0]</sup></button>
 						<button id="AchievementsTabButton" class="tablinks" onclick="openTab(event, 'AchievementsTab','tablinks')">Achievements <sup>[-]</sup></button>
 					</div>
 				</div>
@@ -6771,7 +6771,7 @@ function SetUILanguage(lang) //TODO
 					<h2>Language Settings</h2><hr><br>
 					<form>User Interface Language:
 							<select id="uiLanguageOption" onchange="ChangeUILanguage();">
-								<option>English</option>
+								<option selected="selected">English</option>
 							</select>	
 						</form>
 					<br><br>
@@ -6823,7 +6823,7 @@ function SetUILanguage(lang) //TODO
 							<select id="readerLanguageOption" onchange="ChangeReaderLanguage();">
 								<option>English</option>
 								<option>Chinese</option>
-								<option>Korean</option>
+								<option selected="selected">Korean</option>
 							</select>	
 						</form>
 					<br>
@@ -6951,7 +6951,7 @@ function SetUILanguage(lang) //TODO
 							<select id="filterImportOption" onchange="ChangeFilterImport();">
 								<option>Unknown</option>
 								<option>Learning</option>
-								<option>Known</option>
+								<option selected="selected">Known</option>
 							</select>
 						</form><br><br><button id="importButton" onclick="ButtonImportSubmit();">Import</button> &nbsp
 						<br>
@@ -6964,7 +6964,7 @@ function SetUILanguage(lang) //TODO
 							<select id="filterExportWordlistOption" onchange="ChangeFilterExportWordlist();">
 								<option>Vocabulary - All</option>
 								<option>Vocabulary - Unknown</option>
-								<option>Vocabulary - Learning</option>
+								<option selected="selected">Vocabulary - Learning</option>
 								<option>Vocabulary - Known</option>
 								<option>Current Text - All</option>
 								<option>Current Text - Unknown</option>
