@@ -577,3 +577,12 @@ canvas{
 	background-color: var(--tertiary-bg);
 }
 
+#LoadingText
+{
+	text-align: center;
+  justify-content: center;
+  align-content: center;
+  padding-top:14vh;
+  font-size:2vw;
+}
+
