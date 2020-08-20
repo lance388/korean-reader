@@ -4892,7 +4892,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=12;
+	var numGrammar=11;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4908,67 +4908,60 @@ function SetHangulGrammarTriggers()
 				n.des="Particle denoting direction or time";
 			break;	
 			case 1:
-				n.num = 12;
-				rx.push(/은(?=\s)/);
-				rx.push(/는(?=\s)/);
-				n.point = "N은/는";
-				n.des="Topic marking particle";
-			break;
-			case 2:
 				n.num = 11;
 				rx.push(/이(?=\s)/);
 				rx.push(/가(?=\s)/);
 				n.point = "N이/가";
 				n.des="Subject marking particle";
 			break;
-			case 3:
+			case 2:
 				n.num = 17;
 				rx.push(/의(?=\s)/);
 				n.point = "N의";
 				n.des="Particle denoting possession";
 			break;
-			case 4:
+			case 3:
 				n.num = 14;
 				rx.push(/와(?=\s)/);
 				rx.push(/과(?=\s)/);
 				n.point = "N와/과";
 				n.des="Particle denoting 'and'";
 			break;
-			case 5:
+			case 4:
 				n.num = 22;
 				rx.push(/에게/);
 				rx.push(/에겐/);
 				n.point = "N에게";
 				n.des="Particle denoting a recipient";
 			break;
-			case 6:
+			case 5:
 				n.num = 13;
 				rx.push(/를(?=\s)/);
 				rx.push(/을(?=\s)/);
 				n.point = "N을/를";
 				n.des="Object marking particle";
 			break;
-			case 7:
+			case 6:
 				n.num = 19;
 				rx.push(/에서/);
 				n.point = "N에서";
 				n.des="Particle denoting location/'from...'";
 			break;
-			case 8:
+			case 7:
 				n.num = 126;
 				rx.push(/야(?=\s)/);
 				rx.push(/아(?=\s)/);
 				n.point = "-야, -아";
 				n.des="Particle used in casual speech when calling someone by name";
 			break;
-			case 9:
+			case 8:
 				n.num = 213;
 				rx.push(/오(?=\s)/);
 				rx.push(/소(?=\s)/);
 				n.point = "A/V-오/소";
 				n.des="Honorific imperative";
 			break;
-			case 10:
+			case 9:
 				n.num = 119;
 				rx.push(/아(?=\s)/);
 				rx.push(/어(?=\s)/);
@@ -4978,7 +4971,7 @@ function SetHangulGrammarTriggers()
 				n.point = "-아/어, -(이)야, -니";
 				n.des="Casual speech";
 			break;
-			case 11:
+			case 10:
 				n.num = 92;
 				rx.push(/기/);
 				n.point = "A/V-기";
@@ -5002,7 +4995,7 @@ function SetGrammarPoints()
 		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=335;
+	var numGrammar=336;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5041,7 +5034,7 @@ function SetGrammarPoints()
 			case 4:
 				rx.push(/ayo(?=\s)/);
 				rx.push(/eoyo(?=\s)/);
-				rx.push(/haeyo(?=\s)/);
+				rx.push(/aeyo(?=\s)/);
 				rx.push(/yeyo(?=\s)/);
 				rx.push(/ieyo(?=\s)/);
 				n.point = "A/V-아/어요";
@@ -5087,6 +5080,7 @@ function SetGrammarPoints()
 				n.des="Subject marking particle";
 			break;
 			case 11:
+				rx.push(/n(?=\s)/);
 				n.point = "N은/는";
 				n.des="Topic marking particle";
 			break;
@@ -5140,8 +5134,8 @@ function SetGrammarPoints()
 				n.des="Particle denoting a recipient";
 			break;
 			case 23:
-				rx.push(/do(?=\s)/);
-				n.point = "N도";
+				rx.push(/do/);
+				n.point = "N도, N도(요)";
 				n.des="'Also', particle denoting the listing of something";
 			break;
 			case 24:
