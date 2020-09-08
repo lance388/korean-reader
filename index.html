@@ -4892,7 +4892,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=11;
+	var numGrammar=12;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -4977,6 +4977,12 @@ function SetHangulGrammarTriggers()
 				n.point = "A/V-기";
 				n.des="Particle that turns adjectives and verbs into nouns";
 			break;
+			case 11:
+				n.num = 338;
+				rx.push(/거/);
+				n.point = "거";
+				n.des="Shortened form of 것, 'thing'";
+			break;
 
 			
 			default: console.log("index out of bounds");
@@ -4995,7 +5001,7 @@ function SetGrammarPoints()
 		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=336;
+	var numGrammar=338;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5072,6 +5078,8 @@ function SetGrammarPoints()
 			case 9:
 				rx.push(/ji an/);
 				rx.push(/ji mos/);
+				rx.push(/jineun an/);
+				rx.push(/jineun mos/);
 				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
@@ -5561,6 +5569,8 @@ function SetGrammarPoints()
 				n.des="Expresses wonder or surprise";
 			break;
 			case 102:
+				rx.push(/nganeun/);
+				rx.push(/ngaleul/);
 				rx.push(/nga(?=\s)/);
 				rx.push(/ngayo(?=\s)/);
 				n.point = "A-(으)ㄴ가(요)";
@@ -6811,6 +6821,27 @@ function SetGrammarPoints()
 				n.point = "-(으)시-";
 				n.des="Honorific";
 			break;
+			case 336:
+				rx.push(/yagess/);
+				n.point = "A/V-아/어야겠다";
+				n.des="'Had better', '(I) guess (I) have to'";
+			break;
+			case 337:
+				n.point = "거";
+				n.des="Shortened form of 것, 'thing'";
+			break;
+			case 338:
+				rx.push(/kkili/);
+				n.point = "-끼리";
+				n.des="'Among', 'between'";
+			break;
+			case 339:
+				rx.push(/ssig/);
+				n.point = "-씩";
+				n.des="'Apiece', 'per'";
+			break;
+			
+			
 			
 			
 		
