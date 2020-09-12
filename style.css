@@ -510,9 +510,11 @@ canvas{
 	
 			display: grid;
         grid-template-columns: 100%;
-		grid-template-rows: 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬%;
+		grid-template-rows: 19.2‬‬% 1% 19.2‬‬% 1% 19.2‬‬% 1% 19.2‬% 1% 19.2‬%;
 		grid-template-areas:
         "topbarbutton2"
+		"empty"
+		"topbarbutton2"
 		"empty"
 		"topbarbutton2"
 		"empty"
@@ -544,8 +546,10 @@ canvas{
 		
 				display: grid;
 			grid-template-columns: 100%;
-			grid-template-rows: 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬‬% 1% 24.25‬%;
+			grid-template-rows: 19.2‬‬% 1% 19.2‬‬% 1% 19.2‬‬% 1% 19.2‬% 1% 19.2‬%;
 			grid-template-areas:
+			"topbarbutton2"
+			"empty"
 			"topbarbutton2"
 			"empty"
 			"topbarbutton2"
