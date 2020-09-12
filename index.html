@@ -7215,7 +7215,7 @@ function SetUILanguage(lang) //TODO
 					<h2>Login</h2><hr>
 						<br>
 						<br>
-						<h4>Log in with Google&nbsp&nbsp&nbsp&nbsp</h4><div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
+						<div id="GoogleLoginText"><h4>Log in with Google&nbsp&nbsp&nbsp&nbsp</h4></div><div id="SignInButton" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
 						<script>
 						  function onSignIn(googleUser) {
 							console.log("test "+googleUser.getAuthResponse().id_token);
@@ -7236,9 +7236,12 @@ function SetUILanguage(lang) //TODO
 							{
 								var loginText = document.getElementById ("loginText");
 								loginText.innerHTML="<h1>Logged in as "+profile.getName()+"</h1>";
-								loginText
 								var loginTabButton = document.getElementById ("LoginTabButton");
 								loginTabButton.innerHTML="<b>Logged in as "+profile.getName()+"</b>";
+								var signInButton = document.getElementById ("SignInButton");
+								signInButton.style.display="none";
+								var googleLoginText = document.getElementById ("GoogleLoginText");
+								googleLoginText.style.display="none";
 							}
 						  }
 						</script>
