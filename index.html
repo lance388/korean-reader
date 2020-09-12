@@ -7262,8 +7262,6 @@ function SetUILanguage(lang) //TODO
 								var auth2 = gapi.auth2.getAuthInstance();
 								auth2.signOut().then(function () {
 								  console.log('User signed out.');
-									var loginText = document.getElementById ("loginText");
-									loginText.innerHTML="<h1>Logged in as "+profile.getName()+"</h1>";
 									var loginTabButton = document.getElementById ("LoginTabButton");
 									loginTabButton.innerHTML="<b>Login</b>";
 									var loginArea = document.getElementById ("LoginArea");
