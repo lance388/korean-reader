@@ -7236,8 +7236,6 @@ function SetUILanguage(lang) //TODO
 							
 
 							
-							if(id_token)
-							{
 								var loginText = document.getElementById ("loginText");
 								loginText.innerHTML="<h1>Logged in as "+profile.getName()+"</h1>";
 								var loginTabButton = document.getElementById ("LoginTabButton");
@@ -7246,7 +7244,6 @@ function SetUILanguage(lang) //TODO
 								loginArea.style.display="none";
 								var LogoutArea = document.getElementById ("LoginArea");
 								loginArea.style.display="block";
-							}
 						  }
 						</script>
 						<br>
@@ -7257,8 +7254,6 @@ function SetUILanguage(lang) //TODO
 							<a id="LogoutButton" href="#" onclick="signOut();">Sign out</a>
 							<script>
 							  function signOut() {
-							  var id_token = googleUser.getAuthResponse().id_token;
-							  console.log("ID Token: " + id_token);
 								var auth2 = gapi.auth2.getAuthInstance();
 								auth2.signOut().then(function () {
 								  console.log('User signed out.');
