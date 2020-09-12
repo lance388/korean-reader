@@ -7235,10 +7235,10 @@ function SetUILanguage(lang) //TODO
 							if(id_token)
 							{
 								var loginText = document.getElementById ("loginText");
-								loginText.innerText="Logged in as "+profile.getName();
+								loginText.innerHTML="<h1>Logged in as "+profile.getName()+"</h1>";
 								loginText
 								var loginTabButton = document.getElementById ("LoginTabButton");
-								loginTabButton.innerText="<b>Logged in as "+profile.getName()+"</b>";
+								loginTabButton.innerHTML="<b>Logged in as "+profile.getName()+"</b>";
 							}
 						  }
 						</script>
