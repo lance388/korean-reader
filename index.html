@@ -2480,9 +2480,9 @@ This software uses the following plugins, please take note of their individual l
 	
 	ShowMenu(false);
 	
-	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="GrammarTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
+	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="LoginTab"||tabName=="ImagesTab"||tabName=="GrammarTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
 	||
-	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="GrammarTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
+	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="GrammarTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="LoginTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
 	)
 	{
 		ShowSidebar(false); 
@@ -2519,7 +2519,7 @@ This software uses the following plugins, please take note of their individual l
 	
 	  
 	  
-	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"||tabName=="GrammarTab")
+	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="LoginTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"||tabName=="GrammarTab")
 	  {
 		document.documentElement.style.setProperty('--tab-top-percent', '0%');
 		document.documentElement.style.setProperty('--tab-bot-percent', '100%');
@@ -7228,8 +7228,13 @@ function SetUILanguage(lang) //TODO
 							// The ID token you need to pass to your backend:
 							var id_token = googleUser.getAuthResponse().id_token;
 							console.log("ID Token: " + id_token);
+							
+							var loginText = document.getElementById ("loginText");
+							loginText.innerText="Logged in as "+profile.getName();
 						  }
 						</script>
+						<div id="loginText">
+						</div>
 					</div>
 					
 					<div id="ImportTab" class="tabcontent">
