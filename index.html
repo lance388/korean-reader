@@ -7218,6 +7218,7 @@ function SetUILanguage(lang) //TODO
 						<h4>Log in with Google&nbsp&nbsp&nbsp&nbsp</h4><div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
 						<script>
 						  function onSignIn(googleUser) {
+							console.log("test "+googleUser.getAuthResponse().id_token);
 							// Useful data for your client-side scripts:
 							var profile = googleUser.getBasicProfile();
 							console.log("ID: " + profile.getId()); // Don't send this directly to your server!
@@ -7231,8 +7232,14 @@ function SetUILanguage(lang) //TODO
 							var id_token = googleUser.getAuthResponse().id_token;
 							console.log("ID Token: " + id_token);
 							
-							var loginText = document.getElementById ("loginText");
-							loginText.innerText="Logged in as "+profile.getName();
+							if(id_token)
+							{
+								var loginText = document.getElementById ("loginText");
+								loginText.innerText="Logged in as "+profile.getName();
+								loginText
+								var loginTabButton = document.getElementById ("LoginTabButton");
+								loginTabButton.innerText="<b>Logged in as "+profile.getName()+"</b>";
+							}
 						  }
 						</script>
 						<br>
