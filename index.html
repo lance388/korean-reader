@@ -7213,7 +7213,9 @@ function SetUILanguage(lang) //TODO
 					
 					<div id="LoginTab" class="tabcontent">
 					<h2>Login</h2><hr>
-						<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+						<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> Log in with Google
+						<br>
+						<br>
 						<script>
 						  function onSignIn(googleUser) {
 							// Useful data for your client-side scripts:
@@ -7233,6 +7235,7 @@ function SetUILanguage(lang) //TODO
 							loginText.innerText="Logged in as "+profile.getName();
 						  }
 						</script>
+						<br><br>
 						<div id="loginText">
 						</div>
 					</div>
