@@ -339,6 +339,9 @@ This software uses the following plugins, please take note of their individual l
 
 			$(document).ready(function() {
 			
+				var logoutArea = document.getElementById ("LogoutArea");
+				logoutArea.style.display="none";
+			
 				var chartDropDown = document.getElementById("chartOption");
 				chartDropDown.selectedIndex=0;
 			
@@ -7217,8 +7220,7 @@ function SetUILanguage(lang) //TODO
 							<div id="GoogleLoginText"><h4>Sign in with Google&nbsp&nbsp&nbsp&nbsp</h4></div><div id="SignInButton" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
 						</div>
 						<script>
-							var logoutArea = document.getElementById ("LogoutArea");
-							logoutArea.style.display="none";
+							
 						  function onSignIn(googleUser) {
 							// Useful data for your client-side scripts:
 							var profile = googleUser.getBasicProfile();
