@@ -7212,15 +7212,14 @@ function SetUILanguage(lang) //TODO
 					</div>
 					
 					<div id="LoginTab" class="tabcontent">
-					<h2>Login</h2><hr>
+					<h2>Sign in</h2><hr>
 						<div id="LoginArea">
 							<br>
 							<br>
-							<div id="GoogleLoginText"><h4>Log in with Google&nbsp&nbsp&nbsp&nbsp</h4></div><div id="SignInButton" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
+							<div id="GoogleLoginText"><h4>Sign in with Google&nbsp&nbsp&nbsp&nbsp</h4></div><div id="SignInButton" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
 						</div>
 						<script>
 						  function onSignIn(googleUser) {
-							console.log("test "+googleUser.getAuthResponse().id_token);
 							// Useful data for your client-side scripts:
 							var profile = googleUser.getBasicProfile();
 							console.log("ID: " + profile.getId()); // Don't send this directly to your server!
@@ -7238,9 +7237,9 @@ function SetUILanguage(lang) //TODO
 							if(id_token)
 							{
 								var loginText = document.getElementById ("loginText");
-								loginText.innerHTML="<h1>Logged in as "+profile.getName()+"</h1>";
+								loginText.innerHTML="<h1>Signed in as "+profile.getName()+"</h1>";
 								var loginTabButton = document.getElementById ("LoginTabButton");
-								loginTabButton.innerHTML="<b>Logged in as "+profile.getName()+"</b>";
+								loginTabButton.innerHTML="<b>Signed in as "+profile.getName()+"</b>";
 								var loginArea = document.getElementById ("LoginArea");
 								loginArea.style.display="none";
 								var logoutArea = document.getElementById ("LogoutArea");
@@ -7260,7 +7259,7 @@ function SetUILanguage(lang) //TODO
 								auth2.signOut().then(function () {
 								  console.log('User signed out.');
 									var loginTabButton = document.getElementById ("LoginTabButton");
-									loginTabButton.innerHTML="<b>Login</b>";
+									loginTabButton.innerHTML="<b>Sign in</b>";
 									var loginArea = document.getElementById ("LoginArea");
 									loginArea.style.display="block";
 									var logoutArea = document.getElementById ("LogoutArea");
