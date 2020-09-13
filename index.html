@@ -6969,69 +6969,17 @@ function SwapChart()
 			}
 }
 
-function fileExists(file, fileName){
-            var request = gapi.client.drive.files.list({
-                    spaces: 'appDataFolder',
-                    fields: 'files(id, name, modifiedTime)'
-            });
-            request.execute(function(res){
-                var exists = res.files.filter(function(f){
-                    return f.name.toLowerCase() === fileName.toLowerCase();
-                }).length > 0;
-                if(!exists){
-                    saveFile(file, fileName, function(newFileId){
-                        //Do something with the result
-                    })
-                }
-            })
-        }
-
- function saveFile(file, fileName, callback) {
-            var file = new Blob([JSON.stringify(file)], {type: 'application/json'});
-            var metadata = {
-                'name': fileName, // Filename at Google Drive
-                'mimeType': 'application/json', // mimeType at Google Drive
-                'parents': ['appDataFolder'], // Folder ID at Google Drive
-            };
-
-            var accessToken = gapi.auth.getToken().access_token; // Here gapi is used for retrieving the access token.
-            var form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
-            form.append('file', file);
-
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('post', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id');
-            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-            xhr.responseType = 'json';
-            xhr.onload = () => {
-                console.log(xhr.response.id); // Retrieve uploaded file ID.
-                callback(xhr.response);
-            };
-            xhr.send(form);
-        }
-		
-		 function fileExists(file, fileName){
-            var request = gapi.client.drive.files.list({
-                    spaces: 'appDataFolder',
-                    fields: 'files(id, name, modifiedTime)'
-            });
-            request.execute(function(res){
-                var exists = res.files.filter(function(f){
-                    return f.name.toLowerCase() === fileName.toLowerCase();
-                }).length > 0;
-                if(!exists){
-                    saveFile(file, fileName, function(newFileId){
-                        //Do something with the result
-                    })
-                }
-            })
-        }
-
 
 function LoadAccountData(id)
 {
-	fileExists("test456","test123");
+	alert("<?php echo "Testing"; ?>");
+{
+
+alert("<?php echo "Testing"; ?>");
+
+}
+
+test();// to call the function
 }
 
 function SetUILanguage(lang) //TODO
