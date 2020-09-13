@@ -1,1 +1,0 @@
-window.gdad = require('./main');
