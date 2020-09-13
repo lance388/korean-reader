@@ -88,6 +88,8 @@ This software uses the following plugins, please take note of their individual l
 	<script type="text/javascript" src="aromanize/aromanize.js"></script>
 	<script type="text/javascript" src="file-saver/FileSaver.min.js"></script>
 	<script type="text/javascript" src="colpick/colpick.js"></script>
+	<script type="text/javascript" src="gdrive-appdata-master/dist/gdad.js"></script>
+	
 	
 	
 	
@@ -6968,6 +6970,17 @@ function SwapChart()
 			}
 }
 
+function LoadAccountData(id)
+{
+	var appData = gdad('your_file_name.json', '641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com');
+	appData.read().then(function (data) {
+	  console.log("Read success");
+	}, function () {
+		console.log("Read fail");
+	  // handle error (show UI button and try to read again; this time it will show the authorize popup)
+	});
+}
+
 function SetUILanguage(lang) //TODO
 {
 
@@ -7192,7 +7205,7 @@ function SetUILanguage(lang) //TODO
 						<hr>
 						<br>
 						Korean Reader was created as a personal project to keep track of progress, gauge the difficulty of texts, identify important words, and speed up dictionary lookups. I hope that it can be useful to all other learners out there.<br><br><br>
-						Report bugs or give suggestions here: <a href="mailto:rohanlancescott@gmail.com?subject=Feedback%20for%20Korean%20Reader">rohanlancescott@gmail.com</a><br><br><br>
+						Report bugs or give suggestions here: <a href="mailto:readerwebsite@gmail.com?subject=Feedback%20for%20Korean%20Reader">readerwebsite@gmail.com</a><br><br><br>
 						
 						If you would like to donate to help with the website hosting costs and to support the development of Korean Reader, please click below:
 						<br><br>
@@ -7222,16 +7235,16 @@ function SetUILanguage(lang) //TODO
 						  function onSignIn(googleUser) {
 							// Useful data for your client-side scripts:
 							var profile = googleUser.getBasicProfile();
-							console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-							console.log('Full Name: ' + profile.getName());
-							console.log('Given Name: ' + profile.getGivenName());
-							console.log('Family Name: ' + profile.getFamilyName());
-							console.log("Image URL: " + profile.getImageUrl());
-							console.log("Email: " + profile.getEmail());
+							//console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+							//console.log('Full Name: ' + profile.getName());
+							//console.log('Given Name: ' + profile.getGivenName());
+							//console.log('Family Name: ' + profile.getFamilyName());
+							//console.log("Image URL: " + profile.getImageUrl());
+							//console.log("Email: " + profile.getEmail());
 
 							// The ID token you need to pass to your backend:
 							var id_token = googleUser.getAuthResponse().id_token;
-							console.log("ID Token: " + id_token);
+							//console.log("ID Token: " + id_token);
 							
 
 							if(id_token)
@@ -7244,6 +7257,7 @@ function SetUILanguage(lang) //TODO
 								loginArea.style.display="none";
 								var logoutArea = document.getElementById ("LogoutArea");
 								logoutArea.style.display="block";
+								LoadAccountData(id_token);			
 							}
 						  }
 						</script>
@@ -7269,6 +7283,11 @@ function SetUILanguage(lang) //TODO
 							  }
 							</script>
 						</div>
+						<br>
+						<hr>
+						<br>
+						<a href="https://koreanreader.com/privacy.html">Privacy policy</a>
+						<br>
 					</div>
 					
 					<div id="ImportTab" class="tabcontent">
