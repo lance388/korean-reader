@@ -6973,16 +6973,14 @@ function SwapChart()
 function LoadAccountData(id)
 {
 	var appData = gdad('your_file_name.json', '641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com');
+	appData.save("abc");
 	
-	/*
-	var appData = gdad('your_file_name.json', '641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com');
 	appData.read().then(function (data) {
-	  console.log("Read success");
+	  console.log("Read success "+data);
 	}, function () {
 		console.log("Read fail");
 	  // handle error (show UI button and try to read again; this time it will show the authorize popup)
 	});
-	*/
 	
 }
 
