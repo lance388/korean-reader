@@ -6972,44 +6972,7 @@ function SwapChart()
 
 function LoadAccountData()
 {
-	//create file
-	 var fileMetadata = {
-	  'name': 'config.json',
-	  'parents': ['appDataFolder']
-	};
-	var media = {
-	  mimeType: 'application/json',
-	  body: fs.createReadStream('files/config.json')
-	};
-	drive.files.create({
-	  resource: fileMetadata,
-	  media: media,
-	  fields: 'id'
-	}, function (err, file) {
-	  if (err) {
-		// Handle error
-		console.error(err);
-	  } else {
-		console.log('Folder Id:', file.id);
-	  }
-	});
-	
-	
-	//search for file
-	drive.files.list({
-	  spaces: 'appDataFolder',
-	  fields: 'nextPageToken, files(id, name)',
-	  pageSize: 100
-	}, function (err, res) {
-	  if (err) {
-		// Handle error
-		console.error(err);
-	  } else {
-		res.files.forEach(function (file) {
-		  console.log('Found file:', file.name, file.id);
-		});
-	  }
-	});
+
 }
 
 function SetUILanguage(lang) //TODO
