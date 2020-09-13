@@ -6970,9 +6970,46 @@ function SwapChart()
 }
 
 
-function LoadAccountData(id)
+function LoadAccountData()
 {
-	//alert("<?php echo \"Testing\"; ?>");
+	//create file
+	 var fileMetadata = {
+	  'name': 'config.json',
+	  'parents': ['appDataFolder']
+	};
+	var media = {
+	  mimeType: 'application/json',
+	  body: fs.createReadStream('files/config.json')
+	};
+	drive.files.create({
+	  resource: fileMetadata,
+	  media: media,
+	  fields: 'id'
+	}, function (err, file) {
+	  if (err) {
+		// Handle error
+		console.error(err);
+	  } else {
+		console.log('Folder Id:', file.id);
+	  }
+	});
+	
+	
+	//search for file
+	drive.files.list({
+	  spaces: 'appDataFolder',
+	  fields: 'nextPageToken, files(id, name)',
+	  pageSize: 100
+	}, function (err, res) {
+	  if (err) {
+		// Handle error
+		console.error(err);
+	  } else {
+		res.files.forEach(function (file) {
+		  console.log('Found file:', file.name, file.id);
+		});
+	  }
+	});
 }
 
 function SetUILanguage(lang) //TODO
@@ -7229,6 +7266,7 @@ function SetUILanguage(lang) //TODO
 						  function onSignIn(googleUser) {
 							// Useful data for your client-side scripts:
 							var profile = googleUser.getBasicProfile();
+							console.log('User signed in as '+profile.getName()+'.');
 							//console.log("ID: " + profile.getId()); // Don't send this directly to your server!
 							//console.log('Full Name: ' + profile.getName());
 							//console.log('Given Name: ' + profile.getGivenName());
@@ -7251,7 +7289,7 @@ function SetUILanguage(lang) //TODO
 								loginArea.style.display="none";
 								var logoutArea = document.getElementById ("LogoutArea");
 								logoutArea.style.display="block";
-								LoadAccountData(id_token);			
+								LoadAccountData();			
 							}
 						  }
 						</script>
