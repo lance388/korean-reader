@@ -6986,100 +6986,52 @@ function fileExists(file, fileName){
             })
         }
 
+ function saveFile(file, fileName, callback) {
+            var file = new Blob([JSON.stringify(file)], {type: 'application/json'});
+            var metadata = {
+                'name': fileName, // Filename at Google Drive
+                'mimeType': 'application/json', // mimeType at Google Drive
+                'parents': ['appDataFolder'], // Folder ID at Google Drive
+            };
+
+            var accessToken = gapi.auth.getToken().access_token; // Here gapi is used for retrieving the access token.
+            var form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+            form.append('file', file);
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('post', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id');
+            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+            xhr.responseType = 'json';
+            xhr.onload = () => {
+                console.log(xhr.response.id); // Retrieve uploaded file ID.
+                callback(xhr.response);
+            };
+            xhr.send(form);
+        }
+		
+		 function fileExists(file, fileName){
+            var request = gapi.client.drive.files.list({
+                    spaces: 'appDataFolder',
+                    fields: 'files(id, name, modifiedTime)'
+            });
+            request.execute(function(res){
+                var exists = res.files.filter(function(f){
+                    return f.name.toLowerCase() === fileName.toLowerCase();
+                }).length > 0;
+                if(!exists){
+                    saveFile(file, fileName, function(newFileId){
+                        //Do something with the result
+                    })
+                }
+            })
+        }
+
 
 function LoadAccountData(id)
 {
-
-var auth = function (immediate) {
-  return gapi.auth.authorize({
-    'client_id': '641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com',
-    // Permissions here can be more restrictive
-    scope: 'https://www.googleapis.com/auth/drive',
-    immediate: immediate
-  });
-};
-
-var silentAuth = function () {
-  return auth(true);
-};
-
-var popupAuth = function () {
-  return auth(false);
-};
-
-var loadDriveAPI = function () {
-  return global.gapi.client.load('drive', 'v3');
-};
-
-var getAppDataFile = function () {
-  return gapi.client.drive.files
-    .list({
-      q: 'name="your-app-data-file-name.json"',
-      spaces: 'appDataFolder',
-      fields: 'files(id)'
-    }).then(
-      function (data) {
-        if (_.isEmpty(data.result.files)) {
-          throw "no files found";
-        }
-
-        return {
-          fileId: data.result.files[0].id
-        }
-      }
-    );
-};
-
-var createAppDataFile = function () {
-  return gapi.client.drive.files
-    .create({
-      resource: {
-        name: 'your-app-data-file-name.json',
-        parents: ['appDataFolder']
-      },
-      fields: 'id'
-    }).then(function (data) {
-      return {
-        fileId: data.result.id
-      };
-    });
-};
-
-var getAppDataFileContent = function (fileId) {
-  return gapi.client.drive.files
-    .get({
-      fileId: fileId,
-      // Download a file — files.get with alt=media file resource
-      alt: 'media'
-    }).then(function (data) {
-      return {
-        fileId: fileId,
-        appData: data.result
-      };
-    });
-};
-
-var saveAppData = function (fileId, appData) {
-  return gapi.client.request({
-    path: '/upload/drive/v3/files/' + fileId,
-    method: 'PATCH',
-    params: {
-      uploadType: 'media'
-    },
-    body: JSON.stringify(appData)
-  });
-};
-
-module.exports = {
-  silentAuth: silentAuth,
-  popupAuth: popupAuth,
-  loadDriveAPI: loadDriveAPI,
-  getAppDataFile: getAppDataFile,
-  createAppDataFile: createAppDataFile,
-  getAppDataFileContent: getAppDataFileContent,
-  saveAppData: saveAppData
-};
-	
+	fileExists("test456","test123");
 }
 
 function SetUILanguage(lang) //TODO
