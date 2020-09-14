@@ -173,6 +173,7 @@ This software uses the following plugins, please take note of their individual l
 		var grammarPoints =[];
 		var grammarPointsHangul =[];
 		var chartFilter = "chart1";
+		var id_token=-1;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -338,7 +339,25 @@ This software uses the following plugins, please take note of their individual l
 			document.getElementById("DictionaryTabButton").click();
 			window.addEventListener('resize', OnResize);
 
-			$(document).ready(function() {	
+			$(document).ready(function() {
+
+				if(id_token == -1)
+				{
+					var loginTabButton = document.getElementById ("LoginTabButton");
+					loginTabButton.innerHTML="<b>Sign in</b>";
+					var loginArea = document.getElementById ("LoginArea");
+					loginArea.style.display="block";
+					var logoutArea = document.getElementById ("LogoutArea");
+					logoutArea.style.display="none";	
+				}
+				else
+				{
+					var loginArea = document.getElementById ("LoginArea");
+					loginArea.style.display="none";
+					var logoutArea = document.getElementById ("LogoutArea");
+					logoutArea.style.display="block";
+				}
+											
 			
 				var chartDropDown = document.getElementById("chartOption");
 				chartDropDown.selectedIndex=0;
@@ -7251,12 +7270,9 @@ function SetUILanguage(lang) //TODO
 							//console.log("Email: " + profile.getEmail());
 
 							// The ID token you need to pass to your backend:
-							var id_token = googleUser.getAuthResponse().id_token;
-							console.log("ID Token: " + id_token);
-							
-
-							if(id_token)
-							{
+							id_token = googleUser.getAuthResponse().id_token;
+							//console.log("ID Token: " + id_token);
+			
 								var loginText = document.getElementById ("loginText");
 								loginText.innerHTML="<h1>Signed in as "+profile.getName()+"</h1>";
 								var loginTabButton = document.getElementById ("LoginTabButton");
@@ -7266,7 +7282,6 @@ function SetUILanguage(lang) //TODO
 								var logoutArea = document.getElementById ("LogoutArea");
 								logoutArea.style.display="block";
 								LoadAccountData();			
-							}
 						  }
 						</script>
 						<br>
@@ -7280,6 +7295,7 @@ function SetUILanguage(lang) //TODO
 								var auth2 = gapi.auth2.getAuthInstance();
 								auth2.signOut().then(function () {
 								  console.log('User signed out.');
+									id_token = -1;
 									var loginTabButton = document.getElementById ("LoginTabButton");
 									loginTabButton.innerHTML="<b>Sign in</b>";
 									var loginArea = document.getElementById ("LoginArea");
