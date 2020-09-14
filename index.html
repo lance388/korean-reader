@@ -6990,7 +6990,7 @@ function SwapChart()
 
 function LoadAccountData()
 {
-	$.ajax({
+/*	$.ajax({
                 type: "GET",
                 url: "service.php" ,
                 data: { h: "michael" },
@@ -7003,6 +7003,17 @@ function LoadAccountData()
 
                 }
             });
+*/
+
+	$.ajax({
+    type: "POST",
+    url: 'service.php',
+    data: {name: 'Wayne', age: 27},
+    success: function(data){
+        alert("here1"+data);
+    }
+	});
+
 			
 }
 

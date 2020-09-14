@@ -1,9 +1,19 @@
+   <?php
+    $name = $_POST['name'];
+	$age = $_POST['age'];
+	print_r($name);
+	print_r($age);
+?>
+
+
 <?php
+/*
 echo "PHP Hello World!";
 $color = "red";
 echo "My car is " . $color . "<br>";
 echo "My house is " . $COLOR . "<br>";
 echo "My boat is " . $coLOR . "<br>";
+*/
 ?>
 
 <?php
