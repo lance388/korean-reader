@@ -6972,7 +6972,7 @@ function SwapChart()
 
 function LoadAccountData()
 {
-/*	$.ajax({
+	$.ajax({
                 type: "GET",
                 url: "service.php" ,
                 data: { h: "michael" },
@@ -6981,11 +6981,11 @@ function LoadAccountData()
                     // here is the code that will run on client side after running clear.php on server
 
                     // function below reloads current page
-                    location.reload();
+                    //location.reload();
 
                 }
             });
-			*/
+			
 }
 
 function SetUILanguage(lang) //TODO
@@ -7252,7 +7252,7 @@ function SetUILanguage(lang) //TODO
 
 							// The ID token you need to pass to your backend:
 							var id_token = googleUser.getAuthResponse().id_token;
-							//console.log("ID Token: " + id_token);
+							console.log("ID Token: " + id_token);
 							
 
 							if(id_token)
