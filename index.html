@@ -7008,6 +7008,7 @@ function LoadAccountData()
 	$.ajax({
     type: "POST",
     url: 'service.php',
+	dataType: 'jsonp',
     data: {name: 'Wayne', age: 27},
     success: function(data){
         alert("here1"+data);
