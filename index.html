@@ -88,6 +88,7 @@ This software uses the following plugins, please take note of their individual l
 	<script type="text/javascript" src="aromanize/aromanize.js"></script>
 	<script type="text/javascript" src="file-saver/FileSaver.min.js"></script>
 	<script type="text/javascript" src="colpick/colpick.js"></script>
+	<script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
 	
 	
 	
@@ -6990,31 +6991,27 @@ function SwapChart()
 
 function LoadAccountData()
 {
-/*	$.ajax({
-                type: "GET",
-                url: "service.php" ,
-                data: { h: "michael" },
-                success : function() { 
+// 1. Load the JavaScript client library.
+gapi.load('client', start);
 
-                    // here is the code that will run on client side after running clear.php on server
-
-                    // function below reloads current page
-                    //location.reload();
-
-                }
-            });
-*/
-/*
-	$.ajax({
-    type: "POST",
-    url: 'service.php',
-    data: {name: 'Wayne', age: 27},
-    success: function(data){
-        alert("here1"+data);
-    }
-	});
-*/
-			
+	  // 2. Initialize the JavaScript client library.
+	  gapi.client.init({
+		'apiKey': 'AIzaSyAu_b-3aLMJ1dmBBYxzbMXke5w8_QcZiao',
+		// clientId and scope are optional if auth is not required.
+		'clientId': '641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com',
+		'scope': 'profile',
+	  }).then(function() {
+		// 3. Initialize and make the API request.
+		return gapi.client.request({
+		  'path': 'https://people.googleapis.com/v1/people/me?requestMask.includeField=person.names',
+		})
+	  }).then(function(response) {
+		console.log(response.result);
+	  }, function(reason) {
+		console.log('Error: ' + reason.result.error.message);
+	  });
+	// 1. Load the JavaScript client library.
+		
 }
 
 function SetUILanguage(lang) //TODO
@@ -7291,7 +7288,9 @@ function SetUILanguage(lang) //TODO
 								loginArea.style.display="none";
 								var logoutArea = document.getElementById ("LogoutArea");
 								logoutArea.style.display="block";
-								LoadAccountData();			
+								
+								gapi.load('client', LoadAccountData);	
+								//LoadAccountData();			
 						  }
 						</script>
 						<br>
