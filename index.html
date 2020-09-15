@@ -88,7 +88,6 @@ This software uses the following plugins, please take note of their individual l
 	<script type="text/javascript" src="aromanize/aromanize.js"></script>
 	<script type="text/javascript" src="file-saver/FileSaver.min.js"></script>
 	<script type="text/javascript" src="colpick/colpick.js"></script>
-	<script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
 	
 	
 	
@@ -174,7 +173,6 @@ This software uses the following plugins, please take note of their individual l
 		var grammarPoints =[];
 		var grammarPointsHangul =[];
 		var chartFilter = "chart1";
-		var id_token=-1;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -341,22 +339,6 @@ This software uses the following plugins, please take note of their individual l
 			window.addEventListener('resize', OnResize);
 
 			$(document).ready(function() {
-				if(id_token == -1)
-				{
-					var loginTabButton = document.getElementById ("LoginTabButton");
-					loginTabButton.innerHTML="<b>Sign in</b>";
-					var loginArea = document.getElementById ("LoginArea");
-					loginArea.style.display="block";
-					var logoutArea = document.getElementById ("LogoutArea");
-					logoutArea.style.display="none";	
-				}
-				else
-				{
-					var loginArea = document.getElementById ("LoginArea");
-					loginArea.style.display="none";
-					var logoutArea = document.getElementById ("LogoutArea");
-					logoutArea.style.display="block";
-				}
 											
 			
 				var chartDropDown = document.getElementById("chartOption");
@@ -7239,63 +7221,6 @@ function SetUILanguage(lang) //TODO
 					
 					<div id="LoginTab" class="tabcontent">
 					<h2>Sign in</h2><hr>
-					<br>
-						<div id="LoginArea">
-							<br>
-							<div id="GoogleLoginText"><h4>Sign in with Google&nbsp&nbsp&nbsp&nbsp</h4></div><div id="SignInButton" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> 
-						</div>
-						<script>
-						  function onSignIn(googleUser) {
-							// Useful data for your client-side scripts:
-							var profile = googleUser.getBasicProfile();
-							console.log('User signed in as '+profile.getName()+'.');
-							//console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-							//console.log('Full Name: ' + profile.getName());
-							//console.log('Given Name: ' + profile.getGivenName());
-							//console.log('Family Name: ' + profile.getFamilyName());
-							//console.log("Image URL: " + profile.getImageUrl());
-							//console.log("Email: " + profile.getEmail());
-
-							// The ID token you need to pass to your backend:
-							id_token = googleUser.getAuthResponse().id_token;
-							//console.log("ID Token: " + id_token);
-			
-								var loginText = document.getElementById ("loginText");
-								loginText.innerHTML="<h1>Signed in as "+profile.getName()+"</h1>";
-								var loginTabButton = document.getElementById ("LoginTabButton");
-								loginTabButton.innerHTML="<b>Signed in as "+profile.getName()+"</b>";
-								var loginArea = document.getElementById ("LoginArea");
-								loginArea.style.display="none";
-								var logoutArea = document.getElementById ("LogoutArea");
-								logoutArea.style.display="block";
-								
-								gapi.load('client', LoadAccountData);	
-								//LoadAccountData();			
-						  }
-						</script>
-						<br>
-						<div id="LogoutArea">
-							<div id="loginText">
-							</div>
-							
-							<a id="LogoutButton" href="#" onclick="signOut();">Sign out</a>
-							<script>
-							  function signOut() {
-								var auth2 = gapi.auth2.getAuthInstance();
-								auth2.signOut().then(function () {
-								  console.log('User signed out.');
-									id_token = -1;
-									var loginTabButton = document.getElementById ("LoginTabButton");
-									loginTabButton.innerHTML="<b>Sign in</b>";
-									var loginArea = document.getElementById ("LoginArea");
-									loginArea.style.display="block";
-									var logoutArea = document.getElementById ("LogoutArea");
-									logoutArea.style.display="none";
-								  
-								});
-							  }
-							</script>
-						</div>
 						<br>
 						<br>
 						<hr>
@@ -7508,7 +7433,33 @@ function SetUILanguage(lang) //TODO
 			<div class="empty"></div>
 		</div>
 	 </div>
+	 
+	 <!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+		 https://firebase.google.com/docs/web/setup#available-libraries -->
+	<script src="https://www.gstatic.com/firebasejs/7.20.-/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.20.-/firebase-firestore.js"></script>
+
+	<script>
+	  // Your web app's Firebase configuration
+	  var firebaseConfig = {
+		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
+		authDomain: "korean-reader.firebaseapp.com",
+		databaseURL: "https://korean-reader.firebaseio.com",
+		projectId: "korean-reader",
+		storageBucket: "korean-reader.appspot.com",
+		messagingSenderId: "410562108352",
+		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+	</script>
 </body>
+
+
 
 
 </html>
