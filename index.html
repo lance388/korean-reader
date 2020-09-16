@@ -409,6 +409,7 @@ This software uses the following plugins, please take note of their individual l
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
           document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+		  document.getElementById('signout').disabled = false;
           //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
           if (!emailVerified) {
             document.getElementById('quickstart-verify-email').disabled = false;
@@ -419,6 +420,7 @@ This software uses the following plugins, please take note of their individual l
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
           document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+		  document.getElementById('signout').disabled = true;
           //document.getElementById('quickstart-account-details').textContent = 'null';
           // [END_EXCLUDE]
         }
