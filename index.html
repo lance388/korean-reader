@@ -368,7 +368,6 @@ This software uses the following plugins, please take note of their individual l
       // [START authstatelistener]
       firebase.auth().onAuthStateChanged(function(user) {
         // [START_EXCLUDE silent]
-        document.getElementById('quickstart-verify-email').disabled = true;
         // [END_EXCLUDE]
         if (user) {
           // User is signed in.
@@ -384,9 +383,9 @@ This software uses the following plugins, please take note of their individual l
           document.getElementById('quickstart-sign-in').textContent = 'Sign out';
 		  document.getElementById('signout').disabled = false;
           //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-          if (!emailVerified) {
-            document.getElementById('quickstart-verify-email').disabled = false;
-          }
+        //  if (!emailVerified) {
+        //    document.getElementById('quickstart-verify-email').disabled = false;
+       //   }
           // [END_EXCLUDE]
         } else {
           // User is signed out.
@@ -405,7 +404,7 @@ This software uses the following plugins, please take note of their individual l
 
       document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
       document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
-      document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
+     // document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
       document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
 											
 			
@@ -7489,8 +7488,6 @@ function SetUILanguage(lang) //TODO
 								  <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
-								  &nbsp;&nbsp;&nbsp;
-								  <button class="mdl-button mdl-js-button mdl-button--raised" disabled id="quickstart-verify-email" name="verify-email">Send Email Verification</button>
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
 
