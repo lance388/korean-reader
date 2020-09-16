@@ -7523,12 +7523,6 @@ function SetUILanguage(lang) //TODO
           <!-- [END google_button] -->
           <br>
           <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="signout" name="signout">Sign Out</button>
-
-          <div class="quickstart-user-details-container">
-            Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
-            <!--<div>Firebase auth <code>currentUser</code> object value:</div>
-            <pre><code id="quickstart-account-details">null</code></pre>-->
-          </div>
         </div>
       </div>
 
@@ -7656,7 +7650,7 @@ function SetUILanguage(lang) //TODO
 						<br>
 						<br>
 						<form>Voice:
-							<select id="voiceOption" onchange="ChangeVoice();"></select>&nbsp(Locally installed TTS voice)</form>
+							<select id="voiceOption" onchange="ChangeVoice();"></select>&nbsp(Local and browser-specific TTS voices)</form>
 						<br>
 						<div class="wrapper2">
 							<div>Volume:</div>
