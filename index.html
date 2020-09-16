@@ -7519,6 +7519,12 @@ function SetUILanguage(lang) //TODO
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
 
+								  <!-- Container where we'll display the user details -->
+								  <div class="quickstart-user-details-container">
+									Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
+									<!--<div>Firebase auth <code>currentUser</code> object value:</div>
+									<pre><code id="quickstart-account-details">null</code></pre>-->
+								  </div>
 								</div>
 							  </div>
 
@@ -7543,6 +7549,12 @@ function SetUILanguage(lang) //TODO
           <!-- [END google_button] -->
           <br>
           <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="signout" name="signout">Sign Out</button>
+
+          <div class="quickstart-user-details-container">
+            Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
+            <!--<div>Firebase auth <code>currentUser</code> object value:</div>
+            <pre><code id="quickstart-account-details">null</code></pre>-->
+          </div>
         </div>
       </div>
 
