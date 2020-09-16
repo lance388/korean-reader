@@ -359,34 +359,6 @@ This software uses the following plugins, please take note of their individual l
 
 			$(document).ready(function() {
 			
-			
-			 // [START authstatelistener]
-      firebase.auth().onAuthStateChanged(function(user){
-        if (user) {
-          // User is signed in.
-          var displayName = user.displayName;
-          var email = user.email;
-          var emailVerified = user.emailVerified;
-          var photoURL = user.photoURL;
-          var isAnonymous = user.isAnonymous;
-          var uid = user.uid;
-          var providerData = user.providerData;
-          // [START_EXCLUDE]
-          document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-          document.getElementById('signout').disabled = false;
-          document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-          // [END_EXCLUDE]
-        } else {
-          // User is signed out.
-          // [START_EXCLUDE]
-          document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-          document.getElementById('signout').disabled = true;
-          document.getElementById('quickstart-account-details').textContent = 'null';
-            // [END_EXCLUDE]
-        }
-      });
-      // [END authstatelistener]
-
       document.getElementById('signout').addEventListener('click', handleSignOut, false);
 			
 	
@@ -7519,12 +7491,6 @@ function SetUILanguage(lang) //TODO
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
 
-								  <!-- Container where we'll display the user details -->
-								  <div class="quickstart-user-details-container">
-									Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
-									<div>Firebase auth <code>currentUser</code> object value:</div>
-									<pre><code id="quickstart-account-details">null</code></pre>
-								  </div>
 								</div>
 							  </div>
 
@@ -7549,12 +7515,6 @@ function SetUILanguage(lang) //TODO
           <!-- [END google_button] -->
           <br>
           <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="signout" name="signout">Sign Out</button>
-
-          <div class="quickstart-user-details-container">
-            Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
-            <div>Firebase auth <code>currentUser</code> object value:</div>
-            <pre><code id="quickstart-account-details">null</code></pre>
-          </div>
         </div>
       </div>
 
