@@ -7223,13 +7223,12 @@ function toggleSignIn() {
     }
 			
 
-function CreateDocument(collection, document,uid)
+function CreateDocument(collection,_type,uid)
 {
 	// Add a new document in collection "cities"
-	dbfire.collection(collection).doc(document).set({
-		name: "test1",
-		state: "test2",
-		country: "test3",
+	dbfire.collection(collection).add({
+		words: " a b c d",
+		type: _type,
 		author_uid: uid
 	})
 	.then(function() {
@@ -7248,6 +7247,7 @@ function LoadAccountData(uid)
 	dbfire.collection("vocabulary").where("author_uid", "==", user.uid)
 	.get()
 	.then(function(querySnapshot) {
+		console.log("here count of doc +"doc.length);
         querySnapshot.forEach(function(doc) {
             console.log(doc.id, " => ", doc.data());
         });
