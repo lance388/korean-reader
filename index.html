@@ -7227,6 +7227,25 @@ function LoadAccountData()
 {
 	var dbfire = firebase.firestore();
 	
+	//check if vocabulary documents exist in database
+	
+	var docRef = dbfire.collection("vocabulary").doc("known");
+
+	docRef.get().then(function(doc) {
+		if (doc.exists) {
+			console.log("Document data:", doc.data());
+		} else {
+			// doc.data() will be undefined in this case
+			console.log("No such document!");
+		}
+	}).catch(function(error) {
+		console.log("Error getting document:", error);
+	});
+	
+	
+	
+	/*
+	
 	dbfire.collection("users").add({
     first: "Ada",
     last: "Lovelace",
@@ -7258,6 +7277,8 @@ function LoadAccountData()
 			console.log(`${doc.id} => ${doc.data()}`);
 		});
 	});	
+	
+	*/
 }
 
 function SetUILanguage(lang) //TODO
