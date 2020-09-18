@@ -123,6 +123,7 @@ This software uses the following plugins, please take note of their individual l
 		var compareLoopTimeout=[];
 		var colourTimeout;
 		var scrollTimeout;
+		var saveFireDBTimeout;
 		var vocabularyTimeout;
 		var displaySortTimeout;
 		var displayComparisonTimeout;
@@ -2979,7 +2980,6 @@ This software uses the following plugins, please take note of their individual l
 			  
 			  };
 			  
-			  SaveFireDB();
 	}
 	
 	function ChangeVocabularyFilter()
@@ -3249,6 +3249,14 @@ This software uses the following plugins, please take note of their individual l
 							CountAndDrawAchievements();
 						}, 10000);
 		}
+		
+		if(saveFireDBTimeout)
+		{	
+				clearTimeout(saveFireDBTimeout);
+		}
+		saveFireDBTimeout = setTimeout(function() {
+			SaveFireDB();
+		}, 5000);
 		
 		switch(toExport)
 		{
