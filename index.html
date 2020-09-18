@@ -190,6 +190,9 @@ This software uses the following plugins, please take note of their individual l
 		var grammarPointsHangul =[];
 		var chartFilter = "chart1";
 		var dbfire;
+		var unknownFireDBDocumentLoaded = false;
+		var knownFireDBDocumentLoaded = false;
+		var learningFireDBDocumentLoaded = false;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -397,6 +400,11 @@ This software uses the following plugins, please take note of their individual l
         } else {
           // User is signed out.
           // [START_EXCLUDE]
+		  
+		  learningFireDBDocumentLoaded=false;
+		  knownFireDBDocumentLoaded=false;
+		  unknownFireDBDocumentLoaded=false;
+		  
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
           document.getElementById('quickstart-sign-in').textContent = 'Sign in';
 		  document.getElementById('signout').disabled = true;
@@ -7321,6 +7329,12 @@ function CreateDocument(collection,_type,lang,uid,w)
 	.catch(function(error) {
 		console.error("Error writing document: ", error);
 	});
+		switch(_type)
+		{
+			case "unknown": unknownFireDBDocumentLoaded=true; break;
+			case "learning": learningFireDBDocumentLoaded=true; break;
+			case "known": knownFireDBDocumentLoaded=true; break;
+		} 
 }
 
 function ImportVocabularyFromFireDB(words,s)
@@ -7346,11 +7360,21 @@ function ImportVocabularyFromFireDB(words,s)
 				UpdateOrAddDBRow(words[j],state,0);
 			}
 		}
+		switch(s)
+		{
+			case "unknown": unknownFireDBDocumentLoaded=true; break;
+			case "learning": learningFireDBDocumentLoaded=true; break;
+			case "known": knownFireDBDocumentLoaded=true; break;
+		} 
 	}
 }
 
 function SaveFireDB()
 {
+	if(unknownFireDBDocumentLoaded==false||learningFireDBDocumentLoaded==false||knownFireDBDocumentLoaded==false)
+	{
+		return;
+	}
 	
 	var user = firebase.auth().currentUser;
 	var lang = "korean";
