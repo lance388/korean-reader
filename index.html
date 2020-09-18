@@ -7253,7 +7253,7 @@ function LoadAccountData(uid)
 		} else {
 			// doc.data() will be undefined in this case
 			console.log("No such document!");
-			CreateDocument("vocabulary","known",uid);
+			CreateDocument("vocabulary","known_"+uid,uid);
 		}
 	}).catch(function(error) {
 		console.log("Error getting document:", error);
@@ -7266,7 +7266,7 @@ function LoadAccountData(uid)
 		} else {
 			// doc.data() will be undefined in this case
 			console.log("No such document!");
-			CreateDocument("vocabulary","learning",uid);
+			CreateDocument("vocabulary","learning_"+uid,uid);
 		}
 	}).catch(function(error) {
 		console.log("Error getting document:", error);
@@ -7279,7 +7279,7 @@ function LoadAccountData(uid)
 		} else {
 			// doc.data() will be undefined in this case
 			console.log("No such document!");
-			CreateDocument("vocabulary","unknown",uid);
+			CreateDocument("vocabulary","unknown_"+uid,uid);
 		}
 	}).catch(function(error) {
 		console.log("Error getting document:", error);
