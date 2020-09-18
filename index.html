@@ -7248,7 +7248,7 @@ function LoadAccountData(uid)
 
 	
 	
-	dbfire.collection("vocabulary").where("author_id", "==", uid)
+	dbfire.collection("vocabulary").where("author_uid", "==", uid)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
