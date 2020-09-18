@@ -7244,12 +7244,8 @@ function LoadAccountData(uid)
 {
 	dbfire = firebase.firestore();
 	var user = firebase.auth().currentUser;
-	var uid = user.uid;
-	console.log("uid "+uid);
-
 	
-	
-	dbfire.collection("vocabulary").where("author_uid", "==", uid)
+	dbfire.collection("vocabulary").where("author_uid", "==", user.uid)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
