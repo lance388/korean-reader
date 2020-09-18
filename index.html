@@ -7222,12 +7222,60 @@ function toggleSignIn() {
       });
     }
 			
+function CalculateVocabularyAndCreateDocument(collection,_type,uid)
+{
+			var arrLearning = [];
+			var arrKnown = [];
+			var arrUnknown = [];
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	        var request = objectStore.getAll();
+	        request.onerror = function(event) {
+	          alert("Unable to retrieve data from database!");
+	        };
+	        request.onsuccess = function(event) {  
+	          if(request.result) {
+			  		var req = request.result;
+					for(var i=0;i<req.length;i++)
+					{
+						var w = req[i].word;
+						var a = req[i].appearances;
+						
+						if(!w.includes("$"))
+						{
+							var remainder = a%3;
+							
+							if(remainder==0)
+								{
+								arrUnknown.push(w);
+							}
+							else if(remainder==1)
+								{
+								arrLearning.push(w);
+							}
+							else if(remainder==2)
+							{
+								arrKnown.push(w);
+							}
+						}
+				  }
+			  }
+			  
+			  	switch(_type)
+				{
+					case "unknown":CreateDocument(collection,_type,uid,arrUnknown); break;
+					case "learning":CreateDocument(collection,_type,uid,arrLearning); break;
+					case "known":CreateDocument(collection,_type,uid,arrKnown); break;
+				}
+			  
+			  };
+}
 
-function CreateDocument(collection,_type,uid)
+
+function CreateDocument(collection,_type,uid,w) //TODO add vocab words to this
 {
 	// Add a new document in collection "cities"
 	dbfire.collection(collection).add({
-		words: " a b c d",
+		words: w,
 		type: _type,
 		author_uid: uid
 	})
@@ -7248,12 +7296,11 @@ function LoadAccountData(uid)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-			console.log("known found");
             console.log(doc.id, " => ", doc.data());
         });
 		if(querySnapshot.empty)
 		{
-			CreateDocument("vocabulary","known",user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","known",user.uid);
 		}
     })
     .catch(function(error) {
@@ -7265,12 +7312,11 @@ function LoadAccountData(uid)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-			console.log("learning found");
             console.log(doc.id, " => ", doc.data());
         });
 		if(querySnapshot.empty)
 		{
-			CreateDocument("vocabulary","learning",user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","learning",user.uid);
 		}
     })
     .catch(function(error) {
@@ -7282,12 +7328,11 @@ function LoadAccountData(uid)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-			console.log("unknown found");
             console.log(doc.id, " => ", doc.data());
         });
 		if(querySnapshot.empty)
 		{
-			CreateDocument("vocabulary","unknown",user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","unknown",user.uid);
 		}
     })
     .catch(function(error) {
