@@ -7424,7 +7424,7 @@ function SaveFireDB()
 			querySnapshot.forEach(function(doc) {
 				//console.log(doc.id, " => ", doc.data());
 				//console.log(doc.id, " => ", doc.data().words);
-				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid,doc.id);
+				CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid,doc.id);
 			});
 			if(querySnapshot.empty)
 			{
