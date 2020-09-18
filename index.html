@@ -359,16 +359,6 @@ This software uses the following plugins, please take note of their individual l
 
 			$(document).ready(function() {
 
-				  // Your web app's Firebase configuration
-			  var firebaseConfig = {
-				apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
-				authDomain: "korean-reader.firebaseapp.com",
-				databaseURL: "https://korean-reader.firebaseio.com",
-				projectId: "korean-reader",
-				storageBucket: "korean-reader.appspot.com",
-				messagingSenderId: "410562108352",
-				appId: "1:410562108352:web:f42d6c8b329d8e54460625"
-			  };
 
       document.getElementById('signout').addEventListener('click', handleSignOut, false);
 			
@@ -397,11 +387,7 @@ This software uses the following plugins, please take note of their individual l
         //    document.getElementById('quickstart-verify-email').disabled = false;
        //   }
           // [END_EXCLUDE]
-        
-		
-		LoadAccountData();
-		
-		} else {
+        } else {
           // User is signed out.
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
@@ -7790,9 +7776,18 @@ function SetUILanguage(lang) //TODO
 
 
 	<script>
-
-	  
-
+	  // Your web app's Firebase configuration
+	  var firebaseConfig = {
+		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
+		authDomain: "korean-reader.firebaseapp.com",
+		databaseURL: "https://korean-reader.firebaseio.com",
+		projectId: "korean-reader",
+		storageBucket: "korean-reader.appspot.com",
+		messagingSenderId: "410562108352",
+		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
 	</script>
 </body>
 
