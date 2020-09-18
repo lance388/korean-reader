@@ -7222,7 +7222,7 @@ function toggleSignIn() {
       });
     }
 			
-function CalculateVocabularyAndCreateDocument(collection,_type,uid)
+function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid)
 {
 			var arrLearning = [];
 			var arrKnown = [];
@@ -7262,20 +7262,20 @@ function CalculateVocabularyAndCreateDocument(collection,_type,uid)
 			  
 			  	switch(_type)
 				{
-					case "unknown":CreateDocument(collection,_type,uid,arrUnknown); break;
-					case "learning":CreateDocument(collection,_type,uid,arrLearning); break;
-					case "known":CreateDocument(collection,_type,uid,arrKnown); break;
+					case "unknown":CreateDocument(collection,_type,lang,uid,arrUnknown); break;
+					case "learning":CreateDocument(collection,_type,lang,uid,arrLearning); break;
+					case "known":CreateDocument(collection,_type,lang,uid,arrKnown); break;
 				}
 			  
 			  };
 }
 
 
-function CreateDocument(collection,_type,uid,w) //TODO add vocab words to this
+function CreateDocument(collection,_type,lang,uid,w)
 {
-	// Add a new document in collection "cities"
 	dbfire.collection(collection).add({
 		words: w,
+		language: lang,
 		type: _type,
 		author_uid: uid
 	})
@@ -7291,16 +7291,18 @@ function LoadAccountData(uid)
 {
 	dbfire = firebase.firestore();
 	var user = firebase.auth().currentUser;
+	var lang = "korean";
 	
-	dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known")
+	dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            console.log(doc.id, " => ", doc.data());
+            //console.log(doc.id, " => ", doc.data());
+			console.log(doc.id, " => ", doc.data().words);
         });
 		if(querySnapshot.empty)
 		{
-			CalculateVocabularyAndCreateDocument("vocabulary","known",user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid);
 		}
     })
     .catch(function(error) {
@@ -7308,15 +7310,16 @@ function LoadAccountData(uid)
     });
 	
 	
-		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "learning")
+		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "learning").where("language", "==", lang)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            console.log(doc.id, " => ", doc.data());
+            //console.log(doc.id, " => ", doc.data());
+			console.log(doc.id, " => ", doc.data().words);
         });
 		if(querySnapshot.empty)
 		{
-			CalculateVocabularyAndCreateDocument("vocabulary","learning",user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
 		}
     })
     .catch(function(error) {
@@ -7324,15 +7327,16 @@ function LoadAccountData(uid)
     });
 	
 	
-			dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "unknown")
+			dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "unknown").where("language", "==", lang)
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            console.log(doc.id, " => ", doc.data());
+            //console.log(doc.id, " => ", doc.data());
+			console.log(doc.id, " => ", doc.data().words);
         });
 		if(querySnapshot.empty)
 		{
-			CalculateVocabularyAndCreateDocument("vocabulary","unknown",user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid);
 		}
     })
     .catch(function(error) {
