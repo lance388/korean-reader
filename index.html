@@ -188,6 +188,7 @@ This software uses the following plugins, please take note of their individual l
 		var grammarPoints =[];
 		var grammarPointsHangul =[];
 		var chartFilter = "chart1";
+		var dbfire;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -7222,21 +7223,62 @@ function toggleSignIn() {
     }
 			
 
+function CreateDocument(collection, document)
+{
+	// Add a new document in collection "cities"
+	dbfire.collection(collection).doc(document).set({
+		name: "test1",
+		state: "test2",
+		country: "test3"
+	})
+	.then(function() {
+		console.log("Document successfully written!");
+	})
+	.catch(function(error) {
+		console.error("Error writing document: ", error);
+	});
+}
 
 function LoadAccountData()
 {
-	var dbfire = firebase.firestore();
+	dbfire = firebase.firestore();
 	
 	//check if vocabulary documents exist in database
 	
 	var docRef = dbfire.collection("vocabulary").doc("known");
-
 	docRef.get().then(function(doc) {
 		if (doc.exists) {
 			console.log("Document data:", doc.data());
 		} else {
 			// doc.data() will be undefined in this case
 			console.log("No such document!");
+			CreateDocument("vocabulary","known");
+		}
+	}).catch(function(error) {
+		console.log("Error getting document:", error);
+	});
+	
+	docRef = dbfire.collection("vocabulary").doc("learning");
+	docRef.get().then(function(doc) {
+		if (doc.exists) {
+			console.log("Document data:", doc.data());
+		} else {
+			// doc.data() will be undefined in this case
+			console.log("No such document!");
+			CreateDocument("vocabulary","learning");
+		}
+	}).catch(function(error) {
+		console.log("Error getting document:", error);
+	});
+	
+	docRef = dbfire.collection("vocabulary").doc("unknown");
+	docRef.get().then(function(doc) {
+		if (doc.exists) {
+			console.log("Document data:", doc.data());
+		} else {
+			// doc.data() will be undefined in this case
+			console.log("No such document!");
+			CreateDocument("vocabulary","unknown");
 		}
 	}).catch(function(error) {
 		console.log("Error getting document:", error);
