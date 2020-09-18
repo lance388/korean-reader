@@ -358,10 +358,12 @@ This software uses the following plugins, please take note of their individual l
 
 
 
-			$(document).ready(function() {
+	$(document).ready(function() {
+			
+		dbfire = firebase.firestore();
 
 
-      document.getElementById('signout').addEventListener('click', handleSignOut, false);
+		document.getElementById('signout').addEventListener('click', handleSignOut, false);
 			
 	
 			
@@ -7224,7 +7226,7 @@ function toggleSignIn() {
       });
     }
 			
-function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid)
+function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid,docid)
 {
 			var arrLearning = [];
 			var arrKnown = [];
@@ -7262,14 +7264,36 @@ function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid)
 				  }
 			  }
 			  
-			  	switch(_type)
+				if(docid=="false")
 				{
-					case "unknown":CreateDocument(collection,_type,lang,uid,arrUnknown); break;
-					case "learning":CreateDocument(collection,_type,lang,uid,arrLearning); break;
-					case "known":CreateDocument(collection,_type,lang,uid,arrKnown); break;
+					switch(_type)
+					{
+						case "unknown":CreateDocument(collection,_type,lang,uid,arrUnknown); break;
+						case "learning":CreateDocument(collection,_type,lang,uid,arrLearning); break;
+						case "known":CreateDocument(collection,_type,lang,uid,arrKnown); break;
+					}
+				}
+				else
+				{
+						case "unknown":UpdateDocument(collection,_type,lang,uid,arrUnknown,docid); break;
+						case "learning":UpdateDocument(collection,_type,lang,uid,arrLearning,docid); break;
+						case "known":UpdateDocument(collection,_type,lang,uid,arrKnown,docid); break;
 				}
 			  
 			  };
+}
+
+function UpdateDocument(collection,_type,lang,uid,w,docid)
+{
+	dbfire.collection(collection).doc(docid).update({
+		words: w
+	})
+	.then(function() {
+		console.log("Document successfully Updated!");
+	})
+	.catch(function(error) {
+		console.error("Error updating document: ", error);
+	});
 }
 
 
@@ -7327,14 +7351,14 @@ function SaveFireDB()
 	.get()
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            console.log(doc.id, " => ", doc.data());
+            //console.log(doc.id, " => ", doc.data());
 			//console.log(doc.id, " => ", doc.data().words);
-			//CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid,doc.id);
 			
         });
 		if(querySnapshot.empty)
 		{
-			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid);
+			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid,"false");
 		}
 		})
 		.catch(function(error) {
@@ -7346,13 +7370,13 @@ function SaveFireDB()
 		.get()
 		.then(function(querySnapshot) {
 			querySnapshot.forEach(function(doc) {
-				console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data());
 				//console.log(doc.id, " => ", doc.data().words);
-				//CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
+				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid,doc.id);
 			});
 			if(querySnapshot.empty)
 			{
-				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
+				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid,"false");
 			}
 		})
 		.catch(function(error) {
@@ -7364,13 +7388,13 @@ function SaveFireDB()
 		.get()
 		.then(function(querySnapshot) {
 			querySnapshot.forEach(function(doc) {
-				console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data());
 				//console.log(doc.id, " => ", doc.data().words);
-				//CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
+				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid,doc.id);
 			});
 			if(querySnapshot.empty)
 			{
-				CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid);
+				CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid,"false");
 			}
 		})
 		.catch(function(error) {
@@ -7381,142 +7405,65 @@ function SaveFireDB()
 
 function LoadAccountData(uid)
 {
-	dbfire = firebase.firestore();
 	var user = firebase.auth().currentUser;
 	var lang = "korean";
 	
-	dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
-	.get()
-	.then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            //console.log(doc.id, " => ", doc.data());
-			//console.log(doc.id, " => ", doc.data().words);
-			ImportVocabularyFromFireDB(doc.data().words,"known");
-			
-        });
-		if(querySnapshot.empty)
-		{
-			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid);
-		}
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
-	
-	
-		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "learning").where("language", "==", lang)
-	.get()
-	.then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            //console.log(doc.id, " => ", doc.data());
-			//console.log(doc.id, " => ", doc.data().words);
-			ImportVocabularyFromFireDB(doc.data().words,"learning");
-        });
-		if(querySnapshot.empty)
-		{
-			CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
-		}
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
-	
-	
-			dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "unknown").where("language", "==", lang)
-	.get()
-	.then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            //console.log(doc.id, " => ", doc.data());
-			//console.log(doc.id, " => ", doc.data().words);
-			ImportVocabularyFromFireDB(doc.data().words,"unknown");
-        });
-		if(querySnapshot.empty)
-		{
-			CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid);
-		}
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
-	
-	//check if vocabulary documents exist in database
-	/*
-	var docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("known_"+uid);
-	docRef.get().then(function(doc) {
-		if (doc.exists) {
-			console.log("Document data:", doc.data());
-		} else {
-			// doc.data() will be undefined in this case
-			console.log("No such document!");
-			CreateDocument("vocabulary","known_"+uid,uid);
-		}
-	}).catch(function(error) {
-		console.log("Error getting document:", error);
-	});
-	
-	docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("learning_"+uid);
-	docRef.get().then(function(doc) {
-		if (doc.exists) {
-			console.log("Document data:", doc.data());
-		} else {
-			// doc.data() will be undefined in this case
-			console.log("No such document!");
-			CreateDocument("vocabulary","learning_"+uid,uid);
-		}
-	}).catch(function(error) {
-		console.log("Error getting document:", error);
-	});
-	
-	docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("unknown_"+uid);
-	docRef.get().then(function(doc) {
-		if (doc.exists) {
-			console.log("Document data:", doc.data());
-		} else {
-			// doc.data() will be undefined in this case
-			console.log("No such document!");
-			CreateDocument("vocabulary","unknown_"+uid,uid);
-		}
-	}).catch(function(error) {
-		console.log("Error getting document:", error);
-	});
-	
-	*/
-	
-	/*
-	
-	dbfire.collection("users").add({
-    first: "Ada",
-    last: "Lovelace",
-    born: 1815
-	})
-	.then(function(docRef) {
-		console.log("Document written with ID: ", docRef.id);
-	})
-	.catch(function(error) {
-		console.error("Error adding document: ", error);
-	});
-	
-	// Add a second document with a generated ID.
-	dbfire.collection("users").add({
-		first: "Alan",
-		middle: "Mathison",
-		last: "Turing",
-		born: 1912
-	})
-	.then(function(docRef) {
-		console.log("Document written with ID: ", docRef.id);
-	})
-	.catch(function(error) {
-		console.error("Error adding document: ", error);
-	});
-	
-	dbfire.collection("users").get().then((querySnapshot) => {
-		querySnapshot.forEach((doc) => {
-			console.log(`${doc.id} => ${doc.data()}`);
+	if(user)
+	{
+		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				//console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data().words);
+				ImportVocabularyFromFireDB(doc.data().words,"known");
+				
+			});
+			if(querySnapshot.empty)
+			{
+				CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid,"false");
+			}
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
 		});
-	});	
-	
-	*/
+		
+		
+			dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "learning").where("language", "==", lang)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				//console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data().words);
+				ImportVocabularyFromFireDB(doc.data().words,"learning");
+			});
+			if(querySnapshot.empty)
+			{
+				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid,"false");
+			}
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
+		});
+		
+		
+				dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "unknown").where("language", "==", lang)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				//console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data().words);
+				ImportVocabularyFromFireDB(doc.data().words,"unknown");
+			});
+			if(querySnapshot.empty)
+			{
+				CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid,"false");
+			}
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
+		});
+	}
 }
 
 function SetUILanguage(lang) //TODO
