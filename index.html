@@ -7287,12 +7287,12 @@ function CreateDocument(collection,_type,lang,uid,w)
 	});
 }
 
-function ImportVocabularyFromFireDB(words,state)
+function ImportVocabularyFromFireDB(words,s)
 {
 	if(words.length>0)
 	{
 		var state = 0;
-		switch(importWordlistFilter)
+		switch(s)
 		{
 			case "unknown": state = 0;break;
 			case "learning": state = 1;break;
