@@ -3281,6 +3281,8 @@ This software uses the following plugins, please take note of their individual l
 				Export(wordArr,"Korean - Current Text - Known");
 			break;
 		}
+		
+		SaveFireDB();
 	}
 	
 	function Export(list,name)
@@ -7313,6 +7315,70 @@ function ImportVocabularyFromFireDB(words,s)
 	}
 }
 
+function SaveFireDB()
+{
+	
+	var user = firebase.auth().currentUser;
+	var lang = "korean";
+	if(user)
+	{
+		console.log("Saving fireDB");
+		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
+	.get()
+	.then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            console.log(doc.id, " => ", doc.data());
+			//console.log(doc.id, " => ", doc.data().words);
+			//CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid);
+			
+        });
+		if(querySnapshot.empty)
+		{
+			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid);
+		}
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
+		});
+		
+		
+			dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "learning").where("language", "==", lang)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data().words);
+				//CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
+			});
+			if(querySnapshot.empty)
+			{
+				CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
+			}
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
+		});
+		
+		
+				dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "unknown").where("language", "==", lang)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data().words);
+				//CalculateVocabularyAndCreateDocument("vocabulary","learning",lang,user.uid);
+			});
+			if(querySnapshot.empty)
+			{
+				CalculateVocabularyAndCreateDocument("vocabulary","unknown",lang,user.uid);
+			}
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
+		});
+	}
+}
+
 function LoadAccountData(uid)
 {
 	dbfire = firebase.firestore();
@@ -7455,7 +7521,7 @@ function LoadAccountData(uid)
 
 function SetUILanguage(lang) //TODO
 {
-
+	
 }
 
 
