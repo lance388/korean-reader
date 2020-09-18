@@ -7248,7 +7248,7 @@ function LoadAccountData(uid)
 	
 	//check if vocabulary documents exist in database
 	
-	var docRef = dbfire.collection("vocabulary").doc("known_"+uid);
+	var docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("known_"+uid);
 	docRef.get().then(function(doc) {
 		if (doc.exists) {
 			console.log("Document data:", doc.data());
@@ -7261,7 +7261,7 @@ function LoadAccountData(uid)
 		console.log("Error getting document:", error);
 	});
 	
-	docRef = dbfire.collection("vocabulary").doc("learning_"+uid);
+	docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("learning_"+uid);
 	docRef.get().then(function(doc) {
 		if (doc.exists) {
 			console.log("Document data:", doc.data());
@@ -7274,7 +7274,7 @@ function LoadAccountData(uid)
 		console.log("Error getting document:", error);
 	});
 	
-	docRef = dbfire.collection("vocabulary").doc("unknown_"+uid);
+	docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("unknown_"+uid);
 	docRef.get().then(function(doc) {
 		if (doc.exists) {
 			console.log("Document data:", doc.data());
