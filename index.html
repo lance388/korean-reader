@@ -241,6 +241,17 @@ This software uses the following plugins, please take note of their individual l
 			}
 		}
 		
+		function AllowEditing
+		{
+			  var pasteArea = document.getElementById ("pasteArea");
+			  pasteArea.innerText = "";	
+			  LoadHTML();
+			  
+			  initialisationComplete = true;
+			  pasteArea.contentEditable = true;
+			NavigateFirstVisit();
+		}
+		
 		function init()
 		{
 			var pasteArea = document.getElementById ("pasteArea");
@@ -399,6 +410,7 @@ This software uses the following plugins, please take note of their individual l
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
           document.getElementById('quickstart-sign-in').textContent = 'Sign in';
 		  document.getElementById('signout').disabled = true;
+		  
           //document.getElementById('quickstart-account-details').textContent = 'null';
           // [END_EXCLUDE]
         }
@@ -407,12 +419,14 @@ This software uses the following plugins, please take note of their individual l
         // [END_EXCLUDE]
       });
       // [END authstatelistener]
-
       document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
       document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
      // document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
       document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
-											
+										
+
+
+				AllowEditing();
 			
 				var chartDropDown = document.getElementById("chartOption");
 				chartDropDown.selectedIndex=0;
@@ -894,13 +908,7 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
 			  InitialiseImport();
-			  var pasteArea = document.getElementById ("pasteArea");
-			  pasteArea.innerText = "";	
-			  LoadHTML();
-			  
-			  initialisationComplete = true;
-			  pasteArea.contentEditable = true;
-			NavigateFirstVisit();
+
 				
 			};
 			}
