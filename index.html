@@ -7287,6 +7287,32 @@ function CreateDocument(collection,_type,lang,uid,w)
 	});
 }
 
+function ImportVocabularyFromFireDB(words,state)
+{
+	if(words.length>0)
+	{
+		var state = 0;
+		switch(importWordlistFilter)
+		{
+			case "unknown": state = 0;break;
+			case "learning": state = 1;break;
+			case "known": state = 2; break;
+		}
+		
+		for(var j=0;j<words.length;j++)
+		{
+			if(j==words.length-1)
+			{
+				UpdateOrAddDBRow(words[j],state,1); //last iteration
+			}
+			else
+			{
+				UpdateOrAddDBRow(words[j],state,0);
+			}
+		}
+	}
+}
+
 function LoadAccountData(uid)
 {
 	dbfire = firebase.firestore();
@@ -7298,7 +7324,9 @@ function LoadAccountData(uid)
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             //console.log(doc.id, " => ", doc.data());
-			console.log(doc.id, " => ", doc.data().words);
+			//console.log(doc.id, " => ", doc.data().words);
+			ImportVocabularyFromFireDB(doc.data().words,"known");
+			
         });
 		if(querySnapshot.empty)
 		{
@@ -7315,7 +7343,8 @@ function LoadAccountData(uid)
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             //console.log(doc.id, " => ", doc.data());
-			console.log(doc.id, " => ", doc.data().words);
+			//console.log(doc.id, " => ", doc.data().words);
+			ImportVocabularyFromFireDB(doc.data().words,"learning");
         });
 		if(querySnapshot.empty)
 		{
@@ -7332,7 +7361,8 @@ function LoadAccountData(uid)
 	.then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             //console.log(doc.id, " => ", doc.data());
-			console.log(doc.id, " => ", doc.data().words);
+			//console.log(doc.id, " => ", doc.data().words);
+			ImportVocabularyFromFireDB(doc.data().words,"unknown");
         });
 		if(querySnapshot.empty)
 		{
