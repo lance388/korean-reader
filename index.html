@@ -7246,8 +7246,19 @@ function LoadAccountData(uid)
 	var user = firebase.auth().currentUser;
 	var uid = user.uid;
 	
-	//check if vocabulary documents exist in database
+	dbfire.collection("vocabulary").where("author_id", "==", uid).get()
+	.then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
 	
+	//check if vocabulary documents exist in database
+	/*
 	var docRef = dbfire.collection("vocabulary").where("author_id", "==", uid).doc("known_"+uid);
 	docRef.get().then(function(doc) {
 		if (doc.exists) {
@@ -7287,7 +7298,7 @@ function LoadAccountData(uid)
 		console.log("Error getting document:", error);
 	});
 	
-	
+	*/
 	
 	/*
 	
