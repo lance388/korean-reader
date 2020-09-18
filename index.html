@@ -387,7 +387,11 @@ This software uses the following plugins, please take note of their individual l
         //    document.getElementById('quickstart-verify-email').disabled = false;
        //   }
           // [END_EXCLUDE]
-        } else {
+        
+		
+		LoadAccountData();
+		
+		} else {
           // User is signed out.
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
@@ -7222,7 +7226,39 @@ function toggleSignIn() {
 
 function LoadAccountData()
 {
-
+	var dbfire = firebase.firestore();
+	
+	dbfire.collection("users").add({
+    first: "Ada",
+    last: "Lovelace",
+    born: 1815
+	})
+	.then(function(docRef) {
+		console.log("Document written with ID: ", docRef.id);
+	})
+	.catch(function(error) {
+		console.error("Error adding document: ", error);
+	});
+	
+	// Add a second document with a generated ID.
+	dbfire.collection("users").add({
+		first: "Alan",
+		middle: "Mathison",
+		last: "Turing",
+		born: 1912
+	})
+	.then(function(docRef) {
+		console.log("Document written with ID: ", docRef.id);
+	})
+	.catch(function(error) {
+		console.error("Error adding document: ", error);
+	});
+	
+	dbfire.collection("users").get().then((querySnapshot) => {
+		querySnapshot.forEach((doc) => {
+			console.log(`${doc.id} => ${doc.data()}`);
+		});
+	});	
 }
 
 function SetUILanguage(lang) //TODO
@@ -7754,8 +7790,8 @@ function SetUILanguage(lang) //TODO
 		messagingSenderId: "410562108352",
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
 	  };
-	  // Initialize Firebase
-	  firebase.initializeApp(firebaseConfig);
+	  
+
 	</script>
 </body>
 
