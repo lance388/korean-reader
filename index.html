@@ -389,7 +389,7 @@ This software uses the following plugins, please take note of their individual l
        //   }
           // [END_EXCLUDE]
 		  
-		  LoadAccountData(uid);
+		  LoadAccountData();
 		  
         } else {
           // User is signed out.
@@ -7243,6 +7243,8 @@ function CreateDocument(collection, document,uid)
 function LoadAccountData(uid)
 {
 	dbfire = firebase.firestore();
+	var user = firebase.auth().currentUser;
+	var uid = user.uid;
 	
 	//check if vocabulary documents exist in database
 	
