@@ -7251,6 +7251,7 @@ function LoadAccountData(uid)
 			console.log("known found");
             console.log(doc.id, " => ", doc.data());
         });
+		console.log("here1 "+querySnapshot.empty);
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
