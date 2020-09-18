@@ -7251,7 +7251,44 @@ function LoadAccountData(uid)
 			console.log("known found");
             console.log(doc.id, " => ", doc.data());
         });
-		console.log("here1 "+querySnapshot.empty);
+		if(querySnapshot.empty)
+		{
+			CreateDocument("vocabulary","known",user.uid);
+		}
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+	
+	
+		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "learning")
+	.get()
+	.then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+			console.log("learning found");
+            console.log(doc.id, " => ", doc.data());
+        });
+		if(querySnapshot.empty)
+		{
+			CreateDocument("vocabulary","learning",user.uid);
+		}
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+	
+	
+			dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "unknown")
+	.get()
+	.then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+			console.log("unknown found");
+            console.log(doc.id, " => ", doc.data());
+        });
+		if(querySnapshot.empty)
+		{
+			CreateDocument("vocabulary","unknown",user.uid);
+		}
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
