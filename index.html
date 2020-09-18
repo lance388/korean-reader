@@ -7274,10 +7274,12 @@ function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid,docid)
 					}
 				}
 				else
-				{
+				{	switch(_type)
+					{
 						case "unknown":UpdateDocument(collection,_type,lang,uid,arrUnknown,docid); break;
 						case "learning":UpdateDocument(collection,_type,lang,uid,arrLearning,docid); break;
 						case "known":UpdateDocument(collection,_type,lang,uid,arrKnown,docid); break;
+					}
 				}
 			  
 			  };
