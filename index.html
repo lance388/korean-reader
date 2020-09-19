@@ -421,17 +421,7 @@ This software uses the following plugins, please take note of their individual l
       document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
      // document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
       document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
-		
-
-			  var pasteArea = document.getElementById ("pasteArea");
-			  pasteArea.innerText = "";	
-			  LoadHTML();
-			  
-			  initialisationComplete = true;
-			  pasteArea.contentEditable = true;
-			NavigateFirstVisit();
-
-			
+											
 			
 				var chartDropDown = document.getElementById("chartOption");
 				chartDropDown.selectedIndex=0;
@@ -913,7 +903,13 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
 			  InitialiseImport();
-
+			  var pasteArea = document.getElementById ("pasteArea");
+			  pasteArea.innerText = "";	
+			  LoadHTML();
+			  
+			  initialisationComplete = true;
+			  pasteArea.contentEditable = true;
+			NavigateFirstVisit();
 				
 			};
 			}
@@ -7355,21 +7351,25 @@ function ImportVocabularyFromFireDB(words,s)
 		
 		for(var j=0;j<words.length;j++)
 		{
-			if(j==words.length-1)
-			{
-				UpdateOrAddDBRow(words[j],state,1); //last iteration
-			}
-			else
-			{
+			//if(j==words.length-1)
+			//{
+			//	UpdateOrAddDBRow(words[j],state,1); //last iteration
+			//}
+			//else
+			//{
 				UpdateOrAddDBRow(words[j],state,0);
-			}
+			//}
 		}
 		switch(s)
 		{
 			case "unknown": unknownFireDBDocumentLoaded=true; break;
 			case "learning": learningFireDBDocumentLoaded=true; break;
 			case "known": knownFireDBDocumentLoaded=true; break;
-		} 
+		}
+		if(unknownFireDBDocumentLoaded&&learningFireDBDocumentLoaded&&knownFireDBDocumentLoaded)
+		{
+			OnInput();
+		}
 	}
 }
 
