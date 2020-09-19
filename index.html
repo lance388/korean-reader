@@ -364,63 +364,7 @@ This software uses the following plugins, please take note of their individual l
 
 	$(document).ready(function() {
 			
-		dbfire = firebase.firestore();
-
-
-		document.getElementById('signout').addEventListener('click', handleSignOut, false);
-			
-	
-			
-				// Listening for auth state changes.
-      // [START authstatelistener]
-      firebase.auth().onAuthStateChanged(function(user) {
-        // [START_EXCLUDE silent]
-        // [END_EXCLUDE]
-        if (user) {
-          // User is signed in.
-          var displayName = user.displayName;
-          var email = user.email;
-          var emailVerified = user.emailVerified;
-          var photoURL = user.photoURL;
-          var isAnonymous = user.isAnonymous;
-          var uid = user.uid;
-          var providerData = user.providerData;
-          // [START_EXCLUDE]
-          document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-		  document.getElementById('signout').disabled = false;
-          //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-        //  if (!emailVerified) {
-        //    document.getElementById('quickstart-verify-email').disabled = false;
-       //   }
-          // [END_EXCLUDE]
-		  
-		  LoadAccountData();
-		  
-        } else {
-          // User is signed out.
-          // [START_EXCLUDE]
-		  
-		  learningFireDBDocumentLoaded=false;
-		  knownFireDBDocumentLoaded=false;
-		  unknownFireDBDocumentLoaded=false;
-		  
-          document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-          document.getElementById('quickstart-sign-in').textContent = 'Sign in';
-		  document.getElementById('signout').disabled = true;
-          //document.getElementById('quickstart-account-details').textContent = 'null';
-          // [END_EXCLUDE]
-        }
-        // [START_EXCLUDE silent]
-        document.getElementById('quickstart-sign-in').disabled = false;
-        // [END_EXCLUDE]
-      });
-      // [END authstatelistener]
-
-      document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
-      document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
-     // document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
-      document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
+		
 											
 			
 				var chartDropDown = document.getElementById("chartOption");
@@ -903,6 +847,7 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
 			  InitialiseImport();
+			  InitialiseFireDB();
 			  var pasteArea = document.getElementById ("pasteArea");
 			  pasteArea.innerText = "";	
 			  LoadHTML();
@@ -1057,6 +1002,68 @@ This software uses the following plugins, please take note of their individual l
 		function sleep(ms) {
 		  return new Promise(resolve => setTimeout(resolve, ms));
 		}
+		
+		function InitialiseFireDB()
+		{
+			dbfire = firebase.firestore();
+
+
+		document.getElementById('signout').addEventListener('click', handleSignOut, false);
+			
+	
+			
+				// Listening for auth state changes.
+      // [START authstatelistener]
+      firebase.auth().onAuthStateChanged(function(user) {
+				// [START_EXCLUDE silent]
+				// [END_EXCLUDE]
+				if (user) {
+				  // User is signed in.
+				  var displayName = user.displayName;	
+				  var email = user.email;
+				  var emailVerified = user.emailVerified;
+				  var photoURL = user.photoURL;
+				  var isAnonymous = user.isAnonymous;
+				  var uid = user.uid;
+				  var providerData = user.providerData;
+				  // [START_EXCLUDE]
+				  document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+				  document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+				  document.getElementById('signout').disabled = false;
+				  //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+				//  if (!emailVerified) {
+				//    document.getElementById('quickstart-verify-email').disabled = false;
+			   //   }
+				  // [END_EXCLUDE]
+				  
+				  LoadAccountData();
+				  
+				} else {
+				  // User is signed out.
+				  // [START_EXCLUDE]
+				  
+				  learningFireDBDocumentLoaded=false;
+				  knownFireDBDocumentLoaded=false;
+				  unknownFireDBDocumentLoaded=false;
+				  
+				  document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+				  document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+				  document.getElementById('signout').disabled = true;
+				  //document.getElementById('quickstart-account-details').textContent = 'null';
+				  // [END_EXCLUDE]
+				}
+				// [START_EXCLUDE silent]
+				document.getElementById('quickstart-sign-in').disabled = false;
+				// [END_EXCLUDE]
+			  });
+			  // [END authstatelistener]
+
+			  document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+			  document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
+			 // document.getElementById('quickstart-verify-email').addEventListener('click', sendEmailVerification, false);
+			  document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
+		}
+		
 
 		function InitialiseFontType(attempts)
 		{
