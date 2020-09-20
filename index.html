@@ -7101,7 +7101,7 @@ function toggleSignIn() {
       }
       document.getElementById('quickstart-sign-in').disabled = true;
 	  
-	  if(user)
+	  if(firebase.auth().currentUser)
 	  {
 		document.getElementById("fireLoginArea").style.visibility="visible";
 		document.getElementById("googleLoginArea").style.visibility="hidden";
