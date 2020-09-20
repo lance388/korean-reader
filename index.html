@@ -364,8 +364,14 @@ This software uses the following plugins, please take note of their individual l
 
 	$(document).ready(function() {
 			
-				document.getElementById("fireLoginArea").style.visibility="visible";
-				document.getElementById("googleLoginArea").style.visibility="visible";
+				if (firebase.auth().currentUser)
+				{
+					ShowSigninElements(true);
+				}
+				else
+				{
+					ShowSigninElements(false);
+				}
 											
 			
 				var chartDropDown = document.getElementById("chartOption");
@@ -7070,8 +7076,7 @@ function toggleSignIn() {
       if (firebase.auth().currentUser) {
         // [START signout]
         firebase.auth().signOut();
-		document.getElementById("fireLoginArea").style.visibility="visible";
-		document.getElementById("googleLoginArea").style.visibility="visible";
+		ShowSigninElements(true);
         // [END signout]
       } else {
         var email = document.getElementById('email').value;
@@ -7101,8 +7106,7 @@ function toggleSignIn() {
           // [END_EXCLUDE]
         });
         // [END authwithemail]
-		document.getElementById("fireLoginArea").style.visibility="visible";
-		document.getElementById("googleLoginArea").style.visibility="hidden";
+		ShowSigninElements(false);
       }
       document.getElementById('quickstart-sign-in').disabled = true;
     }
@@ -7213,9 +7217,8 @@ function toggleSignIn() {
             // [END_EXCLUDE]
           });
 		  
-		document.getElementById("fireLoginArea").style.visibility="hidden";
-		document.getElementById("googleLoginArea").style.visibility="visible";
-		
+			ShowSigninElements(false);
+			
           // [END authwithcred]
         } else {
           console.log('User already signed-in Firebase.');
@@ -7250,8 +7253,7 @@ function toggleSignIn() {
       var googleAuth = gapi.auth2.getAuthInstance();
       googleAuth.signOut().then(function() {
         firebase.auth().signOut();
-		document.getElementById("fireLoginArea").style.visibility="visible";
-		document.getElementById("googleLoginArea").style.visibility="visible";
+		ShowSigninElements(true);
       });
     }
 			
@@ -7514,6 +7516,20 @@ function LoadAccountData(uid)
 		.catch(function(error) {
 			console.log("Error getting documents: ", error);
 		});
+	}
+}
+
+function ShowSigninElements(show)
+{
+	if(show)
+	{
+		document.getElementById("email").style.visibility="visible";
+		document.getElementById("password").style.visibility="visible";
+	}
+	else
+	{
+		document.getElementById("email").style.visibility="hidden";
+		document.getElementById("password").style.visibility="hidden";
 	}
 }
 
