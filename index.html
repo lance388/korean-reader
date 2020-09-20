@@ -7075,7 +7075,8 @@ function SwapChart()
 function toggleSignIn() {
       if (firebase.auth().currentUser) {
         // [START signout]
-        firebase.auth().signOut();
+		handleSignOut();
+        //firebase.auth().signOut();
 		ShowSigninElements(true);
         // [END signout]
       } else {
