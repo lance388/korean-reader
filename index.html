@@ -7069,6 +7069,9 @@ function toggleSignIn() {
       if (firebase.auth().currentUser) {
         // [START signout]
         firebase.auth().signOut();
+		console.log("here1");
+		document.getElementById("fireLoginArea").style.visibility="visible";
+		document.getElementById("googleLoginArea").style.visibility="hidden";
         // [END signout]
       } else {
         var email = document.getElementById('email').value;
@@ -7097,22 +7100,16 @@ function toggleSignIn() {
           document.getElementById('quickstart-sign-in').disabled = false;
           // [END_EXCLUDE]
         });
+		
+		if(firebase.auth().currentUser)
+		{
+			console.log("here2");
+			document.getElementById("fireLoginArea").style.visibility="visible";
+			document.getElementById("googleLoginArea").style.visibility="visible";
+		}
         // [END authwithemail]
       }
       document.getElementById('quickstart-sign-in').disabled = true;
-	  
-	  if(firebase.auth().currentUser)
-	  {
-		console.log("here1");
-		document.getElementById("fireLoginArea").style.visibility="visible";
-		document.getElementById("googleLoginArea").style.visibility="hidden";
-	  }
-	  else
-	  {
-		console.log("here2");
-		document.getElementById("fireLoginArea").style.visibility="visible";
-		document.getElementById("googleLoginArea").style.visibility="visible";
-	  }
     }
 
     /**
