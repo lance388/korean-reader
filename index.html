@@ -7529,6 +7529,7 @@ function ShowSigninElements(show)
 		document.getElementById("quickstart-sign-up").style.visibility="visible";
 		document.getElementById("quickstart-password-reset").style.visibility="visible";
 		document.getElementById("fireSigninText").style.visibility="visible";
+		document.getElementById("googleSignin").style.visibility="visible";
 	}
 	else
 	{
@@ -7537,6 +7538,8 @@ function ShowSigninElements(show)
 		document.getElementById("quickstart-sign-up").style.visibility="hidden";
 		document.getElementById("quickstart-password-reset").style.visibility="hidden";
 		document.getElementById("fireSigninText").style.visibility="hidden";
+		document.getElementById("googleSignin").style.visibility="hidden";
+		
 	}
 }
 
@@ -7807,7 +7810,17 @@ function SetUILanguage(lang) //TODO
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
+									      
 
+								<div class="mdl-card__supporting-text mdl-color-text--grey-600">
+								  <p>Sign in with your Google account below.</p>
+								  <!-- [START google_button] -->
+								  <div class="g-signin2" id="googleSignin" data-onsuccess="onSignIn" data-theme="dark"></div>
+								  <!-- [END google_button] -->
+								  <br>
+								  </div>
+								
+								
 								  <!-- Container where we'll display the user details -->
 								  <div class="quickstart-user-details-container">
 									Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
@@ -7831,14 +7844,7 @@ function SetUILanguage(lang) //TODO
         <div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
           <h2 class="mdl-card__title-text">Google Authentication with OAuth Credentials</h2>
         </div>
-        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-          <p>Sign in with your Google account below.</p>
-          <!-- [START google_button] -->
-          <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-          <!-- [END google_button] -->
-          <br>
-          <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="signout" name="signout">Sign Out</button>
-        </div>
+
       </div>
 
     </div>
