@@ -7100,6 +7100,17 @@ function toggleSignIn() {
         // [END authwithemail]
       }
       document.getElementById('quickstart-sign-in').disabled = true;
+	  
+	  if(user)
+	  {
+		document.getElementById("fireLoginArea").style.visibility="visible";
+		document.getElementById("googleLoginArea").style.visibility="hidden";
+	  }
+	  else
+	  {
+		document.getElementById("fireLoginArea").style.visibility="visible";
+		document.getElementById("googleLoginArea").style.visibility="visible";
+	  }
     }
 
     /**
@@ -7754,7 +7765,7 @@ function SetUILanguage(lang) //TODO
 						<br>
 						
 
-						<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+						<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" id="fireLoginArea">
 
 							  <!-- Container for the demo -->
 							  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
@@ -7789,7 +7800,7 @@ function SetUILanguage(lang) //TODO
 						
 
 
-  <main class="mdl-layout__content mdl-color--grey-100">
+  <main class="mdl-layout__content mdl-color--grey-100" id="googleLoginArea">
     <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
 
       <!-- Container for the demo -->
