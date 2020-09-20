@@ -7103,11 +7103,13 @@ function toggleSignIn() {
 	  
 	  if(firebase.auth().currentUser)
 	  {
+		console.log("here1");
 		document.getElementById("fireLoginArea").style.visibility="visible";
 		document.getElementById("googleLoginArea").style.visibility="hidden";
 	  }
 	  else
 	  {
+		console.log("here2");
 		document.getElementById("fireLoginArea").style.visibility="visible";
 		document.getElementById("googleLoginArea").style.visibility="visible";
 	  }
