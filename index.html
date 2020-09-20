@@ -7108,7 +7108,6 @@ function toggleSignIn() {
         // [END authwithemail]
 		ShowSigninElements(false);
       }
-      document.getElementById('quickstart-sign-in').disabled = true;
     }
 
     /**
@@ -7188,6 +7187,7 @@ function toggleSignIn() {
       console.log('Google Auth Response', googleUser);
       // We need to register an Observer on Firebase Auth to make sure auth is initialized.
       var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+		ShowSigninElements(false);
         unsubscribe();
         // Check if we are already signed-in Firebase with the correct user.
         if (!isUserEqual(googleUser, firebaseUser)) {
@@ -7796,7 +7796,7 @@ function SetUILanguage(lang) //TODO
 							  <!-- Container for the demo -->
 							  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
 								<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
-								  <h2 class="mdl-card__title-text">Firebase Email &amp; Password Authentication</h2>
+								  <h2 class="mdl-card__title-text">Login</h2>
 								</div>
 								<div class="mdl-card__supporting-text mdl-color-text--grey-600">
 								  <p id="fireSigninText">Enter an email and password below and either sign in to an existing account or sign up</p>
@@ -7832,24 +7832,7 @@ function SetUILanguage(lang) //TODO
 
 							</div>
 						
-						<br>
-						
-
-
-  <main class="mdl-layout__content mdl-color--grey-100" id="googleLoginArea">
-    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-
-      <!-- Container for the demo -->
-      <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-        <div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
-          <h2 class="mdl-card__title-text">Google Authentication with OAuth Credentials</h2>
-        </div>
-
-      </div>
-
-    </div>
-  </main>					
-						
+						<br>				
 						<br>
 						<hr>
 						<br>
