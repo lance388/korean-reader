@@ -7531,6 +7531,7 @@ function ShowSigninElements(show)
 		document.getElementById("quickstart-password-reset").style.visibility="visible";
 		document.getElementById("fireSigninText").style.visibility="visible";
 		document.getElementById("googleSignin").style.visibility="visible";
+		document.getElementById("googleSigninText").style.visibility="visible";
 	}
 	else
 	{
@@ -7540,7 +7541,7 @@ function ShowSigninElements(show)
 		document.getElementById("quickstart-password-reset").style.visibility="hidden";
 		document.getElementById("fireSigninText").style.visibility="hidden";
 		document.getElementById("googleSignin").style.visibility="hidden";
-		
+		document.getElementById("googleSigninText").style.visibility="hidden";
 	}
 }
 
@@ -7812,7 +7813,7 @@ function SetUILanguage(lang) //TODO
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
 									      
-								  <p>Sign in with your Google account below.</p>
+								  <p id="googleSigninText">Sign in with your Google account below.</p>
 								  <!-- [START google_button] -->
 								  <div class="g-signin2" id="googleSignin" data-onsuccess="onSignIn" data-theme="dark"></div>
 								  <!-- [END google_button] -->
