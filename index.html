@@ -7463,6 +7463,7 @@ function LoadAccountData(uid)
 	
 	if(user)
 	{
+		ShowSigninElements(false);
 		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
 		.get()
 		.then(function(querySnapshot) {
