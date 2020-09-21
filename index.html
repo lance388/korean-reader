@@ -7525,23 +7525,37 @@ function ShowSigninElements(show)
 {
 	if(show)
 	{
-		document.getElementById("email").style.visibility="visible";
-		document.getElementById("password").style.visibility="visible";
-		document.getElementById("quickstart-sign-up").style.visibility="visible";
-		document.getElementById("quickstart-password-reset").style.visibility="visible";
-		document.getElementById("fireSigninText").style.visibility="visible";
-		document.getElementById("googleSignin").style.visibility="visible";
-		document.getElementById("googleSigninText").style.visibility="visible";
+		//document.getElementById("email").style.visibility="visible";
+		//document.getElementById("password").style.visibility="visible";
+		//document.getElementById("quickstart-sign-up").style.visibility="visible";
+		//document.getElementById("quickstart-password-reset").style.visibility="visible";
+		//document.getElementById("fireSigninText").style.visibility="visible";
+		//document.getElementById("googleSignin").style.visibility="visible";
+		//document.getElementById("googleSigninText").style.visibility="visible";
+				document.getElementById("email").style.display = 'block';
+		document.getElementById("password").style.display = 'block';
+		document.getElementById("quickstart-sign-up").style.display = 'block';
+		document.getElementById("quickstart-password-reset").style.display = 'block';
+		document.getElementById("fireSigninText").style.display = 'block';
+		document.getElementById("googleSignin").style.display = 'block';
+		document.getElementById("googleSigninText").style.display = 'block';
 	}
 	else
 	{
-		document.getElementById("email").style.visibility="hidden";
-		document.getElementById("password").style.visibility="hidden";
-		document.getElementById("quickstart-sign-up").style.visibility="hidden";
-		document.getElementById("quickstart-password-reset").style.visibility="hidden";
-		document.getElementById("fireSigninText").style.visibility="hidden";
-		document.getElementById("googleSignin").style.visibility="hidden";
-		document.getElementById("googleSigninText").style.visibility="hidden";
+		//document.getElementById("email").style.visibility="hidden";
+		//document.getElementById("password").style.visibility="hidden";
+		//document.getElementById("quickstart-sign-up").style.visibility="hidden";
+		//document.getElementById("quickstart-password-reset").style.visibility="hidden";
+		//document.getElementById("fireSigninText").style.visibility="hidden";
+		//document.getElementById("googleSignin").style.visibility="hidden";
+		//document.getElementById("googleSigninText").style.visibility="hidden";
+		document.getElementById("email").style.display = 'none'; 
+		document.getElementById("password").style.display = 'none'; 
+		document.getElementById("quickstart-sign-up").style.display = 'none'; 
+		document.getElementById("quickstart-password-reset").style.display = 'none'; 
+		document.getElementById("fireSigninText").style.display = 'none'; 
+		document.getElementById("googleSignin").style.display = 'none'; 
+		document.getElementById("googleSigninText").style.display = 'none'; 
 	}
 }
 
