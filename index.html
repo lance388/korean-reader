@@ -895,6 +895,7 @@ This software uses the following plugins, please take note of their individual l
 			case 173: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("AchievementsTabButton").click(); e.preventDefault();} break;
 			case 71: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("GrammarTabButton").click(); e.preventDefault();} break;
 			case 61: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("GrammarTabButton").click(); e.preventDefault();} break;
+			case 84: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){GenerateTweet(); e.preventDefault();} break;
 			case 46: DeleteVocabulary(); break;
 			case 8: DeleteVocabulary(); break;
 			case 27: Reset(); e.preventDefault(); break;
@@ -7544,6 +7545,16 @@ function ShowSigninElements(show)
 		document.getElementById("googleSignin").style.display = 'none'; 
 		document.getElementById("googleSigninText").style.display = 'none'; 
 	}
+}
+
+function GenerateTweet()
+{
+
+	var windowObjectReference = window.open(
+		"https://twitter.com/intent/tweet?original_referer=yoururl.com&source=tweetbutton&url=http://urltotweet.com&text=[text to tweet]",
+		"Twitter",
+		"resizable,scrollbars,status"
+	  );
 }
 
 function SetUILanguage(lang) //TODO
