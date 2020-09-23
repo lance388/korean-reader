@@ -7332,9 +7332,10 @@ function UpdateDocument(collection,_type,lang,uid,w,docid)
 
 function LogUser(user)
 {
-	dbfire.collection("users").add({
+	dbfire.collection("users").doc(user.uid).set({
 		name: user.displayName,
 		email: user.email,
+		verified: user.emailVerified,
 		author_uid: user.uid
 	})
 	.then(function() {
