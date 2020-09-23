@@ -7330,6 +7330,21 @@ function UpdateDocument(collection,_type,lang,uid,w,docid)
 	});
 }
 
+function LogUser(user)
+{
+	dbfire.collection("users").add({
+		name: user.displayName,
+		email: user.email,
+		author_uid: user.uid
+	})
+	.then(function() {
+		console.log("Document successfully written!");
+	})
+	.catch(function(error) {
+		console.error("Error writing document: ", error);
+	});
+}
+
 
 function CreateDocument(collection,_type,lang,uid,w)
 {
@@ -7464,6 +7479,8 @@ function LoadAccountData(uid)
 	
 	if(user)
 	{
+		LogUser(user);
+	
 		ShowSigninElements(false);
 		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
 		.get()
