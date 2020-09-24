@@ -5106,11 +5106,9 @@ function SetGrammarPoints()
 {
 	/*NOTE
 	(?=\s) look ahead 1 character, pass if that character is a space
-	
-		//TODO PUT IN (?=\s) for particles, but must fix
 	*/
 	
-	var numGrammar=340;
+	var numGrammar=341;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5273,7 +5271,7 @@ function SetGrammarPoints()
 			case 27:
 				rx.push(/na(?=\s)/);
 				n.point = "N(이)나";
-				n.des="Particle denoting 'or' or 'no less than'";
+				n.des="Particle denoting 'or'";
 			break;
 			case 28:
 				rx.push(/jjeum(?=\s)/);
@@ -6948,6 +6946,11 @@ function SetGrammarPoints()
 				rx.push(/ssig/);
 				n.point = "-씩";
 				n.des="'Apiece', 'per'";
+			break;
+			case 340:
+				rx.push(/na(?=\s)/);
+				n.point = "N(이)나";
+				n.des="Particle denoting 'no less than'";
 			break;
 			
 			
