@@ -363,6 +363,8 @@ This software uses the following plugins, please take note of their individual l
 
 
 	$(document).ready(function() {
+	
+				InitialiseFireDB();
 			
 				if (firebase.auth().currentUser)
 				{
@@ -850,7 +852,7 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseHighlightingKnown();
 			  InitialiseVocabulary();
 			  SetDefaultReaderLanguage();
-			  InitialiseFireDB();
+			  //InitialiseFireDB();
 			  InitialiseUILanguage();
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
