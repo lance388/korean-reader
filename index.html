@@ -7554,6 +7554,7 @@ function ShowSigninElements(show)
 		document.getElementById("fireSigninText").style.display = 'block';
 		document.getElementById("googleSignin").style.display = 'block';
 		document.getElementById("googleSigninText").style.display = 'block';
+		document.getElementById("LoginTabButton").innerHTML='Login';		
 	}
 	else
 	{
@@ -7563,7 +7564,9 @@ function ShowSigninElements(show)
 		document.getElementById("quickstart-password-reset").style.display = 'none'; 
 		document.getElementById("fireSigninText").style.display = 'none'; 
 		document.getElementById("googleSignin").style.display = 'none'; 
-		document.getElementById("googleSigninText").style.display = 'none'; 
+		document.getElementById("googleSigninText").style.display = 'none';
+
+		document.getElementById("LoginTabButton").innerHTML='Logged-in';
 	}
 }
 
