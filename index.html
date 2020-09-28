@@ -5173,6 +5173,7 @@ function SetGrammarPoints()
 			break;
 			case 7:
 				rx.push(/go i/);
+				rx.push(/gu i/);
 				n.point = "V-고 있다";
 				n.des="Progressive tense";
 			break;
@@ -5215,6 +5216,7 @@ function SetGrammarPoints()
 			break;
 			case 15:
 				rx.push(/hago(?=\s)/);
+				rx.push(/hagu(?=\s)/);
 				n.point = "N하고";
 				n.des="Particle denoting 'and'";
 			break;
@@ -5301,6 +5303,7 @@ function SetGrammarPoints()
 			break;
 			case 33:
 				rx.push(/go(?=\s)/);
+				rx.push(/gu(?=\s)/);
 				n.point = "A/V-고";
 				n.des="'And'";
 			break;
@@ -5341,6 +5344,7 @@ function SetGrammarPoints()
 			break;
 			case 41:
 				rx.push(/go naseo/);
+				rx.push(/gu naseo/);
 				n.point = "V-고 나서";
 				n.des="'And then'";
 			break;
@@ -5440,6 +5444,7 @@ function SetGrammarPoints()
 			break;
 			case 59:
 				rx.push(/go sip/);
+				rx.push(/gu sip/);
 				n.point = "V-고 싶다";
 				n.des="'Want to'";
 			break;
@@ -5542,11 +5547,13 @@ function SetGrammarPoints()
 			break;
 			case 78:
 				rx.push(/lyeogo(?=\s)/);
+				rx.push(/lyeogu(?=\s)/);
 				n.point = "V-(으)려고";
 				n.des="'In order to', 'so that'";
 			break;
 			case 79:
 				rx.push(/lyeogo ha/);
+				rx.push(/lyeogu ha/);
 				n.point = "V-(으)려고 하다";
 				n.des="'Plan to', 'intend to'";
 			break;
@@ -5566,12 +5573,12 @@ function SetGrammarPoints()
 				n.des="Indicates a decision or promise";
 			break;
 			case 83:
-				rx.push(/myeon(?=\s)/);
+				rx.push(/myeon/);
 				n.point = "A/V-(으)면";
 				n.des="'If', 'when', 'once'";
 			break;
 			case 84:
-				rx.push(/lyeomyeon(?=\s)/);
+				rx.push(/lyeomyeon/);
 				n.point = "V-(으)려면";
 				n.des="'If (you) want to', 'if (your) intention is to'";
 			break;
@@ -5698,6 +5705,8 @@ function SetGrammarPoints()
 			case 105:
 				rx.push(/hago(?=\s)/);
 				rx.push(/lago(?=\s)/);
+				rx.push(/hagu(?=\s)/);
+				rx.push(/lagu(?=\s)/);
 				n.point = "-하고/-라고";
 				n.des="Direct quotation";
 			break;
@@ -5706,6 +5715,10 @@ function SetGrammarPoints()
 				rx.push(/dago/);
 				rx.push(/nyago/);
 				rx.push(/lago/);
+				rx.push(/jagu/);
+				rx.push(/dagu/);
+				rx.push(/nyagu/);
+				rx.push(/lagu/);
 				rx.push(/dae/);
 				rx.push(/jae/);
 				rx.push(/lae/);
@@ -5846,6 +5859,7 @@ function SetGrammarPoints()
 			break;
 			case 131:
 				rx.push(/go haeseo/);
+				rx.push(/gu haeseo/);
 				n.point = "A/V-고 해서";
 				n.des="Used to state a reason, while hinting that there are a number of other reasons";
 			break;
@@ -5879,6 +5893,7 @@ function SetGrammarPoints()
 			break;
 			case 137:
 				rx.push(/goja(?=\s)/);
+				rx.push(/guja(?=\s)/);
 				n.point = "V-고자";
 				n.des="Indicates a reason";
 			break;
@@ -5919,6 +5934,7 @@ function SetGrammarPoints()
 			break;
 			case 145:
 				rx.push(/deolago/);
+				rx.push(/deolagu/);
 				n.point = "A/V-더라고(요)";
 				n.des="Indicates recollection";
 			break;
@@ -6043,6 +6059,7 @@ function SetGrammarPoints()
 			break;
 			case 168:
 				rx.push(/gajigo/);
+				rx.push(/gajigu/);
 				n.point = "V-아/어 가지고";
 				n.des="Indicates the doing of an action following the completion of another action";
 			break;
@@ -6058,11 +6075,13 @@ function SetGrammarPoints()
 			break;
 			case 170:
 				rx.push(/goseo/);
+				rx.push(/guseo/);
 				n.point = "V-고서";
 				n.des="Indicates that the first action completed before the second action started";
 			break;
 			case 171:
 				rx.push(/go boni/);
+				rx.push(/gu boni/);
 				n.point = "V-고 보니";
 				n.des="Indicates that the speaker learned something new";
 			break;
@@ -6186,6 +6205,7 @@ function SetGrammarPoints()
 			break;
 			case 194:
 				rx.push(/go mal/);
+				rx.push(/gu mal/);
 				n.point = "V-고 말다";
 				n.des="Refers to an unplanned action or event that continued until it was complete and thoroughly finished";
 			break;
@@ -6222,6 +6242,8 @@ function SetGrammarPoints()
 			case 201:
 				rx.push(/gon ha/);
 				rx.push(/goneun ha/);
+				rx.push(/guneun ha/);
+				rx.push(/gun ha/);
 				n.point = "V-곤 하다, V-고는 하다";
 				n.des="Used to describe something that occurs repeatedly";
 			break;
@@ -6259,6 +6281,7 @@ function SetGrammarPoints()
 			break;
 			case 208:
 				rx.push(/bogo/);
+				rx.push(/bogu/);
 				n.point = "-보고";
 				n.des="Indicates a person to whom a question, order, request, or suggestion is verbally directed";
 			break;
@@ -6331,6 +6354,7 @@ function SetGrammarPoints()
 			break;
 			case 222:
 				rx.push(/ndabsigo/);
+				rx.push(/ndabsigu/);
 				n.point = "V-(느)ㄴ답시고";
 				n.des="Used to sarcastically express that while the subject of the sentence had intended to do something correctly, the effort ended in an unexpected and unsatisfactory result";
 			break;
@@ -6371,6 +6395,7 @@ function SetGrammarPoints()
 			break;
 			case 230:
 				rx.push(/ndago ch/);
+				rx.push(/ndagu ch/);
 				n.point = "A/V-(느)ㄴ다고 치다";
 				n.des="Used to acknowledge or assume someone's behavior or assertion";
 			break;
@@ -6431,11 +6456,13 @@ function SetGrammarPoints()
 			break;
 			case 242:
 				rx.push(/godo/);
+				rx.push(/gudo/);
 				n.point = "V-고도";
 				n.des="Indicates that some unexpected action or situation occurs in the following clause after the completion of the action in the preceding clause";
 			break;
 			case 243:
 				rx.push(/bulguhago/);
+				rx.push(/bulguhagu/);
 				n.point = "A/V-(으)ㅁ에도 불구하고";
 				n.des="Indicates that the content in the following clause is the opposite result than what was expected based on the action or circumstance described in the preceding clause";
 			break;
@@ -6526,6 +6553,7 @@ function SetGrammarPoints()
 			break;
 			case 260:
 				rx.push(/lyeogo deu/);
+				rx.push(/lyeogu deu/);
 				rx.push(/lyeo deu/);
 				n.point = "V-(으)려고 들다";
 				n.des="Expresses the subject's strong and active effort to achieve some goal";
@@ -6637,6 +6665,7 @@ function SetGrammarPoints()
 			break;
 			case 281:
 				rx.push(/chigo(?=\s)/);
+				rx.push(/chigu(?=\s)/);
 				n.point = "N치고";
 				n.des="Indicates that something is the case in every instance of a particular noun";
 			break;
@@ -6733,7 +6762,8 @@ function SetGrammarPoints()
 				n.des="Indicates a command";
 			break;
 			case 299:
-				rx.push(/goyo/);
+				rx.push(/go/);
+				rx.push(/gu/);
 				n.point = "A/V-고(요)";
 				n.des="Used to add additional information to something stated earlier";
 			break;
@@ -6879,6 +6909,7 @@ function SetGrammarPoints()
 			break;
 			case 326:
 				rx.push(/geulgo/);
+				rx.push(/geulgu/);
 				n.point = "글고";
 				n.des="'And', shortened form of 그리고";
 			break;
@@ -7801,9 +7832,7 @@ function SetUILanguage(lang) //TODO
 						<br>
 						<br>
 						
-						
-						Korean Reader was created as a personal project to keep track of progress, gauge the difficulty of texts, identify important words, and speed up dictionary lookups. I hope that it can be useful to all other learners out there.<br><br><br>
-						Report bugs or give suggestions here: <a href="mailto:readerwebsite@gmail.com?subject=Feedback%20for%20Korean%20Reader">readerwebsite@gmail.com</a><br><br><br>
+						Report bugs or give suggestions here: <a href="mailto:readerwebsite@gmail.com?subject=Feedback%20for%20Korean%20Reader">readerwebsite@gmail.com</a><br><br>
 						
 						If you would like to donate to help with the website hosting costs and to support the development of Korean Reader, please click below:
 						<br><br>
