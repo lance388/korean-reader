@@ -5002,7 +5002,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=12;
+	var numGrammar=13;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5019,8 +5019,8 @@ function SetHangulGrammarTriggers()
 			break;	
 			case 1:
 				n.num = 11;
-				rx.push(/이(?=\s)/);
-				rx.push(/가(?=\s)/);
+				rx.push(/이/);
+				rx.push(/가/);
 				n.point = "N이/가";
 				n.des="Subject marking particle";
 			break;
@@ -5093,6 +5093,13 @@ function SetHangulGrammarTriggers()
 				n.point = "거";
 				n.des="Shortened form of 것, 'thing'";
 			break;
+			case 12:
+				n.num = 24;
+				rx.push(/도/);
+				rx.push(/두/);
+				n.point = "N도, N도(요)";
+				n.des="'Also', particle denoting the listing of something";
+			break;
 
 			
 			default: console.log("index out of bounds");
@@ -5109,7 +5116,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=341;
+	var numGrammar=344;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5252,7 +5259,6 @@ function SetGrammarPoints()
 				n.des="Particle denoting a recipient";
 			break;
 			case 23:
-				rx.push(/do/);
 				n.point = "N도, N도(요)";
 				n.des="'Also', particle denoting the listing of something";
 			break;
@@ -5423,6 +5429,8 @@ function SetGrammarPoints()
 			case 56:
 				rx.push(/do doi/);
 				rx.push(/do doae/);
+				rx.push(/du doi/);
+				rx.push(/du doae/);
 				n.point = "A/V-아/어도 되다";
 				n.des="'May', 'be allowed to'";
 			break;
@@ -5439,6 +5447,10 @@ function SetGrammarPoints()
 				rx.push(/ji anh-ado doae/);
 				rx.push(/ji anh-adodoi/);
 				rx.push(/ji anh-adodoae/);
+				rx.push(/ji anh-adu doi/);
+				rx.push(/ji anh-adu doae/);
+				rx.push(/ji anh-adudoi/);
+				rx.push(/ji anh-adudoae/);
 				n.point = "A/V-지 않아도 되다";
 				n.des="'Does not have to'";
 			break;
@@ -5586,6 +5598,9 @@ function SetGrammarPoints()
 				rx.push(/ado(?=\s)/);
 				rx.push(/eodo(?=\s)/);
 				rx.push(/aedo(?=\s)/);
+				rx.push(/adu(?=\s)/);
+				rx.push(/eodu(?=\s)/);
+				rx.push(/aedu(?=\s)/);
 				n.point = "A/V-아/어도";
 				n.des="'Even if', 'regardless whether'";
 			break;
@@ -5703,22 +5718,16 @@ function SetGrammarPoints()
 				n.des="Expresses one's disagreement";
 			break;
 			case 105:
-				rx.push(/hago(?=\s)/);
-				rx.push(/lago(?=\s)/);
-				rx.push(/hagu(?=\s)/);
-				rx.push(/lagu(?=\s)/);
+				rx.push(/ha(?=\s)/);
+				rx.push(/la(?=\s)/);
 				n.point = "-하고/-라고";
 				n.des="Direct quotation";
 			break;
 			case 106:
-				rx.push(/jago/);
-				rx.push(/dago/);
-				rx.push(/nyago/);
-				rx.push(/lago/);
-				rx.push(/jagu/);
-				rx.push(/dagu/);
-				rx.push(/nyagu/);
-				rx.push(/lagu/);
+				rx.push(/ja/);
+				rx.push(/da/);
+				rx.push(/nya/);
+				rx.push(/la/);
 				rx.push(/dae/);
 				rx.push(/jae/);
 				rx.push(/lae/);
@@ -5767,6 +5776,7 @@ function SetGrammarPoints()
 			break;
 			case 114:
 				rx.push(/ljido mol/);
+				rx.push(/ljidu mol/);
 				rx.push(/lji mol/);
 				n.point = "A/V-ㄹ지(도) 모르다";
 				n.des="Expresses the speaker's view that something might happen or be true";
@@ -5778,6 +5788,7 @@ function SetGrammarPoints()
 			break;
 			case 116:
 				rx.push(/ndedo/);
+				rx.push(/ndedu/);
 				n.point = "A/V-(으)ㄴ/는데도";
 				n.des="Expresses an unexpected state of affairs";
 			break;
@@ -5933,8 +5944,7 @@ function SetGrammarPoints()
 				n.des="Indicates recollection";
 			break;
 			case 145:
-				rx.push(/deolago/);
-				rx.push(/deolagu/);
+				rx.push(/deola/);
 				n.point = "A/V-더라고(요)";
 				n.des="Indicates recollection";
 			break;
@@ -5992,6 +6002,7 @@ function SetGrammarPoints()
 			break;
 			case 155:
 				rx.push(/man haedo/);
+				rx.push(/man haedu/);
 				n.point = "N만 해도";
 				n.des="Used to give examples to explain something";
 			break;
@@ -6375,11 +6386,13 @@ function SetGrammarPoints()
 			break;
 			case 226:
 				rx.push(/deolado/);
+				rx.push(/deoladu/);
 				n.point = "A/V-더라도";
 				n.des="Indicated that while the speaker acknowledges and accepts the possibility of the content in the preceding clause, it does not have any affect on the following clause";
 			break;
 			case 227:
 				rx.push(/ljilado/);
+				rx.push(/ljiladu/);
 				n.point = "A/V-(으)ㄹ지라도";
 				n.des="Indicated that even if the speaker acknowledges or hypothesises the content in the preceding clause, it does not have any affect on the situation or event stated in the following clause";
 			break;
@@ -6457,6 +6470,8 @@ function SetGrammarPoints()
 			case 242:
 				rx.push(/godo/);
 				rx.push(/gudo/);
+				rx.push(/godu/);
+				rx.push(/gudu/);
 				n.point = "V-고도";
 				n.des="Indicates that some unexpected action or situation occurs in the following clause after the completion of the action in the preceding clause";
 			break;
@@ -6758,7 +6773,7 @@ function SetGrammarPoints()
 			break;
 			case 298:
 				rx.push(/la(?=\s)/);
-				n.point = "V-아/어라";
+				n.point = "V-아/어라, V-너라, V-거라";
 				n.des="Indicates a command";
 			break;
 			case 299:
@@ -6983,6 +6998,32 @@ function SetGrammarPoints()
 				rx.push(/na(?=\s)/);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'no less than'";
+			break;
+			case 341:
+				rx.push(/geuleohge/);
+				rx.push(/geuleohge/);
+				n.point = "그렇게";
+				n.des="'So', 'that'";
+			break;
+			case 342:
+				rx.push(/jila/);
+				n.point = "A/V-은/는지라";
+				n.des="'Because'";
+			break;
+			case 343:
+				rx.push(/geon/);
+				n.point = "건";
+				n.des="Shortened form of '것은'";
+			break;
+			case 344:
+				rx.push(/geon/);
+				n.point = "건";
+				n.des="Shortened form of '것은'";
+			break;
+			case 345:
+				rx.push(/nya/);
+				n.point = "A/V-느냐?, A/V-(으)냐?";
+				n.des="Formal non-polite - inquisitive";
 			break;
 			
 			
