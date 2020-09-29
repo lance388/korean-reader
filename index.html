@@ -5116,7 +5116,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=346;
+	var numGrammar=345;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7016,11 +7016,6 @@ function SetGrammarPoints()
 				n.des="Shortened form of '것은'";
 			break;
 			case 344:
-				rx.push(/geon/);
-				n.point = "건";
-				n.des="Shortened form of '것은'";
-			break;
-			case 345:
 				rx.push(/nya/);
 				n.point = "A/V-느냐?, A/V-(으)냐?";
 				n.des="Formal non-polite - inquisitive";
