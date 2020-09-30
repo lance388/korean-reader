@@ -5054,6 +5054,8 @@ function SetHangulGrammarTriggers()
 			case 6:
 				n.num = 19;
 				rx.push(/에서/);
+				rx.push(/서/);
+				rx.push(/선/);
 				n.point = "N에서";
 				n.des="Particle denoting location/'from...'";
 			break;
@@ -5116,7 +5118,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=345;
+	var numGrammar=348;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5175,6 +5177,9 @@ function SetGrammarPoints()
 				rx.push(/l geo/);
 				rx.push(/lgeoya/);
 				rx.push(/lgeoye/);
+				rx.push(/l kkeo/);
+				rx.push(/lkkeoya/);
+				rx.push(/lkkeoye/);
 				n.point = "V-(으)ㄹ 거예요/V-(으)ㄹ 거야";
 				n.des="Future tense";
 			break;
@@ -7019,6 +7024,21 @@ function SetGrammarPoints()
 				rx.push(/nya/);
 				n.point = "A/V-느냐?, A/V-(으)냐?";
 				n.des="Formal non-polite - inquisitive";
+			break;
+			case 345:
+				rx.push(/guman/);
+				n.point = "A/V-구만";
+				n.des="Expresses surprise at a realisation";
+			break;
+			case 346:
+				rx.push(/hagoneun/);
+				n.point = "하고는";
+				n.des="Indicates something that is displeasing and deserves to be criticized";
+			break;
+			case 347:
+				rx.push(/amuli/);
+				n.point = "아무리";
+				n.des="'No matter how much/many'";
 			break;
 			
 			
