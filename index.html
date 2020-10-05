@@ -7646,8 +7646,6 @@ function ShowSigninElements(show)
 
 function QuickImport(words,state)
 {
-	//get list of local database vocabulary with a particular state
-	
 	var arrLearning = [];
 			var arrKnown = [];
 			var arrUnknown = [];
@@ -7698,7 +7696,11 @@ function QuickImport(words,state)
 				}
 				for(var j=0;j<words.length;j++)
 					{
+						if(!arr.includes(words[j]))
+						{
 							UpdateOrAddDBRow(words[j],state);
+						}
+							
 					}
 			}
 }
