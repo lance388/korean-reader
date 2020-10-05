@@ -3268,13 +3268,16 @@ This software uses the following plugins, please take note of their individual l
 						}, 10000);
 		}
 		
-		if(saveFireDBTimeout)
-		{	
-				clearTimeout(saveFireDBTimeout);
+		if(unknownFireDBDocumentLoaded!=false&&learningFireDBDocumentLoaded!=false&&knownFireDBDocumentLoaded!=false)
+		{
+			if(saveFireDBTimeout)
+			{	
+					clearTimeout(saveFireDBTimeout);
+			}
+			saveFireDBTimeout = setTimeout(function() {
+				SaveFireDB();
+			}, 5000);
 		}
-		saveFireDBTimeout = setTimeout(function() {
-			SaveFireDB();
-		}, 5000);
 		
 		switch(toExport)
 		{
@@ -4835,18 +4838,7 @@ function ButtonImportSubmit()
 			case "Known": state = 2; break;
 		}
 		
-		for(var j=0;j<wordArray.length;j++)
-		{
-			//console.log(wordArray[j]);
-			if(j==wordArray.length-1)
-			{
-				UpdateOrAddDBRow(wordArray[j],state,1); //last iteration
-			}
-			else
-			{
-				UpdateOrAddDBRow(wordArray[j],state,0);
-			}
-		}
+		QuickImport(wordArray,state);
 		
 		
 		document.getElementById("importTextArea").value="";
@@ -4882,7 +4874,7 @@ function InitialiseImport()
 	importDropDown.value=importWordlistFilter;
 }
 
-function UpdateOrAddDBRow(w,a,last)
+function UpdateOrAddDBRow(w,a)
 {
 
 			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
@@ -4902,7 +4894,7 @@ function UpdateOrAddDBRow(w,a,last)
 					
 	          }
 			  
-			  if(last==1)
+			 if(unknownFireDBDocumentLoaded&&learningFireDBDocumentLoaded&&knownFireDBDocumentLoaded)
 			  {
 				OnInput();
 			  }
@@ -7438,7 +7430,7 @@ function LogUser(user)
 		author_uid: user.uid
 	})
 	.then(function() {
-		console.log("Document successfully written!");
+		console.log("User logged in");
 	})
 	.catch(function(error) {
 		console.error("Error writing document: ", error);
@@ -7480,23 +7472,15 @@ function ImportVocabularyFromFireDB(words,s)
 			case "known": state = 2; break;
 		}
 		
-		for(var j=0;j<words.length;j++)
-		{
-			//if(j==words.length-1)
-			//{
-			//	UpdateOrAddDBRow(words[j],state,1); //last iteration
-			//}
-			//else
-			//{
-				UpdateOrAddDBRow(words[j],state,0);
-			//}
-		}
-		switch(s)
+				switch(s)
 		{
 			case "unknown": unknownFireDBDocumentLoaded=true; break;
 			case "learning": learningFireDBDocumentLoaded=true; break;
 			case "known": knownFireDBDocumentLoaded=true; break;
 		}
+		
+		QuickImport(words,state);
+
 		//if(unknownFireDBDocumentLoaded&&learningFireDBDocumentLoaded&&knownFireDBDocumentLoaded)
 		//{
 		//	OnInput();
@@ -7663,6 +7647,14 @@ function ShowSigninElements(show)
 
 		document.getElementById("LoginTabButton").innerHTML='<b>Logged-in</b>';
 	}
+}
+
+function QuickImport(words,s)
+{
+	for(var j=0;j<words.length;j++)
+		{
+				UpdateOrAddDBRow(words[j],state);
+		}
 }
 
 function SetUILanguage(lang) //TODO
