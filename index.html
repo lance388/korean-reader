@@ -7693,18 +7693,19 @@ function QuickImport(words,state)
 				  }
 			  }
 	
-	var arr;
-	switch(state)
-	{
-		case 0:  arr=arrUnknown; break;
-		case 1:  arr=arrLearning; break;
-		case 2:  arr=arrKnown; break;
-		default: console.log("state out of range");
-	}
-	for(var j=0;j<words.length;j++)
-		{
-				UpdateOrAddDBRow(words[j],state);
-		}
+				var arr;
+				switch(state)
+				{
+					case 0:  arr=arrUnknown; break;
+					case 1:  arr=arrLearning; break;
+					case 2:  arr=arrKnown; break;
+					default: console.log("state out of range");
+				}
+				for(var j=0;j<words.length;j++)
+					{
+							UpdateOrAddDBRow(words[j],state);
+					}
+			}
 }
 
 function SetUILanguage(lang) //TODO
