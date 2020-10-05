@@ -5002,7 +5002,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=13;
+	var numGrammar=14;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5102,6 +5102,12 @@ function SetHangulGrammarTriggers()
 				n.point = "N도, N도(요)";
 				n.des="'Also', particle denoting the listing of something";
 			break;
+			case 13:
+				n.num = 349;
+				rx.push(/며/);
+				n.point = "V-(으)며";
+				n.des="'While'";
+			break;
 
 			
 			default: console.log("index out of bounds");
@@ -5118,7 +5124,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=348;
+	var numGrammar=349;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5199,8 +5205,8 @@ function SetGrammarPoints()
 			case 9:
 				rx.push(/ji an/);
 				rx.push(/ji mos/);
-				rx.push(/jineun an/);
-				rx.push(/jineun mos/);
+				rx.push(/jin/);
+
 				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
@@ -5741,19 +5747,19 @@ function SetGrammarPoints()
 				n.des="Indirect quotation";
 			break;
 			case 107:
-				rx.push(/a boi/);
-				rx.push(/eo boi/);
-				rx.push(/e boi/);
+				rx.push(/boi/);
+				rx.push(/boi/);
+				rx.push(/boi/);
 				n.point = "A-아/어 보이다";
 				n.des="Indicates one's conjecture based on the outward appearance of something";
 			break;
 			case 108:
-				rx.push(/n moyang/);
+				rx.push(/moyang/);
 				n.point = "A/V-(으)ㄴ/는 모양이다";
 				n.des="'shape'/'appearance'";
 			break;
 			case 109:
-				rx.push(/l tende/);
+				rx.push(/tende/);
 				n.point = "A/V-(으)ㄹ 텐데";
 				n.des="Expresses a future situation or intention";
 			break;
@@ -5768,14 +5774,12 @@ function SetGrammarPoints()
 				n.des="Expresses an unconfirmed assumption about a future event";
 			break;
 			case 112:
-				rx.push(/n jul mollass/);
-				rx.push(/l jul mollass/);
+				rx.push(/jul mollass/);
 				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 줄 몰랐다";
 				n.des="Expresses something the speaker was not aware of or did not anticipate";
 			break;
 			case 113:
-				rx.push(/n jul al-ass/);
-				rx.push(/l jul al-ass/);
+				rx.push(/jul al-ass/);
 				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 줄 알았다";
 				n.des="Expresses the speaker's realisation that their assumption was incorrect";
 			break;
@@ -7039,6 +7043,10 @@ function SetGrammarPoints()
 				rx.push(/amuli/);
 				n.point = "아무리";
 				n.des="'No matter how much/many'";
+			break;
+			case 348:
+				n.point = "V-(으)며";
+				n.des="'While'";
 			break;
 			
 			
