@@ -896,7 +896,7 @@ This software uses the following plugins, please take note of their individual l
 			case 61: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("GrammarTabButton").click(); e.preventDefault();} break;
 			case 79: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){OpenGoogleImages(); e.preventDefault();} break;
 			case 89: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){OpenYahooImages(); e.preventDefault();} break;
-			
+			case 84: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){OpenGoogleTranslate(); e.preventDefault();} break;
 			
 			case 46: DeleteVocabulary(); break;
 			case 8: DeleteVocabulary(); break;
@@ -7758,6 +7758,11 @@ function OpenYahooImages()
 	window.open("https://images.search.yahoo.com/search/images;_ylt=Awr9Fqy0F4FfPGgAKy6LuLkF;_ylc=X1MDOTYwNTc0ODMEX3IDMgRmcgMEZ3ByaWQDYk0xRDBROWVTVUtJNnhpTllYaHIwQQRuX3N1Z2cDMTAEb3JpZ2luA2ltYWdlcy5zZWFyY2gueWFob28uY29tBHBvcwMwBHBxc3RyAwRwcXN0cmwDBHFzdHJsAzcEcXVlcnkDcG9rZW1vbgR0X3N0bXADMTYwMjI5NTc0Mw--?fr2=sb-top-images.search&p="+pendingLookup+"&ei=UTF-8&iscqry=&fr=sfp");
 }
 
+function OpenGoogleTranslate()
+{
+	window.open("https://translate.google.com/#view=home&op=translate&sl=ko&tl=en&text="+pendingLookup);
+}
+
 function SetUILanguage(lang) //TODO
 {
 	
@@ -7887,6 +7892,8 @@ function SetUILanguage(lang) //TODO
 					<br>
 					</div>
 					<div id="DictionaryTab" class="tabcontent">
+					<button id="googleTranslateLink" onclick="OpenGoogleTranslate();">Google Translate (shortcut: t)</button>
+					<br>
 					<br>
 					<form>Dictionary Language:
 							<select id="dictLanguageOption2" onchange="ChangeDictLanguage2();">
@@ -7930,7 +7937,6 @@ function SetUILanguage(lang) //TODO
 								<option>Hungarian</option>
 							</select>	
 						</form>
-					<br>
 					<hr>
 						<iframe id="naverIframe" src="https://en.dict.naver.com"></iframe>
 					</div>
