@@ -7907,63 +7907,68 @@ function SetUILanguage(lang) //TODO
 					<br>
 					</div>
 					<div id="DictionaryTab" class="tabcontent">
-					<button id="googleTranslateLink" onclick="OpenGoogleTranslate();">Google Translate (shortcut: t)</button>
-					<br>
-					<br>
-					<form>Dictionary Language:
-							<select id="dictLanguageOption2" onchange="ChangeDictLanguage2();">
-								<option>Korean-Korean</option>
-								<option selected="selected">English</option>
-								<option>Japanese</option>
-								<option>Chinese</option>
-								<option>French</option>
-								<option>Spanish</option>
-								<option>German</option>
-								<option>Vietnamese</option>
-								<option>Nepali</option>
-								<option>Mongolian</option>
-								<option>Burmese</option>
-								<option>Swahili</option>
-								<option>Arabic</option>
-								<option>Uzbek</option>
-								<option>Bahasa Indonesian</option>
-								<option>Cambodian</option>
-								<option>Thai</option>
-								<option>Tetum</option>
-								<option>Persian</option>
-								<option>Ancient Hebrew</option>
-								<option>Hindi</option>
-								<option>Modern Greek</option>
-								<option>Ancient Greek</option>
-								<option>Dutch</option>
-								<option>Latin</option>
-								<option>Russian</option>
-								<option>Romanian</option>
-								<option>Swedish</option>
-								<option>Albanian</option>
-								<option>Ukrainian</option>
-								<option>Italian</option>
-								<option>Gruziya</option>
-								<option>Czech</option>
-								<option>Turkish</option>
-								<option>Portuguese</option>
-								<option>Polish</option>
-								<option>Finnish</option>
-								<option>Hungarian</option>
-							</select>	
-						</form>
-					<hr>
-						<iframe id="naverIframe" src="https://en.dict.naver.com"></iframe>
+					<div id="dictionaryOptionsArea">
+					<iframe id="naverIframe" src="https://en.dict.naver.com"></iframe>
+						<button id="googleTranslateLink" onclick="OpenGoogleTranslate();">Google Translate (shortcut: t)</button>
+						<br>
+						<br>
+						<form>Dictionary Language:
+								<select id="dictLanguageOption2" onchange="ChangeDictLanguage2();">
+									<option>Korean-Korean</option>
+									<option selected="selected">English</option>
+									<option>Japanese</option>
+									<option>Chinese</option>
+									<option>French</option>
+									<option>Spanish</option>
+									<option>German</option>
+									<option>Vietnamese</option>
+									<option>Nepali</option>
+									<option>Mongolian</option>
+									<option>Burmese</option>
+									<option>Swahili</option>
+									<option>Arabic</option>
+									<option>Uzbek</option>
+									<option>Bahasa Indonesian</option>
+									<option>Cambodian</option>
+									<option>Thai</option>
+									<option>Tetum</option>
+									<option>Persian</option>
+									<option>Ancient Hebrew</option>
+									<option>Hindi</option>
+									<option>Modern Greek</option>
+									<option>Ancient Greek</option>
+									<option>Dutch</option>
+									<option>Latin</option>
+									<option>Russian</option>
+									<option>Romanian</option>
+									<option>Swedish</option>
+									<option>Albanian</option>
+									<option>Ukrainian</option>
+									<option>Italian</option>
+									<option>Gruziya</option>
+									<option>Czech</option>
+									<option>Turkish</option>
+									<option>Portuguese</option>
+									<option>Polish</option>
+									<option>Finnish</option>
+									<option>Hungarian</option>
+								</select>	
+							</form>
+						<hr>
+					</div>
+						
 					</div>
 					<div id="ImagesTab" class="tabcontent">
-						<br>
-						<button id="googleImagesLink" onclick="OpenGoogleImages();">Google Images (shortcut: o)</button>
-						<br><br>
-						<button id="yahooImagesLink" onclick="OpenYahooImages();">Yahoo Images (shortcut: y)</button>
-						<br>
-						<hr>
-					
-						<iframe id="imagesIframe" src=""></iframe>
+					<iframe id="imagesIframe" src=""></iframe>
+						<div id="imagesOptionsArea">
+							<br>
+							<button id="googleImagesLink" onclick="OpenGoogleImages();">Google Images (shortcut: o)</button>
+							<br><br>
+							<button id="yahooImagesLink" onclick="OpenYahooImages();">Yahoo Images (shortcut: y)</button>
+							<br>
+							<hr>
+						</div>
+						
 					</div>
 					<div id="StatisticsTab" class="tabcontent"></div>
 					<div id="UnknownWordsTab" class="tabcontent">

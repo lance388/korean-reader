@@ -55,12 +55,24 @@ th {
   text-align: left;
 }
 
+#imagesOptionsArea
+{
+	border:0.1vh;
+	height: 10%;
+}
+
+#dictionaryOptionsArea
+{
+	border:0.1vh;
+	height: 10%;
+}
+
 iframe
 {
 	background-color: #fff;
 	border:0.1vh;
 	width:100%;
-	height: 100%;
+	height: 90%;
 }
 
 html, body
