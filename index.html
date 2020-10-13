@@ -5167,7 +5167,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=349;
+	var numGrammar=350;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5972,6 +5972,7 @@ function SetGrammarPoints()
 			break;
 			case 140:
 				rx.push(/yaji/);
+				rx.push(/yajyo/);
 				n.point = "V-아/어야지(요)";
 				n.des="Used to make a promise to oneself";
 			break;
@@ -7090,6 +7091,11 @@ function SetGrammarPoints()
 			case 348:
 				n.point = "V-(으)며";
 				n.des="'While'";
+			break;
+			case 349:
+				rx.push(/lop/);
+				n.point = "N+롭다";
+				n.des="Turns a noun into an adjective";
 			break;
 			
 			
