@@ -2177,22 +2177,44 @@ This software uses the following plugins, please take note of their individual l
 						if (window.getSelection && (sel = window.getSelection()).modify) {
 							// Webkit, Gecko
 							var s = window.getSelection();
-								s.modify('extend', 'forward', 'word');
-								t = s.toString();
 							
-							t=t.replace(replaceCharacters," ");
-							t=t.trim();
-							for (var i = 0; i < t.length; i++) {
-							  if(t.charAt(i)==" ")
-							  {
-								t = t.substring(0,i);
-								break;
-							  }
-							}
+
+								s.modify('extend', 'forward', 'character');
+								var testString = s.toString();
+								testString = testString.replace(replaceCharacters,"");
+								if(testString!='')
+								{
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									s.modify('extend', 'forward', 'word');
+									t = s.toString();
+									t=t.replace(replaceCharacters," ");
+									console.log("here2 "+t);
+									
+									
+									t=t.trim();
+									for (var i = 0; i < t.length; i++) {
+									  if(t.charAt(i)==" ")
+									  {
+										t = t.substring(0,i);
+										break;
+									  }
+									}
+								}
+								
+								
+							
 								
 							word = t;
 						}
-					}	
+					}		
 					if(word!="")
 					{
 							if(modifier==1&&enableHighlighting)
@@ -6738,9 +6760,9 @@ function SetGrammarPoints()
 				n.des="Indicates that something is the case in every instance of a particular noun";
 			break;
 			case 282:
-				rx.push(/e ttala/);
+				rx.push(/ttala/);
 				n.point = "A/V-(으)ㅁ에 따라";
-				n.des="Indicates that the results stated in the following clause are based on the standard stated in the preceding clause";
+				n.des="Indicates that the result stated in the following clause is based on the standard stated in the preceding clause";
 			break;
 			case 283:
 				rx.push(/yeogan(?=\s)/);
@@ -6910,7 +6932,7 @@ function SetGrammarPoints()
 				n.des="Declaritive form";
 			break;
 			case 313:
-				rx.push(/ttalaseo(?=\s)/);
+				rx.push(/ttala/);
 				n.point = "따라서";
 				n.des="Therefore";
 			break;
