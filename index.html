@@ -5189,7 +5189,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=350;
+	var numGrammar=351;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6061,7 +6061,7 @@ function SetGrammarPoints()
 				n.des="Used to give an explanation";
 			break;
 			case 152:
-				rx.push(/l ppunman anila/);
+				rx.push(/l ppunman ani/);
 				n.point = "A/V-(으)ㄹ 뿐만 아니라";
 				n.des="'Not only... but also...'";
 			break;
@@ -6253,7 +6253,8 @@ function SetGrammarPoints()
 				n.des="Expresses there is no other choice but to do the action";
 			break;
 			case 187:
-				rx.push(/l ppun-i/);
+				rx.push(/l ppun/);
+				rx.push(/lppun/);
 				n.point = "A/V-(으)ㄹ 뿐이다";
 				n.des="Expresses there is only one available course of action or state";
 			break;
@@ -7116,8 +7117,13 @@ function SetGrammarPoints()
 			break;
 			case 349:
 				rx.push(/lop/);
-				n.point = "N+롭다";
+				n.point = "N롭다";
 				n.des="Turns a noun into an adjective";
+			break;
+			case 350:
+				rx.push(/ppun/);
+				n.point = "N뿐, A/V-뿐";
+				n.des="'Only', 'just'";
 			break;
 			
 			
