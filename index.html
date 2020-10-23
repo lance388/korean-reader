@@ -5189,7 +5189,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=351;
+	var numGrammar=352;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6014,7 +6014,7 @@ function SetGrammarPoints()
 				n.des="Used to give a suggestion";
 			break;
 			case 144:
-				rx.push(/ssdeon/);
+				rx.push(/deon/);
 				n.point = "A/V-았/었던";
 				n.des="Indicates recollection";
 			break;
@@ -6131,7 +6131,7 @@ function SetGrammarPoints()
 				rx.push(/deunji/);
 				rx.push(/deun(?=\s)/);
 				n.point = "N/A/V-든(지)";
-				n.des="Indicates that any of the stated choices are fine";
+				n.des="'Regardless', 'no matter', indicates that any of the stated choices are fine";
 			break;
 			case 166:
 				rx.push(/daesin/);
@@ -7124,6 +7124,11 @@ function SetGrammarPoints()
 				rx.push(/ppun/);
 				n.point = "N뿐, A/V-뿐";
 				n.des="'Only', 'just'";
+			break;
+			case 351:
+				rx.push(/kkeos/);
+				n.point = "-껏";
+				n.des="'To the full extent of'";
 			break;
 			
 			
