@@ -132,6 +132,7 @@ This software uses the following plugins, please take note of their individual l
 		var unmarkJumpTimeout;
 		var calculateStatisticsTimeout;
 		var achievementsTimeout;
+		var sentencesTimeout;
 		var openedTab="";
 		var limiters;
 		var limitersHangeul; 
@@ -619,6 +620,27 @@ This software uses the following plugins, please take note of their individual l
 					]
 				} );
 				
+				var table15 = $('#sentencesDataTable').DataTable( {
+				    "scrollY":        500,
+					"scrollCollapse": false,
+					"paging":         false,
+					"searching": true,
+					"deferRender": true,
+					"info": false,
+					"order": [[ 3, "asc" ]],
+					select: true,
+					"language": {
+					  "emptyTable": "Loading..."
+					},
+					columns: [
+						{ title: "#" },
+						{ title: "Sentence" },
+						{ title: "n"},
+						{ title: "?"},
+						{ title: "%"}
+					]
+				} );
+				
 				var events = $('#events');
 				
 				table
@@ -658,6 +680,15 @@ This software uses the following plugins, please take note of their individual l
 					selectedWord = rowData[0][1];
 					selectedIndex = indexes[0];
 					JumpTo(rowData[0][1]);
+				} );
+				
+							table15
+				.on( 'select', function ( e, dt, type, indexes ) {
+					var rowData = table15.rows( indexes ).data().toArray();
+					table15.rows( { selected: true } ).deselect();
+					selectedWord = rowData[0][1];
+					selectedIndex = indexes[0];
+					JumpToSentence(rowData[0][1]);
 				} );
 
 				
@@ -868,7 +899,7 @@ This software uses the following plugins, please take note of their individual l
 		}
 		
 		$(window).keydown(function(e) {
-		console.log(e.keyCode);
+		//console.log(e.keyCode);
 		  switch (e.keyCode) {
 		  
 			case 49: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
@@ -898,6 +929,7 @@ This software uses the following plugins, please take note of their individual l
 			case 89: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("yahooImagesLink").click(); e.preventDefault();} break;
 			case 84: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("googleTranslateLink").click(); e.preventDefault();} break;
 			case 80: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("papagoTranslateLink").click(); e.preventDefault();} break;
+			case 83: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("SentencesTabButton").click(); e.preventDefault();} break;
 			
 			case 46: DeleteVocabulary(); break;
 			case 8: DeleteVocabulary(); break;
@@ -1912,6 +1944,16 @@ This software uses the following plugins, please take note of their individual l
 			
 		}
 		
+		function JumpToSentence(word)
+		{
+			window.find(word,false,false,true);
+			pendingLookup = word;
+			if(enableVoice)
+			{
+				SpeakWord(word);
+			}
+		}
+		
 		function JumpTo(word)
 		{
 				//if(browser=="edge")
@@ -2695,7 +2737,7 @@ This software uses the following plugins, please take note of their individual l
 		}
 		document.getElementById(button).click();
 	  }
-	  else if((tabName=="UnknownWordsTab"||tabName=="LearningWordsTab"||tabName=="KnownWordsTab"||tabName=="AllWordsTab"||tabName=="GraphTab"||tabName=="AchievementsTab")
+	  else if((tabName=="UnknownWordsTab"||tabName=="LearningWordsTab"||tabName=="KnownWordsTab"||tabName=="AllWordsTab"||tabName=="GraphTab"||tabName=="AchievementsTab"||tabName=="SentencesTab")
 	  && enableHighlighting)
 	  {
 		AsyncCalculateStatistics();
@@ -2765,6 +2807,7 @@ This software uses the following plugins, please take note of their individual l
 			case "CompareTab": lastUsedStatsTab = "CompareTab"; break;
 			case "GraphTab": lastUsedStatsTab = "GraphTab"; break;
 			case "AchievementsTab": lastUsedStatsTab = "AchievementsTab"; break;
+			case "SentencesTab": lastUsedStatsTab = "SentencesTab"; break;
 		}
 	  
 	  
@@ -3300,6 +3343,18 @@ This software uses the following plugins, please take note of their individual l
 			}
 						achievementsTimeout = setTimeout(function() {
 							CountAndDrawAchievements();
+						}, 500);
+			
+		}
+		if(openedTab=="SentencesTab")
+		{
+		
+			if(sentencesTimeout)
+			{	
+				clearTimeout(sentencesTimeout);
+			}
+						sentencesTimeout = setTimeout(function() {
+							CreateSentences();
 						}, 500);
 			
 		}
@@ -7825,6 +7880,90 @@ function OpenPapagoTranslate()
 	window.open("https://papago.naver.com/?sk=auto&tk=ko&st="+pendingLookup);
 }
 
+function CreateSentences()
+{
+	var t = $('#sentencesDataTable').DataTable();
+	t.clear();
+	var oldHTML = pasteArea.innerText;
+	var replace = /[\n\.\!\?\。\！\?]/g;
+	var split = oldHTML.replace(replace,'<br>');
+	var count=1;
+	var sentenceUnknownWords = [];
+	var sentenceLearningWords = [];
+	var optionsPrimary = {
+						"accuracy": {
+							"value": "exactly",
+							"limiters": limiters
+						}, "className": 'primary'
+					};
+					
+	var optionsSecondary = {
+						"accuracy": {
+							"value": "exactly",
+							"limiters": limiters
+						}, "className": 'secondary'
+					};				
+	
+	split = split.split('<br>');
+	for(var i=0;i<split.length;i++)
+	{
+		split[i]=split[i].trim();
+		if(split[i].length>0)
+		{
+			var wordsInSentence = 0;
+			var difficulty = 0;
+			var wordsplit = split[i].replace(replaceCharacters," ");
+			wordsplit = wordsplit.split(' ');
+			for(var j=0;j<wordsplit.length;j++)
+			{
+				wordsplit[j]=wordsplit[j].trim();
+				if(wordsplit[j].length>0)
+				{
+					var found = knownArray.findIndex(w => w.word === wordsplit[j]);
+					if(found == -1)
+					{
+						var foundLearning = learningArray.findIndex(w => w.word === wordsplit[j]);
+						if(foundLearning == -1)
+						{
+							sentenceUnknownWords.push(wordsplit[j]);
+						}
+						else
+						{
+							sentenceLearningWords.push(wordsplit[j]);
+						}
+						
+						
+						
+						difficulty++;
+					}
+					
+					wordsInSentence++;
+				}
+			}
+			var ratio=(Math.round((difficulty/wordsInSentence)* 100)/100).toFixed(2);
+			
+			var text = split[i];
+			
+			t.row.add( [
+	            count,text,wordsInSentence,difficulty,ratio
+	        ] );
+			
+			count++;
+		}
+	}
+	t.draw();
+	
+	var context = new Mark(".SentenceTable");
+	for(var j=0;j<sentenceUnknownWords.length;j++)
+	{
+		context.mark(sentenceUnknownWords[j],optionsPrimary);
+	}
+	for(var j=0;j<sentenceLearningWords.length;j++)
+	{
+		context.mark(sentenceLearningWords[j],optionsSecondary);
+	}
+}
+
 function SetUILanguage(lang) //TODO
 {
 	
@@ -7859,6 +7998,7 @@ function SetUILanguage(lang) //TODO
 						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK <sup>[9]</sup></button>
 						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph <sup>[0]</sup></button>
 						<button id="AchievementsTabButton" class="tablinks" onclick="openTab(event, 'AchievementsTab','tablinks')">Achievements <sup>[-]</sup></button>
+						<button id="SentencesTabButton" class="tablinks" onclick="openTab(event, 'SentencesTab','tablinks')">Sentences <sup>[s]</sup></button>
 					</div>
 				</div>
 				<div class="tabContainer">
@@ -8100,10 +8240,12 @@ function SetUILanguage(lang) //TODO
 					</div>
 					
 					<div id="SentencesTab" class="tabcontent">
-						<h4>List of sentences.</h4><br>
+						<h4>List of sentences.</h4>
+						<table id="sentencesDataTable" class="SentenceTable cell-border compact" width="100%"></table>
 						<br>
-						<table id="sentencesDataTable" class="cell-border compact" width="100%"></table>
-						<br>
+						<small>n: number of words in the sentence.</small><br>
+						<small>?: number of 'learning' or 'unknown' words in the sentence.</small><br>
+						<small>%: the percentage of 'learning' or 'unknown' words in the sentence.</small><br>
 					</div>
 					
 					<div id="AboutTab" class="tabcontent">
