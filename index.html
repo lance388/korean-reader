@@ -868,7 +868,7 @@ This software uses the following plugins, please take note of their individual l
 		}
 		
 		$(window).keydown(function(e) {
-		//console.log(e.keyCode);
+		console.log(e.keyCode);
 		  switch (e.keyCode) {
 		  
 			case 49: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
@@ -8097,6 +8097,13 @@ function SetUILanguage(lang) //TODO
 						<br><br>
 						<br>
 						<button id="deleteAchievementsButton" onclick="ButtonDeleteAchievementsSubmit();">Clear Achievements</button><br><br>
+					</div>
+					
+					<div id="SentencesTab" class="tabcontent">
+						<h4>List of sentences.</h4><br>
+						<br>
+						<table id="sentencesDataTable" class="cell-border compact" width="100%"></table>
+						<br>
 					</div>
 					
 					<div id="AboutTab" class="tabcontent">
