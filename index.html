@@ -194,6 +194,7 @@ This software uses the following plugins, please take note of their individual l
 		var unknownFireDBDocumentLoaded = false;
 		var knownFireDBDocumentLoaded = false;
 		var learningFireDBDocumentLoaded = false;
+		var hideKnownSentences = true;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -886,6 +887,7 @@ This software uses the following plugins, please take note of their individual l
 			  InitialiseFontSize();
 			  InitialiseExportWordlist();
 			  InitialiseImport();
+			  InitialiseHideKnownSentences();
 			  var pasteArea = document.getElementById ("pasteArea");
 			  pasteArea.innerText = "";	
 			  LoadHTML();
@@ -7932,14 +7934,120 @@ function CreateSentences()
 			
 			var text = split[i];
 			
-			t.row.add( [
-	            count,text,wordsInSentence,difficulty,ratio
-	        ] );
+			if(hideKnownSentences && difficulty==0)
+			{
 			
-			count++;
+			}
+			else
+			{
+				t.row.add( [
+					count,text,wordsInSentence,difficulty,ratio
+				] );
+				
+				count++;
+			}
 		}
 	}
 	t.draw();
+}
+
+function toggleHideKnownSentences()
+{
+	if(document.getElementById("hideKnownSentences").checked)
+			{
+				hideKnownSentences=true;
+			
+				var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+				var request = objectStore.get("hideKnownSentences$");
+				request.onerror = function(event) {
+				  alert("Unable to retrieve data from database!");
+				};
+				request.onsuccess = function(event) {          
+					if(request.result) {
+						request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "hideKnownSentences$",appearances: 1});
+						HideKnownSentences();
+					}
+					else
+					{
+						addwordtodb("hideKnownSentences$",1);
+						HideKnownSentences();
+					}
+					
+				}
+	
+						
+			}
+			else
+			{
+				hideKnownSentences=false;
+				
+				var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+				var request = objectStore.get("hideKnownSentences$");
+				request.onerror = function(event) {
+				  alert("Unable to retrieve data from database!");
+				};
+				request.onsuccess = function(event) {          
+					if(request.result) {
+						request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "hideKnownSentences$",appearances: 0});
+						HideKnownSentences();
+					}
+					else
+					{
+						addwordtodb("hideKnownSentences$",0);
+						HideKnownSentences();
+					}
+					
+				}
+				
+			}
+			
+}
+
+function InitialiseHideKnownSentences()
+{
+	var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	        var request = objectStore.get("hideKnownSentences$");
+	        request.onerror = function(event) {
+	          alert("Unable to retrieve data from database!");
+	        };
+	        request.onsuccess = function(event) {          
+	          if(request.result) {
+					var a = request.result.appearances;
+					if(a==0)
+					{
+						hideKnownSentences=false;
+						document.getElementById("hideKnownSentences").checked = false;
+					}
+					else
+					{
+						hideKnownSentences=true;
+						document.getElementById("hideKnownSentences").checked = true;
+					}
+			}
+					else
+					{
+						if(hideKnownSentences)
+						{
+							
+							addwordtodb("hideKnownSentences$",1);
+							document.getElementById("hideKnownSentences").checked = true;
+						}
+						else
+						{
+							
+							addwordtodb("hideKnownSentences$",0);
+							document.getElementById("hideKnownSentences").checked = false;
+						}
+						
+					}
+					
+			};
+		
+}
+
+function HideKnownSentences()
+{
+	CalculateStatistics();
 }
 
 function SetUILanguage(lang) //TODO
@@ -8219,6 +8327,11 @@ function SetUILanguage(lang) //TODO
 					
 					<div id="SentencesTab" class="tabcontent">
 						<h4>List of sentences.</h4>
+						
+						<input checked type="checkbox" id="hideKnownSentences" name="hideKnownSentences" checked onclick="toggleHideKnownSentences();">
+						<label for="hideKnownSentences">Hide sentences that are fully known</label>
+						<br><br>
+						
 						<table id="sentencesDataTable" class="SentenceTable cell-border compact" width="100%"></table>
 						<br>
 						<small>n: number of words in the sentence.</small><br>
