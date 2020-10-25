@@ -7907,12 +7907,12 @@ function CreateSentences()
 	split = split.split('<br>');
 	for(var i=0;i<split.length;i++)
 	{
-		split[i]=split[i].trim();
-		if(split[i].length>0)
+		var wordsplit = split[i].replace(replaceCharacters," ");
+		wordsplit=wordsplit.trim();
+		if(wordsplit.length>0)
 		{
 			var wordsInSentence = 0;
 			var difficulty = 0;
-			var wordsplit = split[i].replace(replaceCharacters," ");
 			wordsplit = wordsplit.split(' ');
 			for(var j=0;j<wordsplit.length;j++)
 			{
@@ -7922,18 +7922,6 @@ function CreateSentences()
 					var found = knownArray.findIndex(w => w.word === wordsplit[j]);
 					if(found == -1)
 					{
-						var foundLearning = learningArray.findIndex(w => w.word === wordsplit[j]);
-						if(foundLearning == -1)
-						{
-							sentenceUnknownWords.push(wordsplit[j]);
-						}
-						else
-						{
-							sentenceLearningWords.push(wordsplit[j]);
-						}
-						
-						
-						
 						difficulty++;
 					}
 					
@@ -7952,16 +7940,6 @@ function CreateSentences()
 		}
 	}
 	t.draw();
-	
-	var context = new Mark(".SentenceTable");
-	for(var j=0;j<sentenceUnknownWords.length;j++)
-	{
-		context.mark(sentenceUnknownWords[j],optionsPrimary);
-	}
-	for(var j=0;j<sentenceLearningWords.length;j++)
-	{
-		context.mark(sentenceLearningWords[j],optionsSecondary);
-	}
 }
 
 function SetUILanguage(lang) //TODO
