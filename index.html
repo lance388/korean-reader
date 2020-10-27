@@ -5247,7 +5247,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=352;
+	var numGrammar=353;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5679,7 +5679,7 @@ function SetGrammarPoints()
 			case 75:
 				rx.push(/lge/);
 				n.point = "V-(으)ㄹ게(요)";
-				n.des="'(I) will (do)'";
+				n.des="	'Will (do)', indicates intention";
 			break;
 			case 76:
 				rx.push(/llae/);
@@ -5937,10 +5937,12 @@ function SetGrammarPoints()
 				n.des="Casual speech";
 			break;
 			case 119:
-				rx.push(/eo la(?=\s)/);
-				rx.push(/a la(?=\s)/);
-				rx.push(/ji ma(?=\s)/);
-				rx.push(/ji mala(?=\s)/);
+				rx.push(/eo la/);
+				rx.push(/a la/);
+				rx.push(/e la/);
+				rx.push(/ji ma/);
+				rx.push(/jima/);
+				rx.push(/mala/);
 				n.point = "-아/어 라, -지 마, -지 마라";
 				n.des="Casual speech - imperative";
 			break;
@@ -7187,6 +7189,11 @@ function SetGrammarPoints()
 				rx.push(/kkeos/);
 				n.point = "-껏";
 				n.des="'To the full extent of'";
+			break;
+			case 352:
+				rx.push(/ma/);
+				n.point = "V-(으)마";
+				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
 			break;
 			
 			
