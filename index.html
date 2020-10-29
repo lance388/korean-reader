@@ -5247,7 +5247,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=353;
+	var numGrammar=354;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5374,7 +5374,7 @@ function SetGrammarPoints()
 				n.des="Particle denoting location, 'from...'";
 			break;
 			case 19:
-				rx.push(/kkaji(?=\s)/);
+				rx.push(/kkaji/);
 				n.point = "N까지";
 				n.des="Particle denoting 'until'";
 			break;
@@ -5388,16 +5388,16 @@ function SetGrammarPoints()
 				n.des="Particle denoting a recipient";
 			break;
 			case 22:
-				rx.push(/hante(?=\s)/);
+				rx.push(/hante/);
 				n.point = "N한테";
-				n.des="Particle denoting a recipient";
+				n.des="to someone, from someone";
 			break;
 			case 23:
 				n.point = "N도, N도(요)";
 				n.des="'Also', particle denoting the listing of something";
 			break;
 			case 24:
-				rx.push(/man(?=\s)/);
+				rx.push(/man/);
 				n.point = "N만";
 				n.des="Particle denoting 'only'";
 			break;
@@ -7194,6 +7194,11 @@ function SetGrammarPoints()
 				rx.push(/ma/);
 				n.point = "V-(으)마";
 				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
+			break;
+			case 353:
+				rx.push(/hanteseo/);
+				n.point = "한테서";
+				n.des="from someone";
 			break;
 			
 			
