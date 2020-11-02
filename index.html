@@ -3465,7 +3465,10 @@ This software uses the following plugins, please take note of their individual l
 			unmark();
 			var pasteArea = document.getElementById ("pasteArea");
 			pasteArea.style.fontSize = fontSize+"em";
-			SaveHTML(pasteArea.innerHTML);
+			if(initialisationComplete)
+			{	
+				SaveHTML(pasteArea.innerHTML);
+			}
 			paginate();
 			onScroll();
 			unknownWordsTabUpToDate = false;
@@ -3478,7 +3481,10 @@ This software uses the following plugins, please take note of their individual l
 		{
 			var pasteArea = document.getElementById ("pasteArea");
 			pasteArea.style.fontSize = fontSize+"em";
-			SaveHTML(pasteArea.innerHTML);
+			if(initialisationComplete)
+			{	
+				SaveHTML(pasteArea.innerHTML);
+			}
 		}
 		
 		var innerhtml = document.getElementById("pasteArea").innerHTML;
