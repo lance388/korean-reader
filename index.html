@@ -5257,7 +5257,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=355;
+	var numGrammar=354;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5957,16 +5957,14 @@ function SetGrammarPoints()
 				n.des="Casual speech - imperative";
 			break;
 			case 120:
-				rx.push(/ja(?=\s)/);
-				rx.push(/ji malja(?=\s)/);
+				rx.push(/ja/);
 				n.point = "-자, 지 말자";
 				n.des="Casual speech - propositive";
 			break;
 			case 121:
-				rx.push(/ja(?=\s)/);
-				rx.push(/ji malja(?=\s)/);
-				n.point = "-자, 지 말자";
-				n.des="Casual speech - propositive";
+				rx.push(/en/);
+				n.point = "-엔";
+				n.des="Declaritive form, shortened form of '-에는'";
 			break;
 			case 122:
 				rx.push(/nae(?=\s)/);
@@ -6959,14 +6957,14 @@ function SetGrammarPoints()
 				n.des="Shortened form of -는 것이, '-ing', turns a verb into a noun clause";
 			break;
 			case 305:
-				rx.push(/n geol(?=\s)/);
-				rx.push(/ngeol(?=\s)/);
+				rx.push(/n geol/);
+				rx.push(/ngeol/);
 				n.point = "V-는 걸";
 				n.des="Shortened form of -는 것을, '-ing', turns a verb into a noun clause";
 			break;
 			case 306:
-				rx.push(/n geo(?=\s)/);
-				rx.push(/ngeo(?=\s)/);
+				rx.push(/n geo/);
+				rx.push(/ngeo);
 				n.point = "V-는 거";
 				n.des="Shortened form of -는 것, -는 것이, or -는 것을, '-ing', turns a verb into a noun clause";
 			break;
@@ -7008,12 +7006,12 @@ function SetGrammarPoints()
 				n.des="Therefore";
 			break;
 			case 314:
-				rx.push(/geo(?=\s)/);
+				rx.push(/geo/);
 				n.point = "거";
 				n.des="Shortened form of 것, 것이, or 것을";
 			break;
 			case 315:
-				rx.push(/geol(?=\s)/);
+				rx.push(/geol/);
 				n.point = "걸";
 				n.des="Shortened form of 것을";
 			break;
@@ -7210,11 +7208,7 @@ function SetGrammarPoints()
 				n.point = "한테서";
 				n.des="'From (someone)'";
 			break;			
-			case 354:
-				rx.push(/en/);
-				n.point = "-엔";
-				n.des="Declaritive form, shortened form of '-에는'";
-			break;
+
 			
 			
 			
