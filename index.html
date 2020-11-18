@@ -5257,7 +5257,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=354;
+	var numGrammar=355;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7207,6 +7207,11 @@ function SetGrammarPoints()
 				rx.push(/hanteseo/);
 				n.point = "한테서";
 				n.des="'From (someone)'";
+			break;
+			case 354:
+				rx.push(/mich/);
+				n.point = "N 및 N";
+				n.des="'And'";
 			break;			
 
 			
