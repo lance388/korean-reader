@@ -5257,7 +5257,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=355;
+	var numGrammar=356;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5412,58 +5412,58 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'only'";
 			break;
 			case 25:
-				rx.push(/bakk-e(?=\s)/);
+				rx.push(/bakk-e)/);
 				n.point = "N밖에";
 				n.des="Particle denoting 'nothing but'";
 			break;
 			case 26:
-				rx.push(/lo(?=\s)/);
+				rx.push(/lo/);
 				n.point = "N(으)로";
 				n.des="Particle denoting direction/method/way/means";
 			break;
 			case 27:
-				rx.push(/na(?=\s)/);
+				rx.push(/na/);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'or'";
 			break;
 			case 28:
-				rx.push(/jjeum(?=\s)/);
+				rx.push(/jjeum/);
 				n.point = "N쯤";
 				n.des="Particle denoting approximation";
 			break;
 			case 29:
-				rx.push(/cheoleom(?=\s)/);
+				rx.push(/cheoleom/);
 				n.point = "N처럼";
 				n.des="Particle denoting similarity";
 			break;
 			case 30:
-				rx.push(/gat-i(?=\s)/);
+				rx.push(/gat-i/);
 				n.point = "N같이";
 				n.des="Particle denoting similarity";
 			break;
 			case 31:
-				rx.push(/boda(?=\s)/);
+				rx.push(/boda/);
 				n.point = "N보다";
 				n.des="Particle denoting comparision";
 			break;
 			case 32:
-				rx.push(/mada(?=\s)/);
+				rx.push(/mada/);
 				n.point = "N마다";
 				n.des="Particle denoting 'every'";
 			break;
 			case 33:
-				rx.push(/go(?=\s)/);
-				rx.push(/gu(?=\s)/);
+				rx.push(/go/);
+				rx.push(/gu/);
 				n.point = "A/V-고";
 				n.des="'And'";
 			break;
 			case 34:
-				rx.push(/geona(?=\s)/);
+				rx.push(/geona/);
 				n.point = "V-거나";
 				n.des="'Or'";
 			break;
 			case 35:
-				rx.push(/jiman(?=\s)/);
+				rx.push(/jiman/);
 				n.point = "A/V-지만, -기는 하지만, -기는 -지만";
 				n.des="'But'";
 			break;
@@ -7212,6 +7212,11 @@ function SetGrammarPoints()
 				rx.push(/mich/);
 				n.point = "N 및 N";
 				n.des="'And'";
+			break;
+			case 355:
+				rx.push(/mueonga/);
+				n.point = "뭔가";
+				n.des="'Something'";
 			break;			
 
 			
