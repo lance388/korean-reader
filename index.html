@@ -5258,7 +5258,7 @@ function SetGrammarPoints()
 	(?=\s) look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=357;
+	var numGrammar=358;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7222,7 +7222,13 @@ function SetGrammarPoints()
 			case 356:
 				rx.push(/byeol/);
 				n.point = "-별";
-				n.des="'classified by'";
+				n.des="Denotes a class of something, 'classified by'";
+			break;
+			case 357:
+				rx.push(/gido/);
+				rx.push(/gidu/);
+				n.point = "V-기도 하다";
+				n.des="'As well as'";
 			break;
 
 			
