@@ -5135,7 +5135,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=16;
+	var numGrammar=17;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5257,6 +5257,13 @@ function SetHangulGrammarTriggers()
 				n.point = "V-(으)마";
 				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
 			break;
+			case 16:
+				n.num = 5;
+				rx.push(/요/);
+				rx.push(/용/);
+				n.point = "A/V-아/어요";
+				n.des="Informal polite style";
+			break;
 
 			
 			default: console.log("index out of bounds");
@@ -5310,11 +5317,6 @@ function SetGrammarPoints()
 			break;
 			
 			case 4:
-				rx.push(/ayo(/);
-				rx.push(/eoyo/);
-				rx.push(/aeyo/);
-				rx.push(/yeyo/);
-				rx.push(/ieyo/);
 				n.point = "A/V-아/어요";
 				n.des="Informal polite style";
 			break;
