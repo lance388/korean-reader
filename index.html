@@ -5135,7 +5135,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=14;
+	var numGrammar=16;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5245,6 +5245,18 @@ function SetHangulGrammarTriggers()
 				n.point = "V-(으)며";
 				n.des="'While'";
 			break;
+			case 14:
+				rx.push(/지/);
+				n.num = 10;
+				n.point = "A/V-지 않아(요) / V-지 못해(요)";
+				n.des="Negation with 지";
+			break;
+			case 15:
+				rx.push(/마/);
+				n.num = 353;
+				n.point = "V-(으)마";
+				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
+			break;
 
 			
 			default: console.log("index out of bounds");
@@ -5340,10 +5352,6 @@ function SetGrammarPoints()
 				n.des="Past perfect tense";
 			break;
 			case 9:
-				rx.push(/ji an/);
-				rx.push(/ji mos/);
-				rx.push(/jin/);
-
 				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
@@ -7202,7 +7210,6 @@ function SetGrammarPoints()
 				n.des="'To the full extent of'";
 			break;
 			case 352:
-				rx.push(/ma/);
 				n.point = "V-(으)마";
 				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
 			break;
