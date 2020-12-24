@@ -5225,9 +5225,12 @@ function SetHangulGrammarTriggers()
 			break;
 			case 11:
 				n.num = 338;
-				rx.push(/거/);
-				n.point = "거";
-				n.des="Shortened form of 것, 'thing'";
+				rx.push(/해/);
+				rx.push(/아/);
+				rx.push(/어/);
+				rx.push(/여/);
+				n.point = "V-아/어/여";
+				n.des="Present tense";
 			break;
 			case 12:
 				n.num = 24;
@@ -7008,17 +7011,17 @@ function SetGrammarPoints()
 			case 314:
 				rx.push(/geo/);
 				n.point = "거";
-				n.des="Shortened form of 것, 것이, or 것을";
+				n.des="'Thing', shortened form of 것, 것이, or 것을";
 			break;
 			case 315:
 				rx.push(/geol/);
 				n.point = "걸";
-				n.des="Shortened form of 것을";
+				n.des="'Thing', shortened form of 것을";
 			break;
 			case 316:
 				rx.push(/ge(?=\s)/);
 				n.point = "게";
-				n.des="Shortened form of 것이";
+				n.des="'Thing', shortened form of 것이";
 			break;
 			case 317:
 				rx.push(/danda/);
@@ -7125,8 +7128,8 @@ function SetGrammarPoints()
 				n.des="'Had better', '(I) guess (I) have to'";
 			break;
 			case 337:
-				n.point = "거";
-				n.des="Shortened form of 것, 'thing'";
+				n.point = "V-아/어/여";
+				n.des="Present tense";
 			break;
 			case 338:
 				rx.push(/kkili/);
