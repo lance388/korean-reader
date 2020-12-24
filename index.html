@@ -5135,7 +5135,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=17;
+	var numGrammar=20;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5378,6 +5378,24 @@ function SetHangulGrammarTriggers()
 				n.point = "A/V-아/어요";
 				n.des="Informal polite style";
 			break;
+			case 17:
+				n.num = 28;
+				rx.push(/나/);
+				n.point = "N(이)나";
+				n.des="Particle denoting 'or'";
+			break;
+			case 18:
+				n.num = 164;
+				rx.push(/나/);
+				n.point = "N(으)나";
+				n.des="Indicates that something is not really one's first choice";
+			break;
+			case 19:
+				n.num = 104;
+				rx.push(/나/);
+				n.point = "V-나(요)";
+				n.des="Used to politely and gently ask a question";
+			break;
 
 			
 			default: console.log("index out of bounds");
@@ -5550,7 +5568,6 @@ function SetGrammarPoints()
 				n.des="Particle denoting direction/method/way/means";
 			break;
 			case 27:
-				rx.push(/na/);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'or'";
 			break;
@@ -5621,8 +5638,7 @@ function SetGrammarPoints()
 				n.des="'After'";
 			break;
 			case 41:
-				rx.push(/go naseo/);
-				rx.push(/gu naseo/);
+				rx.push(/naseo/);
 				n.point = "V-고 나서";
 				n.des="'And then'";
 			break;
@@ -5978,8 +5994,6 @@ function SetGrammarPoints()
 				n.des="Used to politely and gently ask a question";
 			break;
 			case 103:
-				rx.push(/na/);
-				rx.push(/nayo/);
 				n.point = "V-나(요)";
 				n.des="Used to politely and gently ask a question";
 			break;
@@ -6313,7 +6327,6 @@ function SetGrammarPoints()
 				n.des="'Nobody'";
 			break;
 			case 163:
-				rx.push(/na/);
 				n.point = "N(으)나";
 				n.des="Indicates that something is not really one's first choice";
 			break;
@@ -6475,6 +6488,7 @@ function SetGrammarPoints()
 			break;
 			case 192:
 				rx.push(/na mana/);
+				rx.push(/namana/);
 				n.point = "V-(으)나 마나";
 				n.des="Expresses that an action is of no value or use";
 			break;
@@ -6482,12 +6496,17 @@ function SetGrammarPoints()
 				rx.push(/eo beol/);
 				rx.push(/e beol/);
 				rx.push(/a beol/);
+				rx.push(/eobeol/);
+				rx.push(/ebeol/);
+				rx.push(/abeol/);
 				n.point = "V-아/어 버리다";
 				n.des="Indicates the complete and thorough finishing of an action or event";
 			break;
 			case 194:
 				rx.push(/go mal/);
 				rx.push(/gu mal/);
+				rx.push(/gumal/);
+				rx.push(/gomal/);
 				n.point = "V-고 말다";
 				n.des="Refers to an unplanned action or event that continued until it was complete and thoroughly finished";
 			break;
