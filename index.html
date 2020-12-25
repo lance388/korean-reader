@@ -5394,10 +5394,10 @@ function SetHangulGrammarTriggers()
 				n.des="Negation with 지";
 			break;
 			case 15:
-				rx.push(/마/);
-				n.num = 353;
-				n.point = "V-(으)마";
-				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
+				n.num = 360;
+				rx.push(/들/);
+				n.point = "N들";
+				n.des="Turns certain nouns into plural form";
 			break;
 			case 16:
 				n.num = 5;
@@ -5440,7 +5440,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=359;
+	var numGrammar=360;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5626,8 +5626,8 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'every'";
 			break;
 			case 33:
-				rx.push(/-go/);
-				rx.push(/-gu/);
+				rx.push(/-go /);
+				rx.push(/-gu /);
 				n.point = "A/V-고";
 				n.des="'And'";
 			break;
@@ -6993,7 +6993,8 @@ function SetGrammarPoints()
 				n.des="Indicates that continuing a particular action or situation eventually results in some other situation or state of affairs";
 			break;
 			case 278:
-				rx.push(/-de/);
+				rx.push(/-de-/);
+				rx.push(/-de /);
 				n.point = "A/V-데(요)";
 				n.des="Expresses recollection";
 			break;
@@ -7392,6 +7393,7 @@ function SetGrammarPoints()
 				n.des="'To the full extent of'";
 			break;
 			case 352:
+				rx.push(/-ma /);
 				n.point = "V-(으)마";
 				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
 			break;
@@ -7425,6 +7427,10 @@ function SetGrammarPoints()
 				rx.push(/-la-seo/);
 				n.point = "N(이)라서";
 				n.des="'Because of'";
+			break;
+			case 359:
+				n.point = "N들";
+				n.des="Turns certain nouns into plural form";
 			break;
 
 			
