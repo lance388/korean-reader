@@ -5163,7 +5163,7 @@ function PopulateGrammarTab()
 
 function SetHangulGrammarTriggers()
 {
-	var numGrammar=20;
+	var numGrammar=19;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5245,11 +5245,10 @@ function SetHangulGrammarTriggers()
 				n.des="Casual speech";
 			break;
 			case 10:
-				n.num = 92;
-				rx.push(/기/);
-				rx.push(/긴/);
-				n.point = "A/V-기";
-				n.des="Particle that turns adjectives and verbs into nouns";
+				n.num = 104;
+				rx.push(/나/);
+				n.point = "V-나(요)";
+				n.des="Used to politely and gently ask a question";
 			break;
 			case 11:
 				n.num = 338;
@@ -5417,12 +5416,6 @@ function SetHangulGrammarTriggers()
 				rx.push(/나/);
 				n.point = "N(으)나";
 				n.des="Indicates that something is not really one's first choice";
-			break;
-			case 19:
-				n.num = 104;
-				rx.push(/나/);
-				n.point = "V-나(요)";
-				n.des="Used to politely and gently ask a question";
 			break;
 
 			
@@ -5938,7 +5931,7 @@ function SetGrammarPoints()
 				n.des="'Do (you) think...?'";
 			break;
 			case 89:
-				rx.push(/geos gat/);
+				rx.push(/geos gat-/);
 				n.point = "A/V-(으)ㄴ/는/(으)ㄹ 것 같다";
 				n.des="'Appears that'";
 			break;
@@ -5949,6 +5942,8 @@ function SetGrammarPoints()
 				n.des="Noun modifying form";
 			break;
 			case 91:
+				rx.push(/-gi-/);
+				rx.push(/-gi /);
 				n.point = "A/V-기";
 				n.des="Particle that turns adjectives and verbs into nouns";
 			break;
@@ -6070,12 +6065,14 @@ function SetGrammarPoints()
 				n.des="'shape'/'appearance'";
 			break;
 			case 109:
-				rx.push(/ten-de/);
+				rx.push(/ten-de /);
+				rx.push(/ten-de-/);
 				n.point = "A/V-(으)ㄹ 텐데";
 				n.des="Expresses a future situation or intention";
 			break;
 			case 110:
-				rx.push(/te-ni/);
+				rx.push(/te-ni-/);
+				rx.push(/te-ni /);
 				n.point = "A/V-(으)ㄹ 테니까";
 				n.des="Expresses a reason for giving a particular suggestion or advice";
 			break;
@@ -6113,9 +6110,9 @@ function SetGrammarPoints()
 				n.des="Expresses an unexpected state of affairs";
 			break;
 			case 117:
-				rx.push(/-da/);
-				rx.push(/ss-da/);
-				rx.push(/n-da/);
+				rx.push(/-da /);
+				rx.push(/ss-da /);
+				rx.push(/n-da /);
 				rx.push(/l geos/);
 				n.point = "-았/었다, -다, -(느)ㄴ다, -(으)ㄹ 것이다";
 				n.des="Narration";
@@ -6125,12 +6122,18 @@ function SetGrammarPoints()
 				n.des="Casual speech";
 			break;
 			case 119:
-				rx.push(/eo la/);
-				rx.push(/a la/);
-				rx.push(/e la/);
-				rx.push(/ji ma/);
-				rx.push(/ji-ma/);
-				rx.push(/ma-la/);
+				rx.push(/eo la-/);
+				rx.push(/a la-/);
+				rx.push(/e la-/);
+				rx.push(/ji ma-/);
+				rx.push(/ji-ma-/);
+				rx.push(/ma-la-/);
+				rx.push(/eo la /);
+				rx.push(/a la /);
+				rx.push(/e la /);
+				rx.push(/ji ma /);
+				rx.push(/ji-ma /);
+				rx.push(/ma-la /);
 				n.point = "-아/어 라, -지 마, -지 마라";
 				n.des="Casual speech - imperative";
 			break;
