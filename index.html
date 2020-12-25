@@ -6126,27 +6126,32 @@ function SetGrammarPoints()
 				n.des="Casual speech - imperative";
 			break;
 			case 120:
-				rx.push(/-ja/);
+				rx.push(/-ja-/);
+				rx.push(/-ja /);
 				n.point = "-자, 지 말자";
 				n.des="Casual speech - propositive";
 			break;
 			case 121:
-				rx.push(/-en/);
+				rx.push(/-en-/);
+				rx.push(/-en /);
 				n.point = "-엔";
 				n.des="Declaritive form, shortened form of '-에는'";
 			break;
 			case 122:
-				rx.push(/nae/);
+				rx.push(/nae-/);
+				rx.push(/nae /);
 				n.point = "내";
 				n.des="Contraction of 나의";
 			break;
 			case 123:
-				rx.push(/je/);
+				rx.push(/je-/);
+				rx.push(/je /);
 				n.point = "제";
 				n.des="Contraction of 저의";
 			break;
 			case 124:
-				rx.push(/ne/);
+				rx.push(/ne-/);
+				rx.push(/ne /);
 				n.point = "네";
 				n.des="Contraction of 너의";
 			break;
