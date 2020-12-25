@@ -285,7 +285,7 @@ This software uses the following plugins, please take note of their individual l
 			
 			
 			SetGrammarPoints();
-			SetHangulGrammarTriggers();
+			//SetHangulGrammarTriggers();
 			
 			fileSelector = document.getElementById('importWordlistButton');
 						  fileSelector.addEventListener('change', (event) => {
@@ -5161,271 +5161,6 @@ function PopulateGrammarTab()
 	t.draw();
 }
 
-function SetHangulGrammarTriggers()
-{
-	var numGrammar=19;
-	
-	for(var i=0;i<numGrammar;i++)
-	{
-		var n=[];
-		var rx = [];
-		
-		switch(i)
-		{
-			case 0:
-				n.num = 18;
-				rx.push(/에/);
-				n.point = "N에";
-				n.des="Particle denoting direction or time";
-			break;	
-			case 1:
-				n.num = 11;
-				rx.push(/이/);
-				rx.push(/가/);
-				n.point = "N이/가";
-				n.des="Subject marking particle";
-			break;
-			case 2:
-				n.num = 17;
-				rx.push(/의/);
-				n.point = "N의";
-				n.des="Particle denoting possession";
-			break;
-			case 3:
-				n.num = 14;
-				rx.push(/와/);
-				rx.push(/과/);
-				n.point = "N와/과";
-				n.des="Particle denoting 'and'";
-			break;
-			case 4:
-				n.num = 22;
-				rx.push(/에게/);
-				rx.push(/에겐/);
-				n.point = "N에게";
-				n.des="Particle denoting a recipient";
-			break;
-			case 5:
-				n.num = 13;
-				rx.push(/를/);
-				rx.push(/을/);
-				n.point = "N을/를";
-				n.des="Object marking particle";
-			break;
-			case 6:
-				n.num = 19;
-				rx.push(/에서/);
-				rx.push(/서/);
-				rx.push(/선/);
-				n.point = "N에서";
-				n.des="Particle denoting location/'from...'";
-			break;
-			case 7:
-				n.num = 126;
-				rx.push(/야/);
-				rx.push(/아/);
-				n.point = "-야, -아";
-				n.des="Particle used in casual speech when calling someone by name";
-			break;
-			case 8:
-				n.num = 213;
-				rx.push(/오/);
-				rx.push(/소/);
-				n.point = "A/V-오/소";
-				n.des="Honorific imperative";
-			break;
-			case 9:
-				n.num = 119;
-				rx.push(/아/);
-				rx.push(/어/);
-				rx.push(/해/);
-				rx.push(/야/);
-				rx.push(/니/);
-				n.point = "-아/어, -(이)야, -니";
-				n.des="Casual speech";
-			break;
-			case 10:
-				n.num = 104;
-				rx.push(/나/);
-				n.point = "V-나(요)";
-				n.des="Used to politely and gently ask a question";
-			break;
-			case 11:
-				n.num = 338;
-				rx.push(/빼/);
-				rx.push(/째/);
-				rx.push(/때/);
-				rx.push(/깨/);
-				rx.push(/쌔/);
-				rx.push(/해/);
-				rx.push(/배/);
-				rx.push(/재/);
-				rx.push(/개/);
-				rx.push(/새/);
-				rx.push(/대/);
-				rx.push(/매/);
-				rx.push(/내/);
-				rx.push(/얘/);
-				rx.push(/이에/);
-				rx.push(/예/);
-				rx.push(/래/);
-				rx.push(/캐/);
-				rx.push(/태/);
-				rx.push(/채/);
-				rx.push(/패/);
-				
-				rx.push(/아/);
-				rx.push(/바/);
-				rx.push(/빠/);
-				rx.push(/짜/);
-				rx.push(/까/);
-				rx.push(/싸/);
-				rx.push(/자/);
-				rx.push(/다/);
-				rx.push(/가/);
-				rx.push(/사/);
-				rx.push(/마/);
-				rx.push(/나/);
-				rx.push(/라/);
-				rx.push(/하/);
-				rx.push(/카/);
-				rx.push(/타/);
-				rx.push(/차/);
-				rx.push(/파/);
-				
-				rx.push(/야/);
-				rx.push(/뱌/);
-				rx.push(/뺘/);
-				rx.push(/쨔/);
-				rx.push(/꺄/);
-				rx.push(/쌰/);
-				rx.push(/쟈/);
-				rx.push(/댜/);
-				rx.push(/갸/);
-				rx.push(/샤/);
-				rx.push(/먀/);
-				rx.push(/냐/);
-				rx.push(/랴/);
-				rx.push(/햐/);
-				rx.push(/캬/);
-				rx.push(/탸/);
-				rx.push(/챠/);
-				rx.push(/퍄/);
-				
-				rx.push(/여/);
-				rx.push(/벼/);
-				rx.push(/뼈/);
-				rx.push(/쪄/);
-				rx.push(/껴/);
-				rx.push(/쎠/);
-				rx.push(/져/);
-				rx.push(/뎌/);
-				rx.push(/겨/);
-				rx.push(/셔/);
-				rx.push(/며/);
-				rx.push(/녀/);
-				rx.push(/려/);
-				rx.push(/혀/);
-				rx.push(/켜/);
-				rx.push(/텨/);
-				rx.push(/쳐/);
-				rx.push(/펴/);
-				
-				rx.push(/봐/);
-				rx.push(/뽜/);
-				rx.push(/쫘/);
-				rx.push(/꽈/);
-				rx.push(/쏴/);
-				rx.push(/좌/);
-				rx.push(/돠/);
-				rx.push(/과/);
-				rx.push(/솨/);
-				rx.push(/뫄/);
-				rx.push(/놔/);
-				rx.push(/롸/);
-				rx.push(/화/);
-				rx.push(/콰/);
-				rx.push(/톼/);
-				rx.push(/촤/);
-				rx.push(/퐈/);
-				rx.push(/와/);
-				
-				rx.push(/붜/);
-				rx.push(/뿨/);
-				rx.push(/쭤/);
-				rx.push(/꿔/);
-				rx.push(/쒀/);
-				rx.push(/줘/);
-				rx.push(/둬/);
-				rx.push(/궈/);
-				rx.push(/숴/);
-				rx.push(/뭐/);
-				rx.push(/눠/);
-				rx.push(/뤄/);
-				rx.push(/훠/);
-				rx.push(/쿼/);
-				rx.push(/퉈/);
-				rx.push(/춰/);
-				rx.push(/풔/);
-				rx.push(/워/);
-				
-				rx.push(/어/);
-				n.point = "V-아/어";
-				n.des="Present tense";
-			break;
-			case 12:
-				n.num = 24;
-				rx.push(/도/);
-				rx.push(/두/);
-				n.point = "N도, N도(요)";
-				n.des="'Also', particle denoting the listing of something";
-			break;
-			case 13:
-				n.num = 349;
-				rx.push(/며/);
-				n.point = "V-(으)며";
-				n.des="'While'";
-			break;
-			case 14:
-				rx.push(/지/);
-				n.num = 10;
-				n.point = "A/V-지 않아(요) / V-지 못해(요)";
-				n.des="Negation with 지";
-			break;
-			case 15:
-				n.num = 360;
-				rx.push(/들/);
-				n.point = "N들";
-				n.des="Turns certain nouns into plural form";
-			break;
-			case 16:
-				n.num = 5;
-				rx.push(/요/);
-				rx.push(/용/);
-				n.point = "A/V-아/어요";
-				n.des="Informal polite style";
-			break;
-			case 17:
-				n.num = 28;
-				rx.push(/나/);
-				n.point = "N(이)나";
-				n.des="Particle denoting 'or'";
-			break;
-			case 18:
-				n.num = 164;
-				rx.push(/나/);
-				n.point = "N(으)나";
-				n.des="Indicates that something is not really one's first choice";
-			break;
-
-			
-			default: console.log("index out of bounds");
-		}
-		n.regex=rx;
-		grammarPointsHangul.push(n);
-	}
-}
-
 
 function SetGrammarPoints()
 {
@@ -5470,6 +5205,8 @@ function SetGrammarPoints()
 			break;
 			
 			case 4:
+				rx.push(/-yo /);
+				rx.push(/-yong /);
 				n.point = "A/V-아/어요";
 				n.des="Informal polite style";
 			break;
@@ -5508,23 +5245,34 @@ function SetGrammarPoints()
 				n.des="Past perfect tense";
 			break;
 			case 9:
+				rx.push(/-ji an/);
+				rx.push(/-ji mos/);
 				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
 			case 10:
+				rx.push(/-i /);
+				rx.push(/-ga /);
 				n.point = "N이/가";
 				n.des="Subject marking particle";
 			break;
 			case 11:
-				rx.push(/n /);
+				rx.push(/-eun /);
+				rx.push(/-neun /);
 				n.point = "N은/는";
 				n.des="Topic marking particle";
 			break;
 			case 12:
+				rx.push(/-eul /);
+				rx.push(/-leul /);
 				n.point = "N을/를";
 				n.des="Object marking particle";
 			break;
 			case 13:
+				rx.push(/-oa-/);
+				rx.push(/-goa-/);
+				rx.push(/-oa /);
+				rx.push(/-goa /);
 				n.point = "N와/과";
 				n.des="Particle denoting 'and'";
 			break;
@@ -5540,14 +5288,23 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'and'";
 			break;
 			case 16:
+				rx.push(/-eui /);
 				n.point = "N의";
 				n.des="Particle denoting possession";
 			break;
 			case 17:
+				rx.push(/-e-/);
+				rx.push(/-e /);
 				n.point = "N에";
 				n.des="Particle denoting direction or time";
 			break;
 			case 18:
+				rx.push(/-e-seo-/);
+				rx.push(/-seo-/);
+				rx.push(/-seon-/);
+				rx.push(/-e-seo /);
+				rx.push(/-seo /);
+				rx.push(/-seon /);
 				n.point = "N에서";
 				n.des="Particle denoting location, 'from...'";
 			break;
@@ -5562,6 +5319,8 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'from...'";
 			break;
 			case 21:
+				rx.push(/-e-ge /);
+				rx.push(/-e-gen /);
 				n.point = "N에게";
 				n.des="Particle denoting a recipient";
 			break;
@@ -5571,6 +5330,10 @@ function SetGrammarPoints()
 				n.des="to someone, from someone";
 			break;
 			case 23:
+				rx.push(/-do-/);
+				rx.push(/-du-/);
+				rx.push(/-do /);
+				rx.push(/-du /);
 				n.point = "N도, N도(요)";
 				n.des="'Also', particle denoting the listing of something";
 			break;
@@ -5590,6 +5353,7 @@ function SetGrammarPoints()
 				n.des="Particle denoting direction/method/way/means";
 			break;
 			case 27:
+				rx.push(/-na /);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'or'";
 			break;
@@ -5994,7 +5758,8 @@ function SetGrammarPoints()
 			break;
 			case 99:
 				rx.push(/-ji-yo/);
-				rx.push(/-ji/);
+				rx.push(/-ji-/);
+				rx.push(/-ji /);
 				rx.push(/-jyo/);
 				n.point = "A/V-지(요)/죠?";
 				n.des="'Isn't it?', indicates a tag question";
@@ -6019,6 +5784,8 @@ function SetGrammarPoints()
 				n.des="Used to politely and gently ask a question";
 			break;
 			case 103:
+				rx.push(/-na /);
+				rx.push(/-na-/);
 				n.point = "V-나(요)";
 				n.des="Used to politely and gently ask a question";
 			break;
@@ -6118,6 +5885,11 @@ function SetGrammarPoints()
 				n.des="Narration";
 			break;
 			case 118:
+				rx.push(/a /);
+				rx.push(/eo /);
+				rx.push(/ae /);
+				rx.push(/-ya /);
+				rx.push(/-ni /);
 				n.point = "-아/어, -(이)야, -니";
 				n.des="Casual speech";
 			break;
@@ -6168,6 +5940,8 @@ function SetGrammarPoints()
 				n.des="Contraction of 너의";
 			break;
 			case 125:
+				rx.push(/-ya /);
+				rx.push(/-a /);
 				n.point = "-야, -아";
 				n.des="Particle used in casual speech when calling someone by name";
 			break;
@@ -6341,8 +6115,8 @@ function SetGrammarPoints()
 				n.des="Used when the speaker does an action while in the process of going somewhere";
 			break;
 			case 157:
-				rx.push(/-da-ga/);
-				rx.push(/-da/);
+				rx.push(/-da-ga /);
+				rx.push(/-da /);
 				n.point = "V-다가/-다";
 				n.des="Expresses an interruption of action to immediately start doing another";
 			break;
@@ -6372,6 +6146,7 @@ function SetGrammarPoints()
 				n.des="'Nobody'";
 			break;
 			case 163:
+				rx.push(/-na /);
 				n.point = "N(으)나";
 				n.des="Indicates that something is not really one's first choice";
 			break;
@@ -6646,6 +6421,10 @@ function SetGrammarPoints()
 				n.des="Expresses the basis or grounds of a fact";
 			break;
 			case 212:
+				rx.push(/-o-/);
+				rx.push(/-so-/);
+				rx.push(/-o /);
+				rx.push(/-so /);
 				n.point = "A/V-오/소";
 				n.des="Honorific - imperative";
 			break;
@@ -6754,7 +6533,7 @@ function SetGrammarPoints()
 				n.des="Emphasises the fact that something occurs immediately after something else ends";
 			break;
 			case 233:
-				rx.push(/-ja/);
+				rx.push(/-ja /);
 				n.point = "A/V-자";
 				n.des="Indicates that some action occurs immediately after the completion of another action";
 			break;
@@ -6839,8 +6618,6 @@ function SetGrammarPoints()
 				n.des="Honorific - declarative";
 			break;
 			case 249:
-				rx.push(/-na-/);
-				rx.push(/-n-ga-/);
 				rx.push(/-na /);
 				rx.push(/-n-ga /);
 				n.point = "A/V-(으)ㄴ/는가?, V-나?";
@@ -7059,7 +6836,7 @@ function SetGrammarPoints()
 				n.des="Indicates a cause or reason";
 			break;
 			case 290:
-				rx.push(/-na/);
+				rx.push(/-na /);
 				n.point = "A/V-(으)나";
 				n.des="Indicates a situation or action in the following clause that is contrary or opposite to the one stated in the preceding clause";
 			break;
@@ -7188,7 +6965,6 @@ function SetGrammarPoints()
 				n.des="Declaritive form";
 			break;
 			case 312:
-				rx.push(/-da-/);
 				rx.push(/-da /);
 				n.point = "V-ㄴ/는다, A-다";
 				n.des="Declaritive form";
@@ -7319,6 +7095,12 @@ function SetGrammarPoints()
 				n.des="'Had better', '(I) guess (I) have to'";
 			break;
 			case 337:
+				rx.push(/a-/);
+				rx.push(/eo-/);
+				rx.push(/e-/);
+				rx.push(/a /);
+				rx.push(/eo /);
+				rx.push(/e /);
 				n.point = "V-아/어/여/야";
 				n.des="Present tense";
 			break;
@@ -7333,7 +7115,6 @@ function SetGrammarPoints()
 				n.des="'Apiece', 'per'";
 			break;
 			case 340:
-				rx.push(/-na-/);
 				rx.push(/-na /);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'no less than'";
@@ -7377,6 +7158,7 @@ function SetGrammarPoints()
 				n.des="'No matter how much/many'";
 			break;
 			case 348:
+				rx.push(/-myeo /);
 				n.point = "V-(으)며";
 				n.des="'While'";
 			break;
@@ -7432,6 +7214,8 @@ function SetGrammarPoints()
 				n.des="'Because of'";
 			break;
 			case 359:
+				rx.push(/-deul-/);
+				rx.push(/-deul /);
 				n.point = "N들";
 				n.des="Turns certain nouns into plural form";
 			break;
@@ -7492,6 +7276,7 @@ function GrammarLookup(word)
 		}
 	}
 	
+	/*
 	for(var i=0;i<grammarPointsHangul.length;i++)
 	{	for(var j=0;j<grammarPointsHangul[i].regex.length;j++)
 		{
@@ -7512,6 +7297,7 @@ function GrammarLookup(word)
 	}
 	
 	tt.draw();
+	*/
 }
 
 function ChangeChart()
