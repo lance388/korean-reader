@@ -5489,7 +5489,8 @@ function SetGrammarPoints()
 				n.des="Polite request";
 			break;
 			case 53:
-				rx.push(/ma-se-yo/);
+				rx.push(/ma-se-/);
+				rx.push(/ma-se /);
 				n.point = "V-지 마세요";
 				n.des="Polite request not to do something";
 			break;
@@ -5499,7 +5500,8 @@ function SetGrammarPoints()
 				n.des="Polite request not to do something";
 			break;
 			case 55:
-				rx.push(/-ya/);
+				rx.push(/-ya /);
+				rx.push(/-ya-/);
 				n.point = "A/V-아/어야 (되다/하다)";
 				n.des="'Must', 'have to'";
 			break;
@@ -5860,10 +5862,9 @@ function SetGrammarPoints()
 				n.des="Expresses the speaker's realisation that their assumption was incorrect";
 			break;
 			case 114:
-				rx.push(/l-ji-do mo/);
-				rx.push(/l-ji-du mo/);
-				rx.push(/l-ji mo/);
-				n.point = "A/V-ㄹ지(도) 모르다";
+				rx.push(/l-ji-/);
+				rx.push(/l-ji /);
+				n.point = "A/V-ㄹ지(도) (모르다)";
 				n.des="Expresses the speaker's view that something might happen or be true";
 			break;
 			case 115:
