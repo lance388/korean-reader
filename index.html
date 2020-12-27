@@ -5750,7 +5750,8 @@ function SetGrammarPoints()
 				n.des="Expresses a change from one state to another";
 			break;
 			case 97:
-				rx.push(/n-ji/);
+				rx.push(/n-ji /);
+				rx.push(/n-ji-/);
 				n.point = "A/V-(으)ㄴ/는지";
 				n.des="Connects a clause requiring additional information";
 			break;
@@ -7134,7 +7135,8 @@ function SetGrammarPoints()
 				n.des="'So', 'that'";
 			break;
 			case 342:
-				rx.push(/-ji-la/);
+				rx.push(/-ji-la /);
+				rx.push(/-ji-la-/);
 				n.point = "A/V-은/는지라";
 				n.des="'Because'";
 			break;
