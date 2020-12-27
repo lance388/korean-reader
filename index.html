@@ -5886,9 +5886,11 @@ function SetGrammarPoints()
 				n.des="Narration";
 			break;
 			case 118:
-				rx.push(/a /);
-				rx.push(/eo /);
-				rx.push(/ae /);
+				rx.push(/oa /);
+				rx.push(/ueo /);
+				rx.push(/-a /);
+				rx.push(/-eo /);
+				rx.push(/-hae /);
 				rx.push(/-ya /);
 				rx.push(/-ni /);
 				n.point = "-아/어, -(이)야, -니";
@@ -5911,7 +5913,6 @@ function SetGrammarPoints()
 				n.des="Casual speech - imperative";
 			break;
 			case 120:
-				rx.push(/-ja-/);
 				rx.push(/-ja /);
 				n.point = "-자, 지 말자";
 				n.des="Casual speech - propositive";
