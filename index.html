@@ -5168,7 +5168,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=360;
+	var numGrammar=363;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7222,6 +7222,24 @@ function SetGrammarPoints()
 				rx.push(/-deul /);
 				n.point = "N들";
 				n.des="Turns certain nouns into plural form";
+			break;
+			case 360:
+				rx.push(/geo-na /);
+				rx.push(/geo-na-/);
+				n.point = "거나";
+				n.des="'Anything'";
+			break;
+			case 361:
+				rx.push(/de-na /);
+				rx.push(/de-na-/);
+				n.point = "데나";
+				n.des="'Anywhere'";
+			break;
+			case 362:
+				rx.push(/ttae-na /);
+				rx.push(/ttae-na-/);
+				n.point = "때나";
+				n.des="'Anytime'";
 			break;
 
 			
