@@ -3588,7 +3588,7 @@ This software uses the following plugins, please take note of their individual l
 							{
 								clearTimeout(colourTimeout);
 							}		
-							colourTimeout = setTimeout(markAll(toMark),500);
+							colourTimeout = setTimeout(function() {markAll(toMark)},500);
 							
 							if(openedTab=="VocabularyTab")
 							{
@@ -3610,7 +3610,7 @@ This software uses the following plugins, please take note of their individual l
 					clearTimeout(scrollTimeout);
 				}
 									
-				scrollTimeout = setTimeout(scrollOperation(),400);
+				scrollTimeout = setTimeout(function() {scrollOperation()},60);
 		}
 		
 		
