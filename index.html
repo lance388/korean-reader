@@ -5400,7 +5400,8 @@ function SetGrammarPoints()
 				n.des="'But'";
 			break;
 			case 36:
-				rx.push(/n-de/);
+				rx.push(/n-de /);
+				rx.push(/n-de-/);
 				n.point = "A/V-(으)ㄴ/는데";
 				n.des="'But', 'so', 'therefore', 'and'";
 			break;
@@ -6088,7 +6089,8 @@ function SetGrammarPoints()
 				n.des="Expresses if some statement is true, then...";
 			break;
 			case 151:
-				rx.push(/n-de/);
+				rx.push(/n-de /);
+				rx.push(/n-de-/);
 				n.point = "A/V-(으)ㄴ/는데(요)";
 				n.des="Used to give an explanation";
 			break;
