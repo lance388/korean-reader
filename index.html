@@ -146,10 +146,16 @@ This software uses the following plugins, please take note of their individual l
 		var colourSecondary;
 		var colourTertiary;
 		var colourJump;
+		var colourBackground;
+		var colourFont;
+		var colourBorder;
 		const colourPrimaryDefault= "#F5A9E1";
 		const colourSecondaryDefault= "#FFFF66";
 		const colourTertiaryDefault= "#99FF00";
 		const colourJumpDefault = "#00ffff";
+		const colourBackgroundDefault = "#fff";
+		const colourFontDefault = "#000";
+		const colourBorderDefault = "#0066CC";
 		var enableVoice;
 		var voicePitch;
 		var voiceVolume;
@@ -265,6 +271,9 @@ This software uses the following plugins, please take note of their individual l
 			colourSecondary = colourSecondaryDefault;
 			colourTertiary = colourTertiaryDefault;
 			colourJump = colourJumpDefault;
+			colourFont = colourFontDefault;
+			colourBackground = colourBackgroundDefault;
+			colourBorder = colourBorderDefault;
 			//selectedVocabulary=[];
 			global_total_words = 0;
 			calculateStatisticsTimeout = 50;
@@ -342,6 +351,41 @@ This software uses the following plugins, please take note of their individual l
 					var jumpField = document.getElementById("fieldHC4");
 						jumpField.value = '#'+hex;
 						jumpField.style.backgroundColor='#'+hex;
+				}
+			});
+			$('#colorpicker5').colpick({
+			color:getComputedStyle(document.documentElement).getPropertyValue('--page-bg').replace("#",""),
+            onSubmit:function(hsb,hex,rgb,el,bySetColor)
+				{
+					$(el).val('#'+hex);
+					$(el).colpickHide();
+					var bgField = document.getElementById("fieldHC5");
+						bgField.value = '#'+hex;
+						bgField.style.backgroundColor='#'+hex;
+				}
+			});
+			
+			$('#colorpicker6').colpick({
+			color:getComputedStyle(document.documentElement).getPropertyValue('--font-bg').replace("#",""),
+            onSubmit:function(hsb,hex,rgb,el,bySetColor)
+				{
+					$(el).val('#'+hex);
+					$(el).colpickHide();
+					var fontColourField = document.getElementById("fieldHC6");
+						fontColourField.value = '#'+hex;
+						fontColourField.style.backgroundColor='#'+hex;
+				}
+			});
+			
+			$('#colorpicker7').colpick({
+			color:getComputedStyle(document.documentElement).getPropertyValue('--document-bg').replace("#",""),
+            onSubmit:function(hsb,hex,rgb,el,bySetColor)
+				{
+					$(el).val('#'+hex);
+					$(el).colpickHide();
+					var borderColourField = document.getElementById("fieldHC7");
+						borderColourField.value = '#'+hex;
+						borderColourField.style.backgroundColor='#'+hex;
 				}
 			});
 			
@@ -4029,6 +4073,97 @@ This software uses the following plugins, please take note of their individual l
 		jumpField.style.backgroundColor=colourJump;
 		document.documentElement.style.setProperty('--jump-bg', colourJump);
 				};
+				
+				var objectStore5 = db.transaction(["wordsdb"]).objectStore("wordsdb");	
+			var request5 = objectStore5.get("bgColourField$");
+			request5.onerror = function(event) {
+				alert("Unable to retrieve data from database!");
+			};
+				request5.onsuccess = function(event) 
+				{
+				if(request5.result) {
+				var a = request5.result.appearances;
+				
+						if(a)
+						{
+									
+							colourBackground=a;
+						}
+						else
+						{
+							colourBackground=colourBackgroundDefault;
+						}
+					}
+					else
+					{
+						colourBackground=colourBackgroundDefault;
+					}
+						var bgField = document.getElementById("fieldHC5");
+		bgField.value = colourBackground;
+		bgField.style.backgroundColor=colourBackground;
+		document.documentElement.style.setProperty('--page-bg', colourBackground);
+				};
+				
+				
+							var objectStore6 = db.transaction(["wordsdb"]).objectStore("wordsdb");	
+			var request6 = objectStore6.get("fontColourField$");
+			request6.onerror = function(event) {
+				alert("Unable to retrieve data from database!");
+			};
+				request6.onsuccess = function(event) 
+				{
+				if(request6.result) {
+				var a = request6.result.appearances;
+				
+						if(a)
+						{
+									
+							colourFont=a;
+						}
+						else
+						{
+							colourFont=colourFontDefault;
+						}
+					}
+					else
+					{
+						colourFont=colourFontDefault;
+					}
+						var fontField = document.getElementById("fieldHC6");
+		fontField.value = colourFont;
+		fontField.style.backgroundColor=colourFont;
+		document.documentElement.style.setProperty('--font-bg', colourFont);
+				};
+				
+				var objectStore7 = db.transaction(["wordsdb"]).objectStore("wordsdb");	
+			var request7 = objectStore7.get("borderColourField$");
+			request7.onerror = function(event) {
+				alert("Unable to retrieve data from database!");
+			};
+				request7.onsuccess = function(event) 
+				{
+				if(request7.result) {
+				var a = request7.result.appearances;
+				
+						if(a)
+						{
+									
+							colourBorder=a;
+						}
+						else
+						{
+							colourBorder=colourBorderDefault;
+						}
+					}
+					else
+					{
+						colourBorder=colourBorderDefault;
+					}
+						var borderField = document.getElementById("fieldHC7");
+		borderField.value = colourBorder;
+		borderField.style.backgroundColor=colourBorder;
+		document.documentElement.style.setProperty('--document-bg', colourBorder);
+				};	
 	}
 	
 	function ValidateColour(c)
@@ -4161,6 +4296,102 @@ This software uses the following plugins, please take note of their individual l
 					else
 					{
 						addwordtodb("jumpField$",colourJump);
+					}
+				}
+	}
+	
+		function HC5Submit()
+	{
+			var bgField = document.getElementById("fieldHC5");
+		if(ValidateColour(bgField.value))
+		{
+			colourBackground=bgField.value;
+		}
+		else
+		{
+			colourBackground=colourBackgroundDefault;
+		}
+		
+		bgField.value = colourBackground;
+		bgField.style.backgroundColor=colourBackground;
+		document.documentElement.style.setProperty('--page-bg', colourBackground);
+		
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("bgColourField$");
+				request.onerror = function(event) {
+				  alert("Unable to retrieve data from database!");
+				};
+				request.onsuccess = function(event) {          
+					if(request.result) {
+					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "bgColourField$",appearances: colourBackground});
+					}
+					else
+					{
+						addwordtodb("bgColourField$",colourBackground);
+					}
+				}
+	}
+	
+		function HC6Submit()
+	{
+			var fontField = document.getElementById("fieldHC6");
+		if(ValidateColour(fontField.value))
+		{
+			colourFont=fontField.value;
+		}
+		else
+		{
+			colourFont=colourFontDefault;
+		}
+		
+		fontField.value = colourFont;
+		fontField.style.backgroundColor=colourFont;
+		document.documentElement.style.setProperty('--font-bg', colourFont);
+		
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("fontColourField$");
+				request.onerror = function(event) {
+				  alert("Unable to retrieve data from database!");
+				};
+				request.onsuccess = function(event) {          
+					if(request.result) {
+					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "fontColourField$",appearances: colourFont});
+					}
+					else
+					{
+						addwordtodb("fontColourField$",colourFont);
+					}
+				}
+	}
+	
+		function HC7Submit()
+	{
+			var borderField = document.getElementById("fieldHC7");
+		if(ValidateColour(borderField.value))
+		{
+			colourBorder=borderField.value;
+		}
+		else
+		{
+			colourBorder=colourBorderDefault;
+		}
+		
+		borderField.value = colourBorder;
+		borderField.style.backgroundColor=colourBorder;
+		document.documentElement.style.setProperty('--document-bg', colourBorder);
+		
+			var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+		var request = objectStore.get("borderColourField$");
+				request.onerror = function(event) {
+				  alert("Unable to retrieve data from database!");
+				};
+				request.onsuccess = function(event) {          
+					if(request.result) {
+					request = db.transaction(["wordsdb"], "readwrite").objectStore("wordsdb").put({ word: "borderColourField$",appearances: colourBorder});
+					}
+					else
+					{
+						addwordtodb("borderColourField$",colourBorder);
 					}
 				}
 	}
@@ -7261,12 +7492,12 @@ function SetGrammarPoints()
 			case 363:
 				rx.push(/geu-chi/);
 				n.point = "그치";
-				n.des="'Is it?', shortened form of 그렇지";
+				n.des="'Isn't it?', shortened form of 그렇지";
 			break;
 			case 364:
 				rx.push(/geu-chyo/);
 				n.point = "그쵸";
-				n.des="'Is it?', shortened form of 그렇죠";
+				n.des="'Isn't it?', shortened form of 그렇죠";
 			break;
 
 			
@@ -8626,6 +8857,24 @@ function SetUILanguage(lang) //TODO
 						<button id="colorpicker4">Pick</button>
 						<button id="HC4SubmitButton" onclick="HC4Submit();">Submit</button>
 						<br><br>
+						<hr>
+						<br>
+						Background Colour:&nbsp&nbsp&nbsp&nbsp
+						<input class="colourInputField" type="textField" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" id="fieldHC5" name="fieldHC5" oninput="HC5OnInput()" onkeydown="if (event.keyCode == 13) { HC5Submit(); return false;}">
+						<button id="colorpicker5">Pick</button>
+						<button id="HC5SubmitButton" onclick="HC5Submit();">Submit</button>
+												<br>
+						<br>Text Colour:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						<input class="colourInputField" type="textField" id="fieldHC6" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" name="fieldHC6" oninput="HC6OnInput()" onkeydown="if (event.keyCode == 13) { HC6Submit(); return false;}">
+						<button id="colorpicker6">Pick</button>
+						<button id="HC6SubmitButton" onclick="HC6Submit();">Submit</button>
+						<br>
+						<br>Border Colour:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						<input class="colourInputField" type="textField" id="fieldHC7" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" name="fieldHC7" oninput="HC7OnInput()" onkeydown="if (event.keyCode == 13) { HC7Submit(); return false;}">
+						<button id="colorpicker7">Pick</button>
+						<button id="HC7SubmitButton" onclick="HC7Submit();">Submit</button>
+						<br>
+						<br>
 						<hr>
 						<br>
 						<form>Font Size:
