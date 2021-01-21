@@ -5917,8 +5917,9 @@ function SetGrammarPoints()
 				n.des="'Even if', 'regardless whether'";
 			break;
 			case 86:
-				rx.push(/gess-eo/);
-				n.point = "A/V-겠어(요)";
+				rx.push(/gess-/);
+				rx.push(/gess /);
+				n.point = "A/V-겠(어)(요)";
 				n.des="'Appears that'";
 			break;
 			case 87:
@@ -6760,8 +6761,8 @@ function SetGrammarPoints()
 				n.des="Hypothesises the content in the preceding clause";
 			break;
 			case 230:
-				rx.push(/n-da-go ch/);
-				rx.push(/n-da-gu ch/);
+				rx.push(/da-go ch/);
+				rx.push(/da-gu ch/);
 				n.point = "A/V-(느)ㄴ다고 치다";
 				n.des="Used to acknowledge or assume someone's behavior or assertion";
 			break;
@@ -7317,6 +7318,7 @@ function SetGrammarPoints()
 			break;
 			case 332:
 				rx.push(/mol-gess-/);
+				rx.push(/mol-gess /);
 				n.point = "몰겠어";
 				n.des="'(I) don't know', shortened form of 모르겠어";
 			break;
@@ -7498,6 +7500,59 @@ function SetGrammarPoints()
 				rx.push(/geu-chyo/);
 				n.point = "그쵸";
 				n.des="'Isn't it?', shortened form of 그렇죠";
+			break;
+			case 365:
+				rx.push(/nu-gun-ga /);
+				rx.push(/nu-gun-ga-/);
+				n.point = "누군가";
+				n.des="'Somebody', 누구 + ㄴ가";
+			break;
+			case 366:
+				rx.push(/mueon-ga /);
+				rx.push(/mueon-ga-/);
+				n.point = "뭔가";
+				n.des="'Something', 뭐 + ㄴ가";
+			break;
+			case 367:
+				rx.push(/eo-din-ga /);
+				rx.push(/eo-din-ga-/);
+				n.point = "어딘가";
+				n.des="'Somewhere', 어디 + ㄴ가";
+			break;
+			case 368:
+				rx.push(/eon-jen-ga /);
+				rx.push(/eon-jen-ga-/);
+				n.point = "언젠가";
+				n.des="'Sometime', 언제 + ㄴ가";
+			break;
+			case 369:
+				rx.push(/gess-ji /);
+				rx.push(/gess-ji-/);
+				n.point = "-겠지?";
+				n.des="'It must be, right?' ";
+			break;
+			case 370:
+				rx.push(/da-go-/);
+				rx.push(/da-go /);
+				n.point = "A/V-(ㄴ/는)다고 (해서/해도)";
+				n.des="'Even if...'";
+			break;
+			case 371:
+				rx.push(/la-go-/);
+				rx.push(/la-go /);
+				n.point = "N-(이)라고 (해서/해도)";
+				n.des="'Even if somebody is...'";
+			break;
+			case 372:
+				rx.push(/m-/);
+				rx.push(/m /);
+				n.point = "A/V-ㅁ/음";
+				n.des="Noun form of a verb or adjective";
+			break;
+			case 373:
+				rx.push(/seu-leo/);
+				n.point = "N스럽다";
+				n.des="Changes some nouns into adjectives";
 			break;
 
 			
