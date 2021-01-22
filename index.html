@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=365;
+	var numGrammar=375;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6030,7 +6030,7 @@ function SetGrammarPoints()
 				rx.push(/-na /);
 				rx.push(/-na-/);
 				n.point = "V-나(요)";
-				n.des="Used to politely and gently ask a question";
+				n.des="Used to politely and gently ask a question or to confirm something";
 			break;
 			case 104:
 				rx.push(/n-de-/);
@@ -6194,7 +6194,8 @@ function SetGrammarPoints()
 				n.des="Used to respond to a question or add to a statement";
 			break;
 			case 127:
-				rx.push(/-janh-a/);
+				rx.push(/janh-/);
+				rx.push(/janh /);
 				n.point = "A/V-잖아(요)";
 				n.des="Used to state a reason that the listener should be aware of";
 			break;
@@ -7553,6 +7554,12 @@ function SetGrammarPoints()
 				rx.push(/seu-leo/);
 				n.point = "N스럽다";
 				n.des="Changes some nouns into adjectives";
+			break;
+			case 374:
+				rx.push(/na /);
+				rx.push(/na-/);
+				n.point = "A/V-나(요)";
+				n.des="Expresses wonder or surprise";
 			break;
 
 			
