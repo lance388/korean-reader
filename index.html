@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=375;
+	var numGrammar=381;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6268,7 +6268,7 @@ function SetGrammarPoints()
 				rx.push(/ya-ji/);
 				rx.push(/ya-jyo/);
 				n.point = "V-아/어야지(요)";
-				n.des="Used to make a promise to oneself";
+				n.des="Used to make a promise to oneself or to tell someone that they need to do something";
 			break;
 			case 141:
 				rx.push(/l manh/);
@@ -6398,7 +6398,7 @@ function SetGrammarPoints()
 			case 164:
 				rx.push(/la-do/);
 				n.point = "N(으)라도";
-				n.des="Indicates that something will suffice even though it is not the best choice";
+				n.des="Indicates that something will suffice even though it is not the best choice, 'even N (must/are/have/do...)'";
 			break;
 			case 165:
 				rx.push(/-deun/);
@@ -7410,10 +7410,11 @@ function SetGrammarPoints()
 			case 347:
 				rx.push(/a-mu-li/);
 				n.point = "아무리";
-				n.des="'No matter how much/many'";
+				n.des="'However'";
 			break;
 			case 348:
 				rx.push(/-myeo /);
+				rx.push(/-myeo-/);
 				n.point = "V-(으)며";
 				n.des="'While'";
 			break;
@@ -7466,7 +7467,7 @@ function SetGrammarPoints()
 			case 358:
 				rx.push(/-la-seo/);
 				n.point = "N(이)라서";
-				n.des="'Because of'";
+				n.des="'Therefore', 'because of'";
 			break;
 			case 359:
 				rx.push(/-deul-/);
@@ -7560,6 +7561,37 @@ function SetGrammarPoints()
 				rx.push(/na-/);
 				n.point = "A/V-나(요)";
 				n.des="Expresses wonder or surprise";
+			break;
+			case 375:
+				rx.push(/-la/);
+				n.point = "A/V-아/어라";
+				n.des="Expresses a exclamation";
+			break;
+			case 376:
+				rx.push(/-la/);
+				n.point = "N(이)라";
+				n.des="Shortened form of N(이)라서, 'therefore', 'because of'";
+			break;
+			case 377:
+				rx.push(/ban-deu-si/);
+				n.point = "반드시";
+				n.des="'Surely'";
+			break;
+			case 378:
+				rx.push(/ge-da-ga/);
+				n.point = "게다가";
+				n.des="'Besides', 'furthermore'";
+			break;
+			case 379:
+				rx.push(/da-ueo/);
+				rx.push(/dab/);
+				n.point = "N답다";
+				n.des="'Be like', 'be worthy of'";
+			break;
+			case 380:
+				rx.push(/deo-gu-na/);
+				n.point = "A/V-더구나";
+				n.des="Used to notify someone of a fact that one learned anew from a personal experience";
 			break;
 
 			
