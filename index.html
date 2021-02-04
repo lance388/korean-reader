@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=381;
+	var numGrammar=382;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5413,19 +5413,19 @@ function SetGrammarPoints()
 		{
 			
 			case 0:
-				rx.push(/-kke-seo /);
+				rx.push(/-kke-seo/);
 				n.point = "N께서";
 				n.des="Honorific form of 이/가";
 			break;
 			
 			case 1:
-				rx.push(/-kke-seo-neun /);
+				rx.push(/-kke-seo-neun/);
 				n.point = "N께서는";
 				n.des="Honorific form of 은/는";
 			break;
 			
 			case 2:
-				rx.push(/-kke /);
+				rx.push(/-kke/);
 				n.point = "N께";
 				n.des="Honorific form of 에게(한테)";
 			break;
@@ -5454,19 +5454,16 @@ function SetGrammarPoints()
 				n.des="Past tense";
 			break;
 			case 6:
-				rx.push(/l geo-/);
-				rx.push(/l-geo-ya/);
-				rx.push(/l-geo-ye/);
-				rx.push(/l kkeo-/);
-				rx.push(/l-kkeo-/);
-				rx.push(/l-kkeo-ya/);
-				rx.push(/l-kkeo-ye/);
+				rx.push(/l geo/);
+				rx.push(/l-geo/);
+				rx.push(/l kkeo/);
+				rx.push(/l-kkeo/);
 				n.point = "V-(으)ㄹ 거예요/V-(으)ㄹ 거야";
 				n.des="Future tense";
 			break;
 			case 7:
-				rx.push(/-go i/);
-				rx.push(/-gu i/);
+				rx.push(/go i/);
+				rx.push(/gu i/);
 				n.point = "V-고 있다";
 				n.des="Progressive tense";
 			break;
@@ -5478,8 +5475,8 @@ function SetGrammarPoints()
 				n.des="Past perfect tense";
 			break;
 			case 9:
-				rx.push(/-ji an/);
-				rx.push(/-ji mos/);
+				rx.push(/ji an/);
+				rx.push(/ji mos/);
 				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
@@ -5502,10 +5499,8 @@ function SetGrammarPoints()
 				n.des="Object marking particle";
 			break;
 			case 13:
-				rx.push(/-oa-/);
-				rx.push(/-goa-/);
-				rx.push(/-oa /);
-				rx.push(/-goa /);
+				rx.push(/oa-/);
+				rx.push(/oa /);
 				n.point = "N와/과";
 				n.des="Particle denoting 'and'";
 			break;
@@ -5515,13 +5510,13 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'and'";
 			break;
 			case 15:
-				rx.push(/-hago/);
-				rx.push(/-hagu/);
+				rx.push(/hago/);
+				rx.push(/hagu/);
 				n.point = "N하고";
 				n.des="Particle denoting 'and'";
 			break;
 			case 16:
-				rx.push(/-eui /);
+				rx.push(/eui /);
 				n.point = "N의";
 				n.des="Particle denoting possession";
 			break;
@@ -6889,9 +6884,7 @@ function SetGrammarPoints()
 				n.des="Indicates that a particular noun is the first in a series";
 			break;
 			case 254:
-				rx.push(/a dae/);
-				rx.push(/e dae/);
-				rx.push(/eo dae/);
+				rx.push(/dae/);
 				n.point = "V-아/어 대다";
 				n.des="Expresses that an action is done excessively and continuously";
 			break;
@@ -7592,6 +7585,11 @@ function SetGrammarPoints()
 				rx.push(/deo-gu-na/);
 				n.point = "A/V-더구나";
 				n.des="Used to notify someone of a fact that one learned anew from a personal experience";
+			break;
+			case 381:
+				rx.push(/deu-lil/);
+				n.point = "A/V-아/어 드릴(까)";
+				n.des="'Shall I...?'";
 			break;
 
 			
