@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=382;
+	var numGrammar=384;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5505,7 +5505,7 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'and'";
 			break;
 			case 14:
-				rx.push(/lang /);
+				rx.push(/lang/);
 				n.point = "N(이)랑";
 				n.des="Particle denoting 'and'";
 			break;
@@ -7590,6 +7590,17 @@ function SetGrammarPoints()
 				rx.push(/deu-lil/);
 				n.point = "A/V-아/어 드릴(까)";
 				n.des="'Shall I...?'";
+			break;
+			case 382:
+				rx.push(/s-/);
+				n.point = "-ㅅ";
+				n.des="In a compound word made up of two individual words, -ㅅ is added to the first word if that word ends in a vowel";
+			break;
+			case 383:
+				rx.push(/ noh /);
+				rx.push(/ noh-/);
+				n.point = "A/V-아/어 놓다";
+				n.des="Indicates that one completes an action and leaves it in that state";
 			break;
 
 			
