@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=384;
+	var numGrammar=386;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5415,19 +5415,19 @@ function SetGrammarPoints()
 			case 0:
 				rx.push(/-kke-seo/);
 				n.point = "N께서";
-				n.des="Honorific form of 이/가";
+				n.des="Subject marking particle, honorific form of 이/가";
 			break;
 			
 			case 1:
 				rx.push(/-kke-seo-neun/);
 				n.point = "N께서는";
-				n.des="Honorific form of 은/는";
+				n.des="Topic marking particle, honorific form of 은/는";
 			break;
 			
 			case 2:
 				rx.push(/-kke/);
 				n.point = "N께";
-				n.des="Honorific form of 에게(한테)";
+				n.des="Particle denoting a recipient, honorific form of 에게(한테)";
 			break;
 			
 			case 3:
@@ -5493,8 +5493,7 @@ function SetGrammarPoints()
 				n.des="Topic marking particle";
 			break;
 			case 12:
-				rx.push(/-eul /);
-				rx.push(/-leul /);
+				rx.push(/l /);
 				n.point = "N을/를";
 				n.des="Object marking particle";
 			break;
@@ -5697,7 +5696,7 @@ function SetGrammarPoints()
 				n.des="'Since'";
 			break;
 			case 49:
-				rx.push(/l su/);
+				rx.push(/su /);
 				n.point = "V-(으)ㄹ 수 있다/없다";
 				n.des="'Can'";
 			break;
@@ -7601,6 +7600,21 @@ function SetGrammarPoints()
 				rx.push(/ noh-/);
 				n.point = "A/V-아/어 놓다";
 				n.des="Indicates that one completes an action and leaves it in that state";
+			break;
+			case 384:
+				rx.push(/n-geol/);
+				n.point = "A/V-ㄴ걸(요)";
+				n.des="Shows protestation or regret";
+			break;
+			case 385:
+				rx.push(/su-ga /);
+				n.point = "V-(으)ㄹ 수가 있다/없다";
+				n.des="'Can', emphasises the verb more than in the V-(으)ㄹ 수 있다/없다 grammar pattern";
+			break;
+			case 386:
+				rx.push(/seon /);
+				n.point = "-선";
+				n.des="Shortened form of -서는";
 			break;
 
 			
