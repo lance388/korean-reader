@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=386;
+	var numGrammar=388;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7615,6 +7615,11 @@ function SetGrammarPoints()
 				rx.push(/seon /);
 				n.point = "-선";
 				n.des="Shortened form of -서는";
+			break;
+			case 387:
+				rx.push(/lyeo/);
+				n.point = "A/V-(으)렴, A/V-(으)려무나";
+				n.des="Imperative, typically spoken from an adult to a child";
 			break;
 
 			
