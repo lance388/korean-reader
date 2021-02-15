@@ -7444,7 +7444,7 @@ function SetGrammarPoints()
 				n.des="'To the full extent of'";
 			break;
 			case 352:
-				rx.push(/-ma /);
+				rx.push(/(?<!eom)-ma /);
 				n.point = "V-(으)마";
 				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
 			break;
@@ -7556,8 +7556,8 @@ function SetGrammarPoints()
 				n.des="'Even if somebody is...'";
 			break;
 			case 372:
-				rx.push(/(?<!si)m-/);
-				rx.push(/(?<!si)m /);
+				rx.push(/(?<!si|yeo-leu)m-(?!ma)/);
+				rx.push(/(?<!si|yeo-leu)m /);
 				n.point = "A/V-ㅁ/음";
 				n.des="Noun form of a verb or adjective";
 			break;
