@@ -5666,7 +5666,8 @@ function SetGrammarPoints()
 				n.des="'(In order) to'";
 			break;
 			case 43:
-				rx.push(/ttae/);
+				rx.push(/ttae-/);
+				rx.push(/ttae /);
 				n.point = "N때, A/V-(으)ㄹ 때";
 				n.des="'When'";
 			break;
@@ -5785,7 +5786,7 @@ function SetGrammarPoints()
 			break;
 			case 63:
 				rx.push(/ni-kka/);
-				rx.push(/ni/);
+				rx.push(/ni /);
 				n.point = "A/V-(으)니까(요), A/V-(으)니";
 				n.des="'Because', 'when', '(do something) only to discover'";
 			break;
@@ -7609,9 +7610,10 @@ function SetGrammarPoints()
 				n.des="'Shall I...?'";
 			break;
 			case 382:
-				rx.push(/s-/);
+				rx.push(/(?<!g|b|l|s)s-/);
+				rx.push(/(?<!g|b|l|s)s /);
 				n.point = "-ㅅ";
-				n.des="In a compound word made up of two individual words, -ㅅ is added to the first word if that word ends in a vowel";
+				n.des="In a compound word made up of two individual words, -ㅅ is added to the first word if that word ends in a batchim";
 			break;
 			case 383:
 				rx.push(/ noh /);
