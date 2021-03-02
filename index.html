@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=388;
+	var numGrammar=390;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7640,6 +7640,17 @@ function SetGrammarPoints()
 				rx.push(/lyeo/);
 				n.point = "A/V-(으)렴, A/V-(으)려무나";
 				n.des="Imperative, typically spoken from an adult to a child";
+			break;
+			case 388:
+				rx.push(/-deun/);
+				n.point = "N/A/V-든(가)";
+				n.des="'Regardless', 'no matter', indicates that any of the stated choices are fine";
+			break;
+			case 389:
+				rx.push(/eol-ma-/);
+				rx.push(/eol-ma /);
+				n.point = "얼마나";
+				n.des="'How much/many'";
 			break;
 
 			
