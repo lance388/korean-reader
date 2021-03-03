@@ -5401,7 +5401,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=390;
+	var numGrammar=391;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7357,15 +7357,15 @@ function SetGrammarPoints()
 				n.des="'Had better', '(I) guess (I) have to'";
 			break;
 			case 337:
-				rx.push(/a-y/);
-				rx.push(/o-y/);
-				rx.push(/e-y/);
-				rx.push(/ab-/);
-				rx.push(/ob-/);
-				rx.push(/eb-/);
-				rx.push(/a /);
-				rx.push(/o /);
-				rx.push(/e /);
+				rx.push(/(?<!ss-)a-y/);
+				rx.push(/(?<!ss-)o-y/);
+				rx.push(/(?<!ss-)e-y/);
+				rx.push(/(?<!ss-)ab-/);
+				rx.push(/(?<!ss-)ob-/);
+				rx.push(/(?<!ss-)eb-/);
+				rx.push(/(?<!ss-)a /); 
+				rx.push(/(?<!ss-)o /);
+				rx.push(/(?<!ss-)e /);
 				n.point = "V-아/어";
 				n.des="Present tense";
 			break;
@@ -7651,6 +7651,12 @@ function SetGrammarPoints()
 				rx.push(/eol-ma /);
 				n.point = "얼마나";
 				n.des="'How much/many'";
+			break;
+			case 390:
+				rx.push(/li-/);
+				rx.push(/li /);
+				n.point = "-리";
+				n.des="'Way', common combinations include '이리', '그리', '저리' ('in this way/ like this', 'in that way/ like that') ";
 			break;
 
 			
