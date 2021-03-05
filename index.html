@@ -5887,12 +5887,13 @@ function SetGrammarPoints()
 				n.des="'For the sake of', 'in order to'";
 			break;
 			case 82:
-				rx.push(/-gi-lo/);
+				rx.push(/gi-lo/);
 				n.point = "V-기로 (하다)";
 				n.des="Indicates a decision or promise";
 			break;
 			case 83:
-				rx.push(/-myeon/);
+				rx.push(/myeon /);
+				rx.push(/myeon-/);
 				n.point = "A/V-(으)면";
 				n.des="'If', 'when', 'once'";
 			break;
@@ -5933,20 +5934,20 @@ function SetGrammarPoints()
 				n.des="'Appears that'";
 			break;
 			case 90:
-				rx.push(/n /);
-				rx.push(/l /);
+				rx.push(/(?<!deo)n /);
+				rx.push(/(?<!ja)l /);
 				n.point = "A/V-(으)ㄴ/-는/-(으)ㄹ N";
 				n.des="Noun modifying form";
 			break;
 			case 91:
-				rx.push(/-gi-/);
-				rx.push(/-gi /);
+				rx.push(/gi-/);
+				rx.push(/gi /);
 				n.point = "A/V-기";
 				n.des="Particle that turns adjectives and verbs into nouns";
 			break;
 			case 92:
-				rx.push(/-ge /);
-				rx.push(/-ge-/);
+				rx.push(/ge /);
+				rx.push(/ge-/);
 				n.point = "A-게";
 				n.des="'In a...manner'";
 			break;
@@ -5992,25 +5993,24 @@ function SetGrammarPoints()
 				n.des="takes/requires, costs...to do";
 			break;
 			case 99:
-				rx.push(/-ji-yo/);
-				rx.push(/-ji-/);
-				rx.push(/-ji /);
-				rx.push(/-jyo/);
+				rx.push(/ji-yo /);
+				rx.push(/ji /);
+				rx.push(/jyo /);
 				n.point = "A/V-지(요)/죠?";
 				n.des="'Isn't it?', indicates a tag question";
 			break;
 			case 100:
-				rx.push(/-gu-na /);
-				rx.push(/-gu-na-/);
-				rx.push(/-gun /);
-				rx.push(/-gun-/);
-				rx.push(/-neun-gun/);
+				rx.push(/gu-na /);
+				rx.push(/gu-na-/);
+				rx.push(/gun /);
+				rx.push(/gun-/);
+				rx.push(/neun-gun/);
 				n.point = "A/V-군(요)/는군(요)/구나/군";
 				n.des="Expresses wonder or surprise";
 			break;
 			case 101:
-				rx.push(/-ne-/);
-				rx.push(/-ne /);
+				rx.push(/ne-/);
+				rx.push(/ne /);
 				n.point = "A/V-네(요)";
 				n.des="Expresses wonder or surprise";
 			break;
@@ -6022,8 +6022,8 @@ function SetGrammarPoints()
 				n.des="Used to politely and gently ask a question";
 			break;
 			case 103:
-				rx.push(/-na /);
-				rx.push(/-na-/);
+				rx.push(/na /);
+				rx.push(/na-/);
 				n.point = "V-나(요)";
 				n.des="Used to politely and gently ask a question or to confirm something";
 			break;
@@ -6132,7 +6132,7 @@ function SetGrammarPoints()
 				n.des="Expresses an unexpected state of affairs";
 			break;
 			case 117:
-				rx.push(/-da /);
+				rx.push(/da /);
 				rx.push(/ss-da /);
 				rx.push(/n-da /);
 				rx.push(/l geos/);
@@ -6147,6 +6147,11 @@ function SetGrammarPoints()
 				rx.push(/-hae /);
 				rx.push(/-ya /);
 				rx.push(/-ni /);
+				rx.push(/ a /);
+				rx.push(/ eo /);
+				rx.push(/ hae /);
+				rx.push(/ ya /);
+				rx.push(/ ni /);
 				n.point = "-아/어, -(이)야, -니";
 				n.des="Casual speech";
 			break;
@@ -6167,13 +6172,15 @@ function SetGrammarPoints()
 				n.des="Casual speech - imperative";
 			break;
 			case 120:
-				rx.push(/-ja /);
+				rx.push(/ja /);
 				n.point = "-자, 지 말자";
 				n.des="Casual speech - propositive";
 			break;
 			case 121:
 				rx.push(/-en-/);
 				rx.push(/-en /);
+				rx.push(/ en-/);
+				rx.push(/ en /);
 				n.point = "-엔";
 				n.des="Declaritive form, shortened form of '-에는'";
 			break;
@@ -6198,11 +6205,13 @@ function SetGrammarPoints()
 			case 125:
 				rx.push(/-ya /);
 				rx.push(/-a /);
+				rx.push(/ ya /);
+				rx.push(/ a /);
 				n.point = "-야, -아";
 				n.des="Particle used in casual speech when calling someone by name";
 			break;
 			case 126:
-				rx.push(/-geo-deun/);
+				rx.push(/geo-deun/);
 				n.point = "A/V-거든(요)";
 				n.des="Used to respond to a question or add to a statement";
 			break;
@@ -6341,8 +6350,8 @@ function SetGrammarPoints()
 				n.des="Expresses if some statement is true, then...";
 			break;
 			case 151:
-				rx.push(/n-de /);
-				rx.push(/n-de-/);
+				rx.push(/(?<!deo)n-de /);
+				rx.push(/(?<!deo)n-de-/);
 				n.point = "A/V-(으)ㄴ/는데(요)";
 				n.des="Used to give an explanation";
 			break;
@@ -6357,7 +6366,7 @@ function SetGrammarPoints()
 				n.des="Used to express actions occuring at the same time";
 			break;
 			case 154:
-				rx.push(/-jo-cha/);
+				rx.push(/jo-cha/);
 				n.point = "N조차";
 				n.des="'Even'";
 			break;
@@ -6373,8 +6382,8 @@ function SetGrammarPoints()
 				n.des="Used when the speaker does an action while in the process of going somewhere";
 			break;
 			case 157:
-				rx.push(/-da-ga /);
-				rx.push(/-da /);
+				rx.push(/da-ga /);
+				rx.push(/da /);
 				n.point = "V-다가/-다";
 				n.des="Expresses an interruption of action to immediately start doing another";
 			break;
@@ -6404,7 +6413,7 @@ function SetGrammarPoints()
 				n.des="'Nobody'";
 			break;
 			case 163:
-				rx.push(/-na /);
+				rx.push(/na /);
 				n.point = "N(으)나";
 				n.des="Indicates that something is not really one's first choice";
 			break;
@@ -6414,7 +6423,7 @@ function SetGrammarPoints()
 				n.des="Indicates that something will suffice even though it is not the best choice, 'even N (must/are/have/do...)'";
 			break;
 			case 165:
-				rx.push(/-deun/);
+				rx.push(/deun/);
 				n.point = "N/A/V-든(지)";
 				n.des="'Regardless', 'no matter', indicates that any of the stated choices are fine";
 			break;
@@ -6442,8 +6451,8 @@ function SetGrammarPoints()
 				n.des="Indicates the doing of an action following the completion of another action";
 			break;
 			case 170:
-				rx.push(/-go-seo/);
-				rx.push(/-gu-seo/);
+				rx.push(/go-seo/);
+				rx.push(/gu-seo/);
 				n.point = "V-고서";
 				n.des="Indicates that the first action completed before the second action started";
 			break;
@@ -6466,7 +6475,7 @@ function SetGrammarPoints()
 				n.des="Indicates that if an action continues, then over time the result will occur";
 			break;
 			case 174:
-				rx.push(/-deo-ni/);
+				rx.push(/deo-ni/);
 				n.point = "A/V-더니, A/V-더니만";
 				n.des="Used to refer to something directly experienced or seen in the past when describing how that thing subsequently changed";
 			break;
@@ -6515,12 +6524,12 @@ function SetGrammarPoints()
 				n.des="Used to state a characteristic";
 			break;
 			case 183:
-				rx.push(/-seu-leob/);
+				rx.push(/seu-leob/);
 				n.point = "N스럽다";
 				n.des="Expresses having the same qualities of a certain noun";
 			break;
 			case 184:
-				rx.push(/-dab/);
+				rx.push(/dab/);
 				n.point = "N답다";
 				n.des="Expresses having the same qualities of a certain noun";
 			break;
@@ -6546,12 +6555,12 @@ function SetGrammarPoints()
 				n.des="Strongly emphasises the meaning of a noun";
 			break;
 			case 189:
-				rx.push(/-ge/);
+				rx.push(/ge/);
 				n.point = "A/V-게";
 				n.des="Indicates the following action is necessary to realise the preceding action or state";
 			break;
 			case 190:
-				rx.push(/-do-log/);
+				rx.push(/do-log/);
 				n.point = "A/V-도록";
 				n.des="Indicates the following action is necessary to realise the preceding action or state";
 			break;
@@ -6650,13 +6659,13 @@ function SetGrammarPoints()
 				n.des="Lists two comparable or contrasting clauses, and indicates that choosing either one will have the same result";
 			break;
 			case 207:
-				rx.push(/-gi-bo-da-neun/);
+				rx.push(/gi-bo-da-neun/);
 				n.point = "A/V-(느)ㄴ다기보다는";
 				n.des="Indicates a more appropriate description of a subject";
 			break;
 			case 208:
-				rx.push(/-bo-go/);
-				rx.push(/-bo-gu/);
+				rx.push(/bo-go/);
+				rx.push(/bo-gu/);
 				n.point = "-보고";
 				n.des="Indicates a person to whom a question, order, request, or suggestion is verbally directed";
 			break;
@@ -6683,6 +6692,10 @@ function SetGrammarPoints()
 				rx.push(/-so-/);
 				rx.push(/-o /);
 				rx.push(/-so /);
+				rx.push(/ o-/);
+				rx.push(/ so-/);
+				rx.push(/ o /);
+				rx.push(/ so /);
 				n.point = "A/V-오/소";
 				n.des="Honorific - imperative";
 			break;
@@ -6831,15 +6844,15 @@ function SetGrammarPoints()
 				n.des="Expresses that the action or state of affairs resulting from the action in the preceding clause becomes an opportunity to do another unplanned but related action";
 			break;
 			case 241:
-				rx.push(/-geon-man/);
+				rx.push(/geon-man/);
 				n.point = "A/V-건만";
 				n.des="Expresses that the content in the following clause is the opposite of the result expected based on the content in the preceding clause";
 			break;
 			case 242:
-				rx.push(/-go-do/);
-				rx.push(/-gu-do/);
-				rx.push(/-go-du/);
-				rx.push(/-gu-du/);
+				rx.push(/go-do/);
+				rx.push(/gu-do/);
+				rx.push(/go-du/);
+				rx.push(/gu-du/);
 				n.point = "V-고도";
 				n.des="Indicates that some unexpected action or situation occurs in the following clause after the completion of the action in the preceding clause";
 			break;
@@ -6850,34 +6863,34 @@ function SetGrammarPoints()
 				n.des="Indicates that the content in the following clause is the opposite result than what was expected based on the action or circumstance described in the preceding clause";
 			break;
 			case 244:
-				rx.push(/-deus/);
+				rx.push(/deus/);
 				n.point = "A/V-듯이";
 				n.des="Indicates that the contents in the preceding and following clause are almost the same";
 			break;
 			case 245:
-				rx.push(/-da-si-pi/);
+				rx.push(/da-si-pi/);
 				n.point = "A/V-다시피 하다";
 				n.des="Indicates that some action is actually very close to another action but not exactly the same";
 			break;
 			case 246:
-				rx.push(/-geo-ni-oa/);
+				rx.push(/geo-ni-oa/);
 				n.point = "A/V-거니와";
 				n.des="Acknowledges the statement in the preceding clause, but at the same time adding the statement in the following clause";
 			break;
 			case 247:
-				rx.push(/-gi-neun-keo-nyeong/);
+				rx.push(/gi-neun-keo-nyeong/);
 				n.point = "A/V-기는커녕";
 				n.des="Expresses that the content in the preceding clause is easily realised, but also the content in the following clause is even more so";
 			break;
 			case 248:
-				rx.push(/-ne-/);
-				rx.push(/-ne /);
+				rx.push(/ne-/);
+				rx.push(/ne /);
 				n.point = "A/V-네";
 				n.des="Honorific - declarative";
 			break;
 			case 249:
-				rx.push(/-na /);
-				rx.push(/-n-ga /);
+				rx.push(/na /);
+				rx.push(/n-ga /);
 				n.point = "A/V-(으)ㄴ/는가?, V-나?";
 				n.des="Honorific - inquisitive";
 			break;
@@ -6887,12 +6900,12 @@ function SetGrammarPoints()
 				n.des="Expresses additional facts";
 			break;
 			case 251:
-				rx.push(/-doi/);
+				rx.push(/doi/);
 				n.point = "A/V-되";
 				n.des="Acknowledges the statement in the preceding clause, but at the same time adding an additional explanation or condition in the following clause";
 			break;
 			case 252:
-				rx.push(/-ma-jeo/);
+				rx.push(/ma-jeo/);
 				n.point = "N마저";
 				n.des="Expresses that a particular noun is the last thing remaining from a group of included things";
 			break;
@@ -6907,8 +6920,8 @@ function SetGrammarPoints()
 				n.des="Expresses that an action is done excessively and continuously";
 			break;
 			case 255:
-				rx.push(/-gi il-ssu/);
-				rx.push(/-gi-ga il-ssu/);
+				rx.push(/gi il-ssu/);
+				rx.push(/gi-ga il-ssu/);
 				n.point = "V-기 일쑤이다";
 				n.des="Indicates that an action occurs regularly";
 			break;
@@ -6918,7 +6931,7 @@ function SetGrammarPoints()
 				n.des="Expresses that the subject only partially or half-heartedly does some action";
 			break;
 			case 257:
-				rx.push(/-li-man-chi/);
+				rx.push(/li-man-chi/);
 				n.point = "A/V-(으)리만치";
 				n.des="Used to emphasise the content in the following clause by indicating the degree to which the situation or state of affairs in the preceding clause describes it";
 			break;
@@ -6976,12 +6989,12 @@ function SetGrammarPoints()
 				n.des="Expresses that the speaker knows from past experience that the following content is clearly not true";
 			break;
 			case 268:
-				rx.push(/-gi sib-sang-/);
+				rx.push(/gi sib-sang-/);
 				n.point = "A/V-기 십상이다";
 				n.des="Indicates that under the current circumstances, it is probable or easy for something to happen";
 			break;
 			case 269:
-				rx.push(/-gi ma-lyeon-/);
+				rx.push(/gi ma-lyeon-/);
 				n.point = "A/V-기 마련이다";
 				n.des="Indicates that the occurance of something is inevitable";
 			break;
@@ -6997,18 +7010,18 @@ function SetGrammarPoints()
 			break;
 			case 272:
 				rx.push(/eu-ni/);
-				rx.push(/-ni ha/);
+				rx.push(/ni ha/);
 				n.point = "A/V-느니 -느니 하다";
 				n.des="Used when listing a number of statements said by the subject";
 			break;
 			case 273:
-				rx.push(/-lya/);
+				rx.push(/lya/);
 				n.point = "V-(으)랴 -(으)랴";
 				n.des="Used when listing a number of actions, all of which the subject is making a great effort to try to finish";
 			break;
 			case 274:
-				rx.push(/-myeo /);
-				rx.push(/-myeo-/);
+				rx.push(/myeo /);
+				rx.push(/myeo-/);
 				n.point = "A/V-(이)며 -(이)며";
 				n.des="Used when listing a number of things or statements, implying that the list is large and there are other things that belong to the list that are not stated";
 			break;
@@ -7046,8 +7059,8 @@ function SetGrammarPoints()
 				n.des="Expresses that the preceding clause describes the context in which the action in the following clause occurs";
 			break;
 			case 281:
-				rx.push(/-chi-go/);
-				rx.push(/-chi-gu/);
+				rx.push(/chi-go/);
+				rx.push(/chi-gu/);
 				n.point = "N치고";
 				n.des="Indicates that something is the case in every instance of a particular noun";
 			break;
@@ -7073,8 +7086,8 @@ function SetGrammarPoints()
 				n.des="Emphasises the fact that the speaker is not able to do something no matter how hard he or she tries due to some circumstance";
 			break;
 			case 286:
-				rx.push(/-se /);
-				rx.push(/-se-/);
+				rx.push(/se /);
+				rx.push(/se-/);
 				n.point = "V-세";
 				n.des="Honorific - propositive";
 			break;
