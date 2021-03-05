@@ -5493,7 +5493,7 @@ function SetGrammarPoints()
 				n.des="Topic marking particle";
 			break;
 			case 12:
-				rx.push(/l /);
+				rx.push(/(?<!ja)l /);
 				n.point = "N을/를";
 				n.des="Object marking particle";
 			break;
@@ -5627,8 +5627,8 @@ function SetGrammarPoints()
 				n.des="'But'";
 			break;
 			case 36:
-				rx.push(/n-de /);
-				rx.push(/n-de-/);
+				rx.push(/(?<!deo)n-de /);
+				rx.push(/(?<!deo)n-de-/);
 				n.point = "A/V-(으)ㄴ/는데";
 				n.des="'But', 'so', 'therefore', 'and'";
 			break;
@@ -6028,8 +6028,8 @@ function SetGrammarPoints()
 				n.des="Used to politely and gently ask a question or to confirm something";
 			break;
 			case 104:
-				rx.push(/n-de-/);
-				rx.push(/n-de /);
+				rx.push(/(?<!deo)n-de-/);
+				rx.push(/(?<!deo)n-de /);
 				n.point = "A/V-(으)ㄴ/는데(요)";
 				n.des="Expresses one's disagreement";
 			break;
@@ -6299,7 +6299,7 @@ function SetGrammarPoints()
 				n.des="Used to give a suggestion";
 			break;
 			case 144:
-				rx.push(/deon/);
+				rx.push(/deon(?!-de)/);
 				n.point = "A/V-았/었던";
 				n.des="Indicates recollection";
 			break;
@@ -7030,8 +7030,8 @@ function SetGrammarPoints()
 				n.des="Indicates that continuing a particular action or situation eventually results in some other situation or state of affairs";
 			break;
 			case 278:
-				rx.push(/-de-/);
-				rx.push(/-de /);
+				rx.push(/(?<!deon-|neun-)de-/);
+				rx.push(/(?<!deon-|neun-)de /);
 				n.point = "A/V-데(요)";
 				n.des="Expresses recollection";
 			break;
@@ -7447,7 +7447,7 @@ function SetGrammarPoints()
 			case 352:
 				rx.push(/(?<!eom-)ma /);
 				n.point = "V-(으)마";
-				n.des="	'Will (do)', indicates intention, typically spoken from an older person to somebody younger";
+				n.des="	'Will (do)', indicates intention or a promise, typically spoken from an older person to somebody younger";
 			break;
 			case 353:
 				rx.push(/han-te-seo/);
@@ -7616,8 +7616,8 @@ function SetGrammarPoints()
 				n.des="In a compound word made up of two individual words, -ㅅ is added to the first word if that word ends in a batchim";
 			break;
 			case 383:
-				rx.push(/ noh /);
-				rx.push(/ noh-/);
+				rx.push(/noh /);
+				rx.push(/noh-/);
 				n.point = "A/V-아/어 놓다";
 				n.des="Indicates that one completes an action and leaves it in that state";
 			break;
@@ -7657,6 +7657,17 @@ function SetGrammarPoints()
 				rx.push(/li /);
 				n.point = "-리";
 				n.des="'Way', common combinations include '이리', '그리', '저리' ('in this way/ like this', 'in that way/ like that') ";
+			break;
+			case 391:
+				rx.push(/syeo-/);
+				rx.push(/syeo /);
+				n.point = "N(이)셔";
+				n.des="Honorific sentence ender for somebody's name, shortened form of N(이)시어)";
+			break;
+			case 392:
+				rx.push(/noass/);
+				n.point = "놨";
+				n.des="Shortened past-tense form of 놓다";
 			break;
 
 			
