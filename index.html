@@ -5498,8 +5498,12 @@ function SetGrammarPoints()
 				n.des="Object marking particle";
 			break;
 			case 13:
-				rx.push(/oa-/);
-				rx.push(/oa /);
+				rx.push(/ oa-/);
+				rx.push(/ oa /);
+				rx.push(/-oa-/);
+				rx.push(/-oa /);
+				rx.push(/goa-/);
+				rx.push(/goa /);
 				n.point = "N와/과";
 				n.des="Particle denoting 'and'";
 			break;
@@ -5842,7 +5846,7 @@ function SetGrammarPoints()
 			case 73:
 				rx.push(/l-lae/);
 				n.point = "V-(으)ㄹ래(요)?";
-				n.des="'How about?'";
+				n.des="'Let's', 'how about?', 'be going to', 'will'";
 			break;
 			case 74:
 				rx.push(/gess/);
@@ -5855,9 +5859,12 @@ function SetGrammarPoints()
 				n.des="	'Will (do)', indicates intention";
 			break;
 			case 76:
-				rx.push(/l-lae/);
-				n.point = "V-(으)ㄹ래(요)";
-				n.des="'Be going to', 'will'";
+				rx.push(/ja-ni-gga/);
+				rx.push(/da-ni-gga/);
+				rx.push(/la-ni-gga/);
+				rx.push(/nya-ni-gga/);
+				n.point = "-(이/으)(자/다/라/냐)니까(요)";
+				n.des="Emphasises something the speaker already said";
 			break;
 			case 77:
 				rx.push(/-leo/);
@@ -5949,7 +5956,7 @@ function SetGrammarPoints()
 				rx.push(/ge /);
 				rx.push(/ge-/);
 				n.point = "A-게";
-				n.des="'In a...manner'";
+				n.des="'To', 'in a...manner'";
 			break;
 			case 93:
 				rx.push(/a-ha/);
@@ -6022,10 +6029,10 @@ function SetGrammarPoints()
 				n.des="Used to politely and gently ask a question";
 			break;
 			case 103:
-				rx.push(/na /);
-				rx.push(/na-/);
-				n.point = "V-나(요)";
-				n.des="Used to politely and gently ask a question or to confirm something";
+				rx.push(/lyeon-man/);
+				rx.push(/lyeon-ma-neun/);
+				n.point = "A/V-(으)련만/-(으)련마는";
+				n.des="'Would, but...'";
 			break;
 			case 104:
 				rx.push(/(?<!deo)n-de-/);
@@ -6415,7 +6422,7 @@ function SetGrammarPoints()
 			case 163:
 				rx.push(/na /);
 				n.point = "N(으)나";
-				n.des="Indicates that something is not really one's first choice";
+				n.des="Indicates that something is dissatisfactory or not the best choice";
 			break;
 			case 164:
 				rx.push(/la-do/);
@@ -6893,7 +6900,7 @@ function SetGrammarPoints()
 				rx.push(/na /);
 				rx.push(/n-ga /);
 				n.point = "A/V-(으)ㄴ/는가?, V-나?";
-				n.des="Honorific - inquisitive";
+				n.des="Honorific - inquisitive, used to politely and gently ask a question or to confirm something";
 			break;
 			case 250:
 				rx.push(/l-ppun-deol/);
@@ -7035,6 +7042,9 @@ function SetGrammarPoints()
 				rx.push(/eo nae/);
 				rx.push(/e nae/);
 				rx.push(/a nae/);
+				rx.push(/eo-nae/);
+				rx.push(/e-nae/);
+				rx.push(/a-nae/);
 				n.point = "A/V-아/어 내다";
 				n.des="Indicates that the subject was able to complete a particular task after experiencing some difficulty";
 			break;
@@ -7359,10 +7369,13 @@ function SetGrammarPoints()
 				n.des="'Now', shortened form of 지금";
 			break;
 			case 335:
-				rx.push(/-si-/);
-				rx.push(/-syeo/);
-				rx.push(/-se/);
-				n.point = "-(으)시-";
+				rx.push(/si-/);
+				rx.push(/syeo-/);
+				rx.push(/se-/);
+				rx.push(/si /);
+				rx.push(/syeo /);
+				rx.push(/se /);
+				n.point = "-(으)시-/(으)셔-/(으)세-";
 				n.des="Honorific";
 			break;
 			case 336:
@@ -7588,12 +7601,14 @@ function SetGrammarPoints()
 				n.des="Expresses wonder or surprise";
 			break;
 			case 375:
-				rx.push(/-la/);
+				rx.push(/la /);
+				rx.push(/la-/);
 				n.point = "A/V-아/어라";
 				n.des="Expresses a exclamation";
 			break;
 			case 376:
-				rx.push(/-la/);
+				rx.push(/la /);
+				rx.push(/la-/);
 				n.point = "N(이)라";
 				n.des="Shortened form of N(이)라서, 'therefore', 'because of'";
 			break;
@@ -7647,16 +7662,21 @@ function SetGrammarPoints()
 			break;
 			case 386:
 				rx.push(/seon /);
+				rx.push(/seon-/);
 				n.point = "-선";
 				n.des="Shortened form of -서는";
 			break;
 			case 387:
-				rx.push(/lyeo/);
+				rx.push(/lyeom /);
+				rx.push(/lyeom-/);
+				rx.push(/lyeo-mu /);
+				rx.push(/lyeo-mu-/);
 				n.point = "A/V-(으)렴, A/V-(으)려무나";
 				n.des="Imperative, typically spoken from an adult to a child";
 			break;
 			case 388:
-				rx.push(/-deun/);
+				rx.push(/deun-/);
+				rx.push(/deun /);
 				n.point = "N/A/V-든(가)";
 				n.des="'Regardless', 'no matter', indicates that any of the stated choices are fine";
 			break;
@@ -7682,6 +7702,26 @@ function SetGrammarPoints()
 				rx.push(/noass/);
 				n.point = "놨";
 				n.des="Shortened past-tense form of 놓다";
+			break;
+			case 393:
+				rx.push(/nae-ge /);
+				rx.push(/nae-ge-/);
+				n.point = "내게";
+				n.des="Shortened form of 나에게, 'to me'";
+			break;
+			case 394:
+				rx.push(/jil /);
+				rx.push(/jil-/);
+				n.point = "-질";
+				n.des="(The act of) doing";
+			break;
+			case 395:
+				rx.push(/n-da-myeon /);
+				rx.push(/la-myeon /);
+				rx.push(/n-da-myeon-/);
+				rx.push(/la-myeon-/);
+				n.point = "V-ㄴ/는다면, V-(이)라면";
+				n.des="'If V happens, then...'";
 			break;
 
 			
