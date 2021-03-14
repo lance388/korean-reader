@@ -7370,10 +7370,9 @@ function SetGrammarPoints()
 			break;
 			case 335:
 				rx.push(/si-/);
-				rx.push(/syeo-/);
+				rx.push(/syeo/);
 				rx.push(/se-/);
 				rx.push(/si /);
-				rx.push(/syeo /);
 				rx.push(/se /);
 				n.point = "-(으)시-/(으)셔-/(으)세-";
 				n.des="Honorific";
@@ -7584,8 +7583,8 @@ function SetGrammarPoints()
 				n.des="'Even if somebody is...'";
 			break;
 			case 372:
-				rx.push(/(?<!si|yeo-leu)m-(?!ma)/);
-				rx.push(/(?<!si|yeo-leu)m /);
+				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu)m-(?!ma)/);
+				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu)m /);
 				n.point = "A/V-ㅁ/음";
 				n.des="Noun form of a verb or adjective";
 			break;
