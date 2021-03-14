@@ -22,6 +22,16 @@ Author: Rohan Scott*/
 	--tabcontent-padding:1vh;
 }
 
+table
+{
+	cursor:pointer;
+}
+
+table:hover
+{
+	cursor:pointer;
+}
+
 mark{
 	cursor:pointer;
 }
