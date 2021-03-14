@@ -22,6 +22,10 @@ Author: Rohan Scott*/
 	--tabcontent-padding:1vh;
 }
 
+th{
+	color: var(--font-bg);
+}
+
 table
 {
 	cursor:pointer;
