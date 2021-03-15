@@ -7742,9 +7742,9 @@ function SetGrammarPoints()
 function GrammarLookup(word)
 {
 	//TODO also check the hangul for certain words that often give false positives, e.g. -에
-	var wordHangul = word.replace(replaceCharacters," ");
-	wordHangul = wordHangul.trim();
-	wordHangul = " "+wordHangul+" ";
+	//var wordHangul = word.replace(replaceCharacters," ");
+	//wordHangul = wordHangul.trim();
+	//wordHangul = " "+wordHangul+" ";
 
 	if(openedTab!="GrammarTab")
 	{
@@ -8686,12 +8686,12 @@ function SetUILanguage(lang) //TODO
 						<hr>
 						<br>
 						<small>
-						Note the results include some false positives, so please use your own discretion.
+						Note: the results include some false positives, so please use your own discretion.
 						</small>
 						<br><br>
 						<small>
 						The list of grammar rules has been collected from Korean Grammar in Use, https://www.howtostudykorean.com/, https://koreanwikiproject.com, and others.
-						The list is frequently updated. If you see a grammar rule that is missing, please send a message to me at <a href="mailto:readerwebsite@gmail.com?subject=Feedback%20for%20Korean%20Reader">readerwebsite@gmail.com</a>
+						The list is frequently updated. If you find a grammar rule that is missing, please send an email to <a href="mailto:readerwebsite@gmail.com?subject=Feedback%20for%20Korean%20Reader">readerwebsite@gmail.com</a>
 						</small>
 						<br><br>
 						
