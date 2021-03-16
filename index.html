@@ -6607,7 +6607,7 @@ function SetGrammarPoints()
 				n.des="Expresses that there is no use even to try to do a certain action";
 			break;
 			case 196:
-				rx.push(/da-myeon/);
+				rx.push(/da-myeon(?!-seo)/);
 				n.point = "A/V-(느)ㄴ다면";
 				n.des="Used to refer to a hypothetical situation";
 			break;
@@ -7124,7 +7124,8 @@ function SetGrammarPoints()
 				n.des="Indicates a situation or action in the following clause that is contrary or opposite to the one stated in the preceding clause";
 			break;
 			case 291:
-				rx.push(/-myeo/);
+				rx.push(/-myeo /);
+				rx.push(/-myeo-/);
 				n.point = "A/V-(으)며";
 				n.des="Used for listing multiple actions or states in equal terms";
 			break;
