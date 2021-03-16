@@ -730,7 +730,7 @@ This software uses the following plugins, please take note of their individual l
 							table15
 				.on( 'select', function ( e, dt, type, indexes ) {
 					var rowData = table15.rows( indexes ).data().toArray();
-					table15.rows( { selected: true } ).deselect();
+					table15.rows( { selected: true } );
 					selectedWord = rowData[0][1];
 					selectedIndex = indexes[0];
 					JumpToSentence(rowData[0][1]);
