@@ -4330,6 +4330,17 @@ This software uses the following plugins, please take note of their individual l
 						addwordtodb("bgColourField$",colourBackground);
 					}
 				}
+				
+				if(document.getElementById("enableHighlightingKnown").checked)
+			{
+				SetHighlightingKnown(true, true);
+				
+						
+			}
+			else
+			{
+				SetHighlightingKnown(false, true);
+			}
 	}
 	
 		function HC6Submit()
@@ -5208,7 +5219,6 @@ function HC3OnInput()
 		if(ValidateColour(tertiaryField.value))
 		{
 			tertiaryField.style.backgroundColor=tertiaryField.value;
-			InitialiseColourInputField();
 		}
 }
 
@@ -5218,6 +5228,33 @@ function HC4OnInput()
 		if(ValidateColour(jumpField.value))
 		{
 			jumpField.style.backgroundColor=jumpField.value;
+		}
+}
+
+function HC5OnInput()
+{
+	var bgField = document.getElementById("fieldHC5");
+		if(ValidateColour(bgField.value))
+		{
+			bgField.style.backgroundColor=bgField.value;
+		}
+}
+
+function HC6OnInput()
+{
+	var fontColourField = document.getElementById("fieldHC6");
+		if(ValidateColour(fontColourField.value))
+		{
+			fontColourField.style.backgroundColor=fontColourField.value;
+		}
+}
+
+function HC7OnInput()
+{
+	var borderColourField = document.getElementById("fieldHC7");
+		if(ValidateColour(borderColourField.value))
+		{
+			borderColourField.style.backgroundColor=borderColourField.value;
 		}
 }
 
