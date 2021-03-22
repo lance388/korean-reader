@@ -3253,9 +3253,9 @@ This software uses the following plugins, please take note of their individual l
 		var percentUniqueLearning = Math.round(((learningArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 		var percentUniqueKnown = Math.round(((knownArray.length/allArray.length)*100 + Number.EPSILON) * 100) / 100;
 	
-		document.getElementById("UnknownWordsTabButton").innerHTML="Unknown Words ("+percentUnknown+"%) <sup>[4]</sup>";
-		document.getElementById("LearningWordsTabButton").innerHTML="Learning Words ("+percentLearning+"%) <sup>[5]</sup>";
-		document.getElementById("KnownWordsTabButton").innerHTML="Known Words ("+percentKnown+"%) <sup>[6]</sup>";
+		document.getElementById("UnknownWordsTabButton").innerHTML="Unknown Words ("+percentUnknown+"%) <"+percentUniqueUnknown+"%> <sup>[4]</sup>";
+		document.getElementById("LearningWordsTabButton").innerHTML="Learning Words ("+percentLearning+"%) <"+percentUniqueLearning+"%> <sup>[5]</sup>";
+		document.getElementById("KnownWordsTabButton").innerHTML="Known Words ("+percentKnown+"%) <"+percentUniqueKnown+"%> <sup>[6]</sup>";
 		
 		if((lastUsedStatsTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate)||(openedTab=="UnknownWordsTab"&&!unknownWordsTabUpToDate))
 		{
