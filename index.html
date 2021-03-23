@@ -8464,7 +8464,7 @@ function CreateSentences()
 	var oldHTML = pasteArea.innerText;
 	var replace = /[\n\.\!\?\。\！\?]/g;
 	var split = oldHTML.replace(replace,'<br>');
-	var count=1;
+	var count=0;
 	var difficultyTotal=0;
 	var wordsTotal=0;
 	var sentenceUnknownWords = [];
@@ -8517,11 +8517,12 @@ function CreateSentences()
 			}
 			else
 			{
+				count++;
 				t.row.add( [
 					count,text,wordsInSentence,difficulty,ratio
 				] );
 				
-				count++;
+				
 				difficultyTotal+=difficulty;
 				wordsTotal+=wordsInSentence;
 			}
