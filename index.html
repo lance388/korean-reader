@@ -8465,6 +8465,7 @@ function CreateSentences()
 	var replace = /[\n\.\!\?\。\！\?]/g;
 	var split = oldHTML.replace(replace,'<br>');
 	var count=0;
+	var c=0;
 	var difficultyTotal=0;
 	var wordsTotal=0;
 	var sentenceUnknownWords = [];
@@ -8513,11 +8514,14 @@ function CreateSentences()
 			
 			if(hideKnownSentences && difficulty==0)
 			{
-			
+				c++;
+				difficultyTotal+=difficulty;
+				wordsTotal+=wordsInSentence;
 			}
 			else
 			{
 				count++;
+				c++;
 				t.row.add( [
 					count,text,wordsInSentence,difficulty,ratio
 				] );
@@ -8531,7 +8535,8 @@ function CreateSentences()
 	t.draw();
 	
 	var unknownLearningRatio = difficultyTotal/wordsTotal;
-	var meanWords = Math.round((wordsTotal/count) * 100) / 100;
+	
+	var meanWords = Math.round((wordsTotal/c) * 100) / 100;
 	var meanUnknownLearningWords = Math.round((meanWords*unknownLearningRatio) * 100) / 100;
 	var meanKnownWords = Math.round((meanWords-meanUnknownLearningWords) * 100) / 100;
 	var sentencePerUnknownLearningWord = Math.round((1/meanUnknownLearningWords) * 100) / 100;
