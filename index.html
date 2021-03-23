@@ -7242,8 +7242,10 @@ function SetGrammarPoints()
 				n.des="'-ing', turns a verb into a noun clause";
 			break;
 			case 304:
-				rx.push(/n ge/);
-				rx.push(/n-ge/);
+				rx.push(/n ge /);
+				rx.push(/n-ge /);
+				rx.push(/n ge-/);
+				rx.push(/n-ge-/);
 				n.point = "V-는 게";
 				n.des="Shortened form of -는 것이, '-ing', turns a verb into a noun clause";
 			break;
@@ -7254,8 +7256,10 @@ function SetGrammarPoints()
 				n.des="Shortened form of -는 것을, '-ing', turns a verb into a noun clause";
 			break;
 			case 306:
-				rx.push(/n geo/);
-				rx.push(/n-geo/);
+				rx.push(/n geo /);
+				rx.push(/n-geo /);
+				rx.push(/n geo-/);
+				rx.push(/n-geo-/);
 				n.point = "V-는 거";
 				n.des="Shortened form of -는 것, -는 것이, or -는 것을, '-ing', turns a verb into a noun clause";
 			break;
@@ -7680,7 +7684,7 @@ function SetGrammarPoints()
 				rx.push(/(?<!g|b|l|s|-o| o)s-/);
 				rx.push(/(?<!g|b|l|s|-o| o)s /);
 				n.point = "-ㅅ";
-				n.des="In a compound word made up of two individual words, -ㅅ is added to the first word if that word ends in a batchim";
+				n.des="In a compound word made up of two individual words, -ㅅ is added to the first word if that word does not end in a batchim";
 			break;
 			case 383:
 				rx.push(/noh /);
