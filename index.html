@@ -8465,6 +8465,8 @@ function CreateSentences()
 	var replace = /[\n\.\!\?\。\！\?]/g;
 	var split = oldHTML.replace(replace,'<br>');
 	var count=1;
+	var difficultyTotal=0;
+	var wordsTotal=0;
 	var sentenceUnknownWords = [];
 	var sentenceLearningWords = [];
 	var optionsPrimary = {
@@ -8520,10 +8522,21 @@ function CreateSentences()
 				] );
 				
 				count++;
+				difficultyTotal+=difficulty;
+				wordsTotal+=wordsInSentence;
 			}
 		}
 	}
 	t.draw();
+	
+	var unknownLearningRatio = difficultyTotal/wordsTotal;
+	var meanWords = Math.round((wordsTotal/count) * 100) / 100;
+	var meanUnknownLearningWords = Math.round((meanWords*unknownLearningRatio) * 100) / 100;
+	var meanKnownWords = Math.round((meanWords-meanUnknownLearningWords) * 100) / 100;
+	var sentencePerUnknownLearningWord = Math.round((1/meanUnknownLearningWords) * 100) / 100;
+	
+	
+	document.getElementById("unknownPerSentenceText").innerText="The mean sentence length in the current text is "+meanWords+" words. In the average sentence, there are "+meanUnknownLearningWords+" unknown/learning words and "+meanKnownWords+" known words. There is an average of 1 unknown/learning word every "+sentencePerUnknownLearningWord+" sentence(s).";
 }
 
 function toggleHideKnownSentences()
@@ -8948,7 +8961,8 @@ function SetUILanguage(lang) //TODO
 						<input checked type="checkbox" id="hideKnownSentences" name="hideKnownSentences" checked onclick="toggleHideKnownSentences();">
 						<label for="hideKnownSentences">Hide sentences that are fully known</label>
 						<br><br>
-						
+						<div id="unknownPerSentenceText"></div>
+						<br><br>
 						<table id="sentencesDataTable" class="SentenceTable cell-border compact hover" width="100%"></table>
 						<br>
 						<small>n: number of words in the sentence.</small><br>
