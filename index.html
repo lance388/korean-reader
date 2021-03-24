@@ -5439,7 +5439,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=396;
+	var numGrammar=397;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7763,6 +7763,14 @@ function SetGrammarPoints()
 				rx.push(/la-myeon-/);
 				n.point = "V-ㄴ/는다면, V-(이)라면";
 				n.des="'If V happens, then...'";
+			break;
+			case 396:
+				rx.push(/n-da-myeon /);
+				rx.push(/la-myeon /);
+				rx.push(/n-da-myeon-/);
+				rx.push(/la-myeon-/);
+				n.point = "V-(으)ㄹ수록";
+				n.des="'The more...', as one situation changes, another situation changes";
 			break;
 
 			
