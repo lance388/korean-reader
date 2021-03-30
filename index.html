@@ -5439,7 +5439,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=397;
+	var numGrammar=399;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6640,7 +6640,8 @@ function SetGrammarPoints()
 				n.des="Refers to an unplanned action or event that continued until it was complete and thoroughly finished";
 			break;
 			case 195:
-				rx.push(/boass-ja/);
+				rx.push(/boass-ja /);
+				rx.push(/boass-ja-/);
 				n.point = "A/V-아/어 봤자";
 				n.des="Expresses that there is no use even to try to do a certain action";
 			break;
@@ -7626,8 +7627,8 @@ function SetGrammarPoints()
 				n.des="'Even if somebody is...'";
 			break;
 			case 372:
-				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu)m-(?!ma)/);
-				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu)m /);
+				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu|lyeo)m-(?!ma)/);
+				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu|lyeo)m /);
 				n.point = "A/V-ㅁ/음";
 				n.des="Noun form of a verb or adjective";
 			break;
@@ -7771,6 +7772,17 @@ function SetGrammarPoints()
 				rx.push(/la-myeon-/);
 				n.point = "V-(으)ㄹ수록";
 				n.des="'The more...', as one situation changes, another situation changes";
+			break;
+			case 397:
+				rx.push(/dab-ni-da/);
+				n.point = "-답니다";
+				n.des="Shortened form of -다고 합니다, indirect quotation";
+			break;
+			case 398:
+				rx.push(/jjae /);
+				rx.push(/jjae-/);
+				n.point = "-째";
+				n.des="'During'";
 			break;
 
 			
