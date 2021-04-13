@@ -5439,7 +5439,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=402;
+	var numGrammar=403;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6176,7 +6176,7 @@ function SetGrammarPoints()
 				n.des="Expresses an unexpected state of affairs";
 			break;
 			case 117:
-				rx.push(/da /);
+				rx.push(/(?<!ni-)da /);
 				rx.push(/ss-da /);
 				rx.push(/n-da /);
 				rx.push(/l geos/);
@@ -7265,7 +7265,7 @@ function SetGrammarPoints()
 				n.des="Shortened form of -는 것, -는 것이, or -는 것을, '-ing', turns a verb into a noun clause";
 			break;
 			case 307:
-				rx.push(/(?<!myeon-)seo/);
+				rx.push(/(?<!myeon-)seo /);
 				n.point = "N서";
 				n.des="Shortened form of 에서, particle denoting location, 'from...'";
 			break;
@@ -7802,6 +7802,11 @@ function SetGrammarPoints()
 				rx.push(/la-nyo/);
 				n.point = "N(이)라니(요)/N(이)라뇨";
 				n.des="Expresses that something is ridiculous or unbelievable";
+			break;
+			case 402:
+				rx.push(/jjog/);
+				n.point = "N쪽";
+				n.des="Particle denoting side or direction";
 			break;
 
 			
