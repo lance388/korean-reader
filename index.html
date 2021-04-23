@@ -5439,7 +5439,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=405;
+	var numGrammar=406;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7831,6 +7831,11 @@ function SetGrammarPoints()
 				rx.push(/jeog/);
 				n.point = "-적";
 				n.des="'的', used with certain Sino-Korean words to indicate possession";
+			break;
+			case 405:
+				rx.push(/ga-lyang/);
+				n.point = "-가량";
+				n.des="'About'";
 			break;
 
 			
