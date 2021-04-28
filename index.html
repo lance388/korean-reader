@@ -5439,7 +5439,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=406;
+	var numGrammar=407;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7836,6 +7836,11 @@ function SetGrammarPoints()
 				rx.push(/ga-lyang/);
 				n.point = "-가량";
 				n.des="'About'";
+			break;
+			case 406:
+				rx.push(/da-man/);
+				n.point = "다만";
+				n.des="'Only', 'merely', 'just'";
 			break;
 
 			
