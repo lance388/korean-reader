@@ -3418,6 +3418,10 @@ This software uses the following plugins, please take note of their individual l
 						}, 10000);
 		}
 		
+		console.log("***");
+		console.log(unknownFireDBDocumentLoaded);
+		console.log(learningFireDBDocumentLoaded);
+		console.log(knownFireDBDocumentLoaded);
 		if(unknownFireDBDocumentLoaded!=false&&learningFireDBDocumentLoaded!=false&&knownFireDBDocumentLoaded!=false)
 		{
 			if(saveFireDBTimeout)
@@ -4859,17 +4863,14 @@ function InitialiseStartingMark()
 			alert("Unable to retrieve data from database!");
 		};
 					
-				//console.log("here1");
 				request.onsuccess = function(event) {
 				if(request.result) {
-				//console.log("here2 "+a);
 						var a = request.result.appearances;
 											
 						startingMark = a;
 					}
 					else
 					{
-						//console.log("here3");
 						addwordtodb("startingmark$",startingMarkDefault);
 						startingMark = startingMarkDefault;
 					}
@@ -5416,9 +5417,6 @@ function PopulateGrammarTab()
 	var tt = $('#grammarDataTable1').DataTable();
 	tt.clear();
 	GrammarLookup(pendingLookup);
-//	tt.row.add( [
-//		"here1","here2","here3"
-//	] );	
 	
 	var t = $('#grammarDataTable2').DataTable();
 	t.clear();
@@ -8370,7 +8368,6 @@ function LoadAccountData(uid)
 	
 	if(user)
 	{
-		console.log("here3");
 		LogUser(user);
 	
 		ShowSigninElements(false);
@@ -8378,9 +8375,8 @@ function LoadAccountData(uid)
 		.get()
 		.then(function(querySnapshot) {
 			querySnapshot.forEach(function(doc) {
-				console.log("here4");
-				console.log(doc.id, " => ", doc.data());
-				console.log(doc.id, " => ", doc.data().words);
+				//console.log(doc.id, " => ", doc.data());
+				//console.log(doc.id, " => ", doc.data().words);
 				ImportVocabularyFromFireDB(doc.data().words,"known");
 				
 			});
