@@ -8312,6 +8312,7 @@ function SaveFireDB()
             //console.log(doc.id, " => ", doc.data());
 			//console.log(doc.id, " => ", doc.data().words);
 			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid,doc.id);
+			console.log("here1");
 			
         });
 		if(querySnapshot.empty)
@@ -8359,6 +8360,7 @@ function SaveFireDB()
 			console.log("Error getting documents: ", error);
 		});
 	}
+	console.log("here2");
 }
 
 function LoadAccountData(uid)
@@ -8368,6 +8370,7 @@ function LoadAccountData(uid)
 	
 	if(user)
 	{
+		console.log("here3");
 		LogUser(user);
 	
 		ShowSigninElements(false);
@@ -8375,8 +8378,9 @@ function LoadAccountData(uid)
 		.get()
 		.then(function(querySnapshot) {
 			querySnapshot.forEach(function(doc) {
-				//console.log(doc.id, " => ", doc.data());
-				//console.log(doc.id, " => ", doc.data().words);
+				console.log("here4");
+				console.log(doc.id, " => ", doc.data());
+				console.log(doc.id, " => ", doc.data().words);
 				ImportVocabularyFromFireDB(doc.data().words,"known");
 				
 			});
