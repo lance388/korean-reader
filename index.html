@@ -8281,12 +8281,7 @@ function ImportVocabularyFromFireDB(words,s)
 			case "known": state = 2; break;
 		}
 		
-				switch(s)
-		{
-			case "unknown": unknownFireDBDocumentLoaded=true; break;
-			case "learning": learningFireDBDocumentLoaded=true; break;
-			case "known": knownFireDBDocumentLoaded=true; break;
-		}
+		
 		
 		QuickImport(words,state);
 
@@ -8295,6 +8290,13 @@ function ImportVocabularyFromFireDB(words,s)
 		//	OnInput();
 		//}
 	}
+	
+			switch(s)
+		{
+			case "unknown": unknownFireDBDocumentLoaded=true; break;
+			case "learning": learningFireDBDocumentLoaded=true; break;
+			case "known": knownFireDBDocumentLoaded=true; break;
+		}
 }
 
 function SaveFireDB()
