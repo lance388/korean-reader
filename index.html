@@ -8243,6 +8243,8 @@ function LogUser(user)
 
 function CreateDocument(collection,_type,lang,uid,w)
 {
+	console.log("creating document "+_type);
+
 	dbfire.collection(collection).add({
 		words: w,
 		language: lang,
