@@ -8269,6 +8269,8 @@ function CreateDocument(collection,_type,lang,uid,w)
 
 function ImportVocabularyFromFireDB(words,s)
 {
+	console.log("Importing vocab from DB "+s);
+
 	if(words.length>0)
 	{
 		var state = 0;
