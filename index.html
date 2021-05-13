@@ -1,6 +1,6 @@
 <!-- Version 02052020
 Website: http://koreanreader.com
-Copyright © 2020 Rohan Scott
+Copyright © 2020-2021 Rohan Scott
 This source file is free software, available under the following license:
 MIT license - https://mit-license.org/
 This software uses the following plugins, please take note of their individual licenses when redistributing:
@@ -5437,7 +5437,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=407;
+	var numGrammar=408;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7840,7 +7840,11 @@ function SetGrammarPoints()
 				n.point = "다만";
 				n.des="'Only', 'merely', 'just'";
 			break;
-
+			case 407:
+				rx.push(/bal/);
+				n.point = "-발";
+				n.des="Indicates an origin/source";
+			break;
 			
 			
 			
