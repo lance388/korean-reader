@@ -165,6 +165,7 @@ This software uses the following plugins, please take note of their individual l
 		var selectedWord="";
 		var myChart;
 		var myChart3;
+		var chart_hsk_vs_text;
 		var global_total_words;
 		var timeCalculateStatisticsBegin;
 		var timeCalculateStatisticsEnd;
@@ -1432,10 +1433,36 @@ This software uses the following plugins, please take note of their individual l
 		
 		
 		
-		function CreateGraph3(data,data2)
+		function CreateGraph3(data)
 		{
 		
 			DestroyCharts();
+			
+			var HSK1Array = [];
+			var HSK2Array = [];
+			var HSKOtherArray = [];
+			
+			var HSK1ArrayCount = 0;
+			var HSK2ArrayCount = 0;
+			var HSKOtherArrayCount = 0;
+			
+			
+			var data2 = [];
+				for(var i=0;i<data.length;i++)
+				{
+					if(data[i].topik!="")
+					{
+						data2.push(data[i]);
+					}
+					
+					switch(data[i].topik)
+						{
+							case "TOPIK I": HSK1Array.push(data[i]); HSK1ArrayCount+=data[i].occurances; break;
+							case "TOPIK II": HSK2Array.push(data[i]); HSK2ArrayCount+=data[i].occurances; break;
+							default:HSKOtherArray.push(data[i]); HSKOtherArrayCount+=data[i].occurances; break;
+						}
+				}
+		
 			
 			data.sort(sort_by('occurances', true, parseInt));
 			data2.sort(sort_by('occurances', true, parseInt));
@@ -1534,6 +1561,69 @@ This software uses the following plugins, please take note of their individual l
 			tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
 		};
 			
+			
+			var ctx2 = document.getElementById("chart_hsk_vs_text").getContext('2d');
+			
+			chart_hsk_vs_text = new Chart(ctx2, {
+			  type: 'bar',
+			  data: {
+				labels: ["TOPIK I", "TOPIK II", "OTHER"],
+				datasets: [{
+				  //label: '',
+				  
+				  
+				  data: [Math.round(((HSK1ArrayCount/total)*100 + Number.EPSILON) * 100) / 100, Math.round(((HSK2ArrayCount/total)*100 + Number.EPSILON) * 100) / 100, Math.round(((HSKOtherArrayCount/total)*100 + Number.EPSILON) * 100) / 100],
+				  backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)'
+				  ],
+				  borderColor: [
+					'rgba(255,99,132,1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)'
+				  ],
+				  borderWidth: 1
+				}]
+			  },
+			  options: {
+				responsive: true,
+				legend: {
+					display: false
+				  },
+				scales: {
+				  xAxes: [{
+					ticks: {
+					  maxRotation: 90,
+					  minRotation: 80
+					},
+					  gridLines: {
+					  offsetGridLines: true
+					}
+				  },
+				  {
+					position: "top",
+					ticks: {
+					  maxRotation: 90,
+					  minRotation: 80
+					},
+					gridLines: {
+					  offsetGridLines: true
+					}
+				  }],
+				  yAxes: [{
+				  display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Percent of Current Text'
+						},
+					ticks: {
+					  beginAtZero: true
+					}
+				  }]
+				}
+			  }
+			});
 			
 			var ctx = document.getElementById('myChart3').getContext('2d');
 			myChart3 = new Chart(ctx, {
@@ -7922,8 +8012,10 @@ function SwapChart()
 	
 	myChart = document.getElementById("myChart");
 	myChart3 = document.getElementById("myChart3");
+	chart_hsk_vs_text = document.getElementById("chart_hsk_vs_text");
 	myChart.style.display = "none";
 	myChart3.style.display = "none";
+	chart_hsk_vs_text.style.display = "none";
 
 	switch(chartFilter)
 			{
@@ -7931,17 +8023,9 @@ function SwapChart()
 				myChart.style.display = "block";
 				CreateGraph(allArray,knownArray); break;
 				case "chart3":
-				var hskKnownArray = [];
-				for(var i=0;i<allArray.length;i++)
-				{
-					//console.log("<"+allArray[i].topik+">");
-					if(allArray[i].topik!="")
-					{
-						hskKnownArray.push(allArray[i]);
-					}
-				}
 				myChart3.style.display = "block";
-				CreateGraph3(allArray,hskKnownArray); break;
+				chart_hsk_vs_text.style.display="block";
+				CreateGraph3(allArray); break;
 			}
 }
 
@@ -9028,6 +9112,7 @@ function SetUILanguage(lang) //TODO
 					<div id="GraphTab" class="tabcontent">
 						<canvas id="myChart" width="100%" height="100%"></canvas>
 						<canvas id="myChart3" width="100%" height="100%"></canvas>
+						<canvas id="chart_hsk_vs_text" width="100%" height="100%"></canvas>
 						<br>
 						<select id="chartOption" onchange="ChangeChart();">
 								<option value="chart1" selected="selected">Cumulative words in current text vs known words</option>
