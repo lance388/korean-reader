@@ -1273,14 +1273,7 @@ This software uses the following plugins, please take note of their individual l
 		
 		function CreateGraph(data,data2)
 		{
-						if(myChart)
-			{
-				myChart.destroy();
-			}
-			if(myChart3)
-			{
-				myChart3.destroy();
-			}
+			DestroyCharts();
 			
 			
 			
@@ -1442,14 +1435,8 @@ This software uses the following plugins, please take note of their individual l
 		function CreateGraph3(data,data2)
 		{
 		
-			if(myChart)
-			{
-				myChart.destroy();
-			}
-			if(myChart3)
-			{
-				myChart3.destroy();
-			}
+			DestroyCharts();
+			
 			data.sort(sort_by('occurances', true, parseInt));
 			data2.sort(sort_by('occurances', true, parseInt));
 			var accumulativeWords = [];
@@ -2678,10 +2665,7 @@ This software uses the following plugins, please take note of their individual l
 				var t6 = $('#compareDataTable').DataTable();
 				t6.clear().draw();
 						
-				if(myChart)
-				{
-					myChart.destroy();
-				}
+				DestroyCharts();
 				
 			document.getElementById("UnknownWordsTabButton").innerHTML='Unknown Words <sup>[4]</sup>';
 			document.getElementById("LearningWordsTabButton").innerHTML="Learning Words <sup>[5]</sup>";
@@ -7934,17 +7918,10 @@ function ChangeChart()
 
 function SwapChart()
 {
-	if(myChart)
-	{
-		myChart.destroy();
-	}
-	if(myChart3)
-	{
-		myChart3.destroy();
-	}
+	DestroyCharts();
 	
-	var  myChart = document.getElementById("myChart");
-	var  myChart3 = document.getElementById("myChart3");
+	myChart = document.getElementById("myChart");
+	myChart3 = document.getElementById("myChart3");
 	myChart.style.display = "none";
 	myChart3.style.display = "none";
 
@@ -8322,7 +8299,6 @@ function SaveFireDB()
             //console.log(doc.id, " => ", doc.data());
 			//console.log(doc.id, " => ", doc.data().words);
 			CalculateVocabularyAndCreateDocument("vocabulary","known",lang,user.uid,doc.id);
-			console.log("here1");
 			
         });
 		if(querySnapshot.empty)
@@ -8371,6 +8347,21 @@ function SaveFireDB()
 		});
 	}
 	console.log("here2");
+}
+
+
+function DestroyCharts()
+{
+
+	if(myChart instanceof Chart)
+	{
+		myChart.destroy();
+	}
+	if(myChart3 instanceof Chart)
+	{
+		myChart3.destroy();
+	}
+	
 }
 
 function LoadAccountData(uid)
@@ -9039,8 +9030,8 @@ function SetUILanguage(lang) //TODO
 						<canvas id="myChart3" width="100%" height="100%"></canvas>
 						<br>
 						<select id="chartOption" onchange="ChangeChart();">
-								<option value="chart1" selected="selected">Cumulative words in current text + known words</option>
-								<option value="chart3">Cumulative words in current text + words from TOPIK I and TOPIK II</option>
+								<option value="chart1" selected="selected">Cumulative words in current text vs known words</option>
+								<option value="chart3">Cumulative words in current text vs words from TOPIK I and TOPIK II</option>
 							</select>
 					</div>
 					
