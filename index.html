@@ -5511,7 +5511,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=410;
+	var numGrammar=413;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5806,7 +5806,7 @@ function SetGrammarPoints()
 			case 46:
 				rx.push(/ja-ma-ja/);
 				n.point = "V-자마자";
-				n.des="'As soon as', 'right after'";
+				n.des="'As soon as', 'right after', indicates that an action occurs after another action finishes";
 			break;
 			case 47:
 				rx.push(/dong-an/);
@@ -7928,6 +7928,24 @@ function SetGrammarPoints()
 				rx.push(/nyang/);
 				n.point = "-냥";
 				n.des="'Meow', used as a sentence ender to sound cute";
+			break;
+			case 410:
+				rx.push(/seon /);
+				rx.push(/seon-/);
+				n.point = "-선까지";
+				n.des="'The degree to which'";
+			break;
+			case 411:
+				rx.push(/ja-/);
+				rx.push(/ja /);
+				n.point = "V-자";
+				n.des="'As soon as', 'right after', same meaning as '자마자', indicates that an action occurs after another action finishes";
+			break;
+			case 412:
+				rx.push(/ja-/);
+				rx.push(/ja /);
+				n.point = "-자";
+				n.des="'And'";
 			break;
 			
 			
