@@ -5511,7 +5511,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=408;
+	var numGrammar=410;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7919,6 +7919,16 @@ function SetGrammarPoints()
 				n.point = "-발";
 				n.des="Indicates an origin/source";
 			break;
+			case 408:
+				rx.push(/geu-li-ha-yeo/);
+				n.point = "그리하여";
+				n.des="'So', 'therefore'";
+			break;
+			case 409:
+				rx.push(/nyang/);
+				n.point = "-냥";
+				n.des="'Meow', used as a sentence ender to sound cute";
+			break;
 			
 			
 			
@@ -8891,7 +8901,7 @@ function SetUILanguage(lang) //TODO
 					</div>
 					<div class="tab3">
 						<button id="CompareTabButton" class="tablinks"onclick="openTab(event, 'CompareTab','tablinks')">TOPIK <sup>[9]</sup></button>
-						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Graph <sup>[0]</sup></button>
+						<button id="GraphTabButton" class="tablinks" onclick="openTab(event, 'GraphTab','tablinks')">Analysis <sup>[0]</sup></button>
 						<button id="AchievementsTabButton" class="tablinks" onclick="openTab(event, 'AchievementsTab','tablinks')">Achievements <sup>[-]</sup></button>
 						<button id="SentencesTabButton" class="tablinks" onclick="openTab(event, 'SentencesTab','tablinks')">Sentences <sup>[s]</sup></button>
 					</div>
