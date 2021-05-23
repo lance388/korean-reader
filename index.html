@@ -8362,6 +8362,30 @@ function CreateDocument(collection,_type,lang,uid,w)
 
 function ImportVocabularyFromFireDB(words,s)
 {
+	if(s=="unknown")
+	{
+		if(unknownFireDBDocumentLoaded)
+		{
+			return;
+		}
+	}
+	
+	if(s=="learning")
+	{
+		if(learningFireDBDocumentLoaded)
+		{
+			return;
+		}
+	}
+	
+	if(s=="known")
+	{
+		if(knownFireDBDocumentLoaded)
+		{
+			return;
+		}
+	}
+
 	console.log("Importing vocab from DB "+s);
 
 	if(words.length>0)
