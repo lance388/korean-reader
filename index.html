@@ -5519,19 +5519,19 @@ function SetGrammarPoints()
 		{
 			
 			case 0:
-				rx.push(/-kke-seo/);
+				rx.push(/-kke-seo(?!-neun)/);
 				n.point = "N께서";
 				n.des="Subject marking particle, honorific form of 이/가";
 			break;
 			
 			case 1:
-				rx.push(/-kke-seo-neun/);
+				rx.push(/kke-seo-neun/);
 				n.point = "N께서는";
 				n.des="Topic marking particle, honorific form of 은/는";
 			break;
 			
 			case 2:
-				rx.push(/-kke/);
+				rx.push(/kke(?!-seo)/);
 				n.point = "N께";
 				n.des="Particle denoting a recipient, honorific form of 에게(한테)";
 			break;
@@ -5694,7 +5694,7 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'or'";
 			break;
 			case 28:
-				rx.push(/-jjeum/);
+				rx.push(/jjeum/);
 				n.point = "N쯤";
 				n.des="Particle denoting approximation";
 			break;
@@ -7704,8 +7704,8 @@ function SetGrammarPoints()
 				n.des="'Even if somebody is...'";
 			break;
 			case 372:
-				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu|lyeo)m-(?!ma)/);
-				rx.push(/(?<!si|yeo-leu|ma-eu|i-leu|lyeo)m /);
+				rx.push(/(?<!si|yeo-leu|jjeu|ma-eu|i-leu|lyeo)m-(?!ma)/);
+				rx.push(/(?<!si|yeo-leu|jjeu|ma-eu|i-leu|lyeo)m /);
 				n.point = "A/V-ㅁ/음";
 				n.des="Noun form of a verb or adjective";
 			break;
