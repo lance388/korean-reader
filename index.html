@@ -5507,7 +5507,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=413;
+	var numGrammar=418;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7956,6 +7956,40 @@ function SetGrammarPoints()
 				rx.push(/ja /);
 				n.point = "-자";
 				n.des="'And'";
+			break;
+			case 413:
+				rx.push(/geu-leo-neun-de-/);
+				rx.push(/geu-leo-neun-de /);
+				n.point = "그러는데";
+				n.des="'According to...'";
+			break;
+			case 414:
+				rx.push(/geu-leon-de-/);
+				rx.push(/geu-leon-de /);
+				n.point = "그런데";
+				n.des="'By the way'";
+			break;
+			case 415:
+				rx.push(/ i-tta /);
+				rx.push(/ i-tta-/);
+				rx.push(/-i-tta /);
+				rx.push(/-i-tta-/);
+				n.point = "이따(가)";
+				n.des="'By the way'";
+			break;
+			case 416:
+				rx.push(/ i-tta /);
+				rx.push(/ i-tta-/);
+				rx.push(/-i-tta /);
+				rx.push(/-i-tta-/);
+				n.point = "갔다 오다";
+				n.des="'Went and came back', shortened form of 갔다가 오다, with 다가 representing an interruption of an action to immediately start doing another";
+			break;
+			case 417:
+				rx.push(/kka-jin/);
+				rx.push(/kka-ji-neun/);
+				n.point = "-까진/-까지는";
+				n.des="'Until', often used in negative sentences with 안 or 없 to add emphasise, e.g. '미안해할 거까진 없어' 'you don't need to be sorry'";
 			break;
 			
 			
