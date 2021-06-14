@@ -5519,7 +5519,7 @@ function SetGrammarPoints()
 		{
 			
 			case 0:
-				rx.push(/-kke-seo(?!-neun)/);
+				rx.push(/kke-seo(?!-neun)/);
 				n.point = "N께서";
 				n.des="Subject marking particle, honorific form of 이/가";
 			break;
@@ -5544,8 +5544,9 @@ function SetGrammarPoints()
 			break;
 			
 			case 4:
-				rx.push(/-yo /);
-				rx.push(/-yong /);
+				rx.push(/yo /);
+				rx.push(/yo-/);
+				rx.push(/yong/);
 				n.point = "A/V-아/어요";
 				n.des="Informal polite style";
 			break;
@@ -5588,13 +5589,18 @@ function SetGrammarPoints()
 			break;
 			case 10:
 				rx.push(/-i /);
-				rx.push(/-ga /);
+				rx.push(/ga /);
+				rx.push(/ i /);
+				rx.push(/-i-/);
+				rx.push(/ i-/);
+				rx.push(/ga-/);
 				n.point = "N이/가";
 				n.des="Subject marking particle";
 			break;
 			case 11:
-				rx.push(/-eun /);
-				rx.push(/-neun /);
+				rx.push(/-eun/);
+				rx.push(/ eun/);
+				rx.push(/neun/);
 				n.point = "N은/는";
 				n.des="Topic marking particle";
 			break;
@@ -5650,46 +5656,52 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'until'";
 			break;
 			case 20:
-				rx.push(/-bu-teo/);
+				rx.push(/bu-teo/);
 				n.point = "N부터";
 				n.des="Particle denoting 'from...'";
 			break;
 			case 21:
 				rx.push(/-e-ge /);
 				rx.push(/-e-gen /);
+				rx.push(/ e-ge /);
+				rx.push(/ e-gen /);
 				n.point = "N에게";
 				n.des="Particle denoting a recipient";
 			break;
 			case 22:
-				rx.push(/-han-te/);
+				rx.push(/han-te/);
 				n.point = "N한테";
 				n.des="to someone, from someone";
 			break;
 			case 23:
-				rx.push(/-do-/);
-				rx.push(/-du-/);
-				rx.push(/-do /);
-				rx.push(/-du /);
+				rx.push(/do-(?!log)/);
+				rx.push(/du-(?!log)/);
+				rx.push(/do /);
+				rx.push(/du /);
 				n.point = "N도, N도(요)";
 				n.des="'Also', particle denoting the listing of something";
 			break;
 			case 24:
-				rx.push(/-man/);
+				rx.push(/man /);
+				rx.push(/man-/);
 				n.point = "N만";
 				n.des="Particle denoting 'only'";
 			break;
 			case 25:
-				rx.push(/-bakk-e/);
+				rx.push(/bakk-e /);
+				rx.push(/bakk-e-/);
 				n.point = "N밖에";
 				n.des="Particle denoting 'nothing but'";
 			break;
 			case 26:
-				rx.push(/-lo/);
+				rx.push(/lo-/);
+				rx.push(/lo /);
 				n.point = "N(으)로";
 				n.des="Particle denoting direction/method/way/means";
 			break;
 			case 27:
-				rx.push(/-na /);
+				rx.push(/na /);
+				rx.push(/na-/);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'or'";
 			break;
@@ -5699,39 +5711,39 @@ function SetGrammarPoints()
 				n.des="Particle denoting approximation";
 			break;
 			case 29:
-				rx.push(/-cheo-leom/);
+				rx.push(/cheo-leom/);
 				n.point = "N처럼";
 				n.des="Particle denoting similarity";
 			break;
 			case 30:
-				rx.push(/-gat-i/);
+				rx.push(/gat-i/);
 				n.point = "N같이";
 				n.des="Particle denoting similarity";
 			break;
 			case 31:
-				rx.push(/-bo-da/);
+				rx.push(/bo-da/);
 				n.point = "N보다";
 				n.des="Particle denoting comparision";
 			break;
 			case 32:
-				rx.push(/-ma-da/);
+				rx.push(/ma-da/);
 				n.point = "N마다";
 				n.des="Particle denoting 'every'";
 			break;
 			case 33:
-				rx.push(/-go /);
-				rx.push(/-gu /);
+				rx.push(/go /);
+				rx.push(/gu /);
 				n.point = "A/V-고";
 				n.des="'And'";
 			break;
 			case 34:
-				rx.push(/-geo-na/);
+				rx.push(/geo-na/);
 				n.point = "V-거나";
 				n.des="'Or'";
 			break;
 			case 35:
-				rx.push(/-ji-man /);
-				rx.push(/-ji-man-/);
+				rx.push(/ji-man /);
+				rx.push(/ji-man-/);
 				n.point = "A/V-지만, -기는 하지만, -기는 -지만";
 				n.des="'But'";
 			break;
@@ -5742,18 +5754,20 @@ function SetGrammarPoints()
 				n.des="'But', 'so', 'therefore', 'and'";
 			break;
 			case 37:
-				rx.push(/-jeon-e/);
+				rx.push(/jeon-e /);
+				rx.push(/jeon-e-/);
 				n.point = "N전에";
 				n.des="'Before'";
 			break;
 			case 38:
-				rx.push(/-gi jeon-e/);
-				rx.push(/-gi-jeon-e/);
+				rx.push(/gi jeon-e/);
+				rx.push(/gi-jeon-e/);
 				n.point = "V-기 전에";
 				n.des="'Before'";
 			break;
 			case 39:
-				rx.push(/-hu-e/);
+				rx.push(/hu-e /);
+				rx.push(/hu-e-/);
 				n.point = "N후에";
 				n.des="'After'";
 			break;
