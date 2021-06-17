@@ -5507,7 +5507,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=418;
+	var numGrammar=419;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7531,17 +7531,17 @@ function SetGrammarPoints()
 				n.des="Present tense";
 			break;
 			case 338:
-				rx.push(/-kki-li/);
+				rx.push(/kki-li/);
 				n.point = "-끼리";
 				n.des="'Among', 'between'";
 			break;
 			case 339:
-				rx.push(/-ssig/);
+				rx.push(/ssig/);
 				n.point = "-씩";
 				n.des="'Apiece', 'per'";
 			break;
 			case 340:
-				rx.push(/-na /);
+				rx.push(/na /);
 				n.point = "N(이)나";
 				n.des="Particle denoting 'no less than'";
 			break;
@@ -7552,8 +7552,8 @@ function SetGrammarPoints()
 				n.des="'So', 'that'";
 			break;
 			case 342:
-				rx.push(/-ji-la /);
-				rx.push(/-ji-la-/);
+				rx.push(/ji-la /);
+				rx.push(/ji-la-/);
 				n.point = "A/V-은/는지라";
 				n.des="'Because'";
 			break;
@@ -7563,13 +7563,13 @@ function SetGrammarPoints()
 				n.des="Shortened form of '것은'";
 			break;
 			case 344:
-				rx.push(/-nya-/);
-				rx.push(/-nya /);
+				rx.push(/nya-/);
+				rx.push(/nya /);
 				n.point = "A/V-느냐?, A/V-(으)냐?";
 				n.des="Formal non-polite - inquisitive";
 			break;
 			case 345:
-				rx.push(/-gu-man/);
+				rx.push(/gu-man/);
 				n.point = "A/V-구만";
 				n.des="Expresses surprise at a realisation";
 			break;
@@ -7581,27 +7581,27 @@ function SetGrammarPoints()
 			break;
 			case 347:
 				rx.push(/a-mu-li/);
-				n.point = "아무리";
+				n.point = "아무+리";
 				n.des="'However'";
 			break;
 			case 348:
-				rx.push(/-myeo /);
-				rx.push(/-myeo-/);
+				rx.push(/myeo /);
+				rx.push(/myeo-/);
 				n.point = "V-(으)며";
 				n.des="'While'";
 			break;
 			case 349:
-				rx.push(/-lop/);
+				rx.push(/lop/);
 				n.point = "N롭다";
 				n.des="Turns a noun into an adjective";
 			break;
 			case 350:
-				rx.push(/-ppun/);
+				rx.push(/ppun/);
 				n.point = "N뿐, A/V-뿐";
 				n.des="'Only', 'just'";
 			break;
 			case 351:
-				rx.push(/-kkeos/);
+				rx.push(/kkeos/);
 				n.point = "-껏";
 				n.des="'To the full extent of'";
 			break;
@@ -7990,6 +7990,11 @@ function SetGrammarPoints()
 				rx.push(/kka-ji-neun/);
 				n.point = "-까진/-까지는";
 				n.des="'Until', often used in negative sentences with 안 or 없 to add emphasise, e.g. '미안해할 거까진 없어' 'you don't need to be sorry'";
+			break;
+			case 418:
+				rx.push(/da-neun tteus/);
+				n.point = "V-(ㄴ/는)다는 뜻";
+				n.des="'Means'";
 			break;
 			
 			
