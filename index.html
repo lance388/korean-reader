@@ -5508,7 +5508,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=419;
+	var numGrammar=420;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5583,8 +5583,8 @@ function SetGrammarPoints()
 				n.des="Past perfect tense";
 			break;
 			case 9:
-				rx.push(/ji an/);
-				rx.push(/ji mos/);
+				rx.push(/ji /);
+				rx.push(/ji-/);
 				n.point = "A/V-지 않아(요) / V-지 못해(요)";
 				n.des="Negation with 지";
 			break;
@@ -7990,12 +7990,17 @@ function SetGrammarPoints()
 				rx.push(/kka-jin/);
 				rx.push(/kka-ji-neun/);
 				n.point = "-까진/-까지는";
-				n.des="'Until', often used in negative sentences with 안 or 없 to add emphasise, e.g. '미안해할 거까진 없어' 'you don't need to be sorry'";
+				n.des="'Until', often used in negative sentences with 안 or 없 to add emphasis, e.g. '미안해할 거까진 없어' 'you don't need to be sorry'";
 			break;
 			case 418:
 				rx.push(/da-neun tteus/);
 				n.point = "V-(ㄴ/는)다는 뜻";
 				n.des="'Means'";
+			break;
+			case 419:
+				rx.push(/ji-neun/);
+				n.point = "A/V-지는 않아(요) / V-지는 못해(요)";
+				n.des="Same as negation with 지, but with extra emphasis";
 			break;
 			
 			
