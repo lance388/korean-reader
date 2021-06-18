@@ -5508,7 +5508,7 @@ function SetGrammarPoints()
 	(?=\s) : look ahead 1 character, pass if that character is a space
 	*/
 	
-	var numGrammar=420;
+	var numGrammar=425;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5548,18 +5548,19 @@ function SetGrammarPoints()
 				rx.push(/yo /);
 				rx.push(/yo-/);
 				rx.push(/yong/);
-				n.point = "A/V-아/어요";
-				n.des="Informal polite style";
+				n.point = "A/V-요";
+				n.des="Ending that can be used in conjunction with the informal sentence style (A/V-아/어/여 and A/V-았/었/였+아/어) to indicate politeness and respect.";
 			break;
 			
 			case 5:
+				rx.push(/ass /);
 				rx.push(/ass-/);
+				rx.push(/eoss /);
 				rx.push(/eoss-/);
-				rx.push(/haess-/);
-				rx.push(/yess-/);
+				rx.push(/ess /);
 				rx.push(/ess-/);
-				n.point = "A/V-았/었어(요)";
-				n.des="Past tense";
+				n.point = "A/V-았/었/였+아/어+(요)";
+				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았아, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔어, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어";
 			break;
 			case 6:
 				rx.push(/l geo/);
@@ -6740,7 +6741,7 @@ function SetGrammarPoints()
 			case 196:
 				rx.push(/da-myeon(?!-seo)/);
 				n.point = "A/V-(느)ㄴ다면";
-				n.des="Used to refer to a hypothetical situation";
+				n.des="Used to refer to a hypothetical situation (present tense with action verb stem)";
 			break;
 			case 197:
 				rx.push(/ss-deo-la-myeon/);
@@ -8002,6 +8003,38 @@ function SetGrammarPoints()
 				n.point = "A/V-지는 않아(요) / V-지는 못해(요)";
 				n.des="Same as negation with 지, but with extra emphasis";
 			break;
+			case 420:
+				rx.push(/da-myeon(?!-seo)/);
+				n.point = "A/V-다면";
+				n.des="Used to refer to a hypothetical situation (present tense with passive verb stem)";
+			break;
+			case 421:
+				rx.push(/la-myeon/);
+				n.point = "N(이)라면";
+				n.des="Used to refer to a hypothetical situation (present tense with noun)";
+			break;
+			case 422:
+				rx.push(/da-myeon(?!-seo)/);
+				n.point = "N(이)었다면/N였다면";
+				n.des="Used to refer to a hypothetical situation (past tense with noun)";
+			break;
+			case 423:
+				rx.push(/da-myeon(?!-seo)/);
+				n.point = "A/V-았/었다면";
+				n.des="Used to refer to a hypothetical situation (past tense with A/V)";
+			break;
+			case 424:
+				rx.push(/a /);
+				rx.push(/a-/);
+				rx.push(/eo /);
+				rx.push(/eo-/);
+				rx.push(/e /);
+				rx.push(/e-/);
+				n.point = "A/V-아/어/여+(요)";
+				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어";
+			break;
+			
+	
 			
 			
 			
