@@ -5504,11 +5504,8 @@ function PopulateGrammarTab()
 
 function SetGrammarPoints()
 {
-	/*NOTE
-	(?=\s) : look ahead 1 character, pass if that character is a space
-	*/
 	
-	var numGrammar=425;
+	var numGrammar=428;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5655,7 +5652,7 @@ function SetGrammarPoints()
 			case 19:
 				rx.push(/kka-ji/);
 				n.point = "N까지";
-				n.des="Particle denoting 'until'";
+				n.des="'Until', 'up to', 'as many as'";
 			break;
 			case 20:
 				rx.push(/bu-teo/);
@@ -5781,7 +5778,7 @@ function SetGrammarPoints()
 			case 41:
 				rx.push(/na-seo/);
 				n.point = "V-고 나서";
-				n.des="'And then'";
+				n.des="'When... then...'";
 			break;
 			case 42:
 				rx.push(/ a /);
@@ -5863,8 +5860,8 @@ function SetGrammarPoints()
 				n.des="Polite request not to do something";
 			break;
 			case 55:
-				rx.push(/-ya /);
-				rx.push(/-ya-/);
+				rx.push(/ya /);
+				rx.push(/ya-/);
 				n.point = "A/V-아/어야 (되다/하다)";
 				n.des="'Must', 'have to'";
 			break;
@@ -6073,8 +6070,10 @@ function SetGrammarPoints()
 			case 90:
 				rx.push(/(?<!deo)n /);
 				rx.push(/(?<!ja)l /);
+				rx.push(/ un/);
+				rx.push(/-un/);
 				n.point = "A/V-(으)ㄴ/-는/-(으)ㄹ N";
-				n.des="Noun modifying form, used to describe a noun";
+				n.des="Noun modifying form, used to describe a noun. Some irregular conjugations exist e.g. 새롭다→새로운";
 			break;
 			case 91:
 				rx.push(/gi-/);
@@ -7506,11 +7505,12 @@ function SetGrammarPoints()
 				n.des="'Now', shortened form of 지금";
 			break;
 			case 335:
-				rx.push(/si-/);
-				rx.push(/syeo/);
-				rx.push(/se-/);
-				rx.push(/si /);
-				rx.push(/se /);
+				rx.push(/(?<!s-)syeo/);
+				rx.push(/(?<!s-)se /);
+				rx.push(/(?<!s-)se-/);
+				rx.push(/(?<!s-)sil/);
+				rx.push(/(?<!s-)si-/);
+				rx.push(/(?<!s-)si /);
 				n.point = "-(으)시-/(으)셔-/(으)세-";
 				n.des="Honorific";
 			break;
@@ -7991,7 +7991,7 @@ function SetGrammarPoints()
 				rx.push(/kka-jin/);
 				rx.push(/kka-ji-neun/);
 				n.point = "-까진/-까지는";
-				n.des="'Until', often used in negative sentences with 안 or 없 to add emphasis, e.g. '미안해할 거까진 없어' 'you don't need to be sorry'";
+				n.des="'Until', 'up to', 'as many as', often be used in negative sentences with 안 or 없, e.g. '미안해할 거까진 없어' 'you don't need to be sorry'";
 			break;
 			case 418:
 				rx.push(/da-neun tteus/);
@@ -8032,6 +8032,27 @@ function SetGrammarPoints()
 				rx.push(/e-/);
 				n.point = "A/V-아/어/여+(요)";
 				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어";
+			break;
+			case 425:
+				rx.push(/na-myeon/);
+				n.point = "V-고 나면";
+				n.des="'If... then...'";
+			break;
+			case 426:
+				rx.push(/na-ni-kka/);
+				n.point = "V-고 나니까";
+				n.des="'Because... then...'";
+			break;
+			case 427:
+				rx.push(/jeog/);
+				n.point = "적";
+				n.des="'When', similiar meaning and usage as 때";
+			break;
+			case 428:
+				rx.push(/ssi /);
+				rx.push(/ssi-/);
+				n.point = "씨";
+				n.des="Added to the end of names to indicate respect and politeness";
 			break;
 			
 	
