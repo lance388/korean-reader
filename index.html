@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=428;
+	var numGrammar=432;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5557,7 +5557,7 @@ function SetGrammarPoints()
 				rx.push(/ess /);
 				rx.push(/ess-/);
 				n.point = "A/V-았/었/였+아/어+(요)";
-				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았아, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔어, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어";
+				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았아, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔아, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어, (irregular ㅂ) e.g. 외롭→외로우었어→외로웠어/곱→고오았아→고왔아";
 			break;
 			case 6:
 				rx.push(/l geo/);
@@ -5583,7 +5583,7 @@ function SetGrammarPoints()
 			case 9:
 				rx.push(/ji /);
 				rx.push(/ji-/);
-				n.point = "A/V-지 않아(요) / V-지 못해(요)";
+				n.point = "A/V-지 않/못/말고/마";
 				n.des="Negation with 지";
 			break;
 			case 10:
@@ -5604,9 +5604,10 @@ function SetGrammarPoints()
 				n.des="Topic marking particle";
 			break;
 			case 12:
-				rx.push(/(?<!ja)l /);
+				rx.push(/l /);
+				rx.push(/l-/);
 				n.point = "N을/를";
-				n.des="Object marking particle";
+				n.des="Object marking particle. 를 can be condensed into the last character if it doesn't contain a 받침, e.g. 하기+를 can be written either 하기를 or 하길";
 			break;
 			case 13:
 				rx.push(/ oa-/);
@@ -5794,7 +5795,7 @@ function SetGrammarPoints()
 				rx.push(/a-seo/);
 				rx.push(/e-seo/);
 				n.point = "V-아/어(서)";
-				n.des="'(In order) to', clause connector";
+				n.des="'Then', '(in order) to', clause connector";
 			break;
 			case 43:
 				rx.push(/ttae-/);
@@ -5849,15 +5850,15 @@ function SetGrammarPoints()
 				n.des="Polite request";
 			break;
 			case 53:
-				rx.push(/ma-se-/);
-				rx.push(/ma-se /);
-				n.point = "V-지 마세요";
-				n.des="Polite request not to do something";
+				rx.push(/ma-/);
+				rx.push(/ma /);
+				n.point = "V-지 마(세요/십시오)";
+				n.des="Polite request not to do something. Impolite form drops the -세요/-십시오 ending";
 			break;
 			case 54:
-				rx.push(/ma-sib-si-o/);
-				n.point = "V-지 마십시오";
-				n.des="Polite request not to do something";
+				rx.push(/jeol-dae/);
+				n.point = "절대";
+				n.des="'Absolutely', usually used in negative sentences e.g. '절대 안 된다' 'abolutely not'";
 			break;
 			case 55:
 				rx.push(/ya /);
@@ -6840,8 +6841,8 @@ function SetGrammarPoints()
 			break;
 			case 213:
 				rx.push(/n de/);
-				n.point = "V-는 데";
-				n.des="Has the meaning of -는 일, -는 것, -는 경우, and -는 상황";
+				n.point = "V-ㄴ/는 데";
+				n.des="'When', has the meaning of -는 일, -는 것, -는 경우, and -는 상황";
 			break;
 			case 214:
 				rx.push(/n ba/);
@@ -7520,17 +7521,12 @@ function SetGrammarPoints()
 				n.des="'Had better', '(I) guess (I) have to'";
 			break;
 			case 337:
-				rx.push(/(?<!ss-)a-y/);
-				rx.push(/(?<!ss-)o-y/);
-				rx.push(/(?<!ss-)e-y/);
-				rx.push(/(?<!ss-)ab-/);
-				rx.push(/(?<!ss-)ob-/);
-				rx.push(/(?<!ss-)eb-/);
-				rx.push(/(?<!ss-)a /); 
-				rx.push(/(?<!ss-)o /);
-				rx.push(/(?<!ss-)e /);
-				n.point = "V-아/어";
-				n.des="Present tense";
+				rx.push(/ eun /);
+				rx.push(/ eun-/);
+				rx.push(/-eun /);
+				rx.push(/-eun-/);
+				n.point = "-은(요)";
+				n.des="Sentence ender to ask a follow-up question, 'what about...?'";
 			break;
 			case 338:
 				rx.push(/kki-li/);
@@ -8031,7 +8027,7 @@ function SetGrammarPoints()
 				rx.push(/e /);
 				rx.push(/e-/);
 				n.point = "A/V-아/어/여+(요)";
-				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어";
+				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어, (irregular ㅂ) e.g. 외롭→외로우어→외로워/곱→고오아→고와";
 			break;
 			case 425:
 				rx.push(/na-myeon/);
@@ -8053,6 +8049,30 @@ function SetGrammarPoints()
 				rx.push(/ssi-/);
 				n.point = "씨";
 				n.des="Added to the end of names to indicate respect and politeness";
+			break;
+			case 429:
+				rx.push(/li /);
+				rx.push(/li-/);
+				rx.push(/hi /);
+				rx.push(/hi-/);
+				rx.push(/gi /);
+				rx.push(/gi-/);
+				rx.push(/ i /);
+				rx.push(/-i-/);
+				rx.push(/-i /);
+				rx.push(/ i-/);
+				n.point = "A/V-이/히/리/기-";
+				n.des="Passive expression, used only with certain words, e.g. 풀다 'to untie'→풀리다 'to come untied'";
+			break;
+			case 430:
+				rx.push(/mal-go/);
+				n.point = "A 말고 B";
+				n.des="'Not A but B'";
+			break;
+			case 431:
+				rx.push(/n de-seo/);
+				n.point = "V-ㄴ/는 데서";
+				n.des="'When... then...'";
 			break;
 			
 	
