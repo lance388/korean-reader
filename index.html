@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=432;
+	var numGrammar=431;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7871,10 +7871,9 @@ function SetGrammarPoints()
 				n.des="'During'";
 			break;
 			case 399:
-				rx.push(/jjae /);
-				rx.push(/jjae-/);
-				n.point = "-째";
-				n.des="'During'";
+				rx.push(/n de-seo/);
+				n.point = "V-ㄴ/는 데서";
+				n.des="'When... then...'";
 			break;
 			case 400:
 				rx.push(/deo-gun /);
@@ -8066,11 +8065,7 @@ function SetGrammarPoints()
 				n.point = "A 말고 B";
 				n.des="'Not A but B'";
 			break;
-			case 431:
-				rx.push(/n de-seo/);
-				n.point = "V-ㄴ/는 데서";
-				n.des="'When... then...'";
-			break;
+			
 			
 	
 			
