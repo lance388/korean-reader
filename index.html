@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=431;
+	var numGrammar=436;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7391,8 +7391,8 @@ function SetGrammarPoints()
 			break;
 			case 313:
 				rx.push(/tta-la/);
-				n.point = "따라서";
-				n.des="Therefore";
+				n.point = "따라(서)";
+				n.des="'In accordance with', 'therefore'";
 			break;
 			case 314:
 				rx.push(/geo-/);
@@ -8064,6 +8064,32 @@ function SetGrammarPoints()
 				rx.push(/mal-go/);
 				n.point = "A 말고 B";
 				n.des="'Not A but B'";
+			break;
+			case 431:
+				rx.push(/ eo-jji/);
+				rx.push(/-eo-jji/);
+				n.point = "어찌";
+				n.des="'How', 'why'";
+			break;
+			case 432:
+				rx.push(/man-yag/);
+				n.point = "만약(에)";
+				n.des="'If'";
+			break;
+			case 433:
+				rx.push(/la-deun-ga/);
+				n.point = "(이)라든가";
+				n.des="'Things such as...', used to list things, often paired with '같은'";
+			break;
+			case 434:
+				rx.push(/mag/);
+				n.point = "막";
+				n.des="'Just now', a common filler word, shortened form of '마구' meaning 'wildly', 'carelessly', or 'violently'";
+			break;
+			case 435:
+				rx.push(/go-seo-neun/);
+				n.point = "A/V-고서는";
+				n.des="Emphasises that the preceding statement comes before or causes the following statement";
 			break;
 			
 			
