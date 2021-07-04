@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=436;
+	var numGrammar=439;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6567,8 +6567,8 @@ function SetGrammarPoints()
 			break;
 			case 166:
 				rx.push(/dae-sin/);
-				n.point = "A/V-(으)ㄴ/는 대신에, N 대신에";
-				n.des="Indicates that an action can be substituted by another action";
+				n.point = "A/V-(으)ㄴ/는 대신에, N대신(에)";
+				n.des="'Instead', indicates that an action can be substituted by another action";
 			break;
 			case 167:
 				rx.push(/man-e/);
@@ -6773,9 +6773,9 @@ function SetGrammarPoints()
 			break;
 			case 202:
 				rx.push(/gi-neun/);
-				rx.push(/gin-yo/);
+				rx.push(/gin/);
 				n.point = "A/V-기는(요), N(이)기는(요)";
-				n.des="Expresses a polite disagreement";
+				n.des="Expresses a polite disagreement, can be contracted to '긴'";
 			break;
 			case 203:
 				rx.push(/n cheog-ha/);
@@ -7019,6 +7019,7 @@ function SetGrammarPoints()
 			break;
 			case 247:
 				rx.push(/gi-neun-keo-nyeong/);
+				rx.push(/gin-keo-nyeong/);
 				n.point = "A/V-기는커녕";
 				n.des="Expresses that the content in the preceding clause is easily realised, but also the content in the following clause is even more so";
 			break;
@@ -8090,6 +8091,23 @@ function SetGrammarPoints()
 				rx.push(/go-seo-neun/);
 				n.point = "A/V-고서는";
 				n.des="Emphasises that the preceding statement comes before or causes the following statement";
+			break;
+			case 436:
+				rx.push(/geu-nyang/);
+				n.point = "그냥";
+				n.des="'Just', 'as it is'";
+			break;
+			case 437:
+				rx.push(/beo-li /);
+				rx.push(/beo-li-/);
+				rx.push(/beo-lyeo/);
+				n.point = "A/V-아/어 버리다";
+				n.des="'Throw out', indicates that an action has been fully finished";
+			break;
+			case 438:
+				rx.push(/gi/);
+				n.point = "V-기";
+				n.des="Noun form of a verb";
 			break;
 			
 			
