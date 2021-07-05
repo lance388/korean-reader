@@ -7636,7 +7636,7 @@ function SetGrammarPoints()
 				n.des="'As well as'";
 			break;
 			case 358:
-				rx.push(/-la-seo/);
+				rx.push(/la-seo/);
 				n.point = "N(이)라서";
 				n.des="'Therefore', 'because of'";
 			break;
@@ -7647,20 +7647,17 @@ function SetGrammarPoints()
 				n.des="Turns certain nouns into plural form";
 			break;
 			case 360:
-				rx.push(/geo-na /);
-				rx.push(/geo-na-/);
+				rx.push(/geo-na/);
 				n.point = "거나";
 				n.des="'Anything'";
 			break;
 			case 361:
-				rx.push(/de-na /);
-				rx.push(/de-na-/);
+				rx.push(/de-na/);
 				n.point = "데나";
 				n.des="'Anywhere'";
 			break;
 			case 362:
-				rx.push(/ttae-na /);
-				rx.push(/ttae-na-/);
+				rx.push(/ttae-na/);
 				n.point = "때나";
 				n.des="'Anytime'";
 			break;
@@ -7675,44 +7672,37 @@ function SetGrammarPoints()
 				n.des="'Isn't it?', shortened form of 그렇죠";
 			break;
 			case 365:
-				rx.push(/nu-gun-ga /);
-				rx.push(/nu-gun-ga-/);
+				rx.push(/nu-gun-ga/);
 				n.point = "누군가";
 				n.des="'Somebody', 누구 + ㄴ가";
 			break;
 			case 366:
-				rx.push(/mueon-ga /);
-				rx.push(/mueon-ga-/);
+				rx.push(/mueon-ga/);
 				n.point = "뭔가";
 				n.des="'Something', 뭐 + ㄴ가";
 			break;
 			case 367:
-				rx.push(/eo-din-ga /);
-				rx.push(/eo-din-ga-/);
+				rx.push(/eo-din-ga/);
 				n.point = "어딘가";
 				n.des="'Somewhere', 어디 + ㄴ가";
 			break;
 			case 368:
-				rx.push(/eon-jen-ga /);
-				rx.push(/eon-jen-ga-/);
+				rx.push(/eon-jen-ga/);
 				n.point = "언젠가";
 				n.des="'Sometime', 언제 + ㄴ가";
 			break;
 			case 369:
-				rx.push(/gess-ji /);
-				rx.push(/gess-ji-/);
+				rx.push(/gess-ji/);
 				n.point = "-겠지?";
 				n.des="'It must be, right?' ";
 			break;
 			case 370:
-				rx.push(/da-go-/);
-				rx.push(/da-go /);
+				rx.push(/da-go/);
 				n.point = "A/V-(ㄴ/는)다고 (해서/해도)";
 				n.des="'Even if...'";
 			break;
 			case 371:
-				rx.push(/la-go-/);
-				rx.push(/la-go /);
+				rx.push(/la-go/);
 				n.point = "N-(이)라고 (해서/해도)";
 				n.des="'Even if somebody is...'";
 			break;
@@ -7735,13 +7725,13 @@ function SetGrammarPoints()
 			break;
 			case 375:
 				rx.push(/la /);
-				rx.push(/la-/);
+				rx.push(/la-(?!seo)/);
 				n.point = "A/V-아/어라";
 				n.des="Expresses a exclamation";
 			break;
 			case 376:
 				rx.push(/la /);
-				rx.push(/la-/);
+				rx.push(/la-(?!seo)/);
 				n.point = "N(이)라";
 				n.des="Shortened form of N(이)라서, 'therefore', 'because of'";
 			break;
