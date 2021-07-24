@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=439;
+	var numGrammar=445;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5597,11 +5597,9 @@ function SetGrammarPoints()
 				n.des="Subject marking particle";
 			break;
 			case 11:
-				rx.push(/-eun/);
-				rx.push(/ eun/);
-				rx.push(/neun/);
+				rx.push(/n /);
 				n.point = "N은/는";
-				n.des="Topic marking particle";
+				n.des="Topic marking particle. Sometimes contracted, e.g. 로는→론";
 			break;
 			case 12:
 				rx.push(/l /);
@@ -5694,8 +5692,7 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'nothing but'";
 			break;
 			case 26:
-				rx.push(/lo-/);
-				rx.push(/lo /);
+				rx.push(/lo/);
 				n.point = "N(으)로";
 				n.des="Particle denoting direction/method/way/means";
 			break;
@@ -5995,7 +5992,7 @@ function SetGrammarPoints()
 				n.des="Emphasises something the speaker already said";
 			break;
 			case 77:
-				rx.push(/-leo/);
+				rx.push(/leo/);
 				n.point = "V-(으)러 가다/오다/다니다...";
 				n.des="'(Go/come/etc.) in order to'";
 			break;
@@ -6142,7 +6139,7 @@ function SetGrammarPoints()
 				rx.push(/gun /);
 				rx.push(/gun-/);
 				rx.push(/neun-gun/);
-				n.point = "A/V-군(요)/는군(요)/구나/군";
+				n.point = "A/V-군(요), A/V-는군(요), A/V-구나, A/V-군, A/V-는구나";
 				n.des="Expresses wonder or surprise";
 			break;
 			case 101:
@@ -7036,7 +7033,7 @@ function SetGrammarPoints()
 				n.des="Honorific - inquisitive, used to politely and gently ask a question or to confirm something";
 			break;
 			case 250:
-				rx.push(/l-ppun-deol/);
+				rx.push(/ppun-deol/);
 				n.point = "A/V-(으)ㄹ뿐더러";
 				n.des="Expresses additional facts";
 			break;
@@ -7172,14 +7169,10 @@ function SetGrammarPoints()
 				n.des="Indicates that a result wasn't obtained until after a long period of time or a difficult process";
 			break;
 			case 276:
-				rx.push(/eo nae/);
-				rx.push(/e nae/);
-				rx.push(/a nae/);
-				rx.push(/eo-nae/);
-				rx.push(/e-nae/);
-				rx.push(/a-nae/);
-				n.point = "A/V-아/어 내다";
-				n.des="Indicates that the subject was able to complete a particular task after experiencing some difficulty";
+				rx.push(/nae /);
+				rx.push(/nae-/);
+				n.point = "A/V-아/어 내다, A/V-아/어내다";
+				n.des="Indicates that the subject was able to complete a particular task";
 			break;
 			case 277:
 				rx.push(/n na-meo-j/);
@@ -7386,7 +7379,7 @@ function SetGrammarPoints()
 				n.des="Declaritive form";
 			break;
 			case 312:
-				rx.push(/-da /);
+				rx.push(/da /);
 				n.point = "V-ㄴ/는다, A-다";
 				n.des="Declaritive form";
 			break;
@@ -7413,33 +7406,36 @@ function SetGrammarPoints()
 				n.des="'Thing', shortened form of 것이";
 			break;
 			case 317:
-				rx.push(/-dan-da/);
-				rx.push(/-lan-da/);
+				rx.push(/dan-da/);
+				rx.push(/lan-da/);
 				n.point = "-단다, -란다";
 				n.des="Quotation usually used in story-telling for kids";
 			break;
 			case 318:
-				rx.push(/-la-neun/);
-				n.point = "-(이)라는";
+				rx.push(/la-neun/);
+				rx.push(/lan/);
+				n.point = "-(이)라는/-(이)란";
 				n.des="Direct or indirect quotation， shortened form of -(이)라고 하는";
 			break;
 			case 319:
-				rx.push(/-da-neun/);
-				n.point = "-(이)다는";
+				rx.push(/da-neun/);
+				rx.push(/dan/);
+				n.point = "-(이)다는/-(이)단";
 				n.des="Indirect quotation， shortened form of -(이)다고 하는";
 			break;
 			case 320:
-				rx.push(/-ja-neun/);
-				n.point = "-(이)자는";
+				rx.push(/ja-neun/);
+				rx.push(/jan/);
+				n.point = "-(이)자는/-(이)잔";
 				n.des="Indirect quotation， shortened form of -(이)자고 하는";
 			break;
 			case 321:
-				rx.push(/-nya-neun/);
-				n.point = "-(이)냐는";
+				rx.push(/nyan/);
+				n.point = "-(이)냐는/-(이)냔";
 				n.des="Indirect quotation， shortened form of -(이)냐고 하는";
 			break;
 			case 322:
-				rx.push(/-seong/);
+				rx.push(/seong/);
 				n.point = "-성";
 				n.des="'性', used with certain Sino-Korean words to indicate something's property or essense";
 			break;
@@ -8098,6 +8094,43 @@ function SetGrammarPoints()
 				rx.push(/gi/);
 				n.point = "V-기";
 				n.des="Noun form of a verb";
+			break;
+			case 439:
+				rx.push(/n-geo/);
+				rx.push(/n geo/);
+				n.point = "A/V-ㄴ/는 거야, A/V-ㄴ/는 거예요, A/V-ㄴ/는 것이에요";
+				n.des="Used to clarify an action or state";
+			break;
+			case 440:
+				rx.push(/dae /);
+				rx.push(/dae-/);
+				n.point = "A-대요, V-ㄴ/는대요, A/V-았/었대요 (past)";
+				n.des="Sentence ender for indirect reported speech, shortened form of '다고 하다'";
+			break;
+			case 441:
+				rx.push(/lae /);
+				rx.push(/lae-/);
+				n.point = "A-래요, V-ㄴ/는래요, A/V-았/었래요 (past)";
+				n.des="Sentence ender for an imperative quote, shortened form of '라고 하다'";";
+			break;
+			case 442:
+				rx.push(/jae /);
+				rx.push(/jae-/);
+				n.point = "A-재요, V-ㄴ/는재요, A/V-았/었재요 (past)";
+				n.des="Sentence ender for a proposition, 'let's', shortened form of '자고 하다'";
+			break;
+			case 443:
+				rx.push(/ne /);
+				rx.push(/ne-/);
+				n.point = "N네";
+				n.des="Added to nouns indicating a person that adds a meaning of 'the group which that person is part of'";
+			break;
+			case 444:
+				rx.push(/lae-do/);
+				rx.push(/lyeo-go/);
+				rx.push(/lyeo-gu/);
+				n.point = "V-래도, V-려고 해도";
+				n.des="Indicates that the speaker is unable to do something that they plan to do";
 			break;
 			
 			
