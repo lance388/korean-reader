@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=445;
+	var numGrammar=449;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5556,8 +5556,8 @@ function SetGrammarPoints()
 				rx.push(/eoss-/);
 				rx.push(/ess /);
 				rx.push(/ess-/);
-				n.point = "A/V-았/었/였+아/어+(요)";
-				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았아, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔아, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어, (irregular ㅂ) e.g. 외롭→외로우었어→외로웠어/곱→고오았아→고왔아";
+				n.point = "A/V-았/었/였 + 아/어 + (요)";
+				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았어, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔아, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어, (irregular ㅂ) e.g. 외롭→외로우었어→외로웠어 / 곱→고오았아→고왔아, (irregular ㅅ) e.g. 낫→나았어";
 			break;
 			case 6:
 				rx.push(/l geo/);
@@ -5803,7 +5803,7 @@ function SetGrammarPoints()
 			case 44:
 				rx.push(/myeon-seo/);
 				n.point = "V-(으)면서";
-				n.des="'While'";
+				n.des="'While', 'at the same time', 'yet', 'though'";
 			break;
 			case 45:
 				rx.push(/jung/);
@@ -6554,7 +6554,7 @@ function SetGrammarPoints()
 			case 164:
 				rx.push(/la-do/);
 				n.point = "N(으)라도";
-				n.des="Indicates that something will suffice even though it is not the best choice, 'even N (must/are/have/do...)'";
+				n.des="'At least', 'even if only', 'even N (must/are/have/do...)' indicates that something will suffice even though it is not the best choice";
 			break;
 			case 165:
 				rx.push(/deun-/);
@@ -8010,7 +8010,7 @@ function SetGrammarPoints()
 				rx.push(/e /);
 				rx.push(/e-/);
 				n.point = "A/V-아/어/여+(요)";
-				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어, (irregular ㅂ) e.g. 외롭→외로우어→외로워/곱→고오아→고와";
+				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어, (irregular ㅂ) e.g. 외롭→외로우어→외로워 / 곱→고오아→고와, (irregular ㅅ) e.g. 낫→나아";
 			break;
 			case 425:
 				rx.push(/na-myeon/);
@@ -8132,6 +8132,31 @@ function SetGrammarPoints()
 				n.point = "V-래도, V-려고 해도";
 				n.des="Indicates that the speaker is unable to do something that they plan to do";
 			break;
+			case 445:
+				rx.push(/seol-ma/);
+				n.point = "설마";
+				n.des="Expresses disbelief or doubt";
+			break;
+			case 446:
+				rx.push(/ eo-jjaess-deun/);
+				rx.push(/-eo-jjaess-deun/);
+				n.point = "어쨌든";
+				n.des="'Anyhow', 'anyway', combination of of 어찌하다 (how come) + -든(지) (regardless)";
+			break;
+			case 447:
+				rx.push(/ i-leo-go/);
+				rx.push(/-i-leo-go/);
+				rx.push(/jeo-leo-go/);
+				rx.push(/geu-leo-go/);
+				n.point = "이러고 / 그러고 / 저러고";
+				n.des="'Do so', 'in this way', often used to criticise somebody's actions, shortened form of 이리하고 / 그리하고 / 저리하고";
+			break;
+			case 448:
+				rx.push(/jja-li/);
+				n.point = "-짜리";
+				n.des="'Value', 'amount', can be used with ages e.g. 5짜리 (a five-year-old)";
+			break;
+			
 			default: console.log("index out of bounds");	
 		}
 		n.regex=rx;
