@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=449;
+	var numGrammar=451;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8155,6 +8155,16 @@ function SetGrammarPoints()
 				rx.push(/jja-li/);
 				n.point = "-짜리";
 				n.des="'Value', 'amount', can be used with ages e.g. 5짜리 (a five-year-old)";
+			break;
+			case 449:
+				rx.push(/a ju/);
+				n.point = "-아 주다";
+				n.des="An expression used to indicate that one does the act mentioned in the preceding statement for someone.";
+			break;
+			case 450:
+				rx.push(/do-da/);
+				n.point = "-도다";
+				n.des="An archaic sentence ender used to express admiration.";
 			break;
 			
 			default: console.log("index out of bounds");	
