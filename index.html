@@ -6027,7 +6027,7 @@ function SetGrammarPoints()
 				rx.push(/myeon /);
 				rx.push(/myeon-(?!seo)/);
 				n.point = "A/V-(으)면";
-				n.des="'If', 'when', 'once'";
+				n.des="'If', 'as for', 'when', 'once'";
 			break;
 			case 84:
 				rx.push(/l-yeo-myeon/);
@@ -7670,22 +7670,22 @@ function SetGrammarPoints()
 			case 365:
 				rx.push(/nu-gun-ga/);
 				n.point = "누군가";
-				n.des="'Somebody', 누구 + ㄴ가";
+				n.des="'Somebody', 누구 ('who') + ㄴ가";
 			break;
 			case 366:
 				rx.push(/mueon-ga/);
 				n.point = "뭔가";
-				n.des="'Something', 뭐 + ㄴ가";
+				n.des="'Something', 뭐 ('what') + ㄴ가";
 			break;
 			case 367:
 				rx.push(/eo-din-ga/);
 				n.point = "어딘가";
-				n.des="'Somewhere', 어디 + ㄴ가";
+				n.des="'Somewhere', 어디 ('where') + ㄴ가";
 			break;
 			case 368:
 				rx.push(/eon-jen-ga/);
 				n.point = "언젠가";
-				n.des="'Sometime', 언제 + ㄴ가";
+				n.des="'Sometime', 언제 ('when') + ㄴ가";
 			break;
 			case 369:
 				rx.push(/gess-ji/);
@@ -7979,8 +7979,10 @@ function SetGrammarPoints()
 			break;
 			case 419:
 				rx.push(/ji-neun/);
+				rx.push(/jin /);
+				rx.push(/jin-/);
 				n.point = "A/V-지는 않아(요) / V-지는 못해(요)";
-				n.des="Same as negation with 지, but with extra emphasis";
+				n.des="Same as negation with '지' but with extra emphasis. '지는' is often contracted to '진'";
 			break;
 			case 420:
 				rx.push(/da-myeon(?!-seo)/);
@@ -8165,6 +8167,40 @@ function SetGrammarPoints()
 				rx.push(/do-da/);
 				n.point = "-도다";
 				n.des="An archaic sentence ender used to express admiration.";
+			break;
+			case 451:
+				rx.push(/i-myeon(?!-seo)/);
+				n.point = "N이면";
+				n.des="if (something) is a N, 이다 ('to be') + -(으)면 ('if', 'as for', 'when', 'once')";
+			break;
+			case 452:
+				rx.push(/gan /);
+				rx.push(/gan-/);
+				n.point = "-간";
+				n.des="From the Chinese chracter '间' meaning 'period of time' or 'space', e.g. 3일간 ('a period of three days')";
+			break;
+			case 453:
+				rx.push(/ya /);
+				rx.push(/ya-/);
+				n.point = "-(이)야";
+				n.des="Emphasises a topic, similiar usage as the topic marking particle ('-은/는')";
+			break;
+			case 454:
+				rx.push(/dang/);
+				n.point = "-당";
+				n.des="Used with certain nouns to add the meaning of 'per', e.g. '시간당' ('hourly')";
+			break;
+			case 455:
+				rx.push(/ja-go /);
+				rx.push(/ja-go-/);
+				n.point = "-자고";
+				n.des="Indicates a purpose or intention";
+			break;
+			case 456:
+				rx.push(/ja-go /);
+				rx.push(/ja-go-/);
+				n.point = "-ㄴ자고";
+				n.des="Used to emphatically state the speaker's thoughts or argument, used to ask again about a fact that one heard and confirm it";
 			break;
 			
 			default: console.log("index out of bounds");	
