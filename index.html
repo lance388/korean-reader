@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=457;
+	var numGrammar=459;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6382,9 +6382,9 @@ function SetGrammarPoints()
 				n.des="Indicates that the reason for an action was due to worry about something";
 			break;
 			case 133:
-				rx.push(/da-myeon-s/);
-				n.point = "A/V-다면서(요)?";
-				n.des="Used to confirm what the speaker has heard from a third party";
+				rx.push(/da-myeo/);
+				n.point = "A/V-다면서(요), A/V-다며";
+				n.des="Sentence ender used to confirm what the speaker has heard from a third party";
 			break;
 			case 134:
 				rx.push(/deon-de/);
@@ -6698,7 +6698,7 @@ function SetGrammarPoints()
 			case 190:
 				rx.push(/do-log/);
 				n.point = "A/V-도록";
-				n.des="Indicates the following action is necessary to realise the preceding action or state";
+				n.des="'To an extent', 'in order to', 'to make', indicates the following action is necessary to realise the preceding action or state";
 			break;
 			case 191:
 				rx.push(/ss-da-ga/);
@@ -6813,9 +6813,8 @@ function SetGrammarPoints()
 				n.des="Indicates the speaker's response to a statement heard from somebody else";
 			break;
 			case 210:
-				rx.push(/n-da-myeon-seo/);
-				rx.push(/ha-myeon-seo/);
-				n.point = "A/V-(느)ㄴ다면서";
+				rx.push(/da-myeo/);
+				n.point = "A/V-(느)ㄴ다면서, A/V-(느)ㄴ다며";
 				n.des="Expresses doing an action while saying something, expresses connecting of one statement to a previously mentioned statement";
 			break;
 			case 211:
@@ -8201,6 +8200,18 @@ function SetGrammarPoints()
 				rx.push(/ja-go-/);
 				n.point = "-ㄴ자고";
 				n.des="Used to emphatically state the speaker's thoughts or argument, used to ask again about a fact that one heard and confirm it";
+			break;
+			case 457:
+				rx.push(/myeon do/);
+				n.point = "-(으)면 되다";
+				n.des="Indicates that something is adequate/enough";
+			break;
+			case 458:
+				rx.push(/(?<!s-)sil/);
+				rx.push(/(?<!s-)sin-/);
+				rx.push(/(?<!s-)sin /);
+				n.point = "-(으)신, -(으)실";
+				n.des="Honorific ((으)시) + noun modifying form (-(으)ㄴ/-는/-(으)ㄹ N), e.g. '왜 그러신 거예요?' 'Why  did you do that?'";
 			break;
 			
 			default: console.log("index out of bounds");	
