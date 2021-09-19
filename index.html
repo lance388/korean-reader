@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=459;
+	var numGrammar=466;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5537,8 +5537,8 @@ function SetGrammarPoints()
 			case 3:
 				rx.push(/b-ni-da/);
 				rx.push(/b-ni-kka/);
-				n.point = "A/V-(스)ㅂ니다";
-				n.des="Formal polite style";
+				n.point = "A/V-(스)ㅂ니다, A/V-(스)ㅂ니까";
+				n.des="Formal polite style. Some irregular conjugations exist e.g. 들다→듭니다 / 들다→듭니까";
 			break;
 			
 			case 4:
@@ -5839,18 +5839,18 @@ function SetGrammarPoints()
 			case 51:
 				rx.push(/se-yo/);
 				n.point = "V-(으)세요";
-				n.des="Polite request";
+				n.des="Polite request. Some irregular conjugations exist e.g. 들다→드세요";
 			break;
 			case 52:
 				rx.push(/sib-si-o/);
 				n.point = "V-(으)십시오";
-				n.des="Polite request";
+				n.des="Polite request. Some irregular conjugations exist e.g. 들다→드십시오";
 			break;
 			case 53:
 				rx.push(/ma-/);
 				rx.push(/ma /);
 				n.point = "V-지 마(세요/십시오)";
-				n.des="Polite request not to do something. Impolite form drops the -세요/-십시오 ending";
+				n.des="Polite request not to do something. Impolite form drops the -세요/-십시오 ending.";
 			break;
 			case 54:
 				rx.push(/jeol-dae/);
@@ -5961,7 +5961,7 @@ function SetGrammarPoints()
 			case 71:
 				rx.push(/b-si-da/);
 				n.point = "V-(으)ㅂ시다";
-				n.des="'Let's', 'shall we'";
+				n.des="'Let's', 'shall we'. Some irregular conjugations exist e.g. 들다→듭시다";
 			break;
 			case 72:
 				rx.push(/si-gess/);
@@ -6071,7 +6071,7 @@ function SetGrammarPoints()
 				rx.push(/ un/);
 				rx.push(/-un/);
 				n.point = "A/V-(으)ㄴ/-는/-(으)ㄹ N";
-				n.des="Noun modifying form, used to describe a noun. Some irregular conjugations exist e.g. 새롭다→새로운";
+				n.des="Noun modifying form, used to describe a noun. Some irregular conjugations exist e.g. 새롭다→새로운, 즐겁다→즐거운";
 			break;
 			case 91:
 				rx.push(/gi-/);
@@ -6271,7 +6271,7 @@ function SetGrammarPoints()
 				rx.push(/n-da /);
 				rx.push(/l geos/);
 				n.point = "-았/었다, -다, -(느)ㄴ다, -(으)ㄹ 것이다";
-				n.des="Narration";
+				n.des="Narration. Some irregular conjugations exist e.g. 들다→든다";
 			break;
 			case 118:
 				rx.push(/oa /);
@@ -6287,7 +6287,7 @@ function SetGrammarPoints()
 				rx.push(/ ya /);
 				rx.push(/ ni /);
 				n.point = "-아/어, -(이)야, -니";
-				n.des="Casual speech";
+				n.des="Casual speech. Some irregular conjugations exist e.g. 들다→드니";
 			break;
 			case 119:
 				rx.push(/eo la-/);
@@ -7884,6 +7884,10 @@ function SetGrammarPoints()
 				rx.push(/-u /);
 				rx.push(/ u-/);
 				rx.push(/-u-/);
+				rx.push(/ un /);
+				rx.push(/-un /);
+				rx.push(/ un-/);
+				rx.push(/-un-/);
 				rx.push(/ ueo/);
 				rx.push(/-ueo/);
 				n.point = "-우/-워/-웠";
@@ -8093,8 +8097,8 @@ function SetGrammarPoints()
 			break;
 			case 438:
 				rx.push(/gi/);
-				n.point = "V-기";
-				n.des="Noun form of a verb";
+				n.point = "V-기, V-지기";
+				n.des="'Beginning to', 'changing to', active verbs add -기 whereas descriptive verbs add V-지기 (지 here means 'get/become')";
 			break;
 			case 439:
 				rx.push(/n-geo/);
@@ -8212,6 +8216,47 @@ function SetGrammarPoints()
 				rx.push(/(?<!s-)sin /);
 				n.point = "-(으)신, -(으)실";
 				n.des="Honorific ((으)시) + noun modifying form (-(으)ㄴ/-는/-(으)ㄹ N), e.g. '왜 그러신 거예요?' 'Why  did you do that?'";
+			break;
+			case 459:
+				rx.push(/ja-go/);
+				rx.push(/ja-myeon /);
+				rx.push(/ja-myeon-/);
+				n.point = "-자면, -자고 하면";
+				n.des="-자면 is the shortened form of '-자고 하면', 'let us do something', an expression used to assume and indicate someone's recommendation or suggestion";
+			break;
+			case 460:
+				rx.push(/geu-na-jeo-na/);
+				n.point = "그나저나";
+				n.des="'Anyway'";
+			break;
+			case 461:
+				rx.push(/geu-leom/);
+				rx.push(/geu-leo-myeon/);
+				rx.push(/geu-leo-ha-myeon/);
+				n.point = "그럼, 그러면, 그러하면";
+				n.des="그러하면 → 그러면 → 그럼, 'then', 'sure', 'indeed'";
+			break;
+			case 462:
+				rx.push(/yeo-tae/);
+				n.point = "여태";
+				n.des="'Still', 'so far', 'yet'";
+			break;
+			case 463:
+				rx.push(/n-da-go/);
+				n.point = "ㄴ/는다고";
+				n.des="Quotation";
+			break;
+			case 464:
+				rx.push(/li-ga /);
+				rx.push(/li-ga-/);
+				n.point = "ㄹ/을 리가 없다";
+				n.des="'There is no reason why...', 'there is no reason (to)...'";
+			break;
+			case 465:
+				rx.push(/li-ga /);
+				rx.push(/li-ga-/);
+				n.point = "ㄹ/을 리가 있다";
+				n.des="'There must be a reason why...', 'there must be a reason (to)...'";
 			break;
 			
 			default: console.log("index out of bounds");	
