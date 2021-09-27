@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=470;
+	var numGrammar=472;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5605,7 +5605,7 @@ function SetGrammarPoints()
 				rx.push(/l /);
 				rx.push(/l-/);
 				n.point = "N을/를";
-				n.des="Object marking particle. 를 can be condensed into the last character if it doesn't contain a 받침, e.g. 하기+를 can be written either 하기를 or 하길";
+				n.des="Object marking particle. 를 can be condensed into the last character if it doesn't contain a 받침, e.g. 하기+를 can be written either 하기를 or 하길. Sometimes is used without a verb, e.g. 저렇게 멋진 그림을요 (such a nice picture)";
 			break;
 			case 13:
 				rx.push(/ oa-/);
@@ -6172,6 +6172,8 @@ function SetGrammarPoints()
 				rx.push(/la-g/);
 				rx.push(/lan /);
 				rx.push(/lan-/);
+				rx.push(/laess/);
+				rx.push(/haess/);
 				n.point = "-하고/-라고";
 				n.des="Direct quotation";
 			break;
@@ -6208,6 +6210,11 @@ function SetGrammarPoints()
 				rx.push(/jae /);
 				rx.push(/lae /);
 				rx.push(/nyae /);
+				rx.push(/laess/);
+				rx.push(/daess/);
+				rx.push(/jaess/);
+				rx.push(/nyaess/);
+				
 				n.point = "-자고/-다고/-라고/냐고/-재/-대/-래/-냬";
 				n.des="Indirect quotation";
 			break;
@@ -6548,8 +6555,9 @@ function SetGrammarPoints()
 			break;
 			case 163:
 				rx.push(/na /);
-				n.point = "N(으)나";
-				n.des="Indicates that something is dissatisfactory or not the best choice";
+				rx.push(/na-/);
+				n.point = "N(이)나";
+				n.des="'This or something similar'. Express an acceptable option without any specific preference in mind. Depending on context, can also have the opposite meaning to indicates that something is dissatisfactory or not the best choice, e.g. 어서 내 짐이나 내려 줘 (come on, unload my luggage or something)";
 			break;
 			case 164:
 				rx.push(/la-do/);
@@ -8291,6 +8299,19 @@ function SetGrammarPoints()
 				rx.push(/go-/);
 				n.point = "-서(요), -고(요)";
 				n.des="Sentence ender that indicates that there are more words that the speaker wishes to say";
+			break;
+			case 470:
+				rx.push(/laess-ji/);
+				rx.push(/haess-ji/);
+				rx.push(/laess-jyo/);
+				rx.push(/haess-jyo/);
+				n.point = "-랬지, -했지";
+				n.des="'(I) told you, right?', combination of -하고/-라고 (direct quotation) and A/V-지(요)/죠? (tag question)";
+			break;
+			case 471:
+				rx.push(/heui/);
+				n.point = "N희";
+				n.des="Particle denoting possession, same as 의 but used for possession by more than one entity, e.g. 저희 (our)";
 			break;
 			
 			default: console.log("index out of bounds");	
