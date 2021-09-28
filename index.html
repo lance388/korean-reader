@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=472;
+	var numGrammar=474;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5545,8 +5545,8 @@ function SetGrammarPoints()
 				rx.push(/yo /);
 				rx.push(/yo-/);
 				rx.push(/yong/);
-				n.point = "A/V-요";
-				n.des="Ending that can be used in conjunction with the informal sentence style (A/V-아/어/여 and A/V-았/었/였+아/어) to indicate politeness and respect.";
+				n.point = "A/V-요, N요";
+				n.des="Ending that can be used in conjunction with the informal sentence style (A/V-아/어/여 and A/V-았/었/였+아/어) to indicate politeness and respect. Can also be used with a noun, e.g. 첫 주부터 시험요? (Exams from the first week?)";
 			break;
 			
 			case 5:
@@ -5827,8 +5827,10 @@ function SetGrammarPoints()
 			break;
 			case 49:
 				rx.push(/su /);
+				rx.push(/su-n/);
+				rx.push(/sun/);
 				n.point = "V-(으)ㄹ 수 있다/없다";
-				n.des="'Can'";
+				n.des="'Can'. 수 may be combined with the subject marking particle 는 to become either 수는 or 순";
 			break;
 			case 50:
 				rx.push(/l jul al/);
@@ -6118,7 +6120,9 @@ function SetGrammarPoints()
 			case 97:
 				rx.push(/n-ji /);
 				rx.push(/n-ji-/);
-				n.point = "A/V-(으)ㄴ/는지";
+				rx.push(/l-ji /);
+				rx.push(/l-ji-/);
+				n.point = "A/V-(으)ㄴ/는지 (present), A/V-(으)ㄹ지 (future)";
 				n.des="Connects a clause requiring additional information";
 			break;
 			case 98:
@@ -8312,6 +8316,16 @@ function SetGrammarPoints()
 				rx.push(/heui/);
 				n.point = "N희";
 				n.des="Particle denoting possession, same as 의 but used for possession by more than one entity, e.g. 저희 (our)";
+			break;
+			case 472:
+				rx.push(/geo-li/);
+				n.point = "N거리";
+				n.des="'Something used for N', e.g. 걱정거리 (something to worry about)";
+			break;
+			case 473:
+				rx.push(/geo-li/);
+				n.point = "V-(으)ㄹ거리";
+				n.des="'Something to V'. The ㄹ is something omitted. e.g. 먹다+-(으)ㄹ거리→먹을거리→먹거리 (something to eat)";
 			break;
 			
 			default: console.log("index out of bounds");	
