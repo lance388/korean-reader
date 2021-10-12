@@ -5505,7 +5505,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=474;
+	var numGrammar=475;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7258,7 +7258,7 @@ function SetGrammarPoints()
 			case 290:
 				rx.push(/-na /);
 				n.point = "A/V-(으)나";
-				n.des="Indicates a situation or action in the following clause that is contrary or opposite to the one stated in the preceding clause";
+				n.des="'But', indicates a situation or action in the following clause that is contrary or opposite to the one stated in the preceding clause";
 			break;
 			case 291:
 				rx.push(/-myeo /);
@@ -7549,7 +7549,7 @@ function SetGrammarPoints()
 			case 340:
 				rx.push(/na /);
 				n.point = "N(이)나";
-				n.des="Particle denoting 'no less than'";
+				n.des="'At least', particle denoting 'no less than'";
 			break;
 			case 341:
 				rx.push(/geu-leoh-ge/);
@@ -8326,6 +8326,12 @@ function SetGrammarPoints()
 				rx.push(/geo-li/);
 				n.point = "V-(으)ㄹ거리";
 				n.des="'Something to V'. The ㄹ is something omitted. e.g. 먹다+-(으)ㄹ거리→먹을거리→먹거리 (something to eat)";
+			break;
+			case 474:
+				rx.push(/yeo /);
+				rx.push(/yeo-/);
+				n.point = "-여";
+				n.des="'to exceed that number'";
 			break;
 			
 			default: console.log("index out of bounds");	
