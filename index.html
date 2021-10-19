@@ -947,6 +947,13 @@ This software uses the following plugins, please take note of their individual l
 		}
 		
 		$(window).keydown(function(e) {
+		
+			if ($("input[type='search']").is(":focus")) {
+				console.log("focus");
+				
+				return;
+			}
+		
 		//console.log(e.keyCode);
 		  switch (e.keyCode) {
 		  
