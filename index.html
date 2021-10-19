@@ -202,6 +202,9 @@ This software uses the following plugins, please take note of their individual l
 		var knownFireDBDocumentLoaded = false;
 		var learningFireDBDocumentLoaded = false;
 		var hideKnownSentences = true;
+		var lastSentenceJumpIndex = 0;
+		var lastSentenceJumpWord = "";
+		var disableJump = false;
 		
 		
 		const sort_by = (field, reverse, primer) => {
@@ -292,6 +295,7 @@ This software uses the following plugins, please take note of their individual l
 			vocabularyFilter="Known";
 			chosenExportWordlist="Vocabulary - Learning";
 			importWordlistFilter="Known";
+			disableJump = false;
 			
 			
 			SetGrammarPoints();
@@ -735,6 +739,7 @@ This software uses the following plugins, please take note of their individual l
 					selectedWord = rowData[0][1];
 					selectedIndex = indexes[0];
 					JumpToSentence(rowData[0][1]);
+					SaveLastSentenceJump(indexes[0],rowData[0][1]);
 				} );
 
 				
@@ -2077,12 +2082,39 @@ This software uses the following plugins, please take note of their individual l
 		
 		function JumpToSentence(word)
 		{
-			window.find(word,false,true,true);
-			pendingLookup = word;
-			if(enableVoice)
+			if(!disableJump)
 			{
-				SpeakWord(word);
+				window.find(word,false,true,true);
+				pendingLookup = word;
+				if(enableVoice)
+				{
+					SpeakWord(word);
+				}
 			}
+		}
+		
+		function SaveLastSentenceJump(i,w)
+		{
+			lastSentenceJumpIndex = i+1;
+			lastSentenceJumpWord = w;
+		}
+		
+		function LoadLastSentenceJump()
+		{
+			var table = $('#sentencesDataTable').DataTable();
+			
+			var index=0;
+			 table.rows().every(function(){
+				if(this.data()[0]==lastSentenceJumpIndex)
+				{
+					disableJump = true;
+					table.row(':eq('+index+')', { page: 'current' }).select();
+					disableJump = false;
+					return;
+				}
+				index++;
+			});
+				
 		}
 		
 		function JumpTo(word)
@@ -2767,6 +2799,7 @@ This software uses the following plugins, please take note of their individual l
 			document.getElementById("UnknownWordsTabButton").innerHTML='Unknown Words <sup>[4]</sup>';
 			document.getElementById("LearningWordsTabButton").innerHTML="Learning Words <sup>[5]</sup>";
 			document.getElementById("KnownWordsTabButton").innerHTML="Known Words <sup>[6]</sup>";
+			disableJump = false;
 	}
 	
 	function openTab(evt, tabName, tabLink) {
@@ -9150,6 +9183,13 @@ function CreateSentences()
 	
 	
 	document.getElementById("unknownPerSentenceText").innerText="The mean sentence length in the current text is "+meanWords+" words. In the average sentence, there are "+meanUnknownLearningWords+" unknown/learning words and "+meanKnownWords+" known words. There is an average of 1 unknown/learning word every "+sentencePerUnknownLearningWord+" sentence(s).";
+	
+	
+	//go to last scroll position
+	if(lastSentenceJumpWord!="")
+	{
+		LoadLastSentenceJump();
+	}
 }
 
 function toggleHideKnownSentences()
