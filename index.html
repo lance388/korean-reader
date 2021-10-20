@@ -2082,15 +2082,15 @@ This software uses the following plugins, please take note of their individual l
 		
 		function JumpToSentence(word)
 		{
-			if(!disableJump)
-			{
+			//if(!disableJump)
+			//{
 				window.find(word,false,true,true);
 				pendingLookup = word;
 				if(enableVoice)
 				{
 					SpeakWord(word);
 				}
-			}
+			//}
 		}
 		
 		function SaveLastSentenceJump(i,w)
@@ -2102,7 +2102,7 @@ This software uses the following plugins, please take note of their individual l
 		
 		function LoadLastSentenceJump()
 		{
-			var table = $('#sentencesDataTable').DataTable();
+			/*var table = $('#sentencesDataTable').DataTable();
 			
 			var index=0;
 			 table.rows().every(function(){
@@ -2114,7 +2114,7 @@ This software uses the following plugins, please take note of their individual l
 					return;
 				}
 				index++;
-			});
+			});*/
 			$("#SentencesTab").scrollTop(lastSentenceScrollPos);
 				
 		}
@@ -6501,7 +6501,7 @@ function SetGrammarPoints()
 			break;
 			case 145:
 				rx.push(/deo-la/);
-				n.point = "A/V-더라고(요)";
+				n.point = "A/V-더라고(요) / A/V-더라(요)";
 				n.des="Indicates recollection";
 			break;
 			case 146:
@@ -6946,14 +6946,14 @@ function SetGrammarPoints()
 				n.des="Indicates that the movement described in the preceding clause is a means by which some action occurs in the following clause";
 			break;
 			case 224:
-				rx.push(/-gi-e/);
+				rx.push(/gi-e/);
 				n.point = "A/V-기에";
 				n.des="Indicates that the content in the preceding clause forms the cause, reason, or basis for the following clause";
 			break;
 			case 225:
-				rx.push(/-gil-lae/);
+				rx.push(/gil-lae/);
 				n.point = "A/V-길래";
-				n.des="Indicates that the content stated by the speaker in the preceding clause forms the cause, reason, or basis for an action taken in the following clause";
+				n.des="'So', 'because', indicates that the content stated by the speaker in the preceding clause forms the cause, reason, or basis for an action taken in the following clause";
 			break;
 			case 226:
 				rx.push(/deo-la-do/);
@@ -8374,6 +8374,16 @@ function SetGrammarPoints()
 				rx.push(/yeo-/);
 				n.point = "-여";
 				n.des="'to exceed that number'";
+			break;
+			case 475:
+				rx.push(/oaen-ji/);
+				n.point = "왠지";
+				n.des="'Somehow'";
+			break;
+			case 476:
+				rx.push(/lang-ga/);
+				n.point = "-ㄹ랑가";
+				n.des="Indicates doubt";
 			break;
 			
 			default: console.log("index out of bounds");	
