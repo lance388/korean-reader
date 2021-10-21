@@ -9550,11 +9550,7 @@ function SetUILanguage(lang) //TODO
 					<iframe id="naverIframe" src="https://en.dict.naver.com"></iframe>
 					<div id="dictionaryOptionsArea">
 					<hr>
-						<button id="googleTranslateLink" onclick="OpenGoogleTranslate();">Google Translate (shortcut: t)</button>
-						<br><br>
-						<button id="papagoTranslateLink" onclick="OpenPapagoTranslate();">Papago Translate (shortcut: p)</button>
-						<br>
-						<br>
+					
 						<form>Dictionary Language:
 								<select id="dictLanguageOption2" onchange="ChangeDictLanguage2();">
 									<option>Korean-Korean</option>
@@ -9597,17 +9593,20 @@ function SetUILanguage(lang) //TODO
 									<option>Hungarian</option>
 								</select>	
 							</form>
-						
-					</div>
-					<div id="imagesOptionsArea">
-							<br>
-							<button id="googleImagesLink" onclick="OpenGoogleImages();">Google Images (shortcut: o)</button>
-							<br><br>
-							<button id="yahooImagesLink" onclick="OpenYahooImages();">Yahoo Images (shortcut: y)</button>
 							<br>
 							
-						</div>
-						
+						<table>
+						  <tr>
+							<td><button id="googleTranslateLink" onclick="OpenGoogleTranslate();">Google Translate (shortcut: t)</button></td>
+							<td><button id="papagoTranslateLink" onclick="OpenPapagoTranslate();">Papago Translate (shortcut: p)</button></td>
+						  </tr>
+						  <tr>
+							<td><button id="googleImagesLink" onclick="OpenGoogleImages();">Google Images (shortcut: o)</button></td>
+							<td><button id="yahooImagesLink" onclick="OpenYahooImages();">Yahoo Images (shortcut: y)</button></td>
+						  </tr>
+						</table>
+					</div>
+
 					</div>
 					<div id="ImagesTab" class="tabcontent">
 					<iframe id="imagesIframe" src=""></iframe>
