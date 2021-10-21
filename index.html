@@ -202,6 +202,7 @@ This software uses the following plugins, please take note of their individual l
 		var knownFireDBDocumentLoaded = false;
 		var learningFireDBDocumentLoaded = false;
 		var hideKnownSentences = true;
+		var enableWriting = false;
 	//	var lastSentenceJumpIndex = 0;
 	//	var lastSentenceJumpWord = "";
 	//	var disableJump = false;
@@ -953,8 +954,7 @@ This software uses the following plugins, please take note of their individual l
 		
 		$(window).keydown(function(e) {
 		
-			if ($("input[type='search']").is(":focus")) {
-				console.log("focus");
+			if ($("input[type='search']").is(":focus")||enableWriting) {
 				
 				return;
 			}
@@ -963,7 +963,7 @@ This software uses the following plugins, please take note of their individual l
 		  switch (e.keyCode) {
 		  
 			case 49: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
-			case 50: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("ImagesTabButton").click(); e.preventDefault();} break; 
+			case 50: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("WritingTabButton").click(); e.preventDefault();} break; 
 			case 51: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("StatisticsTabButton").click(); e.preventDefault();} break; 
 			case 52: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("UnknownWordsTabButton").click(); e.preventDefault();} break;
 			case 53: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("LearningWordsTabButton").click(); e.preventDefault();} break;
@@ -973,7 +973,7 @@ This software uses the following plugins, please take note of their individual l
 			case 57: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("CompareTabButton").click(); e.preventDefault();} break;
 			case 48: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("GraphTabButton").click(); e.preventDefault();} break;
 			case 97: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("DictionaryTabButton").click(); e.preventDefault();} break; 
-			case 98: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("ImagesTabButton").click(); e.preventDefault();} break; 
+			case 98: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("WritingTabButton").click(); e.preventDefault();} break; 
 			case 99: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("StatisticsTabButton").click(); e.preventDefault();} break; 
 			case 100: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("UnknownWordsTabButton").click(); e.preventDefault();} break;
 			case 101: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("LearningWordsTabButton").click(); e.preventDefault();} break;
@@ -1014,7 +1014,7 @@ This software uses the following plugins, please take note of their individual l
 				selectedVocabulary.push(value[0]);
 			});
 		
-			if(enableHighlighting && openedTab=="VocabularyTab")
+			if(enableHighlighting&&!enableWriting && openedTab=="VocabularyTab")
 			{
 				if(selectedVocabulary.length>0)
 				{
@@ -2160,7 +2160,10 @@ This software uses the following plugins, please take note of their individual l
 			{
 				SpeakWord(word);
 			}
-			dictionaryLookup(word);
+			if(!enableWriting)
+			{
+				dictionaryLookup(word);
+			}
 			imagesLookup(word);
 			pendingLookup = word;
 			GrammarLookup(word);
@@ -2320,7 +2323,12 @@ This software uses the following plugins, please take note of their individual l
 		
 		function mouseUp(modifier){
 		
-			if(!all_marked&&enableHighlighting)
+			if(enableWriting)
+			{
+				return;
+			}
+		
+			if(!all_marked&&enableHighlighting&&!enableWriting)
 			{
 				onScroll();
 			}
@@ -2351,7 +2359,10 @@ This software uses the following plugins, please take note of their individual l
 						{
 							SpeakWord(selectedText);
 						}
-						dictionaryLookup(selectedText);
+						if(!enableWriting)
+						{
+							dictionaryLookup(selectedText);
+						}
 						imagesLookup(selectedText);
 						pendingLookup = selectedText;
 						GrammarLookup(selectedText);
@@ -2425,7 +2436,7 @@ This software uses the following plugins, please take note of their individual l
 					}		
 					if(word!="")
 					{
-							if(modifier==1&&enableHighlighting)
+							if(modifier==1&&enableHighlighting&&!enableWriting)
 							{
 								
 								AsyncChangeColour(word, true,false);
@@ -2435,7 +2446,10 @@ This software uses the following plugins, please take note of their individual l
 									SpeakWord(word);
 								}	
 							
-							dictionaryLookup(word);
+							if(!enableWriting)
+							{
+								dictionaryLookup(word);
+							}
 							imagesLookup(word);
 							pendingLookup = word;
 							GrammarLookup(word);
@@ -2462,7 +2476,7 @@ This software uses the following plugins, please take note of their individual l
 				selectedText=selectedText.replace(replaceCharacters,"");
 				if(selectedText!="")
 				{
-					if(enableHighlighting)
+					if(enableHighlighting&&!enableWriting)
 					{
 						AsyncChangeColour(selectedText, true,false);
 					}
@@ -2470,7 +2484,10 @@ This software uses the following plugins, please take note of their individual l
 					{
 						SpeakWord(selectedText);
 					}
-					dictionaryLookup(selectedText);
+					if(!enableWriting)
+					{
+						dictionaryLookup(selectedText);
+					}
 					imagesLookup(selectedText);
 					pendingLookup = selectedText;
 					GrammarLookup(selectedText);
@@ -2513,6 +2530,11 @@ This software uses the following plugins, please take note of their individual l
 		
 		function RemoveSelection(index)
 		{
+			if(enableWriting)
+			{
+				return;
+			}
+		
 			if(index==0)
 			{
 				var naverIframe = document.getElementById('naverIframe');
@@ -2813,9 +2835,9 @@ This software uses the following plugins, please take note of their individual l
 	
 	ShowMenu(false);
 	
-	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="LoginTab"||tabName=="ImagesTab"||tabName=="GrammarTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
+	if((openedTab==tabName&&(tabName=="OptionsTab"||tabName=="WritingTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="LoginTab"||tabName=="ImagesTab"||tabName=="GrammarTab"||tabName=="StatisticsTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"))
 	||
-	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="GrammarTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="LoginTab"&&openedTab!="ExportTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
+	((tabName=="StatisticsTab")&&(openedTab!=""&&openedTab!="OptionsTab"&&openedTab!="GrammarTab"&&openedTab!="DictionaryTab"&&openedTab!="AboutTab"&&openedTab!="LoginTab"&&openedTab!="ExportTab"&&openedTab!="WritingTab"&&openedTab!="ImagesTab"&&openedTab!="ImportTab"&&openedTab!="LanguageTab"))
 	)
 	{
 		ShowSidebar(false); 
@@ -2852,7 +2874,7 @@ This software uses the following plugins, please take note of their individual l
 	
 	  
 	  
-	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="LoginTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"||tabName=="GrammarTab")
+	  if(tabName=="OptionsTab"||tabName=="DictionaryTab"||tabName=="AboutTab"||tabName=="LoginTab"||tabName=="WritingTab"||tabName=="ImagesTab"||tabName=="ExportTab"||tabName=="ImportTab"||tabName=="LanguageTab"||tabName=="GrammarTab")
 	  {
 		document.documentElement.style.setProperty('--tab-top-percent', '0%');
 		document.documentElement.style.setProperty('--tab-bot-percent', '100%');
@@ -2884,6 +2906,23 @@ This software uses the following plugins, please take note of their individual l
 		document.documentElement.style.setProperty('--tab-bot-percent', '85%');
 	  }
 	  
+	  if(tabName=="WritingTab")
+	  {
+		if(!enableWriting)
+		{
+			enableWriting = true;
+			ExecuteEnableWriting();
+		}
+	  }
+	  else
+	  {
+		if(enableWriting)
+		{
+			enableWriting = false;
+			ExecuteEnableWriting();
+		}
+	  }
+	  
 	  if(tabName=="StatisticsTab")
 	  {
 		var button = "UnknownWordsTabButton";
@@ -2903,11 +2942,11 @@ This software uses the following plugins, please take note of their individual l
 		document.getElementById(button).click();
 	  }
 	  else if((tabName=="UnknownWordsTab"||tabName=="LearningWordsTab"||tabName=="KnownWordsTab"||tabName=="AllWordsTab"||tabName=="GraphTab"||tabName=="AchievementsTab"||tabName=="SentencesTab")
-	  && enableHighlighting)
+	  && enableHighlighting&&!enableWriting)
 	  {
 		AsyncCalculateStatistics();
 	  }
-	  else if ((tabName=="VocabularyTab"||tabName=="ExportTab"||tabName=="ImportTab") && enableHighlighting)
+	  else if ((tabName=="VocabularyTab"||tabName=="ExportTab"||tabName=="ImportTab") && enableHighlighting&&!enableWriting)
 	  {
 	  
 	  
@@ -2920,12 +2959,12 @@ This software uses the following plugins, please take note of their individual l
 						}, 200);
 						
 	  }
-	  else if(tabName=="CompareTab" && enableHighlighting)
+	  else if(tabName=="CompareTab" && enableHighlighting&&!enableWriting)
 	  {
 		CompareVocabulary();
 		
 	  }
-	  else if(tabName=="DictionaryTab")
+	  else if(tabName=="DictionaryTab" && !enableWriting)
 	  {
 		dictionaryLookup(pendingLookup);
 		setTimeout(function() {RemoveSelection(0);},100);
@@ -3616,7 +3655,7 @@ This software uses the following plugins, please take note of their individual l
 			clearTimeout(unmarkJumpTimeout);
 			clearTimeout(calculateStatisticsTimeout);
 	
-		if(enableHighlighting)
+		if(enableHighlighting&&!enableWriting)
 		{
 			var divs = document.getElementsByClassName("individualPage");
 			for(var i=0;i<divs.length;i++)
@@ -3744,7 +3783,7 @@ This software uses the following plugins, please take note of their individual l
 					
 					
 					
-						if(enableHighlighting&&toMark.length>0)
+						if(enableHighlighting&&!enableWriting&&toMark.length>0)
 						{
 							if(colourTimeout)
 							{
@@ -4766,7 +4805,10 @@ This software uses the following plugins, please take note of their individual l
 					var dropDown2 = document.getElementById("dictLanguageOption2");
 					dropDown2.value = dictionaryLanguage;
 					
-					dictionaryLookup(pendingLookup);
+					if(!enableWriting)
+					{
+						dictionaryLookup(pendingLookup);
+					}
 				}
 			dictionaryLookingUp="";
 	}
@@ -4794,7 +4836,10 @@ This software uses the following plugins, please take note of their individual l
 					var dropDown2 = document.getElementById("dictLanguageOption2");
 					dropDown2.value = dictionaryLanguage;
 					dictionaryLookingUp="";
-					dictionaryLookup(pendingLookup);
+					if(!enableWriting)
+					{
+						dictionaryLookup(pendingLookup);
+					}
 				}
 	}
 	
@@ -9345,6 +9390,32 @@ function JumpToSavedPageLocation()
 			};
 }
 
+function toggleEnableWriting()
+{
+
+		if(enableWriting == false)
+		{
+			enableWriting = true;
+			ExecuteEnableWriting();
+		}
+}
+
+function ExecuteEnableWriting()
+{
+	if(enableWriting)
+	{
+		all_marked=true;
+		unmark();
+		ClearStatistics();
+		OnInput();
+	}
+	else
+	{
+		all_marked=false;
+		OnInput();
+	}
+}
+
 function SetUILanguage(lang) //TODO
 {
 	
@@ -9528,12 +9599,7 @@ function SetUILanguage(lang) //TODO
 							</form>
 						
 					</div>
-						
-					</div>
-					<div id="ImagesTab" class="tabcontent">
-					<iframe id="imagesIframe" src=""></iframe>
-						<div id="imagesOptionsArea">
-						<hr>
+					<div id="imagesOptionsArea">
 							<br>
 							<button id="googleImagesLink" onclick="OpenGoogleImages();">Google Images (shortcut: o)</button>
 							<br><br>
@@ -9543,6 +9609,16 @@ function SetUILanguage(lang) //TODO
 						</div>
 						
 					</div>
+					<div id="ImagesTab" class="tabcontent">
+					<iframe id="imagesIframe" src=""></iframe>
+						
+						
+					</div>
+					
+					<div id="WritingTab" class="tabcontent">
+						<h4>Writing in the main text area is now enabled.</h4>
+					</div>
+					
 					<div id="StatisticsTab" class="tabcontent"></div>
 					<div id="UnknownWordsTab" class="tabcontent">
 						<h4>List of unknown words from the current text.</h4>
@@ -9915,7 +9991,7 @@ function SetUILanguage(lang) //TODO
 		 <div class="empty"></div>
 		 <div class="topbarbutton toptabs" id="DictionaryTabButton" onclick="openTab(event, 'DictionaryTab','toptabs')"><b>Dictionary <sup>[1]</sup></b></div>
 		 <div class="empty"></div>
-		 <div class="topbarbutton toptabs" id="ImagesTabButton" onclick="openTab(event, 'ImagesTab','toptabs')"><b>Images <sup>[2]</sup></b></div>
+		 <div class="topbarbutton toptabs" id="WritingTabButton" onclick="openTab(event, 'WritingTab','toptabs');"><b>Writing<sup>[2]</sup></b></div>
 		 <div class="empty"></div>
 		 <div class="topbarbutton toptabs" id="StatisticsTabButton" onclick="openTab(event, 'StatisticsTab','toptabs')"><b>Statistics <sup>[3]</sup></b></div>
 		 <div class="empty"></div>
