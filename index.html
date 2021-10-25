@@ -5592,7 +5592,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=477;
+	var numGrammar=479;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7127,6 +7127,8 @@ function SetGrammarPoints()
 			case 249:
 				rx.push(/na /);
 				rx.push(/n-ga /);
+				rx.push(/-na /);
+				rx.push(/-n-ga /);
 				n.point = "A/V-(으)ㄴ/는가?, V-나?";
 				n.des="Honorific - inquisitive, used to politely and gently ask a question or to confirm something";
 			break;
@@ -8429,6 +8431,18 @@ function SetGrammarPoints()
 				rx.push(/lang-ga/);
 				n.point = "-ㄹ랑가";
 				n.des="Indicates doubt";
+			break;
+			case 477:
+				rx.push(/no /);
+				rx.push(/no-/);
+				n.point = "-노?";
+				n.des="*사투리 dialect* honorific - inquisitive, used to politely and gently ask a question or to confirm something, similiar to 'A/V-(으)ㄴ/는가?, V-나?'";
+			break;
+			case 478:
+				rx.push(/je /);
+				rx.push(/je-/);
+				n.point = "-제?";
+				n.des="*사투리 dialect* 'isn't it?', indicates a tag question, equivalent to 'A/V-지(요)/죠?'";
 			break;
 			
 			default: console.log("index out of bounds");	
