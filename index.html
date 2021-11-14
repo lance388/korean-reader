@@ -5592,7 +5592,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=480;
+	var numGrammar=481;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8448,6 +8448,11 @@ function SetGrammarPoints()
 				rx.push(/dan-/);
 				n.point = "-단";
 				n.des="'Step', 'rank', e.g. '일단' (first step)";
+			break;
+			case 480:
+				rx.push(/long/);
+				n.point = "-롱";
+				n.des="Sentence ending partical that expresses teasing";
 			break;
 			
 			default: console.log("index out of bounds");	
