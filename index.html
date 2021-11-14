@@ -5592,7 +5592,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=479;
+	var numGrammar=480;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8442,6 +8442,12 @@ function SetGrammarPoints()
 				rx.push(/je-/);
 				n.point = "-제?";
 				n.des="*사투리 dialect* 'isn't it?', indicates a tag question, equivalent to 'A/V-지(요)/죠?'";
+			break;
+			case 479:
+				rx.push(/dan /);
+				rx.push(/dan-/);
+				n.point = "-단";
+				n.des="'Step', 'rank', e.g. '일단' (first step)";
 			break;
 			
 			default: console.log("index out of bounds");	
