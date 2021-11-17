@@ -5592,7 +5592,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=481;
+	var numGrammar=482;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6791,7 +6791,7 @@ function SetGrammarPoints()
 				rx.push(/ge /);
 				rx.push(/ge-/);
 				n.point = "A/V-게";
-				n.des="Indicates the following action is necessary to realise the preceding action or state";
+				n.des="Indicates the following action is necessary to realise the preceding action or state, e.g. 엄청나다(be great, extreme) → 엄청나게(extremely)";
 			break;
 			case 190:
 				rx.push(/do-log/);
@@ -8453,6 +8453,12 @@ function SetGrammarPoints()
 				rx.push(/long/);
 				n.point = "-롱";
 				n.des="Sentence ending partical that expresses teasing";
+			break;
+			case 481:
+				rx.push(/na-/);
+				rx.push(/na /);
+				n.point = "-나(다)";
+				n.des="Used with certain words, mainly nouns, to express that there is such a quality. Turns the word into an adjective. e.g. 맛(taste) → 맛나다(tasty)";
 			break;
 			
 			default: console.log("index out of bounds");	
