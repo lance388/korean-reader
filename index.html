@@ -987,6 +987,7 @@ This software uses the following plugins, please take note of their individual l
 			case 61: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("GrammarTabButton").click(); e.preventDefault();} break;
 			case 79: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("googleImagesLink").click(); e.preventDefault();} break;
 			case 89: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("yahooImagesLink").click(); e.preventDefault();} break;
+			case 87: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("wikipediaLink").click(); e.preventDefault();} break;
 			case 84: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("googleTranslateLink").click(); e.preventDefault();} break;
 			case 80: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("papagoTranslateLink").click(); e.preventDefault();} break;
 			case 83: if(openedTab!="OptionsTab"&&openedTab!="LoginTab"){document.getElementById("SentencesTabButton").click(); e.preventDefault();} break;
@@ -9184,6 +9185,11 @@ function QuickImport(words,state)
 			}
 }
 
+function OpenWikipedia()
+{
+	window.open("https://ko.wikipedia.org/wiki/"+pendingLookup);
+}
+
 function OpenGoogleImages()
 {
 	window.open("https://www.google.com/search?q="+pendingLookup+"&sxsrf=ALeKk01CGhV9YShWwU3Knh1qjMdDQcYXHQ:1602295138342&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiS_K7E9qjsAhXhlEsFHS36BooQ_AUoAXoECA8QAw&cshid=1602295160675088&biw=1920&bih=937");
@@ -9654,6 +9660,11 @@ function SetUILanguage(lang) //TODO
 							<td><button id="googleImagesLink" onclick="OpenGoogleImages();">Google Images (shortcut: o)</button></td>
 							<td><button id="yahooImagesLink" onclick="OpenYahooImages();">Yahoo Images (shortcut: y)</button></td>
 						  </tr>
+						  <tr>
+							<td><button id="wikipediaLink" onclick="OpenWikipedia();">Wikipedia (shortcut: w)</button></td>
+							<td></td>
+						  </tr>
+						  
 						</table>
 					</div>
 
