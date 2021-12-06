@@ -5593,7 +5593,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=486;
+	var numGrammar=487;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8480,6 +8480,11 @@ function SetGrammarPoints()
 				rx.push(/myeong/);
 				n.point = "명";
 				n.des="Measure word for people. Less formal than 분";
+			break; 
+			 case 486:
+				rx.push(/ji/);
+				n.point = "A/V-(으)ㄴ/는 지";
+				n.des="Used to indicate the duration of time from the occurrence of an incident until the present moment, e.g. 이 가게는 생긴 지 70 년이 되었습니다 (This store has been around for seventy years)";
 			break;
 			
 			default: console.log("index out of bounds");	
