@@ -268,7 +268,15 @@ grid-area: tab;
 		"tab3";
 }
 
+.lib_text
+{
+	font-size:.8em;
+}
 
+.dialogBox
+{
+	border-radius: .2em;
+}
 
  
 

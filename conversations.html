@@ -1,0 +1,318 @@
+<!-- Version 02052020
+Website: http://koreanreader.com
+Copyright © 2020-2021 Rohan Scott
+This source file is free software, available under the following license:
+MIT license - https://mit-license.org/
+This software uses the following plugins, please take note of their individual licenses when redistributing:
+	jQuery						JS Foundation & other contributors	jquery.org												MIT license
+	mark.js						Julian Kühnel						https://markjs.io/										MIT license
+	IndexedDB-getAll-shim.js	dumbmatter							https://www.npmjs.com/package/indexeddb-getall-shim		MIT license
+	aromanize.js				Fajar Chandra						https://github.com/fujaru/aromanize-js					MIT license
+	chart.js					Chart.js Contributors				https://www.chartjs.org									MIT license
+	datatables					SpryMedia Ltd						http://www.datatables.net								MIT license				
+	javascript-css-font-detect	Lalit Patel							http://www.lalit.org/lab/javascript-css-font-detect/	Apache Software License 2.0
+	FileSaver.js				Eli Grey							http://eligrey.com										MIT license
+	colpick.js					Momo Kornher						https://github.com/mrgrain/colpick						Dual licensed under the MIT and GPLv2 licenses
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta charset="UTF-8"/>
+<meta name="description" content="Learn Korean through reading. Look up words, track progress, and view statistics."/>
+<meta name="keywords" content="Korean, Language, Reader, Texts, Read, Reading, Study, Studying, Learn, Learning"/>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+	<meta name="description" content="home"/>
+	<meta name="author" content="Rohan Scott"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<meta property="og:image" content="https://koreanreader.com/preview/preview.png" />
+<meta name="msapplication-TileColor" content="#0066CC"/>
+<meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png"/>
+<meta name="theme-color" content="#0066CC"/>
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@lance3881" />
+<meta name="twitter:title" content="Korean Reader" />
+<meta name="twitter:description" content="Learn Korean through reading. Look up words, track progress, and view statistics." />
+<meta name="twitter:image" content="/preview/preview.png"/>
+
+  <meta name="google-signin-client_id" content="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com">
+  <meta name="google-signin-cookiepolicy" content="single_host_origin">
+  <meta name="google-signin-scope" content="profile email">
+  
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="icons/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="manifest" href="icons/manifest.json">
+<meta name="msapplication-TileColor" content="#0066CC">
+<meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#0066CC">
+
+
+	  <!-- Material Design Theming -->
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="DataTables-1.10.20/datatables.min.css">
+	<link rel="stylesheet" type="text/css" href="colpick/colpick.css">
+	<link href="fonts/Song+Myung.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Gamja+Flower.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Hi+Melody.css"  type="text/css" rel="stylesheet">
+	<link href="fonts/Nanum+Pen+Script.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Sunflower.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Nanum+Myeongjo.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Cute+Font.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Poor+Story.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Yeon+Sung.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Stylish.css" type="text/css" rel="stylesheet">
+	<link href="fonts/Gothic+A1.css" type="text/css" rel="stylesheet">
+	<script src="mark/mark.min.js" charset="UTF-8"></script>
+	<script src="jQuery-3.3.1/jquery-3.3.1.min.js"></script>
+	<script src="DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+	<script src="IndexedDB-getAll-shim/IndexedDB-getAll-shim.js"></script>
+	<script src="Chart/Chart.bundle.min.js"></script>
+	<script src="Chart/Chart.min.js"></script>
+	<script src="Select-1.3.1/js/dataTables.select.min.js"></script>
+
+	
+	
+	
+	<script type="text/javascript">
+	
+	var lessonList = [];
+	var currentBackgroundColour = "";
+	
+	function BrowserCheck() //allow all browsers for testing purposes 
+	{
+		browser = IsFirefoxOrChrome();
+		if(browser=="unknown")
+		{
+			if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+			   browser="edge";
+			}
+		}
+		console.log("Detected browser: "+browser);
+		Init(); 
+	}
+	
+	function IsFirefoxOrChrome()
+		{
+			var isFirefox = typeof InstallTrigger !== 'undefined';
+			var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+			if(isFirefox)
+			{
+				return "firefox";
+			}
+			else if(isChrome)
+			{
+				return "chrome";
+			}
+			else
+			{
+				return "unknown";
+			}
+		}
+		
+	function Init()
+	{
+		document.documentElement.style.setProperty('--pasteArea-percent', '100%');
+		CreateLessons();
+		DrawLessons();
+	}
+	
+	function CreateLessons()
+	{
+		var lesson = CreateLesson("So where are the chicks?","Mako Mermaid",2,"Two mates eating a fish on the beach.","잭: 나쁘진 않아<br>Zac: Not bad.<br>캠: 여자들은 어딨어?<br>Cam: So where are the chicks?<br>캠: 음악은 어딨고?<br>Cam: And where's the music?<br>캠: 이비한테 가자고 했어야지<br>Cam: You should have asked Evie.<br>잭: 이비는 캠핑을 싫어해<br>Zac: She hates camping.<br>캠: 이건 내가 생각한 좋은 시간이 아니야<br>Cam: It's not exactly my idea of a good time either.<br>잭: 다음 주면 학기 시작이니까<br>Zac: Well, school starts next week.<br>잭: 더 놀러 갈 기회도 없어<br>Zac: We won't get another chance to get away.<br>캠: 난 잘래<br>Cam: I'm gonna crash.<br>잭: 코 골면 때린다<br>Zac: If you snore, I'll hit you.<br>캠: 어디 가?<br>Cam: Where're you going?<br>잭: 소변 보러<br>Zac: Nature calls.");
+		lessonList.push(lesson);
+		
+		var lesson = CreateLesson("You've all been cast out.","Mako Mermaid",2.5,"The older mermaid informs the younger mermaids of their punishment.","아쿠아타: 너무 많은 법을 어겼어<br>Aquata: You broke so many laws.<br>시레나: 하려던 건 아냐<br>Sirena: We didn't mean to.<br>아쿠아타: 우린 떠나야 해<br>Aquata: The pod must leave.<br>닉시: 여긴 우리 집이야<br>Nixie: This is our home.<br>아쿠아타: 이제는 안전하지 않아<br>Aquata: It's not safe here anymore.<br>라일라: 어디로 가는데?<br>Lyla: Where will we go?<br>아쿠아타: 너희는 못 가<br>Aquata: Not you.<br>아쿠아타: 우리끼리 갈 거야<br>Aquata: The pod is going.<br>아쿠아타: 너희는 못 따라와<br>Aquata: None of you may follow.<br>아쿠아타: 너희 모두 추방됐어<br>Aquata: You've all been cast out.<br>닉시: 아쿠아타, 얘기 좀 해줘, 그저 실수였다고<br>Nixie: Aquata, talk to them. Tell them it was a mistake.<br>아쿠아타: 난 못 해 다들 너희를 탓하고 있고<br>Aquata: I can't. They blame you.<br>아쿠아타: 내가 설득하려 했지만 듣지 않았어<br>Aquata: I tried to speak on your behalf but they wouldn't listen.<br>아쿠아타: 갈게, 날 기다리고 있어<br>Aquata: I have to go. The pod is waiting.<br>시레나: 안 돼<br>Sirena: No.<br>시레나: 제발, 언니 날 떠나지 마<br>Sirena: Please, Aquata. Don't leave me.<br>아쿠아타: 미안해, 시레나<br>Aquata: I'm sorry, Sirena."
+		);
+		lessonList.push(lesson);
+		
+		var lesson = CreateLesson("Zac, it's time to get up","Mako Mermaid",2.5,"Zac's father comes into Zac's room to wake him up.",
+		"아빠: 잭, 일어날 시간입니다<br>Dad: Zac, it's time to get up.<br>아빠: - 잭?<br>Dad: Zac!<br>잭: - 아빠, 잠깐만요!<br>Zac: No, Dad! Wait!<br>아빠: 시간 얼마 없지 않니?<br>Dad: You're cutting it a bit fine, aren't you?<br>아빠: 토요일이잖니<br>Dad: It's Saturday.<br>잭: 잘됐네요 늦잠 좀 잘게요 가 보세요<br>Zac: Great. I get to sleep in. Bye.<br>아빠: 잭, 구조 요원 일은?<br>Dad: Zac, life saving?<br>아빠: 주말마다 하잖아<br>Dad: You only do it every weekend.<br>잭: 참, 그랬지 갈게요<br>Zac: Oh, yeah. Right. I'm coming.<br>아빠: - 너 괜찮니?<br>Dad: Are you okay?<br>잭: - 네, 전 멀쩡해요<br>Zac: Yeah, fine, good.<br>아빠:그럼 빨리 일어나<br>Dad: Well, come on then.<br>잭: 아빠!<br>Zac: Dad!<br>아빠:잭, 난 의사야<br>Dad: Zac, I'm a doctor.<br>아빠: - 더 놀랄 것도 없어<br>Dad: It's nothing I haven't seen before.<br>잭: - 아빠!<br>Zac: Dad!<br>아빠: 서둘러라<br>Dad: It's time you weren't here.<br>아빠: 방 꼴이 아주 멋지구나<br>Dad: I love what you're doing with the place."
+		);
+		lessonList.push(lesson);
+		
+		var lesson = CreateLesson("Do you know where Zac is?","Mako Mermaid",2.5,"The three mermaids - Nixie, Lyla, and Serena - enter a cafe to look for Zac.",
+		"라일라: 여기도 없어<br>Lyla: Not here either.<br>시레나: 잭이 어딨는지 누군가는 알 거야<br>Serena: Somebody might know where he is.<br>데이브: - 식사하러 오셨나요?<br>Dave: Something to eat, ladies?<br>시레나: - 그냥 좀 앉고 싶어<br>Serena: We'd rather just sit.<br>시레나: 아침 내내 다리로 걸어 다녔거든<br>Serena: We've been walking all morning on legs.<br>데이브: - 그렇구나, 여긴 처음이야?<br>Dave: Okay. Are you guys new in town?<br>닉시: - 그렇다고 할 수 있지<br>Nixie: You could say that. Yes.<br>시레나: 육지 사람들은 잘 안 만나거든<br>Serena: We don't visit a lot of land people.<br>캠: 데이브, 응급 상황이야 얼음 좀 줘<br>Cam: Dave, medical emergency. We need some ice.<br>데이브: - 얼마나?<br>Dave: How much? <br>캠: - 두어 봉지면 될 거야<br>Cam: Couple of bags should do.<br>데이브: 따라와<br>Dave: Come on.<br>시레나: 쟨 잭의 친구야<br>Serena: Hey, that's Zac's friend.<br>시레나: - 잭이 어딨는지 알 거야<br>Serena: He might know where Zac is.<br>이비: - 필요하신 거 있나요?<br>Evie: Can I help you with anything?<br>닉시: - 잭의 사진에 있던 애구나!<br>Nixie: You're in that picture with Zac.<br>이비: - 난 잭의 여자친구야<br>Evie: I'm his girlfriend.<br>라일라: - 잭 어딨는지 알아?<br>Lyla: Do you know where Zac is?<br>이비: - 왜?<br>Evie: Why?<br>라일라: 그건 상관 말고<br>Lyla: None of your business.<br>이비: 그럼 알아서 찾아봐<br>Evie: Fine. Find him yourself.<br>시레나: 도와줘 중요한 일이야<br>Serena: Please. It's important.<br>이비: 꼭 알아야 한다면야 해변에 있어<br>Evie: Well, if you must know, he's at the beach,<br>이비: 구조 요원이거든<br>Evie: on lifesaving duty.<br>시레나: 고마워<br>Serena: Thanks."
+		);
+		lessonList.push(lesson);
+		
+		var lesson = CreateLesson("No, you can't just grab him.","Mako Mermaid",2.5,"The mermaids attempt to abduct Zac.",
+		"이비: 웬일이야?<br>Evie: What are you doing?<br>이비: - 아침에 새우 안 먹잖아<br>Evie: You never eat prawns for breakfast.<br>잭: - 이젠 먹어<br>Zac: I do now.<br>잭: 아주 맛있는데?<br>Zac: I love them.<br>잭: 하나 줄까?<br>Zac: Do you want one?<br>이비: 고맙지만 난 과일 샐러드면 돼<br>Evie: A fruit salad to go will do me fine, thanks.<br>라일라: 저기 있다<br>Lyla: There he is.<br>라일라: - 녀석을 잡아 오자<br>Lyla: Let's grab him.<br>닉시: - 그냥 잡아 올 순 없어<br>Nixie: No, you can't just grab him.<br>닉시: 육지 사람들만의 방식이 있거든<br>Nixie: Land people have rules for this.<br>라일라: 그래서? 난 육지 사람도 아냐<br>Lyla: So? I'm not one of them.<br>라일라: 안녕, 난 라일라야 넌 잭이지?<br>Lyla: Hi. I'm Lyla. You're Zac.<br>잭: 응<br>Zac: Yup.<br>라일라: 해상 구조 요원이지? 해변에서 봤어<br>Lyla: You're a lifesaver. I've seen you on the beach.<br>라일라: 나도 구조 요원이 되고 싶은데 방법 좀 알려줄래?<br>Lyla: I really wanna be one too. Can you show me how?<br>잭: - 그러려면 일단...<br>Zac: I guess, but you'd be better off going-<br>라일라: - 좋아, 나가자<br>Lyla: - Great, let's go.<br>이비: 안녕, 난 이비야<br>Evie: Hi, I'm Evie.<br>이비: 무슨 문제 있어?<br>Evie: Is there a problem?<br>라일라: 문제는 있는데 너한테 말하고 싶진 않아<br>Lyla: Actually there is one, but I'd rather not share it with you.<br>이비: 그럼 서프 클럽에 가 봐 경비대가 있을 거야<br>Evie: Sorry, but go down to the surf club and see the guard there, okay?<br>라일라: - 내가 뭐 잘못 말했어?<br>Lyla: Did I say something wrong?<br>닉시: - 응<br>Nixie: Yeah.<br>닉시: 이제 내 얘기 좀 들어볼래?<br>Nixie: Wanna hear the rules now?<br>캠: 난 캠이야 나도 구조 요원이지<br>Cam: I'm Cam. I'm a lifesaver too.<br>캠: 이 동네는 처음이야?<br>Cam: You guys new in town?<br>캠: 조언이라거나 뭐 궁금한 거 있어?<br>Cam: You need advice, or anything?<br>시레나: 잭은 어디 가는 거야?<br>Serena: Where's Zac going?<br>캠: 학교<br>Cam: Uh, school.<br>캠: 선코스트 고등학교<br>Cam: Suncoast High.<br>캠: - 너희는 어디 다녀?<br>Cam: What about you guys? What school?<br>닉시: - 우리도 거기 다녀<br>Nixie: That's where we're going too.<br>캠: 설마<br>Cam: No way.<br>캠: 진짜 잘됐다 같은 학교 친구구나<br>Cam: Oh, that's such good news. We're like classmates.<br>닉시: 그래, 근데 학교 위치를 모르겠어서<br>Nixie: Yeah, we just-- We don't know where it is.<br>캠: 문제없어 내가 데려가 줄게<br>Cam: Oh, problem solved. I can take you.<br>캠: 그래, 당장 가자<br>Cam: Right now. Yeah.<br>캠: 여기가 선코스트 고등학교야<br>Cam: Suncoast High.<br>캠: 한 해 동안 머물 감옥이지<br>Cam: Our prison for the next year.<br>캠: 농담한 거야 그렇게 나쁘진 않아<br>Cam: Just joking. Really, it's not that bad.<br>학생: 캠, 가자 이따 봐!<br>Student: Hey, Cam, let's go. See you!<br>시레나: 난 육지 학교 가기 싫어 인어 학교도 충분히 힘들었잖아<br>Serena: I don't want to go to land school. Mermaid school was bad enough."
+		);
+		lessonList.push(lesson);
+	}
+	
+	function CreateLesson(title,source,rating,context,content)
+	{
+		var l=[];
+		l.title=title;
+		l.source=source;
+		l.rating=rating;
+		l.context=context;
+		
+		
+		var c = content.trim().split("<br>");
+		_content = "";
+		
+		//trim and remove unwanted chars from each sentence
+		for(var i=0;i<c.length;i++)
+		{
+			c[i]=c[i].trim();
+			c[i]=c[i].replace(/[\  ]/g," ");
+		}
+		
+		
+		//choose a colour for each speaker
+		speakerList = [];
+		
+		for(var i=0;i<c.length;i++)
+		{
+			if(i%2==0)
+			{
+				var line = c[i].split(":");
+				var speaker = line[0];
+				if(!speakerList.includes(speaker))
+				{
+					speakerList.push(speaker);
+				}
+			}
+		}
+		
+		//colour and format each sentence 
+		for(var i=0;i+1<c.length;i+=2)
+		{
+			//if(i%2==0)
+			//{	
+				//set a colour for the speaker
+				var line = c[i].split(":");
+				var speaker = line[0];
+				var restOfSentence = "";
+				for(var j=1;j<line.length;j++)
+				{
+					restOfSentence+=line[j];
+				}
+				var currentBackgroundColour = GetColourBySpeaker(speaker,speakerList);
+				var text = "<div class='dialogBox'style='background:"+currentBackgroundColour+"'>"+speaker+":<b>"+restOfSentence+"</b>";
+				//c[i] = "<div style='color:black'><b>"+c[i]+"</b></div>";
+			//}
+			//else
+			//{
+				text += "<div class='dialogBox' style='color:Gray'>"+c[i+1]+"</div>";
+				
+				text+="</div><p class='' style='margin: 1em;'></p>";
+			//}
+			_content+=text;
+		}
+		l.content=_content;
+		//content=content.trim();
+		//content=content.replace(/[\  ]/g," ");
+		
+		
+		return l;
+	}
+	
+	function GetColourBySpeaker(speaker,speakerList)
+	{
+		const numColours = 7;
+		var i = speakerList.indexOf(speaker);
+		if(i==-1)
+		{
+			i=0;
+		}
+		var colour="";
+		switch(i%numColours)
+		{
+			case 0: colour="BurlyWood"; break;
+			case 1: colour="Khaki"; break;
+			case 2: colour="LightGray"; break;
+			case 3: colour="LightSeaGreen"; break;
+			case 4: colour="LightGreen"; break;
+			case 5: colour="LightSkyBlue"; break;
+			case 6: colour="LightPink"; break;
+			default: colour="Red";
+			
+		}
+		return colour;
+	}
+	
+	
+	function DrawLessons()
+	{
+		lessonList.sort((a, b) => {
+		  if (a.rating < b.rating)
+			return -1;
+		  if (a.rating > b.rating)
+			return 1;
+		  return 0;
+		});
+		
+	
+		document.getElementById("pasteArea").innerHTML = "<h2>GRADED KOREAN CONVERSATIONS FOR BEGINNER AND INTERMEDIATE LEARNERS<hr></h2>";
+		for(var i=0;i<lessonList.length;i++)
+		{
+			document.getElementById("pasteArea").innerHTML += "<h2>"+(i+1)+". "+lessonList[i].title+"</h2>";
+			document.getElementById("pasteArea").innerHTML += "<p><i>"+lessonList[i].context+"</i><p>";
+			document.getElementById("pasteArea").innerHTML += "<p>Difficulty: "+lessonList[i].rating+"<p>";
+			document.getElementById("pasteArea").innerHTML += "<div class='lib_text'>"+lessonList[i].content+"</div><br>";
+			document.getElementById("pasteArea").innerHTML += "<p><i>Source: "+lessonList[i].source+"</i><p>";
+			document.getElementById("pasteArea").innerHTML += "<hr>";
+		}
+	}
+		
+		
+	</script>
+</head>
+
+<body onload="BrowserCheck()" id="body">
+	<div class="wrapper">
+		<div class="box content" id="content">
+			<div class="editCell " contentEditable="false" id="pasteArea" type="text">
+			</div>
+
+
+		</div>
+		
+		
+		
+ <div class="topbar" id="topbar">
+		 <div class="empty"></div>
+		  <div class="empty"></div>
+		
+		 <div class="empty"></div>
+		 <div class="logo"><b>Korean Reader</b></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		  <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		  <div class="empty"></div>
+		 <div class="empty"></div>
+		  <div class="empty"></div>
+		 <div class="empty"></div>
+		 
+		 <div class="empty"></div>
+	 </div>
+</body>
+</html>
