@@ -5593,7 +5593,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=488;
+	var numGrammar=489;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8491,6 +8491,12 @@ function SetGrammarPoints()
 				rx.push(/goa-/);
 				n.point = "과";
 				n.des="A postpositional word used to indicate the subject of comparison or the object that serves as a basis, e.g. 이 시장은 전과 달라진 것이 없습니다 'This market is the same as before.'";
+			break;
+			case 488:
+				rx.push(/e-da /);
+				rx.push(/e-da-/);
+				n.point = "N에다(가)";
+				n.des="Stresses that an object has been transferred from one place to another. Combination of 에 (particle denoting direction or time) and 다(가) (expresses an interruption of action to immediately start doing another).";
 			break;
 			
 			default: console.log("index out of bounds");	
