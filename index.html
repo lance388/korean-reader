@@ -5593,7 +5593,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=490;
+	var numGrammar=491;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8502,6 +8502,11 @@ function SetGrammarPoints()
 				rx.push(/lo-seo/);
 				n.point = "N(으)로서";
 				n.des="'As a…', e.g. 인어로서 (as a mermaid).";
+			break;
+			case 490:
+				rx.push(/noa/);
+				n.point = "놔";
+				n.des="Shortened form of 놓아 (put down).";
 			break;
 			
 			default: console.log("index out of bounds");	
