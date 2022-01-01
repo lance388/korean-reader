@@ -5593,7 +5593,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=489;
+	var numGrammar=490;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8497,6 +8497,11 @@ function SetGrammarPoints()
 				rx.push(/e-da-/);
 				n.point = "N에다(가)";
 				n.des="Stresses that an object has been transferred from one place to another. Combination of 에 (particle denoting direction or time) and 다(가) (expresses an interruption of action to immediately start doing another).";
+			break;
+			case 489:
+				rx.push(/lo-seo/);
+				n.point = "N(으)로서";
+				n.des="'As a…', e.g. 인어로서 (as a mermaid).";
 			break;
 			
 			default: console.log("index out of bounds");	
