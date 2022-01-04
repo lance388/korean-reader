@@ -6719,8 +6719,9 @@ function SetGrammarPoints()
 				n.des="Indicates that something happened as a result of something the speaker did or said previously";
 			break;
 			case 176:
-				rx.push(/-da-ga-neun/);
-				n.point = "A/V-다가는";
+				rx.push(/da-ga-neun/);
+				rx.push(/da-gan/);
+				n.point = "A/V-다가는 / A/V-다간";
 				n.des="Expresses that if an action continues, then an adverse result will occur in the future";
 			break;
 			case 177:
@@ -6800,7 +6801,7 @@ function SetGrammarPoints()
 				n.des="'To an extent', 'in order to', 'to make', indicates the following action is necessary to realise the preceding action or state";
 			break;
 			case 191:
-				rx.push(/ss-da-ga/);
+				rx.push(/da-ga/);
 				n.point = "V-았/었다가";
 				n.des="Indicates that the subject performs the second action after the first action is complete";
 			break;
