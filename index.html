@@ -5593,7 +5593,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=491;
+	var numGrammar=492;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8500,6 +8500,15 @@ function SetGrammarPoints()
 				rx.push(/noa/);
 				n.point = "놔";
 				n.des="Shortened form of 놓아 (put down).";
+			break;
+			case 491:
+				rx.push(/ja-ni/);
+				rx.push(/da-ni/);
+				rx.push(/nya-ni/);
+				rx.push(/la-ni/);
+				rx.push(/ha-ni/);
+				n.point = "-자니/-다니/-라니/-냐니/-하니";
+				n.des="'Because (somebody) said...', combination of [자/다/라/냐/하]고 하다 (quotation) and A/V-(으)니까(요), A/V-(으)니 (because)";
 			break;
 			
 			default: console.log("index out of bounds");	
