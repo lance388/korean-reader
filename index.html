@@ -5593,7 +5593,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=492;
+	var numGrammar=493;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7111,10 +7111,9 @@ function SetGrammarPoints()
 				n.des="Acknowledges the statement in the preceding clause, but at the same time adding the statement in the following clause";
 			break;
 			case 247:
-				rx.push(/gi-neun-keo-nyeong/);
-				rx.push(/gin-keo-nyeong/);
-				n.point = "A/V-기는커녕";
-				n.des="Expresses that the content in the preceding clause is easily realised, but also the content in the following clause is even more so";
+				rx.push(/keo-nyeong/);
+				n.point = "A/V-기는커녕, A/V-은/는커녕";
+				n.des="'Let alone', expresses that the content in the preceding clause is easily realised, but also the content in the following clause is even more so";
 			break;
 			case 248:
 				rx.push(/ne-/);
@@ -8508,7 +8507,17 @@ function SetGrammarPoints()
 				rx.push(/la-ni/);
 				rx.push(/ha-ni/);
 				n.point = "-자니/-다니/-라니/-냐니/-하니";
-				n.des="'Because (somebody) said...', combination of [자/다/라/냐/하]고 하다 (quotation) and A/V-(으)니까(요), A/V-(으)니 (because)";
+				n.des="'Because (somebody) said...', combination of [-자/-다/-라/-냐/-하]고 하다 (speech/quotation) and A/V-(으)니(까) (because)";
+			break;
+			case 492:
+				rx.push(/lyeo-na/);
+				n.point = "-(으/ㄹ/을)려나";
+				n.des="'I wonder...'";
+			break;
+			case 493:
+				rx.push(/seo-do/);
+				n.point = "-서도";
+				n.des="'Even if/even though'";
 			break;
 			
 			default: console.log("index out of bounds");	
