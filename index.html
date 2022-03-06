@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=493;
+	var numGrammar=495;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6869,8 +6869,8 @@ function SetGrammarPoints()
 			case 202:
 				rx.push(/gi-neun/);
 				rx.push(/gin/);
-				n.point = "A/V-기는(요), N(이)기는(요)";
-				n.des="Expresses a polite disagreement, can be contracted to '긴'";
+				n.point = "A/V-기는(요), N(이)기는(요), A/V-긴(요)";
+				n.des="Expresses a polite disagreement";
 			break;
 			case 203:
 				rx.push(/n cheog-ha/);
@@ -7113,7 +7113,7 @@ function SetGrammarPoints()
 			break;
 			case 247:
 				rx.push(/keo-nyeong/);
-				n.point = "A/V-기는커녕, A/V-은/는커녕";
+				n.point = "A/V-기는커녕, A/V-긴커녕, A/V-은/는커녕";
 				n.des="'Let alone', expresses that the content in the preceding clause is easily realised, but also the content in the following clause is even more so";
 			break;
 			case 248:
@@ -8519,6 +8519,13 @@ function SetGrammarPoints()
 				rx.push(/seo-do/);
 				n.point = "-서도";
 				n.des="'Even if/even though'";
+			break;
+			case 494:
+				rx.push(/gin /);
+				rx.push(/gin-/);
+				rx.push(/gi-n/);
+				n.point = "-기는 하다, -긴 하다";
+				n.des="Used when the speaker admits to the truth of an action or state, but with some reservation";
 			break;
 			
 			default: console.log("index out of bounds");	
