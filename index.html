@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=495;
+	var numGrammar=496;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8526,6 +8526,12 @@ function SetGrammarPoints()
 				rx.push(/gi-n/);
 				n.point = "-기는 하다, -긴 하다";
 				n.des="Used when the speaker admits to the truth of an action or state, but with some reservation";
+			break;
+			case 495:
+				rx.push(/cheog/);
+				rx.push(/che/);
+				n.point = "A/V-(으)ㄴ/는 척 (하다), A/V-(으)ㄴ/는 체 하다)";
+				n.des="'To pretend'";
 			break;
 			
 			default: console.log("index out of bounds");	
