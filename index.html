@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=496;
+	var numGrammar=497;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -7513,24 +7513,24 @@ function SetGrammarPoints()
 				rx.push(/la-neun/);
 				rx.push(/lan/);
 				n.point = "-(이)라는/-(이)란";
-				n.des="Direct or indirect quotation， shortened form of -(이)라고 하는";
+				n.des="Direct or indirect quotation, shortened form of -(이)라고 하는";
 			break;
 			case 319:
 				rx.push(/da-neun/);
 				rx.push(/dan/);
 				n.point = "-(이)다는/-(이)단";
-				n.des="Indirect quotation， shortened form of -(이)다고 하는";
+				n.des="Indirect quotation, shortened form of -(이)다고 하는";
 			break;
 			case 320:
 				rx.push(/ja-neun/);
 				rx.push(/jan/);
 				n.point = "-(이)자는/-(이)잔";
-				n.des="Indirect quotation， shortened form of -(이)자고 하는";
+				n.des="Indirect quotation, shortened form of -(이)자고 하는";
 			break;
 			case 321:
 				rx.push(/nyan/);
 				n.point = "-(이)냐는/-(이)냔";
-				n.des="Indirect quotation， shortened form of -(이)냐고 하는";
+				n.des="Indirect quotation, shortened form of -(이)냐고 하는";
 			break;
 			case 322:
 				rx.push(/seong/);
@@ -8434,7 +8434,7 @@ function SetGrammarPoints()
 			case 478:
 				rx.push(/je /);
 				rx.push(/je-/);
-				n.point = "-제?";
+				n.point = "-제?, -제이?";
 				n.des="*사투리 dialect* 'isn't it?', indicates a tag question, equivalent to 'A/V-지(요)/죠?'";
 			break;
 			case 479:
@@ -8532,6 +8532,12 @@ function SetGrammarPoints()
 				rx.push(/che/);
 				n.point = "A/V-(으)ㄴ/는 척 (하다), A/V-(으)ㄴ/는 체 하다)";
 				n.des="'To pretend', e.g. 고양이인 척 해도 소용없어. (It's no use pretending to be a cat.)";
+			break;
+			case 496:
+				rx.push(/nya /);
+				rx.push(/nya-/);
+				n.point = "-냐면, -냐고 하면";
+				n.des="'When you (or someone else) ask (something)'";
 			break;
 			
 			default: console.log("index out of bounds");	
