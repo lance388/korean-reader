@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=497;
+	var numGrammar=498;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8429,13 +8429,13 @@ function SetGrammarPoints()
 				rx.push(/no /);
 				rx.push(/no-/);
 				n.point = "-노?";
-				n.des="*사투리 dialect* honorific - inquisitive, used to politely and gently ask a question or to confirm something, similiar to 'A/V-(으)ㄴ/는가?, V-나?'";
+				n.des="*경상도 dialect* honorific - inquisitive, used to politely and gently ask a question or to confirm something, similiar to 'A/V-(으)ㄴ/는가?, V-나?'";
 			break;
 			case 478:
 				rx.push(/je /);
 				rx.push(/je-/);
 				n.point = "-제?, -제이?";
-				n.des="*사투리 dialect* 'isn't it?', indicates a tag question, equivalent to 'A/V-지(요)/죠?'";
+				n.des="*경상도 dialect* 'isn't it?', indicates a tag question, equivalent to 'A/V-지(요)/죠?'";
 			break;
 			case 479:
 				rx.push(/dan /);
@@ -8538,6 +8538,11 @@ function SetGrammarPoints()
 				rx.push(/nya-/);
 				n.point = "-냐면, -냐고 하면";
 				n.des="'When you (or someone else) ask (something)'";
+			break;
+			case 497:
+				rx.push(/i-ga/);
+				n.point = "-다아니가, -다아이가, -다이가";
+				n.des="*경상도 dialect*'-잖아', '-잖니";
 			break;
 			
 			default: console.log("index out of bounds");	
