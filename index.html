@@ -6068,6 +6068,7 @@ function SetGrammarPoints()
 			break;
 			case 75:
 				rx.push(/l-ge/);
+				rx.push(/l-kke/);
 				n.point = "V-(으)ㄹ게(요)";
 				n.des="	'Will (do)', indicates intention";
 			break;
@@ -6672,8 +6673,8 @@ function SetGrammarPoints()
 			case 168:
 				rx.push(/ga-ji-go/);
 				rx.push(/ga-ji-gu/);
-				n.point = "V-아/어 가지고";
-				n.des="Indicates the doing of an action following the completion of another action";
+				n.point = "V-아/어 가지고, V-아/어가지고";
+				n.des="'Because', 'so', 'that', indicates the doing of an action follows the completion of another action";
 			break;
 			case 169:
 				rx.push(/ae-da/);
@@ -6869,8 +6870,8 @@ function SetGrammarPoints()
 			case 202:
 				rx.push(/gi-neun/);
 				rx.push(/gin/);
-				n.point = "A/V-기는(요), N(이)기는(요), A/V-긴(요)";
-				n.des="Expresses a polite disagreement";
+				n.point = "A/V-기는(요), N(이)기는(요), A/V-기는 하다, N(이)기는 하다";
+				n.des="'Although...', expresses a polite disagreement, 기는 is often shortened to 긴, e.g. 나는 바보이긴 하지만 너보다 똑똑해";
 			break;
 			case 203:
 				rx.push(/n cheog-ha/);
@@ -7714,9 +7715,9 @@ function SetGrammarPoints()
 				n.des="'And'";
 			break;
 			case 355:
-				rx.push(/mueon-ga/);
-				n.point = "뭔가";
-				n.des="'Something'";
+				rx.push(/si-k/);
+				n.point = "-시키다";
+				n.des="'To make', e.g. 소개(introduce)+시키다 → 소개시키다(to make an introduction)";
 			break;
 			case 356:
 				rx.push(/-byeol/);
@@ -8536,13 +8537,15 @@ function SetGrammarPoints()
 			case 496:
 				rx.push(/nya /);
 				rx.push(/nya-/);
-				n.point = "-냐면, -냐고 하면";
+				n.point = "-냐면, -냐고 하면, -냐하면";
 				n.des="'When you (or someone else) ask (something)'";
 			break;
 			case 497:
 				rx.push(/i-ga/);
+				rx.push(/da-a/);
+				rx.push(/da-i/);
 				n.point = "-다아니가, -다아이가, -다이가";
-				n.des="*경상도 dialect*'-잖아', '-잖니";
+				n.des="*경상도 dialect* equivalent to '-잖아', '-잖니'";
 			break;
 			
 			default: console.log("index out of bounds");	
