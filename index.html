@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=501;
+	var numGrammar=500;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6593,8 +6593,9 @@ function SetGrammarPoints()
 			break;
 			case 153:
 				rx.push(/de-da/);
+				rx.push(/da-ga/);
 				n.point = "A/V-(으)ㄴ/는 데다가";
-				n.des="Used to express actions occuring at the same time";
+				n.des="Used to express actions occuring at the same time, 'in addition', 'and also'";
 			break;
 			case 154:
 				rx.push(/jo-cha/);
@@ -8558,11 +8559,6 @@ function SetGrammarPoints()
 				rx.push(/nya/);
 				n.point = "A/V-(ㅆ)냐고";
 				n.des="'(I) am asking...', '(I) asked...', used to quote speech when the speaker/somebody asks a question again/repeatedly, e.g 모두 끝난걸 왜 아직 모르냐고 물어요? (I am asking why you still don't know yet that it's all over?)";
-			break;
-			case 500:
-				rx.push(/da-ga/);
-				n.point = "A/V-(으)ㄴ/는 테다가;
-				n.des="'In addition', 'and also'";
 			break;
 			
 			default: console.log("index out of bounds");	
