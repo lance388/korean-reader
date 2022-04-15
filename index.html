@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=500;
+	var numGrammar=501;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -6002,10 +6002,9 @@ function SetGrammarPoints()
 				n.des="'Because'";
 			break;
 			case 63:
-				rx.push(/ni-kka/);
-				rx.push(/ni /);
+				rx.push(/ni/);
 				n.point = "A/V-(으)니까(요), A/V-(으)니";
-				n.des="'Because', 'when', '(do something) only to discover'";
+				n.des="'Because', 'when', '(do something) only to discover', 'now that'";
 			break;
 			
 			case 64:
@@ -6652,7 +6651,7 @@ function SetGrammarPoints()
 			break;
 			case 164:
 				rx.push(/la-do/);
-				n.point = "N(으)라도";
+				n.point = "N(이)라도";
 				n.des="'At least', 'even if only', 'even N (must/are/have/do...)' indicates that something will suffice even though it is not the best choice";
 			break;
 			case 165:
@@ -6812,14 +6811,9 @@ function SetGrammarPoints()
 				n.des="Expresses that an action is of no value or use";
 			break;
 			case 193:
-				rx.push(/eo beo-l/);
-				rx.push(/e beo-l/);
-				rx.push(/a beo-l/);
-				rx.push(/eo-beo-l/);
-				rx.push(/e-beo-l/);
-				rx.push(/a-beo-l/);
+				rx.push(/beo-l/);
 				n.point = "V-아/어 버리다";
-				n.des="Indicates the complete and thorough finishing of an action or event";
+				n.des="'Just', indicates the complete and thorough finishing of an action or event, e.g. 비밀을 지키지 못하고 그냥 얘기해 버렸어요 (I could not keep the secret to myself, so I just let it be known)";
 			break;
 			case 194:
 				rx.push(/go mal/);
@@ -6827,7 +6821,7 @@ function SetGrammarPoints()
 				rx.push(/gu-mal/);
 				rx.push(/go-mal/);
 				n.point = "V-고 말다";
-				n.des="Refers to an unplanned action or event that continued until it was complete and thoroughly finished";
+				n.des="'Ended up', 'at last', 'completely', refers to an unplanned action or event that continued until it was thoroughly finished";
 			break;
 			case 195:
 				rx.push(/boass-ja /);
@@ -8559,6 +8553,11 @@ function SetGrammarPoints()
 				rx.push(/nya/);
 				n.point = "A/V-(ㅆ)냐고";
 				n.des="'(I) am asking...', '(I) asked...', used to quote speech when the speaker/somebody asks a question again/repeatedly, e.g 모두 끝난걸 왜 아직 모르냐고 물어요? (I am asking why you still don't know yet that it's all over?)";
+			break;
+			case 500:
+				rx.push(/hyeong/);
+				n.point = "-형";
+				n.des="'Such a type', from the Chinese character '型'";
 			break;
 			
 			default: console.log("index out of bounds");	
