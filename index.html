@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=501;
+	var numGrammar=505;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5748,12 +5748,10 @@ function SetGrammarPoints()
 				n.des="Particle denoting 'from...'";
 			break;
 			case 21:
-				rx.push(/-e-ge /);
-				rx.push(/-e-gen /);
-				rx.push(/ e-ge /);
-				rx.push(/ e-gen /);
-				n.point = "N에게";
-				n.des="Particle denoting a recipient";
+				rx.push(/-e-ge/);
+				rx.push(/ e-ge/);
+				n.point = "N에게, N에게는";
+				n.des="Particle denoting a recipient,the 는 adds emphasis";
 			break;
 			case 22:
 				rx.push(/han-te/);
@@ -6207,7 +6205,7 @@ function SetGrammarPoints()
 				rx.push(/n-ji-/);
 				rx.push(/l-ji /);
 				rx.push(/l-ji-/);
-				n.point = "A/V-(으)ㄴ/는지 (present), A/V-(으)ㄹ지 (future)";
+				n.point = "A/V-(으)ㄴ/는지(도) (present), A/V-(으)ㄹ지(도) (future)";
 				n.des="Connects a clause requiring additional information";
 			break;
 			case 98:
@@ -6724,28 +6722,24 @@ function SetGrammarPoints()
 				n.des="Expresses that if an action continues, then an adverse result will occur in the future";
 			break;
 			case 177:
-				rx.push(/n sen-/);
+				rx.push(/sen-/);
 				n.point = "A/V-(으)ㄴ/는 센이다";
 				n.des="Indicates that something could be considered equivalent";
 			break;
 			case 178:
-				rx.push(/n chae-lo/);
+				rx.push(/chae-lo/);
 				n.point = "V-(으)ㄴ 채로";
 				n.des="Used to describe an action performed while in a certain state";
 			break;
 			case 179:
-				rx.push(/eo noh-/);
-				rx.push(/e noh-/);
-				rx.push(/a noh-/);
+				rx.push(/noh/);
 				n.point = "V-아/어 놓다";
 				n.des="Indicates the continuation of a state";
 			break;
 			case 180:
-				rx.push(/eo du/);
-				rx.push(/e du/);
-				rx.push(/a du/);
-				n.point = "V-아/어 두다";
-				n.des="Indicates the continuation of a state following the completion of an action";
+				rx.push(/du/);
+				n.point = "V-아/어 두다, V-아/어두다";
+				n.des="Similiar to adding '-ing' to a verb in English to indicate an action continuing into the future, e.g. 받다 ( to receive) → 받아두다 (to (continue) receiving)";
 			break;
 			case 181:
 				rx.push(/dae-lo/);
@@ -6753,7 +6747,8 @@ function SetGrammarPoints()
 				n.des="'In accordance with'";
 			break;
 			case 182:
-				rx.push(/n pyeon/);
+				rx.push(/pyeon /);
+				rx.push(/pyeon-/);
 				n.point = "A/V-(으)ㄴ/는 편이다";
 				n.des="Used to state a characteristic";
 			break;
@@ -7680,7 +7675,7 @@ function SetGrammarPoints()
 				n.des="'While'";
 			break;
 			case 349:
-				rx.push(/lop/);
+				rx.push(/lob/);
 				n.point = "N롭다";
 				n.des="Turns a noun into an adjective";
 			break;
@@ -8558,6 +8553,26 @@ function SetGrammarPoints()
 				rx.push(/hyeong/);
 				n.point = "-형";
 				n.des="'Such a type', from the Chinese character '型'";
+			break;
+			case 501:
+				rx.push(/eol-ma-deun-ji/);
+				n.point = "얼마든지";
+				n.des="'No matter how much', 'as much as (you) want'";
+			break;
+			case 502:
+				rx.push(/geu-leo/);
+				n.point = "그렇다, 그러하다";
+				n.des="'Like that'";
+			break;
+			case 503:
+				rx.push(/i-leo/);
+				n.point = "이렇다, 이러하다";
+				n.des="'Like this'";
+			break;
+			case 504:
+				rx.push(/jeo-leo/);
+				n.point = "저렇다, 저러하다";
+				n.des="'Like that'";
 			break;
 			
 			default: console.log("index out of bounds");	
