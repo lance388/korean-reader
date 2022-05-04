@@ -8574,6 +8574,14 @@ function SetGrammarPoints()
 				n.point = "저렇다, 저러하다";
 				n.des="'Like that'";
 			break;
+			case 505:
+				rx.push(/lal/);
+				rx.push(/jal/);
+				rx.push(/dal/);
+				rx.push(/nyal/);
+				n.point = "-랄까/-잘까/-달까/-냘까";
+				n.des="Shortened form of -(이)라고 할까/-(이)자고 할까/-(이)다고 할까/-(이)냐고 할까";
+			break;
 			
 			default: console.log("index out of bounds");	
 		}
