@@ -5606,15 +5606,39 @@ function SetGrammarPoints()
 		{
 			
 			case 0:
-				rx.push(/kke-seo(?!-neun)/);
-				n.point = "N께서";
-				n.des="Subject marking particle, honorific form of 이/가";
+				rx.push(/ u /);
+				rx.push(/-u /);
+				rx.push(/ u-/);
+				rx.push(/-u-/);
+				rx.push(/ un /);
+				rx.push(/-un /);
+				rx.push(/ un-/);
+				rx.push(/-un-/);
+				rx.push(/ ueo/);
+				rx.push(/-ueo/);
+				n.point = "-우/-워/-웠";
+				n.des="ㅂ irregular conjugation (e.g. 쉽 -> 쉬우)";
 			break;
 			
 			case 1:
-				rx.push(/kke-seo-neun/);
-				n.point = "N께서는";
-				n.des="Topic marking particle, honorific form of 은/는";
+				rx.push(/l /);
+				rx.push(/l-/);
+				rx.push(/-l/);
+				
+				rx.push(/n /);
+				rx.push(/n-/);
+				
+				rx.push(/b /);
+				rx.push(/b-/);
+				
+				rx.push(/s /);
+				rx.push(/s-/);
+
+				n.point = "ㄹ irregular conjugation";
+				n.des="RULE 1: ㄹ is dropped when verb ending in ㄹ is conjugated with word beginning with ㄴ, ㅂ, ㅅ, e.g. 살다 + -네요 → 사네요 / 살다 + -ㅂ니다 → 삽니다. RULE 2: 으/스 is dropped when verb ending in ㄹ is conjugated with word beginning with 으/스, and then rules 1 & 3 are applied if necessary, e.g. 만들다 + -(스)ㅂ니다 → 만듭니다 / 알다 + -(으)니까 → 아니까 / 팔다 + -(으)면 → 팔면. RULE 3: The second ㄹ is dropped when verb ending in ㄹ is conjugated with word beginning with ㄹ, e.g. 알다 + -(으)ㄹ 거예요 → 알 거예요";
+			
+			
+
 			break;
 			
 			case 2:
@@ -5626,8 +5650,8 @@ function SetGrammarPoints()
 			case 3:
 				rx.push(/b-ni-da/);
 				rx.push(/b-ni-kka/);
-				n.point = "A/V-(스)ㅂ니다, A/V-(스)ㅂ니까";
-				n.des="Formal polite style. Some irregular conjugations exist e.g. 들다→듭니다 / 들다→듭니까";
+				n.point = "A/V-(스)ㅂ니다, A/V-(스)ㅂ니까?";
+				n.des="Formal polite style. Some irregular conjugations exist e.g. 들다→듭니다 / 들다→듭니까?";
 			break;
 			
 			case 4:
@@ -7970,18 +7994,9 @@ function SetGrammarPoints()
 				n.des="Particle denoting side or direction";
 			break;
 			case 403:
-				rx.push(/ u /);
-				rx.push(/-u /);
-				rx.push(/ u-/);
-				rx.push(/-u-/);
-				rx.push(/ un /);
-				rx.push(/-un /);
-				rx.push(/ un-/);
-				rx.push(/-un-/);
-				rx.push(/ ueo/);
-				rx.push(/-ueo/);
-				n.point = "-우/-워/-웠";
-				n.des="ㅂ irregular conjugation (e.g. 쉽 -> 쉬우)";
+				rx.push(/kke-seo(?!-neun)/);
+				n.point = "N께서";
+				n.des="Subject marking particle, honorific form of 이/가";
 			break;
 			case 404:
 				rx.push(/jeog/);
@@ -8354,21 +8369,9 @@ function SetGrammarPoints()
 				n.des="Turns a noun into an adverb, e.g. 역사 (history) → 역사적으로 (historically)";
 			break;
 			case 468:
-				rx.push(/l /);
-				rx.push(/l-/);
-				rx.push(/-l/);
-				
-				rx.push(/n /);
-				rx.push(/n-/);
-				
-				rx.push(/b /);
-				rx.push(/b-/);
-				
-				rx.push(/s /);
-				rx.push(/s-/);
-
-				n.point = "ㄹ irregular verb";
-				n.des="RULE 1: ㄹ is dropped when verb ending in ㄹ is conjugated with word beginning with ㄴ, ㅂ, ㅅ, e.g. 살다 + -네요 → 사네요 / 살다 + -ㅂ니다 → 삽니다. RULE 2: 으/스 is dropped when verb ending in ㄹ is conjugated with word beginning with 으/스, and then rules 1 & 3 are applied if necessary, e.g. 만들다 + -(스)ㅂ니다 → 만듭니다 / 알다 + -(으)니까 → 아니까 / 팔다 + -(으)면 → 팔면. RULE 3: The second ㄹ is dropped when verb ending in ㄹ is conjugated with word beginning with ㄹ, e.g. 알다 + -(으)ㄹ 거예요 → 알 거예요";
+				rx.push(/kke-seo-neun/);
+				n.point = "N께서는";
+				n.des="Topic marking particle, honorific form of 은/는";
 			break;
 			case 469:
 				rx.push(/seo /);
