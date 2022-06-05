@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=511;
+	var numGrammar=514;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8613,6 +8613,22 @@ function SetGrammarPoints()
 				rx.push(/ne /);
 				n.point = "네가";
 				n.des="'You'";
+			break;
+			case 511:
+				rx.push(/to-log/);
+				n.point = "N토록";
+				n.des="'To the extent of N'";
+			break;
+			case 512:
+				rx.push(/man/);
+				rx.push(/lo-do/);
+				n.point = "N만으로도";
+				n.des="'Only with N'";
+			break;
+			case 513:
+				rx.push(/lyeo-na/);
+				n.point = "A/V-(으/ㄹ/을)려나?";
+				n.des="'I wonder...'";
 			break;
 			
 			default: console.log("index out of bounds");	
