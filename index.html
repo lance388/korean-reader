@@ -5594,7 +5594,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=513;
+	var numGrammar=514;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -8625,6 +8625,11 @@ function SetGrammarPoints()
 				n.point = "N만으로도";
 				n.des="'Only with N'";
 			break;
+			case 513:
+				rx.push(/geu-jeo/);
+				n.point = "그저";
+				n.des="'Just', 'only'";
+			break;
 			
 			default: console.log("index out of bounds");	
 		}
@@ -9008,12 +9013,12 @@ function CreateDocument(collection,_type,lang,uid,w)
 {
 	console.log("creating document "+_type);
 
-	dbfire.collection(collection).add({
+	dbfire.collection(collection).set({
 		words: w,
 		language: lang,
 		type: _type,
 		author_uid: uid
-	})
+	}, { merge: true })
 	.then(function() {
 		console.log("Document successfully written!");
 	})
