@@ -6509,12 +6509,16 @@ function SetGrammarPoints()
 				n.des="Indicates recollection";
 			break;
 			case 135:
+				rx.push(/la-nyo/);
+				rx.push(/da-nyo/);
+				rx.push(/nya-nyo/);
+				rx.push(/ja-nyo/);
 				rx.push(/da-ni/);
 				rx.push(/la-ni/);
 				rx.push(/nya-ni/);
 				rx.push(/ja-ni/);
-				n.point = "A/V-다니(요)";
-				n.des="Expresses surprise towards what somebody has said";
+				n.point = "A/V-다니(요), N(이)라니(요)";
+				n.des="Expresses surprise towards what somebody has said, expresses that something is ridiculous or unbelievable, 니요 can be shortened to 뇨";
 			break;
 			case 136:
 				rx.push(/l-kka/);
@@ -7981,11 +7985,10 @@ function SetGrammarPoints()
 				n.des="Past tense version of A/V-군(요), expresses wonder or surprise in the past";
 			break;
 			case 401:
-				rx.push(/la-ni /);
-				rx.push(/la-ni-/);
-				rx.push(/la-nyo/);
-				n.point = "N(이)라니(요)/N(이)라뇨";
-				n.des="Expresses that something is ridiculous or unbelievable";
+				rx.push(/go /);
+				rx.push(/go-/);
+				n.point = "-고";
+				n.des="Used with certain words to express 'any', e.g. 언제 (when) → 언제고 (anytime)";
 			break;
 			case 402:
 				rx.push(/jjog/);
