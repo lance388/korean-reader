@@ -22,7 +22,13 @@ Author: Rohan Scott*/
 	--tabcontent-padding:1vh;
 }
 
+.vocablistbutton {
+        font-size: 1.5em;
+    }
 
+.defText {
+        font-size: 2em;
+    }
 
 table
 {
