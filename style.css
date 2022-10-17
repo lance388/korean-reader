@@ -25,6 +25,11 @@ Author: Rohan Scott*/
 .vocablistbutton {
         font-size: 1.5em;
     }
+	
+	.lib_text
+{
+	font-size:.6em;
+}
 
 .defText {
         font-size: 2em;
@@ -274,10 +279,7 @@ grid-area: tab;
 		"tab3";
 }
 
-.lib_text
-{
-	font-size:.8em;
-}
+
 
 .dialogBox
 {
@@ -640,6 +642,9 @@ canvas{
 
 th{
 	color: var(--font-bg);
+}
+h2{
+		margin-top:1px;
 }
 
 @charset "UTF-8";

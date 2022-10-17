@@ -201,35 +201,56 @@ This software uses the following plugins, please take note of their individual l
 	
 	function CreateLessons()
 	{
-		var lesson = CreateLesson("마인크래프트","Minecraft","n",1,"");
-		lessonList.push(lesson);
+		lessonList.push(CreateLesson("마인크래프트","Minecraft","n",1,""));
+		lessonList.push(CreateLesson("샌드박스 게임","Sandbox game","n",3,""));
+		lessonList.push(CreateLesson("회로","Circuit","n",2,""));
+		lessonList.push(CreateLesson("자바 프로그래밍 언어","Java programing language","n",2,""));
+		lessonList.push(CreateLesson("플레이어","Player","n",1,""));
+		lessonList.push(CreateLesson("블록","Block","n",1,""));
+		lessonList.push(CreateLesson("흙","Dirt","n",1,""));
+		lessonList.push(CreateLesson("돌","Stone","n",1,""));
+		lessonList.push(CreateLesson("나무","Wood","n",1,""));
+		lessonList.push(CreateLesson("물","Water","n",1,""));
+		lessonList.push(CreateLesson("용암","Lava","n",1,""));
+		lessonList.push(CreateLesson("사막","Desert","n",1,""));
+		lessonList.push(CreateLesson("정글","Jungle","n",1,""));
+		lessonList.push(CreateLesson("얼음지대","Snowfield","n",1,""));
+		lessonList.push(CreateLesson("평지","Plain","n",1,""));
+		lessonList.push(CreateLesson("산","Mountain","n",1,""));
+		lessonList.push(CreateLesson("숲","Forest","n",1,""));
+		lessonList.push(CreateLesson("동굴","Cave","n",1,""));
+		lessonList.push(CreateLesson("레드스톤","Redstone","n",3,""));
+		lessonList.push(CreateLesson("블록들을 이동하다","Move blocks","expr",1,""));
+		lessonList.push(CreateLesson("블록들을 배치하다","Place blocks","expr",1,""));
+		lessonList.push(CreateLesson("배열되다","Be arranged","v",1,""));
 		
-		var lesson = CreateLesson("게임","Game","n",1,""
-		);
-		lessonList.push(lesson);
+		lessonList.push(CreateLesson("3차원 세계","3D world","n",2,"무한히 펼쳐진 3차원 세계를 무대로 활동을 한다.<br>Do activities in an infinite 3D world."));
+		lessonList.push(CreateLesson("제작","Crafting","n",1,""));
+		lessonList.push(CreateLesson("제작하다","Craft","v",1,""));
+		lessonList.push(CreateLesson("건축","Building","n",1,""));
+		lessonList.push(CreateLesson("건축하다","Build (a building)","v",1,""));
+		lessonList.push(CreateLesson("구조물","Structure, construction","n",1,""));
+		lessonList.push(CreateLesson("짓다","Make, build","v",1,""));
+		lessonList.push(CreateLesson("생존","Survival","n",1,""));
+		lessonList.push(CreateLesson("생존하다","Survive","v",1,""));
+		lessonList.push(CreateLesson("보유하다","Possess, hold","v",1,""));
+		lessonList.push(CreateLesson("토공","Earthworks","n",2,""));
+		lessonList.push(CreateLesson("절차적 생성","Procedural generation","n",3,""));
+		lessonList.push(CreateLesson("특별한 목적 없다","Without any special objective","expr",1,""));
+		lessonList.push(CreateLesson("서바이벌 모드","Survival mode","n",3,"세계 속 자원으로 생존을 도모하는 서바이벌 모드 지원한다.<br>It supports survival mode that promotes using resources to survive in the world."));
+		lessonList.push(CreateLesson("크리에이티브 모드","Creative mode","n",3,"자유롭게 세계를 가꾸는 크리에이티브 모드 지원한다.<br>It supports creative mode for freely cultivating the world."));
+		lessonList.push(CreateLesson("채취하다","Gather, harvest","v",1,""));
+		lessonList.push(CreateLesson("채집하다","Collect","v",1,"저의 취미는 아름다운 나비들을 채집하는거에요.<br>My hobby is to collect beautiful butterflies."));
+		lessonList.push(CreateLesson("하드코어 모드","Hardcore mode","n",3,"한번 죽으면 끝나는 하드코어 모드 지원한다.<br>It supports hardcore mode that ends once you die."));
+		lessonList.push(CreateLesson("정육면체","Cube","n",2,""));
+		lessonList.push(CreateLesson("청크","Chunk","n",3,""));
+		lessonList.push(CreateLesson("스킨","Skin","n",3,"2010년 업데이트에서 추가된 사용자 제작 스킨 기능을 선택해 플레이할 수 있다.<br>The 2010 update added the feature to select and play user-created skins."));
+		lessonList.push(CreateLesson("지형","Topography","n",2,""));
+		lessonList.push(CreateLesson("캐릭터로","Character","n",1,""));
+		lessonList.push(CreateLesson("주민","Resident, inhabitant","n",1,""));
+		lessonList.push(CreateLesson("몬스터","Monster","n",1,""));
+		lessonList.push(CreateLesson("몹","Mob","n",3,""));
 		
-		var lesson = CreateLesson("샌드박스 게임","Sandbox game","n",1,
-		""
-		);
-		lessonList.push(lesson);
-		
-		var lesson = CreateLesson("자바 프로그래밍 언어","Java programing language","n",1,
-		""
-		);
-		lessonList.push(lesson);
-		
-		var lesson = CreateLesson("플레이어","Player","n",1,
-		""
-		);
-		
-		lessonList.push(lesson);var lesson = CreateLesson("3차원 세계","3D world","n",2,
-		""
-		);
-		
-		lessonList.push(lesson);var lesson = CreateLesson("채집하다","Gather","v",1,
-		"저의 취미는 아름다운 나비들을 채집하는거에요.<br>My hobby is to collect beautiful butterflies."
-		);
-		lessonList.push(lesson);
 	}
 	
 	function CreateLesson(wordKr,wordEn,wordClass,rating,content)
@@ -371,14 +392,11 @@ This software uses the following plugins, please take note of their individual l
 		  return 0;
 		});
 		
-		
-		document.getElementById("pasteArea").innerHTML = " <h2>Minecraft Korean Vocabulary<hr></h2>";
+
+		document.getElementById("pasteArea").innerHTML = " <h2>Minecraft Korean Vocabulary</h2><div style='font-size:.4em; text-align:right;padding-right:10px'>Basic: ★☆☆  Advanced: ★★☆  Jargon: ★★★</div><hr>";
 		for(var i=0;i<lessonList.length;i++)
 		{
 			document.getElementById("pasteArea").innerHTML += "<table style ='margin-left: auto;margin-right: auto;  width: 100%; ' ><tr><th style ='width: 70%;'></th><th style ='width: 15%;'></th><th style ='width: 15%;'></th><tr><tr><td><div class='defText'>"+(i+1)+".	"+lessonList[i].wordKr+"</div></td><td><div class='defText'>("+lessonList[i].wordClass+")</div></td><td><div class='defText'>"+GetStars(lessonList[i].rating)+"</div></td></tr><tr><td><div class='defText' style='color:Gray'>	"+lessonList[i].wordEn+"</div></td></tr>";
-			//document.getElementById("pasteArea").innerHTML += "<h2>"+(i+1)+".	"+lessonList[i].wordKr+"</h2>";
-			//document.getElementById("pasteArea").innerHTML += "<h2 style='color:Gray'>	"+lessonList[i].wordEn+"</h2>";
-			//document.getElementById("pasteArea").innerHTML += "<p>Difficulty: "+lessonList[i].rating+"<p>";
 			document.getElementById("pasteArea").innerHTML += "<br><div class='lib_text'>"+lessonList[i].content+"</div>";
 			document.getElementById("pasteArea").innerHTML += "<hr>";
 		}
