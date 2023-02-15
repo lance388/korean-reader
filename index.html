@@ -5647,7 +5647,7 @@ function SetGrammarPoints()
 				rx.push(/ess /);
 				rx.push(/ess-/);
 				n.point = "A/V-았/었/였 + 아/어 + (요)";
-				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았어, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔아, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어, (irregular ㅂ) e.g. 외롭→외로우었어→외로웠어 / 곱→고오았아→고왔아, (irregular ㅅ) e.g. 낫→나았어";
+				n.des="Informal past tense 았/었/였 conjugation: 하→하였어→했어, 아→았어, 어→었어, 애→앴어, 에→엤어, 이→이었어→였어, 으→으었어→었어, 오→오았아→왔아, 우→우었어→웠어, 안→안았아, 온→온았아, 언→언었어, 운→운었어, 은→은었어, 인→인었어, 앤→앤었어, 엔→엔었어, (irregular ㅂ) usually drop the ㅂ and add 우 e.g. 외롭→외로우었어→외로웠어 however some words (돕다 and 곱다) add 오 instead e.g.곱→고오았아→고왔아 and some others do not drop the ㅂ, (irregular ㅅ) e.g. 낫→나았어";
 			break;
 			case 6:
 				rx.push(/l geo/);
@@ -5833,8 +5833,8 @@ function SetGrammarPoints()
 			break;
 			case 36:
 				rx.push(/(?<!deo)n-de/);
-				n.point = "A-(으)ㄴ데/은데, V-는데, N-인데";
-				n.des="'But', 'so', 'therefore', 'and'. Adjectives with an ending consonant use -은데, and adjectives without an ending consonant use -(으)ㄴ데. Note the exception for adjectives that end with ㄹ, (으)ㄴ데 will be used instead of 은데. All verbs regardless of ending consonant use -는데. All nouns use -인데.";
+				n.point = "(present) A-(으)ㄴ데/은데, (present) V-는데, (present) N-인데, (past) A/V-는데, (past) N-였는데";
+				n.des="'But', 'so', 'therefore', 'and'. Present tense adjectives with an ending consonant use -은데, and present tense adjectives without an ending consonant use -(으)ㄴ데. Note the exception for adjectives that end with ㄹ, (으)ㄴ데 will be used instead of 은데. All verbs regardless of ending consonant use -는데. All nouns use -인데.";
 			break;
 			case 37:
 				rx.push(/jeon-e /);
@@ -8097,7 +8097,7 @@ function SetGrammarPoints()
 				rx.push(/e /);
 				rx.push(/e-/);
 				n.point = "A/V-아/어/여+(요)";
-				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어, (irregular ㅂ) e.g. 외롭→외로우어→외로워 / 곱→고오아→고와, (irregular ㅅ) e.g. 낫→나아";
+				n.des="Informal present tense 아/어/여 conjugation: 하→하여→해, 아→아, 어→어, 애→애, 에→에, 이→이어→여, 으→으어→어, 오→오아→와, 우→우어→워, 안→안아, 온→온아, 언→언어, 운→운어, 은→은어, 인→인어, 앤→앤어, 엔→엔어, (irregular ㅂ) usually drop the ㅂ and add 우 e.g. 외롭→외로우어→외로워 however some words (돕다 and 곱다) add 오 instead e.g.곱→고오아→고와 and some others do not drop the ㅂ, (irregular ㅅ) e.g. 낫→나아";
 			break;
 			case 425:
 				rx.push(/na-myeon/);
