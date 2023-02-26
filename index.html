@@ -37,11 +37,15 @@ This software uses the following plugins, please take note of their individual l
 <meta name="twitter:description" content="Learn Korean through reading. Look up words, track progress, and view statistics." />
 <meta name="twitter:image" content="/preview/preview.png"/>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<!-- OLD GOOGLE SIGNIN
   <meta name="google-signin-client_id" content="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com">
   <meta name="google-signin-cookiepolicy" content="single_host_origin">
   <meta name="google-signin-scope" content="profile email">
   
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>	-->
+	
 
 <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -9679,6 +9683,12 @@ function SetUILanguage(lang) //TODO
 </head>
 
 <body onload="BrowserCheck()" id="body" onscroll="onScroll()">
+
+	<div id="g_id_onload"
+         data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+
 	<div class="wrapper">
 		<div class="box content" id="content">
 			<div class="editCell " contentEditable="false" data-text="Paste text here" id="pasteArea" type="text" oninput="OnInput()">
@@ -10036,8 +10046,17 @@ function SetUILanguage(lang) //TODO
 									<br><br>      
 								  <p id="googleSigninText">Sign in with your Google account below.</p>
 								  <!-- [START google_button] -->
-								  <div class="g-signin2" id="googleSignin" data-onsuccess="onSignIn" data-theme="dark"></div>
+								  
+								   <!-- OLD METHOD <div class="g-signin2" id="googleSignin" data-onsuccess="onSignIn" data-theme="dark"></div>  -->
 								  <!-- [END google_button] -->
+								  
+								  
+								  <!-- [START google_button] -->
+								  
+								 <div class="g_id_signin" data-type="standard" data-theme="dark"></div>
+								  <!-- [END google_button] -->
+								  
+								  
 								  <br>
 								
 								
