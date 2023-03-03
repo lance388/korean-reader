@@ -5598,7 +5598,7 @@ function PopulateGrammarTab()
 function SetGrammarPoints()
 {
 	
-	var numGrammar=523;
+	var numGrammar=521;
 	
 	for(var i=0;i<numGrammar;i++)
 	{
@@ -5683,11 +5683,11 @@ function SetGrammarPoints()
 			break;
 			case 10:
 				rx.push(/-i /);
-				rx.push(/ga /);
+				rx.push(/(?!-g)ga /);
 				rx.push(/ i /);
 				rx.push(/-i-/);
 				rx.push(/ i-/);
-				rx.push(/ga-/);
+				rx.push(/(?!-g)ga-/);
 				n.point = "N이/가";
 				n.des="Subject marking particle";
 			break;
@@ -5698,7 +5698,7 @@ function SetGrammarPoints()
 			break;
 			case 12:
 				rx.push(/l /);
-				rx.push(/l-/);
+				rx.push(/l-(?!-gga)/);
 				n.point = "Nㄹ/을/를";
 				n.des="Object marking particle. 를 can be condensed into the last character if it doesn't contain a 받침, e.g. 하기+를 can be written either 하기를 or 하길. Sometimes is used without a verb, e.g. 저렇게 멋진 그림을요 (such a nice picture)";
 			break;
@@ -5837,8 +5837,8 @@ function SetGrammarPoints()
 			break;
 			case 36:
 				rx.push(/(?<!deo)n-de/);
-				n.point = "(present) A-(으)ㄴ데/은데, (present) V-는데, (present) N-인데, (past) A/V-는데, (past) N-였는데";
-				n.des="'But', 'so', 'therefore', 'and'. Present tense adjectives with an ending consonant use -은데, and present tense adjectives without an ending consonant use -(으)ㄴ데. Note the exception for adjectives that end with ㄹ, (으)ㄴ데 will be used instead of 은데. All verbs regardless of ending consonant use -는데. All nouns use -인데.";
+				n.point = "(present) A-(으)ㄴ데/은데, (present) V-는데, (present) N-인데, (past) A/V-는데, (past) N였는데";
+				n.des="'But', 'so', 'therefore', 'and'; present tense adjectives with an ending consonant use -은데, and present tense adjectives without an ending consonant use -(으)ㄴ데; all verbs regardless of ending consonant use -는데";
 			break;
 			case 37:
 				rx.push(/jeon-e /);
@@ -5998,14 +5998,14 @@ function SetGrammarPoints()
 				n.des="'Because'";
 			break;
 			case 62:
-				rx.push(/ttae-mun-e/);
-				n.point = "N 때문에, A/V-기 때문에";
-				n.des="'Because'";
+				rx.push(/ttae-mun/);
+				n.point = "N때문에, N 때문에, A/V-기 때문에, (past) A/V-았/었기 때문에";
+				n.des="'Because', similiar meaning to -(으)니까, this structure is not used in propositive or imperative sentences (for those use -(으)니까)";
 			break;
 			case 63:
 				rx.push(/ni/);
 				n.point = "A/V-(으)니까(요), A/V-(으)니";
-				n.des="'Because', 'when', '(do something) only to discover', 'now that'";
+				n.des="'Because', 'when', '(do something) only to discover', 'now that, similiar meaning to -기 때문에";
 			break;
 			
 			case 64:
@@ -6043,8 +6043,8 @@ function SetGrammarPoints()
 			
 			case 70:
 				rx.push(/l-kka/);
-				n.point = "V-(으)ㄹ까(요)?";
-				n.des="'Shall we', 'shall I'?";
+				n.point = "V-(으)ㄹ까(요)?, A/V-(으)ㄹ까(요)?, A/V-(으)ㄹ까.";
+				n.des="'Shall we...?' + V, 'shall I...?' + V, 'do (you) think...?' + A/V, A/V-(으)ㄹ까 in a non-question format indicates a reason for something";
 			break;
 			case 71:
 				rx.push(/b-si-da/);
@@ -6144,9 +6144,9 @@ function SetGrammarPoints()
 				n.des="'Next', shortened form of 다음";
 			break;
 			case 88:
-				rx.push(/l-kka/);
-				n.point = "A/V-(으)ㄹ까(요)?";
-				n.des="'Do (you) think...?'";
+				rx.push(/lyeo-na/);
+				n.point = "-(으/ㄹ/을)려나 보다";
+				n.des="'I guess...'";
 			break;
 			case 89:
 				rx.push(/geos gat/);
@@ -6501,9 +6501,9 @@ function SetGrammarPoints()
 				n.des="Expresses surprise towards what somebody has said, expresses that something is ridiculous or unbelievable, 니요 can be shortened to 뇨";
 			break;
 			case 136:
-				rx.push(/l-kka/);
-				n.point = "A/V-(으)ㄹ까";
-				n.des="Indicates a reason";
+				rx.push(/deo-la/);
+				n.point = "N더러, N(ㄹ/을/를)더러";
+				n.des="'to', indicates the person to whom a question, request, suggestion or order is verbally directed, commonly paired with the object marking particle ㄹ/을/를";
 			break;
 			case 137:
 				rx.push(/go-ja/);
@@ -6852,7 +6852,7 @@ function SetGrammarPoints()
 				n.des="Used to express regret";
 			break;
 			case 200:
-				rx.push(/ss-eo-ya haess-neun-de/);
+				rx.push(/ya haess-neun-de/);
 				n.point = "A/V-았/었어야 했는데";
 				n.des="Used to express regret";
 			break;
@@ -8670,17 +8670,6 @@ function SetGrammarPoints()
 				n.point = "걔";
 				n.des="'That person', same meaning as 쟤 but the person is far away";
 			break;
-			case 521:
-				rx.push(/deo-la/);
-				n.point = "N더러, N(ㄹ/을/를)더러";
-				n.des="'to', indicates the person to whom a question, request, suggestion or order is verbally directed, commonly paired with the object marking particle ㄹ/을/를";
-			break;
-			case 522:
-				rx.push(/lyeo-na/);
-				n.point = "-(으/ㄹ/을)려나 보다";
-				n.des="'I guess...'";
-			break;
-				
 			
 			default: console.log("index out of bounds");	
 		}
