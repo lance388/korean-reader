@@ -423,7 +423,7 @@ This software uses the following plugins, please take note of their individual l
 			
 				if (firebase.auth().currentUser)
 				{
-					//ShowSigninElements(false);
+					ShowSigninElements(false);
 				}
 				else
 				{
@@ -8766,7 +8766,7 @@ function SwapChart()
 function toggleSignIn() {
       if (firebase.auth().currentUser) {
         // [START signout]
-		//handleSignOut();
+		handleSignOut();
         //firebase.auth().signOut();
 		ShowSigninElements(true);
         // [END signout]
@@ -8798,7 +8798,7 @@ function toggleSignIn() {
           // [END_EXCLUDE]
         });
         // [END authwithemail]
-		//ShowSigninElements(false);
+		ShowSigninElements(false);
       }
     }
 
@@ -8879,7 +8879,7 @@ function toggleSignIn() {
       console.log('Google Auth Response', googleUser);
       // We need to register an Observer on Firebase Auth to make sure auth is initialized.
       var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
-		//ShowSigninElements(false);
+		ShowSigninElements(false);
         unsubscribe();
         // Check if we are already signed-in Firebase with the correct user.
         if (!isUserEqual(googleUser, firebaseUser)) {
@@ -8909,7 +8909,7 @@ function toggleSignIn() {
             // [END_EXCLUDE]
           });
 		  
-			//ShowSigninElements(false);
+			ShowSigninElements(false);
 			
           // [END authwithcred]
         } else {
@@ -8942,11 +8942,11 @@ function toggleSignIn() {
      * Handle the sign out button press.
      */
     function handleSignOut() {
-      var googleAuth = gapi.auth2.getAuthInstance();
-      googleAuth.signOut().then(function() {
+      //var googleAuth = gapi.auth2.getAuthInstance();
+      //googleAuth.signOut().then(function() {
         firebase.auth().signOut();
 		ShowSigninElements(true);
-      });
+    //  });
     }
 			
 function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid,docid)
@@ -9214,7 +9214,7 @@ function LoadAccountData(uid)
 	{
 		LogUser(user);
 	
-		ShowSigninElements(true);
+		ShowSigninElements(false);
 		dbfire.collection("vocabulary").where("author_uid", "==", user.uid).where("type", "==", "known").where("language", "==", lang)
 		.get()
 		.then(function(querySnapshot) {
