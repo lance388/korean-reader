@@ -8945,12 +8945,12 @@ function toggleSignIn() {
 	
 	
 	firebase.auth().signOut().then(() => {
-		firebase.auth().signOut();
-		ShowSigninElements(true);
+  // Sign-out successful.
+  ShowSigninElements(true);
 }).catch((error) => {
   // An error happened.
 });
-    }
+}
 			
 function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid,docid)
 {
