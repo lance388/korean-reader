@@ -8877,7 +8877,6 @@ function toggleSignIn() {
 			 // [START googlecallback]
     function onSignIn(googleUser) {
       console.log('Google Auth Response', googleUser);
-	  ShowSigninElements(false);
       // We need to register an Observer on Firebase Auth to make sure auth is initialized.
       var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
 		ShowSigninElements(false);
@@ -8943,11 +8942,14 @@ function toggleSignIn() {
      * Handle the sign out button press.
      */
     function handleSignOut() {
-      //var googleAuth = gapi.auth2.getAuthInstance();
-      //googleAuth.signOut().then(function() {
-        firebase.auth().signOut();
+	
+	
+	firebase.auth().signOut().then(() => {
+		firebase.auth().signOut();
 		ShowSigninElements(true);
-    //  });
+}).catch((error) => {
+  // An error happened.
+});
     }
 			
 function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid,docid)
