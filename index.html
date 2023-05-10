@@ -8941,15 +8941,13 @@ function toggleSignIn() {
     /**
      * Handle the sign out button press.
      */
-    function handleSignOut() {
-	
-	
+function handleSignOut() {
 	firebase.auth().signOut().then(() => {
-  // Sign-out successful.
-  ShowSigninElements(true);
-}).catch((error) => {
-  // An error happened.
-});
+	  // Sign-out successful.
+	  ShowSigninElements(true);
+	}).catch((error) => {
+	  // An error happened.
+	});
 }
 			
 function CalculateVocabularyAndCreateDocument(collection,_type,lang,uid,docid)
