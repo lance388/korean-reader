@@ -8876,7 +8876,7 @@ function toggleSignIn() {
 	
 			 // [START googlecallback]
     function onSignIn(googleUser) {
-	
+		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth()
 		  .signInWithPopup(provider)
 		  .then((result) => {
