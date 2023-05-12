@@ -9685,6 +9685,17 @@ function SetUILanguage(lang) //TODO
 	
 }
 
+  google.accounts.id.renderButton(document.getElementById("googleSignin"), {
+      theme: 'outline',
+      size: 'large',
+      click_listener: onClickHandler
+    });
+
+  
+  function onClickHandler(){
+    console.log("Sign in with Google button clicked...")
+  }
+
 
 
 	</script>
@@ -10062,8 +10073,8 @@ function SetUILanguage(lang) //TODO
 								  <!-- [START google_button] -->
 								  
 								 <!-- <div class="g_id_signin" id="googleSignin" data-onsuccess="onSignIn" data-type="standard" data-theme="dark"></div> -->
-								 
-								 <div class="g_id_signin" id="googleSignin" data-type="standard"></div>
+								 <div id="googleSignin"></div>
+								 <div class="g_id_signin" data-type="standard"></div>
 								  <!-- [END google_button] -->
 								  
 								  
