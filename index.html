@@ -8889,6 +8889,8 @@ function toggleSignIn() {
 			var user = result.user;
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
+			  
+			  ShowSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
 			var errorCode = error.code;
