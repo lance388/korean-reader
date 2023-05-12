@@ -8877,20 +8877,22 @@ function toggleSignIn() {
 			 // [START googlecallback]
     function onSignIn(googleUser) {
 		var provider = new firebase.auth.GoogleAuthProvider();
-		firebase.auth()
-		  .signInWithPopup(provider)
+		firebase.auth().signInWithRedirect(provider);
+		firebase.auth().getRedirectResult()
 		  .then((result) => {
-			/** @type {firebase.auth.OAuthCredential} */
-			var credential = result.credential;
+			if (result.credential) {
+			ShowSigninElements(false);
+			  /** @type {firebase.auth.OAuthCredential} */
+			  var credential = result.credential;
 
-			// This gives you a Google Access Token. You can use it to access the Google API.
-			var token = credential.accessToken;
+			  // This gives you a Google Access Token. You can use it to access the Google API.
+			  var token = credential.accessToken;
+			  // ...
+			}
 			// The signed-in user info.
 			var user = result.user;
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
-			  
-			  ShowSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
 			var errorCode = error.code;
