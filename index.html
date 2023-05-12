@@ -8877,22 +8877,20 @@ function toggleSignIn() {
 			 // [START googlecallback]
     function onSignIn(googleUser) {
 		var provider = new firebase.auth.GoogleAuthProvider();
-		firebase.auth().signInWithRedirect(provider);
-		firebase.auth().getRedirectResult()
+		firebase.auth()
+		  .signInWithPopup(provider)
 		  .then((result) => {
-			if (result.credential) {
-			ShowSigninElements(false);
-			  /** @type {firebase.auth.OAuthCredential} */
-			  var credential = result.credential;
+			/** @type {firebase.auth.OAuthCredential} */
+			var credential = result.credential;
 
-			  // This gives you a Google Access Token. You can use it to access the Google API.
-			  var token = credential.accessToken;
-			  // ...
-			}
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			var token = credential.accessToken;
 			// The signed-in user info.
 			var user = result.user;
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
+			  
+			  ShowSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -9696,7 +9694,7 @@ function SetUILanguage(lang) //TODO
 
 	<div id="g_id_onload"
          data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
-         data-callback="onSignIn">
+         data-callback="handleCredentialResponse">
     </div>
 
 	<div class="wrapper">
@@ -10063,7 +10061,9 @@ function SetUILanguage(lang) //TODO
 								  
 								  <!-- [START google_button] -->
 								  
-								 <div class="g_id_signin" id="googleSignin" data-onsuccess="onSignIn" data-type="standard" data-theme="dark"></div>
+								 <!-- <div class="g_id_signin" id="googleSignin" data-onsuccess="onSignIn" data-type="standard" data-theme="dark"></div> -->
+								 
+								 <div class="g_id_signin" data-type="standard"></div>
 								  <!-- [END google_button] -->
 								  
 								  
