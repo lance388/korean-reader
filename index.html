@@ -9028,7 +9028,7 @@ function CreateDocument(collection,_type,lang,uid,w)
 {
 	console.log("creating document "+_type);
 
-	dbfire.collection(collection).set({
+	dbfire.collection(collection).add({
 		words: w,
 		language: lang,
 		type: _type,
