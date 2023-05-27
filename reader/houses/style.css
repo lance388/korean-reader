@@ -1,0 +1,163 @@
+/*Version 08112018
+Author: Rohan Scott*/
+body {
+  margin: 40px;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 15px;
+}
+
+table {
+  border-spacing: 5px;
+}
+
+th {
+  text-align: left;
+}
+
+tbody{
+	color: #000;
+}
+
+.emailbutton {
+  text-align: Center;
+  background-color: #111;
+  border-radius: 10px;
+  padding: 7px;
+  font-size: 100%;
+}
+
+.emailbuttonstyle2 {
+  text-align: Center;
+  background-color: #000080;
+  border-radius: 10px;
+  padding: 7px;
+  font-size: 100%;
+}
+
+.emailbuttonstyle3 {
+  text-align: Center;
+  background-color: #00FFFF;
+  border-radius: 10px;
+  padding: 7px;
+  font-size: 100%;
+}
+
+.emailbuttonquote {
+  text-align: Center;
+  background-color: #D6B;
+  border-radius: 10px;
+  padding: 7px;
+  font-size: 100%;
+}
+
+.emailbuttoneta {
+  text-align: Center;
+  background-color: #B65;
+  border-radius: 10px;
+  padding: 7px;
+  font-size: 100%;
+}
+
+.emailbuttonurgent {
+  text-align: Center;
+  background-color: #FF0000;
+  border-radius: 10px;
+  padding: 7px;
+  font-size: 100%;
+}
+
+.editCell{
+	color: #000;
+	background-color: #fff;
+	padding: 3px;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.content {
+  grid-area: content;
+  position: relative;
+}
+
+.header {
+  grid-area: header;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.wrapper {
+        display: grid;
+    grid-gap: 10px;
+        grid-template-columns: 33% 33% 33%;
+        grid-template-areas:
+    "header  header  header"
+        "content content sidebar"
+        "footer  footer  footer";
+        background-color: #fff;
+        color: #444;
+    }
+
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 150%;
+}
+
+a {
+    color: #78f3ff;
+    text-decoration: none;
+}
+
+a:hover 
+{
+     color:#00A0C6; 
+     text-decoration:none; 
+     cursor:pointer;  
+}
+
+.header,
+.footer {
+  background-color: #999;
+}
+
+.topleft {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.topright {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.bottomleft {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.bottomright {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.supplierTable
+{
+	font-size: 50%;
+}

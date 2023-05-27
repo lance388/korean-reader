@@ -1,0 +1,106 @@
+/*Version 08112018
+Author: Rohan Scott*/
+body {
+  margin: 10px;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 15px;
+}
+
+table {
+  border-spacing: 5px;
+}
+
+th {
+  text-align: left;
+}
+
+.editCell{
+	color: #000;
+	background-color: #fff;
+	padding: 3px;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.content {
+  grid-area: content;
+  position: relative;
+}
+
+.header {
+  grid-area: header;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.wrapper {
+        display: grid;
+    grid-gap: 10px;
+        grid-template-columns: 33% 33% 33%;
+        grid-template-areas:
+    "header  header  header"
+        "content content content"
+        "footer  footer  footer";
+        background-color: #fff;
+        color: #444;
+    }
+
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 150%;
+}
+
+a {
+    color: #78f3ff;
+    text-decoration: none;
+}
+
+a:hover 
+{
+     color:#00A0C6; 
+     text-decoration:none; 
+     cursor:pointer;  
+}
+
+.header,
+.footer {
+  background-color: #999;
+}
+
+.topleft {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.topright {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.bottomleft {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.bottomright {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}

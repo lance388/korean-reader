@@ -1,0 +1,430 @@
+<!-- Version 02052020
+Website: http://koreanreader.com
+Copyright © 2020-2021 Rohan Scott
+This source file is free software, available under the following license:
+MIT license - https://mit-license.org/
+This software uses the following plugins, please take note of their individual licenses when redistributing:
+	jQuery						JS Foundation & other contributors	jquery.org												MIT license
+	mark.js						Julian Kühnel						https://markjs.io/										MIT license
+	IndexedDB-getAll-shim.js	dumbmatter							https://www.npmjs.com/package/indexeddb-getall-shim		MIT license
+	aromanize.js				Fajar Chandra						https://github.com/fujaru/aromanize-js					MIT license
+	chart.js					Chart.js Contributors				https://www.chartjs.org									MIT license
+	datatables					SpryMedia Ltd						http://www.datatables.net								MIT license				
+	javascript-css-font-detect	Lalit Patel							http://www.lalit.org/lab/javascript-css-font-detect/	Apache Software License 2.0
+	FileSaver.js				Eli Grey							http://eligrey.com										MIT license
+	colpick.js					Momo Kornher						https://github.com/mrgrain/colpick						Dual licensed under the MIT and GPLv2 licenses
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta charset="UTF-8"/>
+<meta name="description" content="Chinese special topic vocabulary lists."/>
+<meta name="keywords" content="Chinese, Language, Reader, Texts, TOPIK, Read, Reading, Study, Studying, Learn, Learning, Specialised, Topic, Vocabulary, List"/>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+	<meta name="description" content="home"/>
+	<meta name="author" content="Rohan Scott"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<meta property="og:image" content="https://koreanreader.com/preview/preview.png" />
+<meta name="msapplication-TileColor" content="#0066CC"/>
+<meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png"/>
+<meta name="theme-color" content="#0066CC"/>
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@lance3881" />
+<meta name="twitter:title" content="Chinese Reader" />
+<meta name="twitter:description" content="Chinese special topic vocabulary lists." />
+<meta name="twitter:image" content="../preview/preview.png"/>
+
+  <meta name="google-signin-client_id" content="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com">
+  <meta name="google-signin-cookiepolicy" content="single_host_origin">
+  <meta name="google-signin-scope" content="profile email">
+  
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<link rel="apple-touch-icon" sizes="57x57" href="../icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="../icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="../icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="../icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="../icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="../icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="../icons/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+<link rel="manifest" href="../icons/manifest.json">
+<meta name="msapplication-TileColor" content="#0066CC">
+<meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#0066CC">
+
+
+	  <!-- Material Design Theming -->
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<link rel="stylesheet" type="text/css" href="../DataTables-1.10.20/datatables.min.css">
+	<link rel="stylesheet" type="text/css" href="../colpick/colpick.css">
+	<link href="../fonts/Song+Myung.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Gamja+Flower.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Hi+Melody.css"  type="text/css" rel="stylesheet">
+	<link href="../fonts/Nanum+Pen+Script.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Sunflower.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Nanum+Myeongjo.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Cute+Font.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Poor+Story.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Yeon+Sung.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Stylish.css" type="text/css" rel="stylesheet">
+	<link href="../fonts/Gothic+A1.css" type="text/css" rel="stylesheet">
+	<script src="../mark/mark.min.js" charset="UTF-8"></script>
+	<script src="../jQuery-3.3.1/jquery-3.3.1.min.js"></script>
+	<script src="../DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+	<script src="../IndexedDB-getAll-shim/IndexedDB-getAll-shim.js"></script>
+	<script src="../Chart/Chart.bundle.min.js"></script>
+	<script src="../Chart/Chart.min.js"></script>
+	<script src="../Select-1.3.1/js/dataTables.select.min.js"></script>
+	<script type="text/javascript" src="../aromanize/aromanize.js"></script>
+
+
+	
+	
+	
+	<script type="text/javascript">
+	
+	var lessonList = [];
+	var currentBackgroundColour = "";
+	var menuVisible =false;
+	
+	function BrowserCheck() //allow all browsers for testing purposes 
+	{
+		browser = IsFirefoxOrChrome();
+		if(browser=="unknown")
+		{
+			if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+			   browser="edge";
+			}
+		}
+		console.log("Detected browser: "+browser);
+		Init(); 
+	}
+	
+	function IsFirefoxOrChrome()
+		{
+			var isFirefox = typeof InstallTrigger !== 'undefined';
+			var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+			if(isFirefox)
+			{
+				return "firefox";
+			}
+			else if(isChrome)
+			{
+				return "chrome";
+			}
+			else
+			{
+				return "unknown";
+			}
+		}
+		
+	function Init()
+	{
+		menuVisible = false;
+	
+		document.documentElement.style.setProperty('--pasteArea-percent', '100%');
+		CreateLessons();
+		DrawLessons();
+	}
+	
+	function ToggleOpenMenu()
+	{
+	
+		if(menuVisible)
+		{
+			ShowMenu(false)
+			
+		}
+		else
+		{
+			ShowMenu(true)
+		}
+	
+	}
+	
+	function ShowMenu(show)
+	{
+		if(show)
+		{
+			var tablinks = document.getElementsByClassName('toptabs');
+			document.getElementById("menu").style.visibility="visible";
+			menuVisible = true;
+		}
+		else
+		{
+			document.getElementById("menu").style.visibility="hidden";
+			menuVisible = false;
+		}
+	}
+	
+	function RomaniseTextWithSeperators(t)
+	{
+		var s = "";
+		for(var i=0;i<t.length;i++)
+		{
+			if(t[i]==" ")
+			{
+				s+=" ";
+			}
+			else if(t[i-1])
+			{
+				if(t[i-1]==" ")
+				{
+					s+=Aromanize.hangulToLatin(t[i], 'rr-translit');
+				}
+				else
+				{
+					s+=Aromanize.hangulToLatin("-"+t[i], 'rr-translit');
+				}
+			}
+			else
+			{
+				s+=Aromanize.hangulToLatin("-"+t[i], 'rr-translit');
+			}
+		}
+		return(s);
+	}
+	
+	
+	function CreateLessons()
+	{
+		lessonList.push(CreateLesson("我的世界, 当个创世神 (tw, hk)","Minecraft","n",1,""));
+		lessonList.push(CreateLesson("采集","Gather","v",1,""));
+		lessonList.push(CreateLesson("玩家","Player","n",1,""));
+		lessonList.push(CreateLesson("方块","Block","n",1,""));
+		lessonList.push(CreateLesson("探索","Explore","v",1,""));
+		lessonList.push(CreateLesson("合成","Craft","v",1,""));
+		lessonList.push(CreateLesson("开采","Mine, dig","v",1,""));
+		lessonList.push(CreateLesson("资源","Resources","n",1,""));
+		lessonList.push(CreateLesson("打造","Build","v",1,""));
+		lessonList.push(CreateLesson("创作","Create","v",1,""));
+		lessonList.push(CreateLesson("建筑","Building","n",1,""));
+		lessonList.push(CreateLesson("放置","Place","v",1,""));
+		lessonList.push(CreateLesson("沙盒游戏","Sandbox game","n",3,""));
+		lessonList.push(CreateLesson("沙漠","Desert","n",1,""));
+		lessonList.push(CreateLesson("丛林","Jungle","n",1,""));
+		lessonList.push(CreateLesson("雪原","Snowfield","n",1,""));
+		lessonList.push(CreateLesson("平原","Plain","n",1,""));
+		lessonList.push(CreateLesson("森林","Forest","n",1,""));
+		lessonList.push(CreateLesson("海洋","Ocean","n",1,""));
+		lessonList.push(CreateLesson("洞穴","Cave","n",1,""));
+		lessonList.push(CreateLesson("区域","Region","n",1,""));
+		lessonList.push(CreateLesson("猎杀","Hunt","v",1,""));
+		lessonList.push(CreateLesson("蜘蛛","Spider","n",1,""));
+		lessonList.push(CreateLesson("骷髅","Skeleton","n",1,""));
+		lessonList.push(CreateLesson("僵尸","Zombie","n",1,""));
+		lessonList.push(CreateLesson("怪物","Monster","n",1,""));
+		lessonList.push(CreateLesson("末影人","Enderman","n",3,""));
+		lessonList.push(CreateLesson("苦力怕","Creeper","n",3,""));
+		lessonList.push(CreateLesson("区块","Chunk","n",3,""));
+		lessonList.push(CreateLesson("基岩","Bedrock","n",2,""));
+		lessonList.push(CreateLesson("电路","Circuit","n",2,""));
+		lessonList.push(CreateLesson("红石","Redstone","n",3,""));
+		lessonList.push(CreateLesson("砾石","Gravel","n",2,""));
+		lessonList.push(CreateLesson("岩浆","Lava","n",2,""));
+		lessonList.push(CreateLesson("下界","Nether","n",3,""));
+		lessonList.push(CreateLesson("末影龙","Ender dragon","n",3,""));
+	}
+	
+	function CreateLesson(wordKr,wordEn,wordClass,rating,content)
+	{
+		var l=[];
+		l.wordKr=wordKr;
+		l.rating=rating;
+		l.wordEn=wordEn;
+		l.wordClass=wordClass;
+		
+		
+		var c = content.trim().split("<br>");
+		_content = "";
+		
+		//trim and remove unwanted chars from each sentence
+		for(var i=0;i<c.length;i++)
+		{
+			c[i]=c[i].trim();
+			c[i]=c[i].replace(/[\  ]/g," ");
+		}
+		
+		
+		//choose a colour for each speaker
+		speakerList = [];
+		
+		for(var i=0;i<c.length;i++)
+		{
+			if(i%2==0)
+			{
+				var line = c[i].split(":");
+				var speaker = line[0];
+				if(!speakerList.includes(speaker))
+				{
+					speakerList.push(speaker);
+				}
+			}
+		}
+		
+		//colour and format each sentence 
+		for(var i=0;i+1<c.length;i+=2)
+		{
+			//if(i%2==0)
+			//{	
+				//set a colour for the speaker
+				var line = c[i].split(":");
+				var speaker = line[0];
+				var restOfSentence = "";
+				for(var j=1;j<line.length;j++)
+				{
+					restOfSentence+=line[j];
+				}
+				//var currentBackgroundColour = GetColourBySpeaker(speaker,speakerList);
+				var currentBackgroundColour = GetRandomColour();
+				var text = "<div class='dialogBox'style='background:"+currentBackgroundColour+"'>"+speaker+"<b>"+restOfSentence+"</b>";
+				//c[i] = "<div style='color:black'><b>"+c[i]+"</b></div>";
+			//}
+			//else
+			//{
+				text += "<div class='dialogBox' style='color:Gray'>"+c[i+1]+"</div>";
+				
+				text+="</div><p class='' style='margin: 1em;'></p>";
+			//}
+			_content+=text;
+		}
+		l.content=_content;
+		//content=content.trim();
+		//content=content.replace(/[\  ]/g," ");
+		
+		
+		return l;
+	}
+	
+		function GetRandomColour()
+	{
+		const numColours = 7;
+		var randomInt = Math.floor(Math.random() * numColours);;
+		var colour="";
+		switch(randomInt)
+		{
+			case 0: colour="BurlyWood"; break;
+			case 1: colour="Khaki"; break;
+			case 2: colour="LightGray"; break;
+			case 3: colour="LightSeaGreen"; break;
+			case 4: colour="LightGreen"; break;
+			case 5: colour="LightSkyBlue"; break;
+			case 6: colour="LightPink"; break;
+			default: colour="Red";
+			
+		}
+		return colour;
+	}
+	/*
+	function GetColourBySpeaker(speaker,speakerList)
+	{
+		const numColours = 7;
+		var i = speakerList.indexOf(speaker);
+		if(i==-1)
+		{
+			i=0;
+		}
+		var colour="";
+		switch(i%numColours)
+		{
+			case 0: colour="BurlyWood"; break;
+			case 1: colour="Khaki"; break;
+			case 2: colour="LightGray"; break;
+			case 3: colour="LightSeaGreen"; break;
+			case 4: colour="LightGreen"; break;
+			case 5: colour="LightSkyBlue"; break;
+			case 6: colour="LightPink"; break;
+			default: colour="Red";
+			
+		}
+		return colour;
+	}
+	*/
+	
+	function GetStars(level)
+	{
+		var stars="";
+		switch(level)
+		{
+			case 1: stars="★☆☆"; break;
+			case 2: stars="★★☆"; break;
+			case 3: stars="★★★"; break;
+			default: console.log("input out of bounds");
+		}
+		return stars;
+	}
+	
+	
+	function DrawLessons()
+	{
+		lessonList.sort((a, b) => {
+		  if (a.rating < b.rating)
+			return -1;
+		  if (a.rating > b.rating)
+			return 1;
+		  return 0;
+		});
+		
+
+		document.getElementById("pasteArea").innerHTML = " <h2>Minecraft Chinese Vocabulary</h2><div style='font-size:.4em; text-align:right;padding-right:10px'>Basic: ★☆☆  Advanced: ★★☆  Jargon: ★★★</div><hr>";
+		for(var i=0;i<lessonList.length;i++)
+		{
+			document.getElementById("pasteArea").innerHTML += "<table style ='margin-left: auto;margin-right: auto;  width: 100%; ' ><tr><th style ='width: 70%;'></th><th style ='width: 15%;'></th><th style ='width: 15%;'></th><tr><tr><td><div class='defText'>"+(i+1)+".	"+lessonList[i].wordKr+"</div></td><td><div class='defText'>("+lessonList[i].wordClass+")</div></td><td><div class='defText'>"+GetStars(lessonList[i].rating)+"</div></td></tr><tr><td><div class='defText' style='color:Gray'>	"+lessonList[i].wordEn+"</div></td></tr>";
+			document.getElementById("pasteArea").innerHTML += "<br><div class='lib_text'>"+lessonList[i].content+"</div>";
+			document.getElementById("pasteArea").innerHTML += "<hr>";
+		}
+	}
+	
+
+		
+		
+	</script>
+</head>
+
+<body onload="BrowserCheck()" id="body">
+	<div class="wrapper">
+		<div class="box content" id="content">
+			<div class="editCell " contentEditable="false" id="pasteArea" type="text">
+			</div>
+
+
+		</div>
+		
+		
+		
+<div class="topbar" id="topbar">
+		 <div class="empty"></div>
+		 <div class="topbarbutton toptabs" onclick="location.href = 'index.html';"><b>Browse Lists</b></div>
+		
+		 <div class="empty"></div>
+		 <div class="logo"><b>Chinese Reader</b></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		  <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="topbarbutton toptabs" onclick="location.href = '../index.html';"><b>Text Reader</b></div>
+		 <div class="empty"></div>
+		  <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+		 <div class="empty"></div>
+	 </div>
+</body>
+</html>
