@@ -10,8 +10,69 @@
 
     <!-- Custom CSS -->
 	<link rel="stylesheet" type="text/css" href="style.css">
+			 <!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
 
-    <title>Reader - Login</title>
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+		 https://firebase.google.com/docs/web/setup#available-libraries -->
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+	
+
+	<div id="g_id_onload"
+         data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <title>Login</title>
+	
+	<script>
+	window.handleCredentialResponse = (response) => {
+	  onSignIn();
+	  
+	}
+
+	
+	function onSignIn(googleUser) {
+		var provider = new firebase.auth.GoogleAuthProvider();
+		firebase.auth()
+		  .signInWithPopup(provider)
+		  .then((result) => {
+			/** @type {firebase.auth.OAuthCredential} */
+			var credential = result.credential;
+
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			var token = credential.accessToken;
+			// The signed-in user info.
+			var user = result.user;
+			// IdP data available in result.additionalUserInfo.profile.
+			  // ...
+			  
+			  ShowSigninElements(false);
+		  }).catch((error) => {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+		  });
+    }
+	
+	function handleSignOut() {
+		firebase.auth().signOut().then(() => {
+		  // Sign-out successful.
+		  ShowSigninElements(true);
+		}).catch((error) => {
+		  // An error happened.
+		});
+	}	
+	</script>
+	
   </head>
   <body>
 	<nav class="navbar navbar-expand-lg navbar-light">
@@ -29,25 +90,71 @@
         </nav>
   
     <div class="container login-container">
-      <h2>Login</h2>
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" id="fireLoginArea">
 
-      <form id="login-form">
-        <div class="mb-3">
-          <label for="inputEmail" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="inputEmail">
-        </div>
-        <div class="mb-3">
-          <label for="inputPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="inputPassword">
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
-      <div class="text-center mt-4">
-        <p><a href="signup.html" class="h4">Signup</a></p>
-        <p><a href="#" class="btn btn-primary h4">Login with Google</a></p>
-      </div>
+							  <!-- Container for the demo -->
+							  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+								<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
+								  <h2 class="mdl-card__title-text">Login</h2>
+								</div>
+								<div class="mdl-card__supporting-text mdl-color-text--grey-600">
+								  <p id="fireSigninText">Enter an email and password below and either sign in to an existing account or sign up</p>
+
+								  <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="email" name="email" placeholder="Email"/>
+								  &nbsp;&nbsp;&nbsp;
+								  <input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="password" name="password" placeholder="Password"/>
+								  <br/><br/>
+								  <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
+								  &nbsp;&nbsp;&nbsp;
+								  <br><br><button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
+								  <br><br>
+								  &nbsp;&nbsp;&nbsp;
+								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
+									<br><br>      
+								  <p id="googleSigninText">Sign in with your Google account below.</p>
+								  <!-- [START google_button] -->
+								  
+								   <!-- OLD METHOD <div class="g-signin2" id="googleSignin" data-onsuccess="onSignIn" data-theme="dark"></div>  -->
+								  <!-- [END google_button] -->
+								  
+								  
+								  <!-- [START google_button] -->
+								  
+								 <!-- <div class="g_id_signin" id="googleSignin" data-onsuccess="onSignIn" data-type="standard" data-theme="dark"></div> -->
+								 <div class="g_id_signin" id="googleSignin" data-type="standard"></div>
+								  <!-- [END google_button] -->
+								  
+								  
+								  <br>
+								
+								
+								  <!-- Container where we'll display the user details -->
+								  <div class="quickstart-user-details-container">
+									Sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
+									<!--<div>Firebase auth <code>currentUser</code> object value:</div>
+									<pre><code id="quickstart-account-details">null</code></pre>-->
+								  </div>
+								</div>
+							  </div>
+
+		</div>
     </div>
 
     <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+	  // Your web app's Firebase configuration
+	  var firebaseConfig = {
+		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
+		authDomain: "korean-reader.firebaseapp.com",
+		databaseURL: "https://korean-reader.firebaseio.com",
+		projectId: "korean-reader",
+		storageBucket: "korean-reader.appspot.com",
+		messagingSenderId: "410562108352",
+		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+</script>
   </body>
 </html>
+
