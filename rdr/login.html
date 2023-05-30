@@ -40,7 +40,6 @@
 	window.handleCredentialResponse = (response) => {
 		onSignIn(); 
 	}
-
 	
 	function onSignIn(googleUser) {
 		var provider = new firebase.auth.GoogleAuthProvider();
@@ -83,7 +82,7 @@
 	{
 		if(show)
 		{
-					document.getElementById("email").style.display = 'block';
+			document.getElementById("email").style.display = 'block';
 			document.getElementById("password").style.display = 'block';
 			document.getElementById("quickstart-sign-up").style.display = 'block';
 			document.getElementById("quickstart-password-reset").style.display = 'block';
@@ -140,25 +139,16 @@
 								  &nbsp;&nbsp;&nbsp;
 								  <input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="password" name="password" placeholder="Password"/>
 								  <br/><br/>
-								  <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
-								  &nbsp;&nbsp;&nbsp;
+								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
+								&nbsp;&nbsp;&nbsp;
 								  <br><br><button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
 								  <br><br>
 								  &nbsp;&nbsp;&nbsp;
 								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-password-reset" name="verify-email">Send Password Reset Email</button>
 									<br><br>      
 								  <p id="googleSigninText">Sign in with your Google account below.</p>
-								  <!-- [START google_button] -->
 								  
-								   <!-- OLD METHOD <div class="g-signin2" id="googleSignin" data-onsuccess="onSignIn" data-theme="dark"></div>  -->
-								  <!-- [END google_button] -->
-								  
-								  
-								  <!-- [START google_button] -->
-								  
-								 <!-- <div class="g_id_signin" id="googleSignin" data-onsuccess="onSignIn" data-type="standard" data-theme="dark"></div> -->
 								 <div class="g_id_signin" id="googleSignin" data-type="standard"></div>
-								  <!-- [END google_button] -->
 								  
 								  
 								  <br>
@@ -167,8 +157,6 @@
 								  <!-- Container where we'll display the user details -->
 								  <div class="quickstart-user-details-container">
 									Sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
-									<!--<div>Firebase auth <code>currentUser</code> object value:</div>
-									<pre><code id="quickstart-account-details">null</code></pre>-->
 								  </div>
 								</div>
 							  </div>
