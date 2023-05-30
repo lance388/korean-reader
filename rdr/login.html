@@ -29,9 +29,18 @@
     <title>Login</title>
 	
 	<script>
+	var firebaseConfig = {
+		apiKey: "<?php echo $firebaseConfig['apiKey']; ?>",
+		authDomain: "<?php echo $firebaseConfig['authDomain']; ?>",
+		databaseURL: "<?php echo $firebaseConfig['databaseURL']; ?>",
+		projectId: "<?php echo $firebaseConfig['projectId']; ?>",
+		storageBucket: "<?php echo $firebaseConfig['storageBucket']; ?>",
+		messagingSenderId: "<?php echo $firebaseConfig['messagingSenderId']; ?>",
+		appId: "<?php echo $firebaseConfig['appId']; ?>"
+	};
+		
 	window.handleCredentialResponse = (response) => {
-	  onSignIn();
-	  
+		onSignIn(); 
 	}
 
 	
