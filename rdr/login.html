@@ -1,4 +1,5 @@
 <!doctype html>
+<?php require 'config.php'; ?>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -10,7 +11,10 @@
 
     <!-- Custom CSS -->
 	<link rel="stylesheet" type="text/css" href="style.css">
-			 <!-- The core Firebase JS SDK is always required and must be listed first -->
+
+    <title>Login</title>
+  </head>
+  <body>
 	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
 
 	<!-- TODO: Add SDKs for Firebase products that you want to use
@@ -19,15 +23,6 @@
 	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-	
-
-	<div id="g_id_onload"
-         data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
-    </div>
-
-    <title>Login</title>
-	
 	<script>
 	var firebaseConfig = {
 		apiKey: "<?php echo $firebaseConfig['apiKey']; ?>",
@@ -38,6 +33,9 @@
 		messagingSenderId: "<?php echo $firebaseConfig['messagingSenderId']; ?>",
 		appId: "<?php echo $firebaseConfig['appId']; ?>"
 	};
+
+	firebase.initializeApp(firebaseConfig);
+	
 		
 	window.handleCredentialResponse = (response) => {
 		onSignIn(); 
@@ -79,11 +77,40 @@
 		}).catch((error) => {
 		  // An error happened.
 		});
-	}	
+	}
+
+	function ShowSigninElements(show)
+	{
+		if(show)
+		{
+					document.getElementById("email").style.display = 'block';
+			document.getElementById("password").style.display = 'block';
+			document.getElementById("quickstart-sign-up").style.display = 'block';
+			document.getElementById("quickstart-password-reset").style.display = 'block';
+			document.getElementById("fireSigninText").style.display = 'block';
+			document.getElementById("googleSignin").style.display = 'block';
+			document.getElementById("googleSigninText").style.display = 'block';
+			document.getElementById("LoginTabButton").innerHTML='<b>Login</b>';		
+		}
+		else
+		{
+			document.getElementById("email").style.display = 'none'; 
+			document.getElementById("password").style.display = 'none'; 
+			document.getElementById("quickstart-sign-up").style.display = 'none'; 
+			document.getElementById("quickstart-password-reset").style.display = 'none'; 
+			document.getElementById("fireSigninText").style.display = 'none'; 
+			document.getElementById("googleSignin").style.display = 'none'; 
+			document.getElementById("googleSigninText").style.display = 'none';
+
+			document.getElementById("LoginTabButton").innerHTML='<b>Logged-in</b>';
+		}
+	}
 	</script>
+	<div id="g_id_onload"
+         data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
 	
-  </head>
-  <body>
 	<nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.html">
@@ -150,20 +177,6 @@
     </div>
 
     <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
-	<script>
-	  // Your web app's Firebase configuration
-	  var firebaseConfig = {
-		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
-		authDomain: "korean-reader.firebaseapp.com",
-		databaseURL: "https://korean-reader.firebaseio.com",
-		projectId: "korean-reader",
-		storageBucket: "korean-reader.appspot.com",
-		messagingSenderId: "410562108352",
-		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
-	  };
-	  // Initialize Firebase
-	  firebase.initializeApp(firebaseConfig);
-</script>
   </body>
 </html>
 
