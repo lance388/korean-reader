@@ -211,6 +211,7 @@
 			document.getElementById("fireSigninText").style.display = 'none'; 
 			document.getElementById("googleSignin").style.display = 'none'; 
 			document.getElementById("googleSigninText").style.display = 'none';
+			//
 		}
 	}
 
