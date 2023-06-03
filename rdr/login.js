@@ -200,8 +200,7 @@
 			document.getElementById("quickstart-password-reset").style.display = 'block';
 			document.getElementById("fireSigninText").style.display = 'block';
 			document.getElementById("googleSignin").style.display = 'block';
-			document.getElementById("googleSigninText").style.display = 'block';
-			document.getElementById("LoginTabButton").innerHTML='<b>Login</b>';		
+			document.getElementById("googleSigninText").style.display = 'block';		
 		}
 		else
 		{
@@ -212,8 +211,6 @@
 			document.getElementById("fireSigninText").style.display = 'none'; 
 			document.getElementById("googleSignin").style.display = 'none'; 
 			document.getElementById("googleSigninText").style.display = 'none';
-
-			document.getElementById("LoginTabButton").innerHTML='<b>Logged-in</b>';
 		}
 	}
 
