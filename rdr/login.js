@@ -23,6 +23,7 @@
 	}
 	
 	function toggleSignIn() {
+	console.log("toggle sign in 1");
       if (firebase.auth().currentUser) {
         // [START signout]
 		handleSignOut();
@@ -44,6 +45,7 @@
         // [START authwithemail]
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           // Handle Errors here.
+		  console.log("toggle sign in 2");
           var errorCode = error.code;
           var errorMessage = error.message;
           // [START_EXCLUDE]
@@ -57,6 +59,7 @@
           // [END_EXCLUDE]
         });
         // [END authwithemail]
+		console.log("current user: "+firebase.auth().currentUser);
 		ShowSigninElements(false);
       }
     }
@@ -155,6 +158,7 @@
 	}
 	
 	function onSignIn(googleUser) {
+		console.log("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth()
 		  .signInWithPopup(provider)
@@ -168,7 +172,7 @@
 			var user = result.user;
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
-			  
+			  console.log("signed in");
 			  ShowSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
