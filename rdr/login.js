@@ -1,5 +1,5 @@
 
-var firebaseConfig = {
+const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
 		databaseURL: "https://korean-reader.firebaseio.com",
@@ -9,30 +9,36 @@ var firebaseConfig = {
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
 };
 
+// Initialize Firebase
+function initializeFirebase() {
+  firebase.initializeApp(firebaseConfig);
+}
+
+initializeFirebase();
+
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    initializeFireDB(); 
+  } else {
+    // No user is signed in.
+    ShowSigninElements(true);
+  }
+});
 	
-initialize();
 	
-		
-	window.handleCredentialResponse = (response) => {
-		onSignIn(); 
-	}
-	
-function initialize()
+function initializeUI()
 {
-	firebase.initializeApp(firebaseConfig);
 	document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
 	document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
 	document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false); 
-	
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            // User is signed in.
-            // You can use Firebase services here, like Firestore:
-            initializeFireDB(); 
-        } else {
-            // No user is signed in.
-        }
-    });
+}
+
+initializeUI();
+
+window.handleCredentialResponse = (response) => {
+	onSignIn(); 
 }
 	
 	function toggleSignIn() {
