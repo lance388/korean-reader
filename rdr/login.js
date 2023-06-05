@@ -1,5 +1,5 @@
 
-	var firebaseConfig = {
+var firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
 		databaseURL: "https://korean-reader.firebaseio.com",
@@ -7,23 +7,35 @@
 		storageBucket: "korean-reader.appspot.com",
 		messagingSenderId: "410562108352",
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
-	 };
+};
 
-	firebase.initializeApp(firebaseConfig);
-	initialize();
+	
+initialize();
 	
 		
 	window.handleCredentialResponse = (response) => {
 		onSignIn(); 
 	}
 	
-	function initialize()
-	{
-		initializeFireDB();
-	}
+function initialize()
+{
+	firebase.initializeApp(firebaseConfig);
+	document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+	document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
+	document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false); 
+	
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // User is signed in.
+            // You can use Firebase services here, like Firestore:
+            initializeFireDB(); 
+        } else {
+            // No user is signed in.
+        }
+    });
+}
 	
 	function toggleSignIn() {
-	console.log("toggle sign in 1");
       if (firebase.auth().currentUser) {
         // [START signout]
 		handleSignOut();
@@ -56,11 +68,10 @@
           }
           console.log(error);
           document.getElementById('quickstart-sign-in').disabled = false;
+		  ShowSigninElements(false);
           // [END_EXCLUDE]
         });
         // [END authwithemail]
-		console.log("current user: "+firebase.auth().currentUser);
-		ShowSigninElements(false);
       }
     }
 
@@ -152,9 +163,6 @@
 				
 			}
 		});
-		document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
-		document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
-		document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);  
 	}
 	
 	function onSignIn(googleUser) {
