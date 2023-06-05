@@ -11,6 +11,7 @@
 
 	firebase.initializeApp(firebaseConfig);
 	initialize();
+	
 		
 	window.handleCredentialResponse = (response) => {
 		onSignIn(); 
