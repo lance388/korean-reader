@@ -1,4 +1,4 @@
-
+var dbfire;
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
@@ -12,6 +12,7 @@ const firebaseConfig = {
 // Initialize Firebase
 function initializeFirebase() {
   firebase.initializeApp(firebaseConfig);
+  dbfire = firebase.firestore();
 }
 
 initializeFirebase();
