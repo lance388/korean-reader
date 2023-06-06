@@ -19,10 +19,10 @@ initializeFirebase();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    ShowSigninElements(true); 
+    showSigninElements(false); 
   } else {
     // No user is signed in.
-    ShowSigninElements(true);
+    showSigninElements(true);
   }
 });
 	
@@ -45,7 +45,7 @@ window.handleCredentialResponse = (response) => {
         // [START signout]
 		handleSignOut();
         //firebase.auth().signOut();
-		ShowSigninElements(true);
+		showSigninElements(true);
         // [END signout]
       } else {
         var email = document.getElementById('email').value;
@@ -73,7 +73,7 @@ window.handleCredentialResponse = (response) => {
           }
           console.log(error);
 		  console.log("Signed in with email");
-		  ShowSigninElements(false);
+		  showSigninElements(false);
           // [END_EXCLUDE]
         });
         // [END authwithemail]
@@ -168,7 +168,7 @@ window.handleCredentialResponse = (response) => {
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
 			  console.log("Signed in with Google");
-			  ShowSigninElements(false);
+			  showSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -184,13 +184,13 @@ window.handleCredentialResponse = (response) => {
 	function handleSignOut() {
 		firebase.auth().signOut().then(() => {
 		  // Sign-out successful.
-		  ShowSigninElements(true);
+		  showSigninElements(true);
 		}).catch((error) => {
 		  // An error happened.
 		});
 	}
 
-	function ShowSigninElements(show)
+	function showSigninElements(show)
 	{
 		if(show)
 		{
