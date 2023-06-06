@@ -19,8 +19,7 @@ initializeFirebase();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    // User is signed in.
-    initializeFireDB(); 
+    ShowSigninElements(true); 
   } else {
     // No user is signed in.
     ShowSigninElements(true);
@@ -73,7 +72,6 @@ window.handleCredentialResponse = (response) => {
             alert(errorMessage);
           }
           console.log(error);
-          document.getElementById('quickstart-sign-in').disabled = false;
 		  ShowSigninElements(false);
           // [END_EXCLUDE]
         });
@@ -153,24 +151,6 @@ window.handleCredentialResponse = (response) => {
       // [END sendpasswordemail];
     }
 	
-	function initializeFireDB()
-	{
-		dbfire = firebase.firestore();
-		firebase.auth().onAuthStateChanged(function(user) {
-			if (user) {
-				var displayName = user.displayName;	
-				var email = user.email;
-				var emailVerified = user.emailVerified;
-				var photoURL = user.photoURL;
-				var isAnonymous = user.isAnonymous;
-				var uid = user.uid;
-				var providerData = user.providerData;
-			} else {
-				
-			}
-		});
-	}
-	
 	function onSignIn(googleUser) {
 		console.log("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
@@ -219,7 +199,9 @@ window.handleCredentialResponse = (response) => {
 			document.getElementById("quickstart-password-reset").style.display = 'block';
 			document.getElementById("fireSigninText").style.display = 'block';
 			document.getElementById("googleSignin").style.display = 'block';
-			document.getElementById("googleSigninText").style.display = 'block';		
+			document.getElementById("googleSigninText").style.display = 'block';
+			document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+			document.getElementById('quickstart-sign-in').textContent = 'Sign out';			
 		}
 		else
 		{
@@ -230,6 +212,8 @@ window.handleCredentialResponse = (response) => {
 			document.getElementById("fireSigninText").style.display = 'none'; 
 			document.getElementById("googleSignin").style.display = 'none'; 
 			document.getElementById("googleSigninText").style.display = 'none';
+			document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+			document.getElementById('quickstart-sign-in').textContent = 'Sign in';
 			//
 		}
 	}
