@@ -72,6 +72,7 @@ window.handleCredentialResponse = (response) => {
             alert(errorMessage);
           }
           console.log(error);
+		  console.log("Signed in with email");
 		  ShowSigninElements(false);
           // [END_EXCLUDE]
         });
@@ -166,7 +167,7 @@ window.handleCredentialResponse = (response) => {
 			var user = result.user;
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
-			  console.log("signed in");
+			  console.log("Signed in with Google");
 			  ShowSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
@@ -214,9 +215,30 @@ window.handleCredentialResponse = (response) => {
 			document.getElementById("googleSigninText").style.display = 'none';
 			document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
 			document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+			var user = firebase.auth().currentUser;
+			if(user)
+			{
+				logUser(user);
+			}
 			//
 		}
 	}
+	
+function logUser(user)
+{
+	dbfire.collection("users").doc(user.uid).set({
+		name: user.displayName,
+		email: user.email,
+		verified: user.emailVerified,
+		author_uid: user.uid
+	})
+	.then(function() {
+		console.log("User logged in");
+	})
+	.catch(function(error) {
+		console.error("Error writing document: ", error);
+	});
+}	
 
 
 
