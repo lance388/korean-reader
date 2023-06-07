@@ -20,9 +20,11 @@ initializeFirebase();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
+	  console.log("23");
     showSigninElements(false); 
   } else {
     // No user is signed in.
+	console.log("27");
     showSigninElements(true);
   }
 });
