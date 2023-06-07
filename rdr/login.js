@@ -20,7 +20,6 @@ initializeFirebase();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-	  console.log("23");
     showSigninElements(false); 
   } else {
     // No user is signed in.
@@ -204,8 +203,8 @@ window.handleCredentialResponse = (response) => {
 			document.getElementById("fireSigninText").style.display = 'block';
 			document.getElementById("googleSignin").style.display = 'block';
 			document.getElementById("googleSigninText").style.display = 'block';
-			document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-			document.getElementById('quickstart-sign-in').textContent = 'Sign out';			
+			document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+			document.getElementById('quickstart-sign-in').textContent = 'Sign in';
 		}
 		else
 		{
@@ -216,8 +215,8 @@ window.handleCredentialResponse = (response) => {
 			document.getElementById("fireSigninText").style.display = 'none'; 
 			document.getElementById("googleSignin").style.display = 'none'; 
 			document.getElementById("googleSigninText").style.display = 'none';
-			document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-			document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+			document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+			document.getElementById('quickstart-sign-in').textContent = 'Sign out';	
 			var user = firebase.auth().currentUser;
 			if(user)
 			{
