@@ -22,8 +22,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     showSigninElements(false); 
   } else {
-    // No user is signed in.
-	console.log("27");
+    // No user is signed in.;
     showSigninElements(true);
   }
 });
