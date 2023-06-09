@@ -195,7 +195,6 @@ function sendPasswordReset() {
 			document.getElementById("fireSigninText").style.display = 'block';
 			document.getElementById("googleSignin").style.display = 'block';
 			document.getElementById("googleSigninText").style.display = 'block';
-			document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
 			document.getElementById('quickstart-sign-in').textContent = 'Sign in';
 		}
 		else
@@ -207,7 +206,6 @@ function sendPasswordReset() {
 			document.getElementById("fireSigninText").style.display = 'none'; 
 			document.getElementById("googleSignin").style.display = 'none'; 
 			document.getElementById("googleSigninText").style.display = 'none';
-			document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
 			document.getElementById('quickstart-sign-in').textContent = 'Sign out';	
 			var user = firebase.auth().currentUser;
 			if(user)
