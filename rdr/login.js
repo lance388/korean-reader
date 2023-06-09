@@ -129,29 +129,22 @@ window.handleCredentialResponse = (response) => {
       // [END sendemailverification]
     }
 
-    function sendPasswordReset() {
-      var email = document.getElementById('email').value;
-      // [START sendpasswordemail]
-      firebase.auth().sendPasswordResetEmail(email).then(function() {
-        // Password Reset Email Sent!
-        // [START_EXCLUDE]
-        alert('Password Reset Email Sent!');
-        // [END_EXCLUDE]
-      }).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // [START_EXCLUDE]
-        if (errorCode == 'auth/invalid-email') {
-          alert(errorMessage);
-        } else if (errorCode == 'auth/user-not-found') {
-          alert(errorMessage);
-        }
-        console.log(error);
-        // [END_EXCLUDE]
-      });
-      // [END sendpasswordemail];
+function sendPasswordReset() {
+  var email = document.getElementById('email').value;
+  firebase.auth().sendPasswordResetEmail(email).then(function() {
+    alert('If there is an account associated with this email, password reset instructions will be sent.');
+  }).catch(function(error) {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if (errorCode == 'auth/invalid-email') {
+      alert(errorMessage);
+    } else if (errorCode == 'auth/user-not-found') {
+      alert(errorMessage);
     }
+    console.log(error);
+  });
+}
+
 	
 	function onSignIn(googleUser) {
 		console.log("at sign in");
