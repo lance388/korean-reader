@@ -46,8 +46,8 @@ a:hover {
 }
 
 #quickstart-sign-up {
-    font-size: 2rem;  /* increase font size */
-    padding: 20px 40px;  /* increase padding to make the button larger */
+    font-size: 1rem;  /* increase font size */
+    padding: 10px 10px;  /* increase padding to make the button larger */
     color: #ffffff;  /* white text */
     background-color: #007bff;  /* change to a bright color */
     border: none;
