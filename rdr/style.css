@@ -44,3 +44,18 @@ a:hover {
 .form-label {
     color: #343a40;
 }
+
+#quickstart-sign-up {
+    font-size: 2rem;  /* increase font size */
+    padding: 20px 40px;  /* increase padding to make the button larger */
+    color: #ffffff;  /* white text */
+    background-color: #007bff;  /* change to a bright color */
+    border: none;
+    border-radius: 5px;  /* add a little bit of border radius */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);  /* add a box shadow for a "3D" effect */
+    transition: background-color 0.3s ease;  /* animate background color changes */
+}
+
+#quickstart-sign-up:hover {
+    background-color: #0056b3;  /* darken the color a bit on mouse hover */
+}
