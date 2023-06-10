@@ -37,7 +37,7 @@ function initializeUI()
 			document.querySelector('.login-container').style.display = 'none';
 			document.querySelector('.signup-container').style.display = 'block';
 		});
-		document.getElementById('fireLoginToggleText').addEventListener('click', function() {
+		document.getElementById('fireSigninToggleText').addEventListener('click', function() {
 			document.querySelector('.login-container').style.display = 'block';
 			document.querySelector('.signup-container').style.display = 'none';
 		});
