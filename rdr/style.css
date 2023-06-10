@@ -63,7 +63,7 @@ a:hover {
 }
 
 #fireSignupToggleText,
-#fireLoginToggleText {
+#fireSigninToggleText {
     color: #007bff;  /* change the color to a bright color */
     cursor: pointer;  /* change the cursor to a hand when hovering */
     font-size: 1rem;  /* increase the font size */
@@ -72,7 +72,7 @@ a:hover {
 }
 
 #fireSignupToggleText:hover,
-#fireLoginToggleText:hover {
+#fireSigninToggleText:hover {
     color: #0056b3;  /* darken the color a bit on mouse hover */
 }
 
