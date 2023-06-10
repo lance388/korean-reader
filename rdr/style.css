@@ -59,3 +59,23 @@ a:hover {
 #quickstart-sign-up:hover {
     background-color: #0056b3;  /* darken the color a bit on mouse hover */
 }
+
+#fireSignupToggleText,
+#fireLoginToggleText {
+    color: #007bff;  /* change the color to a bright color */
+    cursor: pointer;  /* change the cursor to a hand when hovering */
+    font-size: 1.3rem;  /* increase the font size */
+    font-weight: bold;  /* make the text bold */
+    text-decoration: underline;  /* add underline to make it obvious it's clickable */
+    transition: color 0.3s ease;  /* animate color changes */
+}
+
+#fireSignupToggleText:hover,
+#fireLoginToggleText:hover {
+    color: #0056b3;  /* darken the color a bit on mouse hover */
+}
+
+.signup-container {
+    display: none;
+    /* other styles */
+}

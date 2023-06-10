@@ -30,9 +30,17 @@ firebase.auth().onAuthStateChanged(function(user) {
 	
 function initializeUI()
 {
-	document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
-	document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
-	document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false); 
+		document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+		document.getElementById('quickstart-sign-up').addEventListener('click', handleSignUp, false);
+		document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false); 
+		document.getElementById('fireSignupToggleText').addEventListener('click', function() {
+			document.querySelector('.login-container').style.display = 'none';
+			document.querySelector('.signup-container').style.display = 'block';
+		});
+		document.getElementById('fireLoginToggleText').addEventListener('click', function() {
+			document.querySelector('.login-container').style.display = 'block';
+			document.querySelector('.signup-container').style.display = 'none';
+		});
 }
 
 initializeUI();
@@ -230,7 +238,9 @@ function logUser(user)
 	.catch(function(error) {
 		console.error("Error writing document: ", error);
 	});
-}	
+}
+
+
 
 
 
