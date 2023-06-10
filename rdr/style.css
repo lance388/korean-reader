@@ -45,8 +45,9 @@ a:hover {
     color: #343a40;
 }
 
-#quickstart-sign-up {
-    font-size: 1em;  /* increase font size */
+#quickstart-sign-up,
+#quickstart-sign-in, {
+    font-size: 1rem;  /* increase font size */
     padding: 10px 10px;  /* increase padding to make the button larger */
     color: #ffffff;  /* white text */
     background-color: #007bff;  /* change to a bright color */
@@ -64,8 +65,7 @@ a:hover {
 #fireLoginToggleText {
     color: #007bff;  /* change the color to a bright color */
     cursor: pointer;  /* change the cursor to a hand when hovering */
-    font-size: 1.3rem;  /* increase the font size */
-    font-weight: bold;  /* make the text bold */
+    font-size: 1rem;  /* increase the font size */
     text-decoration: underline;  /* add underline to make it obvious it's clickable */
     transition: color 0.3s ease;  /* animate color changes */
 }
