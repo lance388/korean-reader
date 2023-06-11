@@ -116,10 +116,12 @@ window.handleCredentialResponse = (response) => {
           alert(errorMessage);
         }
         console.log(error);
+		return;
         // [END_EXCLUDE]
       });
-	  
-	  sendEmailVerification();
+	document.querySelector('.login-container').style.display = 'block';
+	document.querySelector('.signup-container').style.display = 'none';
+	sendEmailVerification();
       // [END createwithemail]
     }
 
@@ -138,7 +140,7 @@ window.handleCredentialResponse = (response) => {
     }
 
 function sendPasswordReset() {
-  var email = document.getElementById('email').value;
+  var email = document.getElementById('signin-email').value;
   firebase.auth().sendPasswordResetEmail(email).then(function() {
     alert('If there is an account associated with this email, password reset instructions will be sent.');
   }).catch(function(error) {
@@ -196,8 +198,8 @@ function sendPasswordReset() {
 	{
 		if(show)
 		{
-			document.getElementById("email").style.display = 'block';
-			document.getElementById("password").style.display = 'block';
+			document.getElementById("signin-email").style.display = 'block';
+			document.getElementById("signin-password").style.display = 'block';
 			document.getElementById("quickstart-sign-up").style.display = 'block';
 			document.getElementById("quickstart-password-reset").style.display = 'block';
 			document.getElementById("fireSigninText").style.display = 'block';
@@ -207,8 +209,8 @@ function sendPasswordReset() {
 		}
 		else
 		{
-			document.getElementById("email").style.display = 'none'; 
-			document.getElementById("password").style.display = 'none'; 
+			document.getElementById("signin-email").style.display = 'none'; 
+			document.getElementById("signin-password").style.display = 'none'; 
 			document.getElementById("quickstart-sign-up").style.display = 'none'; 
 			document.getElementById("quickstart-password-reset").style.display = 'none'; 
 			document.getElementById("fireSigninText").style.display = 'none'; 
