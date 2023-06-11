@@ -57,8 +57,8 @@ window.handleCredentialResponse = (response) => {
 		showSigninElements(true);
         // [END signout]
       } else {
-        var email = document.getElementById('email').value;
-        var password = document.getElementById('password').value;
+        var email = document.getElementById('signin-email').value;
+        var password = document.getElementById('signin-password').value;
         if (email.length < 4) {
           alert('Please enter an email address.');
           return;
@@ -93,8 +93,8 @@ window.handleCredentialResponse = (response) => {
      * Handles the sign up button press.
      */
     function handleSignUp() {
-      var email = document.getElementById('email').value;
-      var password = document.getElementById('password').value;
+      var email = document.getElementById('signup-email').value;
+      var password = document.getElementById('signup-password').value;
       if (email.length < 4) {
         alert('Please enter an email address.');
         return;
