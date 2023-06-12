@@ -1,0 +1,8 @@
+.lessons-container {
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.lesson-card {
+    display: inline-block;
+}
