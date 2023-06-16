@@ -1,8 +1,48 @@
+.navbar {
+    background-color: #f8f9fa;  /* light gray navbar */
+}
+
+.lesson-link {
+    color: inherit; /* make the text color the same as the card */
+    text-decoration: none; /* remove underline */
+}
+
+.lesson-card:hover {
+    transform: scale(1.05); /* enlarge the card a bit */
+    transition: transform .2s; /* animate the transformation */
+}
+
 .lessons-container {
     overflow-x: scroll;
+    overflow-y: hidden; /* Disables vertical scroll */
     white-space: nowrap;
 }
 
 .lesson-card {
     display: inline-block;
+    width: 18rem; /* Adjust this as needed to fit 5 cards on the screen */
+    height: 100%; /* Makes the cards full height */
+}
+
+.description {
+    height: 3em;  /* Adjust according to your needs */
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.custom-tab {
+  color: #444;  /* Change this to your preferred text color */
+  background-color: #eee;  /* Change this to your preferred background color */
+  border: none;
+}
+
+.custom-tab:hover {
+  color: #333;  /* Change this to your preferred hover text color */
+  background-color: #ddd;  /* Change this to your preferred hover background color */
+}
+
+.custom-tab.active {
+  color: #fff;  /* Change this to your preferred active text color */
+  background-color: #666;  /* Change this to your preferred active background color */
 }

@@ -1,0 +1,46 @@
+html,body {
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height:100%;
+}
+
+.navbar {
+  flex-shrink: 0; /* This makes sure that the navbar doesn't shrink */
+  background-color: #f8f9fa;
+}
+
+.textarea-container {
+  flex-grow: 1;
+  margin: 7px;
+  height:100%;
+}
+
+.sidebar-container{
+  height:100%;
+}
+
+.textarea-container.full-width .col-lg-8 {
+    flex-basis: 100%;
+    max-width: 100%;
+}
+
+.sidebar-container.active {
+    display: none;
+}
+
+.custom-textarea {
+    box-sizing: border-box; /* Add this */
+
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
+    font-size: 1em; /* Adjust the font size to fit the container */
+    line-height: 1.6; /* More space between lines for easier reading */
+    color: #333; /* Dark grey color for the text */
+    background-color: #f9f9f9; /* Light grey color for the background */
+    flex-grow: 1;
+    resize: none; 
+    overflow: auto; /* Enable scrolling within textarea */
+}
+
+
