@@ -1,3 +1,4 @@
+let isDebugMode = true;
 var dbfire;
 
 const firebaseConfig = {
@@ -10,8 +11,13 @@ const firebaseConfig = {
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
 };
 
-
 initialize();
+
+function p(...messages) {
+  if (isDebugMode) {
+    console.log(...messages);
+  }
+}
 
 function initialize()
 {
@@ -29,7 +35,7 @@ function initializeFirebase() {
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    console.log("User has logged in.");
+    p("User has logged in.");
 	logUser(user);
 	showSigninElements(false);
   } else {
@@ -71,7 +77,7 @@ window.handleCredentialResponse = (response) => {
         // [START authwithemail]
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           // Handle Errors here.
-		  console.log("toggle sign in 2");
+		  p("toggle sign in 2");
           var errorCode = error.code;
           var errorMessage = error.message;
           // [START_EXCLUDE]
@@ -80,8 +86,8 @@ window.handleCredentialResponse = (response) => {
           } else {
             alert(errorMessage);
           }
-          console.log(error);
-		  console.log("Signed in with email");
+          p(error);
+		  p("Signed in with email");
 		  showSigninElements(false);
           // [END_EXCLUDE]
         });
@@ -90,7 +96,7 @@ window.handleCredentialResponse = (response) => {
     }
 
 	function onSignIn(googleUser) {
-		console.log("at sign in");
+		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth()
 		  .signInWithPopup(provider)
@@ -104,7 +110,7 @@ window.handleCredentialResponse = (response) => {
 			var user = result.user;
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
-			  console.log("Signed in with Google");
+			  p("Signed in with Google");
 			  showSigninElements(false);
 		  }).catch((error) => {
 			// Handle Errors here.
@@ -148,7 +154,7 @@ function logUser(user)
 		author_uid: user.uid
 	})
 	.then(function() {
-		console.log("User logged in");
+		p("User logged in");
 	})
 	.catch(function(error) {
 		console.error("Error writing document: ", error);
@@ -197,7 +203,18 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadLesson(lessonName) {
   // Load lesson text based on lessonName
   // This is just a placeholder. You would replace this with actual logic to load the text.
-  console.log("Loading lesson:", lessonName);
+  p("Loading lesson:", lessonName);
+  
+  fetch(`lessons/${lessonName}.json`)
+    .then(response => response.json())
+    .then(lesson => {
+        // Now you can work with your lesson object
+        console.log(lesson);
+    })
+    .catch(error => console.error('Error:', error));
+  
+  //let lesson = JSON.parse(lessonName);
+  
 }
 
 
