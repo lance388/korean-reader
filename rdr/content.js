@@ -144,3 +144,27 @@ function logUser(user)
 		console.error("Error writing document: ", error);
 	});
 }
+
+  // Get all the lesson links
+  const lessonLinks = document.querySelectorAll('.lesson-link');
+
+  // Add a click event listener to each lesson link
+  lessonLinks.forEach(lessonLink => {
+    lessonLink.addEventListener('click', function(event) {
+      // Prevent the default link click behavior
+      event.preventDefault();
+
+      // Get the lesson name from the data-lesson attribute of the clicked card
+      const lessonName = this.querySelector('.lesson-card').dataset.lesson;
+
+		console.log('Setting lessonName in sessionStorage:', lessonName);
+
+      // Store the lesson name in sessionStorage
+      sessionStorage.setItem('lessonName', lessonName);
+	  
+	  console.log('Stored lessonName:', sessionStorage.getItem('lessonName'));
+
+      // Navigate to the new page
+      window.location.href = this.href;
+    });
+  });

@@ -33,6 +33,7 @@
     <title>Content</title>
 
 	<link rel="stylesheet" type="text/css" href="styles/style_read.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 	<div class="container">
@@ -57,53 +58,47 @@
     </nav>
 </div>
 	
-<div class="textarea-container mt-3">
-    <div class="row h-100">
-        <!-- Textarea part -->
-        <div class="col-lg-8 h-100 d-flex flex-column">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="container-fluid">
+		<div class="row">
+			<!-- Textarea part -->
+				<div class="textarea-container col-lg-8 col-md-8 col-sm-7 col-xs-6 col-6 h-100 d-flex flex-column" id="textarea">
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Text Area</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <!-- Tab links -->
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-learn-tab" data-bs-toggle="tab" href="#nav-learn" role="tab" aria-controls="nav-learn" aria-selected="true">Learn</a>
+                        <a class="nav-item nav-link" id="nav-edit-tab" data-bs-toggle="tab" href="#nav-edit" role="tab" aria-controls="nav-edit" aria-selected="false">Edit</a>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ml-auto">
+                    <div class="collapse navbar-collapse" id="navbarNav2">
+                        <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a class="nav-link" id="sidebarCollapse">Toggle Sidebar</a>
+                                <a class="nav-item nav-link" id="nav-clear-tab">Clear Text</a>
                             </li>
                         </ul>
                     </div>
-                </div>
-            </nav>
-            <div class="form-floating h-100 d-flex flex-column">
-                <textarea class="form-control custom-textarea" id="userText" placeholder="Write your text here..." style="flex-grow: 1;"></textarea>
-            </div>
-        </div>
-        <!-- Sidebar part -->
-        <div class="sidebar-container col-lg-4 h-100" id="sidebar">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Statistics</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNav" aria-controls="sidebarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="sidebarNav">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" id="sidebarCollapse">Toggle Sidebar</a>
-                            </li>
-                        </ul>
+                    <div class="d-flex">
+                        <button class="btn btn-light" id="textareaFullscreenButton">
+                            <i class="bi bi-arrows-fullscreen"></i>
+                        </button>
                     </div>
                 </div>
             </nav>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            </div>
-        </div>
-    </div>
-</div>
+		
+			<!-- Tab content -->
+			<div class="textarea-tab-content tab-content" id="nav-tabContent";>
+					<div class="tab-pane fade show active" id="nav-learn" role="tabpanel" aria-labelledby="nav-learn-tab">
+                    <textarea class="form-control custom-textarea" id="learnText" placeholder="Learn content..." style="flex-grow: 1;"></textarea>
+                </div>
+                <div class="tab-pane fade" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
+                    <textarea class="form-control custom-textarea" id="editText" placeholder="Write your text here..." style="flex-grow: 1;"></textarea>
+                </div>
+			</div>	
+		</div>
+		
 
 
 
@@ -112,6 +107,50 @@
 
 
 
+
+			<!-- Sidebar part -->
+			<div class="sidebar-container col-lg-4 col-md-4 col-sm-5 col-xs-6 col-6 h-100" id="sidebar">
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+					
+					<div class="container-fluid">
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarNav3">
+							<ul class="navbar-nav ms-auto">
+								<li class="nav-item">
+									
+								</li>
+							</ul>
+						</div>
+						<div class="d-flex">
+							<button class="btn btn-light" id="sideBarFullscreenButton">
+								<i class="bi bi-arrows-fullscreen"></i>
+							</button>
+						</div>
+					</div>
+
+				</nav>
+				<div class="custom-statsarea">
+					<h5 class="card-title">Special title treatment</h5>
+					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+	<div class="d-none" id="xs-detection-div"></div>
+	<div class="d-sm-none d-md-block" id="sm-detection-div"></div>
+	<div class="d-md-none d-lg-block" id="md-detection-div"></div>
+	<div class="d-lg-none d-xl-block" id="lg-detection-div"></div>
+	<div class="d-xl-none d-xxl-block" id="xl-detection-div"></div>
+	<div class="d-xxl-none" id="xxl-detection-div"></div>
 	
 	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>

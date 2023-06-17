@@ -1,4 +1,5 @@
 var dbfire;
+
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
@@ -9,13 +10,22 @@ const firebaseConfig = {
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
 };
 
+
+initialize();
+
+function initialize()
+{
+	initializeFirebase();
+	initializeUI();
+}
+
 // Initialize Firebase
 function initializeFirebase() {
   firebase.initializeApp(firebaseConfig);
   dbfire = firebase.firestore();
 }
 
-initializeFirebase();
+
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -33,7 +43,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	//todo
 }
 
-initializeUI();
+
 
 window.handleCredentialResponse = (response) => {
 	onSignIn(); 
@@ -147,12 +157,48 @@ function logUser(user)
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  var sidebarToggle = document.getElementById('sidebarCollapse');
   var sidebar = document.getElementById('sidebar');
+  var sidebarContainer = document.querySelector('.sidebar-container');
   var textareaContainer = document.querySelector('.textarea-container');
-
-  sidebarToggle.addEventListener('click', function() {
-    sidebar.classList.toggle('active');
-    textareaContainer.classList.toggle('full-width');
+  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
+  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
+  
+	
+  textareaFullscreenButton.addEventListener('click', function() {
+	if(sidebarContainer.classList.contains('hidden')) {
+		  sidebarContainer.classList.remove('hidden');
+		  textareaContainer.classList.remove('full-width');
+		} else {
+		  sidebarContainer.classList.add('hidden');
+		  textareaContainer.classList.add('full-width');
+		  sidebarContainer.classList.remove('full-width');
+	}
   });
+  
+  sidebarFullscreenButton.addEventListener('click', function() {
+	if(textareaContainer.classList.contains('hidden')) {
+		  textareaContainer.classList.remove('hidden');
+		  sidebarContainer.classList.remove('full-width');
+		} else {
+		  textareaContainer.classList.add('hidden');
+		  sidebarContainer.classList.add('full-width');
+		  textareaContainer.classList.remove('full-width');
+	}
+  });
+  
+  // Get the lessonName from sessionStorage
+  const lessonName = sessionStorage.getItem('lessonName');
+
+  // Now you can use lessonName to load the appropriate lesson text
+  // Let's assume you have a function called loadLesson that takes a lesson name and loads the text
+  loadLesson(lessonName);
 });
+
+function loadLesson(lessonName) {
+  // Load lesson text based on lessonName
+  // This is just a placeholder. You would replace this with actual logic to load the text.
+  console.log("Loading lesson:", lessonName);
+}
+
+
+
