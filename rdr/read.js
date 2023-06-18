@@ -205,7 +205,7 @@ function loadLesson(lessonName) {
   // This is just a placeholder. You would replace this with actual logic to load the text.
   p("Loading lesson:", lessonName);
   
-  fetch(`lessons/${lessonName}.json`)
+  fetch('lessons/${lessonName}.json')
     .then(response => response.json())
     .then(lesson => {
         // Now you can work with your lesson object
