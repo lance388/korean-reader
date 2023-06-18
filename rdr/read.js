@@ -233,6 +233,8 @@ function processLessonJson(json)
 
 function loadPremadeLesson(title, text)
 {
+	//TODO check if edit tab is active first
+	
 	// Set the 'Edit' tab as the active tab
 	document.getElementById('nav-edit-tab').classList.add('active');
 	document.getElementById('nav-edit').classList.add('show', 'active');
@@ -241,12 +243,15 @@ function loadPremadeLesson(title, text)
 	document.getElementById('nav-learn-tab').classList.remove('active');
 	document.getElementById('nav-learn').classList.remove('show', 'active');
 	
+	p("Edit text setting text: <br>"+text);
 	//load text into edit mode text area
 	document.getElementById('editText').value = text;
 }
 
 function loadCustomLesson()
 {
+	//TODO check if edit tab is active first
+	
 	// Set the 'Edit' tab as the active tab
 	document.getElementById('nav-edit-tab').classList.add('active');
 	document.getElementById('nav-edit').classList.add('show', 'active');
