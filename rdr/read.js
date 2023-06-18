@@ -202,20 +202,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadLesson(lessonName) {
   // Load lesson text based on lessonName
-  // This is just a placeholder. You would replace this with actual logic to load the text.
   p("Loading lesson:", lessonName);
-  
-  fetch('lessons/${lessonName}.json')
-    .then(response => response.json())
+
+  fetch(`lessons/${lessonName}.json`)  // use backticks here
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(lesson => {
         // Now you can work with your lesson object
-        console.log(lesson);
+        p(lesson);
     })
     .catch(error => console.error('Error:', error));
-  
-  //let lesson = JSON.parse(lessonName);
-  
 }
+
 
 
 
