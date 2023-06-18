@@ -222,29 +222,41 @@ function processLessonJson(json)
 {
 	
 	if (/^custom\d+$/.test(json.type)) {
-		loadCustomLesson(json.name);
+		loadCustomLesson(json.title);
 	}
 	else{
-		loadPremadeLesson(json.name, json.text);
+		loadPremadeLesson(json.title, json.text);
 		
 	}
 	
 }
 
-function loadPremadeLesson()
+function loadPremadeLesson(title, text)
 {
-	setLessonEditable(false);
+	// Set the 'Edit' tab as the active tab
+	document.getElementById('nav-edit-tab').classList.add('active');
+	document.getElementById('nav-edit').classList.add('show', 'active');
+
+	// Remove the 'active' class from the 'Learn' tab
+	document.getElementById('nav-learn-tab').classList.remove('active');
+	document.getElementById('nav-learn').classList.remove('show', 'active');
+	
+	//load text into edit mode text area
+	document.getElementById('editText').value = text;
 }
 
 function loadCustomLesson()
 {
-	setLessonEditable(true);
-}
+	// Set the 'Edit' tab as the active tab
+	document.getElementById('nav-edit-tab').classList.add('active');
+	document.getElementById('nav-edit').classList.add('show', 'active');
 
-function setLessonEditable(editable)
-{
+	// Remove the 'active' class from the 'Learn' tab
+	document.getElementById('nav-learn-tab').classList.remove('active');
+	document.getElementById('nav-learn').classList.remove('show', 'active');
 	
 }
+
 
 
 
