@@ -213,9 +213,37 @@ function loadLesson(lessonName) {
     })
     .then(lesson => {
         // Now you can work with your lesson object
-        p(lesson);
+        processLessonJson(lesson);
     })
     .catch(error => console.error('Error:', error));
+}
+
+function processLessonJson(json)
+{
+	
+	if (/^custom\d+$/.test(json.type)) {
+		loadCustomLesson(json.name);
+	}
+	else{
+		loadPremadeLesson(json.name, json.text);
+		
+	}
+	
+}
+
+function loadPremadeLesson()
+{
+	setLessonEditable(false);
+}
+
+function loadCustomLesson()
+{
+	setLessonEditable(true);
+}
+
+function setLessonEditable(editable)
+{
+	
 }
 
 
