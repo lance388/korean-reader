@@ -327,6 +327,7 @@ function initCustomLesson(title){
 }
 
 function loadTextIntoLearnTab(text) {
+	p("text before: <br>"+text);
     const learnTextElement = document.getElementById('learnText');
 
     // Split the text into words and whitespace, and wrap each word in a span element
@@ -343,7 +344,8 @@ function loadTextIntoLearnTab(text) {
 
     // Join the chunks back together and set the HTML of the learnText element
     learnTextElement.innerHTML = chunks.join('');
-
+	p("text after: <br>"+learnTextElement.innerHTML);
+	
     // Add click event listeners to each word
     const wordElements = learnTextElement.getElementsByClassName('clickable-word');
     for (let i = 0; i < wordElements.length; i++) {
