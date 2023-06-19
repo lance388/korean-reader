@@ -23,6 +23,34 @@ function initialize()
 {
 	initializeFirebase();
 	initializeUI();
+	initializeSaving();
+}
+
+function initializeSaving()
+{
+	let saveTimeout = null;
+	const saveDelay = 5000; // Save after 5 seconds
+	const textarea = document.getElementById('editText');
+
+	// Listen for input events (i.e., when the user types in the textarea)
+	textarea.addEventListener('input', () => {
+		// If a save is already scheduled, cancel it
+		if (saveTimeout !== null) {
+			clearTimeout(saveTimeout);
+		}
+
+		// Schedule a new save
+		saveTimeout = setTimeout(() => {
+			// This is where you'd put your saving code. For now, just log the text.
+			p(textarea.value);
+
+			// Optionally, you can use IndexedDB or any other storage mechanism to store the data.
+			// For example: saveToIndexedDB(textarea.value);
+			
+			// Reset saveTimeout so we know no save is scheduled
+			saveTimeout = null;
+		}, saveDelay);
+	});
 }
 
 // Initialize Firebase
@@ -233,32 +261,35 @@ function processLessonJson(json)
 
 function loadPremadeLesson(title, text)
 {
-	//TODO check if edit tab is active first
-	
-	// Set the 'Edit' tab as the active tab
-	document.getElementById('nav-edit-tab').classList.add('active');
-	document.getElementById('nav-edit').classList.add('show', 'active');
+	if (!editTab.classList.contains('active')) {
+		// Set the 'Edit' tab as the active tab
+		document.getElementById('nav-edit-tab').classList.add('active');
+		document.getElementById('nav-edit').classList.add('show', 'active');
 
-	// Remove the 'active' class from the 'Learn' tab
-	document.getElementById('nav-learn-tab').classList.remove('active');
-	document.getElementById('nav-learn').classList.remove('show', 'active');
+		// Remove the 'active' class from the 'Learn' tab
+		document.getElementById('nav-learn-tab').classList.remove('active');
+		document.getElementById('nav-learn').classList.remove('show', 'active');
+	}
 	
-	p("Edit text setting text: <br>"+text);
+	document.getElementById('textarea-navbar-title').innerText = title;
+	
 	//load text into edit mode text area
 	document.getElementById('editText').value = text;
 }
 
-function loadCustomLesson()
+function loadCustomLesson(title)
 {
-	//TODO check if edit tab is active first
-	
-	// Set the 'Edit' tab as the active tab
-	document.getElementById('nav-edit-tab').classList.add('active');
-	document.getElementById('nav-edit').classList.add('show', 'active');
+	if (!editTab.classList.contains('active')) {
+		// Set the 'Edit' tab as the active tab
+		document.getElementById('nav-edit-tab').classList.add('active');
+		document.getElementById('nav-edit').classList.add('show', 'active');
 
-	// Remove the 'active' class from the 'Learn' tab
-	document.getElementById('nav-learn-tab').classList.remove('active');
-	document.getElementById('nav-learn').classList.remove('show', 'active');
+		// Remove the 'active' class from the 'Learn' tab
+		document.getElementById('nav-learn-tab').classList.remove('active');
+		document.getElementById('nav-learn').classList.remove('show', 'active');
+	}
+	
+	document.getElementById('textarea-navbar-title').innerText = title;
 	
 }
 
