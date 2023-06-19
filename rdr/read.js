@@ -259,9 +259,8 @@ function processLessonJson(json)
 	
 }
 
-function loadPremadeLesson(title, text)
-{
-	if (!editTab.classList.contains('active')) {
+function loadPremadeLesson(title, text){
+	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
 		// Set the 'Edit' tab as the active tab
 		document.getElementById('nav-edit-tab').classList.add('active');
 		document.getElementById('nav-edit').classList.add('show', 'active');
@@ -279,7 +278,7 @@ function loadPremadeLesson(title, text)
 
 function loadCustomLesson(title)
 {
-	if (!editTab.classList.contains('active')) {
+	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
 		// Set the 'Edit' tab as the active tab
 		document.getElementById('nav-edit-tab').classList.add('active');
 		document.getElementById('nav-edit').classList.add('show', 'active');
