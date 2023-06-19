@@ -289,6 +289,8 @@ function activateEditTab()
 function initPremadeLesson(title, text){
 	protectText = true;
 	protectTextMessage = "Content editing is not permitted for pre-set lessons.";
+	document.getElementById('nav-clear-tab').disabled=true;
+	
 	
 	activateEditTab();
 	
