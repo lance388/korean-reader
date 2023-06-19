@@ -1,6 +1,6 @@
 let isDebugMode = true;
 var dbfire;
-var protectText = false;
+//var protectText = false;
 
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
@@ -113,16 +113,16 @@ function initializeUI(){
 			
 		
 		clearTextButton.addEventListener('click', () => {
-			if(protectText)
-			{
-				alert(protectTextMessage);
-			}
-			else
-			{
+			//if(protectText)
+			//{
+			//	alert(protectTextMessage);
+			//}
+			//else
+			//{
 				// Clear the text in the 'Edit' tab
 				document.getElementById('editText').value = '';	
 				activateEditTab();	
-			}
+			//}
 		});
 	});
 }
@@ -260,8 +260,7 @@ function loadLesson(lessonName) {
     .catch(error => console.error('Error:', error));
 }
 
-function processLessonJson(json)
-{
+function processLessonJson(json){
 	
 	if (/^custom\d+$/.test(json.type)) {
 		initCustomLesson(json.title);
@@ -273,8 +272,7 @@ function processLessonJson(json)
 	
 }
 
-function activateEditTab()
-{
+function activateEditTab(){
 	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
 		// Set the 'Edit' tab as the active tab
 		document.getElementById('nav-edit-tab').classList.add('active');
@@ -286,13 +284,22 @@ function activateEditTab()
 	}
 }
 
+function activateEditTab(){
+	if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
+		// Set the 'Edit' tab as the active tab
+		document.getElementById('nav-learn-tab').classList.add('active');
+		document.getElementById('nav-learn').classList.add('show', 'active');
+
+		// Remove the 'active' class from the 'Learn' tab
+		document.getElementById('nav-edit-tab').classList.remove('active');
+		document.getElementById('nav-edit').classList.remove('show', 'active');
+	}
+}
+
 function initPremadeLesson(title, text){
-	protectText = true;
-	protectTextMessage = "Content editing is not permitted for pre-set lessons.";
+	//protectText = true;
+	//protectTextMessage = "Content editing is not permitted for pre-set lessons.";
 	document.getElementById('nav-clear-tab').disabled=true;
-	
-	
-	activateEditTab();
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
 	
@@ -302,17 +309,21 @@ function initPremadeLesson(title, text){
     
     // Trigger the input event
     textarea.dispatchEvent(new Event('input'));
+	var navLearnTab = document.getElementById('nav-learn-tab');
+	//navLearnTab.addEventListener('show.bs.tab', function(e) {
+	//			loadTextIntoLearnTab(document.getElementById('editText').value);
+	//		});
+	
+	activateLearnTab();
 }
 
-function initCustomLesson(title)
-{
-	protectText = false;
-	lessonType = "custom";
-	activateEditTab();
-	
+function initCustomLesson(title){
+	document.getElementById('nav-clear-tab').disabled=false;
+	//protectText = false;
+	//lessonType = "custom";
 	document.getElementById('textarea-navbar-title').innerText = title;
 	
-	
+	activateEditTab();
 }
 
 function loadTextIntoLearnTab(text) {
