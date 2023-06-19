@@ -62,45 +62,44 @@
     <div class="container-fluid">
 		<div class="row">
 			<!-- Textarea part -->
-				<div class="textarea-container col-lg-8 col-md-8 col-sm-7 col-xs-6 col-6 h-100 d-flex flex-column" id="textarea">
-				<nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <!-- Tab links -->
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link" id="nav-learn-tab" data-bs-toggle="tab" href="#nav-learn" role="tab" aria-controls="nav-learn" aria-selected="false">Learn</a>
-						<a class="nav-item nav-link active" id="nav-edit-tab" data-bs-toggle="tab" href="#nav-edit" role="tab" aria-controls="nav-edit" aria-selected="true">Edit</a>
-                    </div>
-					<div class="d-flex align-items-center justify-content-center flex-grow-1">
-						<span id="textarea-navbar-title"></span>
-					</div>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav2">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-item nav-link" id="nav-clear-tab">Clear Text</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="d-flex">
-                        <button class="btn btn-light" id="textareaFullscreenButton">
-                            <i class="bi bi-arrows-fullscreen"></i>
-                        </button>
-                    </div>
-                </div>
-            </nav>
-		
-			<!-- Tab content -->
-			<div class="textarea-tab-content tab-content" id="nav-tabContent">
-				<div class="tab-pane fade" id="nav-learn" role="tabpanel" aria-labelledby="nav-learn-tab">
-					<textarea class="form-control custom-textarea" id="learnText" placeholder="Learn content..." style="flex-grow: 1;"></textarea>
+			<div class="textarea-container col-lg-8 col-md-8 col-sm-7 col-xs-6 col-6 h-100 d-flex flex-column" id="textarea">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			
+			<div class="collapse navbar-collapse" id="navbarNav2">
+				<!-- Tab links -->
+				<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<a class="nav-item nav-link" id="nav-learn-tab" data-bs-toggle="tab" href="#nav-learn" role="tab" aria-controls="nav-learn" aria-selected="false">Learn</a>
+					<a class="nav-item nav-link active" id="nav-edit-tab" data-bs-toggle="tab" href="#nav-edit" role="tab" aria-controls="nav-edit" aria-selected="true">Edit</a>
 				</div>
-				<div class="tab-pane fade show active" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
-					<textarea class="form-control custom-textarea" id="editText" placeholder="Write your text here..." style="flex-grow: 1;"></textarea>
-				</div>
-			</div>	
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-item nav-link" id="nav-clear-tab">Clear Text</a>
+					</li>
+				</ul>
+			</div>
+			<div class="d-flex">
+				<button class="btn btn-light" id="textareaFullscreenButton">
+					<i class="bi bi-arrows-fullscreen"></i>
+				</button>
+			</div>
 		</div>
+	</nav>
+	
+	<!-- Tab content -->
+	<div class="textarea-tab-content tab-content" id="nav-tabContent">
+		<div class="tab-pane fade" id="nav-learn" role="tabpanel" aria-labelledby="nav-learn-tab">
+			<p class="form-control custom-textarea" id="learnText" placeholder="Learn content..." style="flex-grow: 1;"></p>
+		</div>
+		<div class="tab-pane fade show active" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
+			<textarea class="form-control custom-textarea" id="editText" placeholder="Write your text here..." style="flex-grow: 1;"></textarea>
+		</div>
+	</div>	
+</div>
+
 		
 
 
@@ -156,7 +155,11 @@
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
 	<script src="read.js"></script>
 	<script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
-	
+	<div id="g_id_onload"
+    data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse"
+	style="display: none;">
+    </div>
 </body>
 
 </html>

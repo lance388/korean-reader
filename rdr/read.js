@@ -26,8 +26,7 @@ function initialize()
 	initializeSaving();
 }
 
-function initializeSaving()
-{
+function initializeSaving(){
 	let saveTimeout = null;
 	const saveDelay = 5000; // Save after 5 seconds
 	const textarea = document.getElementById('editText');
@@ -42,7 +41,7 @@ function initializeSaving()
 		// Schedule a new save
 		saveTimeout = setTimeout(() => {
 			// This is where you'd put your saving code. For now, just log the text.
-			p(textarea.value);
+			p("text saved");
 
 			// Optionally, you can use IndexedDB or any other storage mechanism to store the data.
 			// For example: saveToIndexedDB(textarea.value);
@@ -72,9 +71,45 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-	function initializeUI()
-{
-	//todo
+function initializeUI(){
+	document.addEventListener('DOMContentLoaded', function() {
+	  var sidebar = document.getElementById('sidebar');
+	  var sidebarContainer = document.querySelector('.sidebar-container');
+	  var textareaContainer = document.querySelector('.textarea-container');
+	  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
+	  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
+	  var navLearnTab = document.getElementById('nav-learn-tab');
+	  
+		
+	  textareaFullscreenButton.addEventListener('click', function() {
+		if(sidebarContainer.classList.contains('hidden')) {
+			  sidebarContainer.classList.remove('hidden');
+			  textareaContainer.classList.remove('full-width');
+			} else {
+			  sidebarContainer.classList.add('hidden');
+			  textareaContainer.classList.add('full-width');
+			  sidebarContainer.classList.remove('full-width');
+		}
+	  });
+	  
+	  sidebarFullscreenButton.addEventListener('click', function() {
+		if(textareaContainer.classList.contains('hidden')) {
+			  textareaContainer.classList.remove('hidden');
+			  sidebarContainer.classList.remove('full-width');
+			} else {
+			  textareaContainer.classList.add('hidden');
+			  sidebarContainer.classList.add('full-width');
+			  textareaContainer.classList.remove('full-width');
+		}
+	  });
+	  loadLesson(sessionStorage.getItem('lessonName'));
+
+
+		navLearnTab.addEventListener('show.bs.tab', function(e) {
+			loadTextIntoLearnTab(document.getElementById('editText').value)
+		});
+
+	});
 }
 
 
@@ -190,37 +225,7 @@ function logUser(user)
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  var sidebar = document.getElementById('sidebar');
-  var sidebarContainer = document.querySelector('.sidebar-container');
-  var textareaContainer = document.querySelector('.textarea-container');
-  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
-  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
-  
-	
-  textareaFullscreenButton.addEventListener('click', function() {
-	if(sidebarContainer.classList.contains('hidden')) {
-		  sidebarContainer.classList.remove('hidden');
-		  textareaContainer.classList.remove('full-width');
-		} else {
-		  sidebarContainer.classList.add('hidden');
-		  textareaContainer.classList.add('full-width');
-		  sidebarContainer.classList.remove('full-width');
-	}
-  });
-  
-  sidebarFullscreenButton.addEventListener('click', function() {
-	if(textareaContainer.classList.contains('hidden')) {
-		  textareaContainer.classList.remove('hidden');
-		  sidebarContainer.classList.remove('full-width');
-		} else {
-		  textareaContainer.classList.add('hidden');
-		  sidebarContainer.classList.add('full-width');
-		  textareaContainer.classList.remove('full-width');
-	}
-  });
-  loadLesson(sessionStorage.getItem('lessonName'));
-});
+
 
 function loadLesson(lessonName) {
   // Load lesson text based on lessonName
@@ -244,16 +249,16 @@ function processLessonJson(json)
 {
 	
 	if (/^custom\d+$/.test(json.type)) {
-		loadCustomLesson(json.title);
+		initCustomLesson(json.title);
 	}
 	else{
-		loadPremadeLesson(json.title, json.text);
+		initPremadeLesson(json.title, json.text);
 		
 	}
 	
 }
 
-function loadPremadeLesson(title, text){
+function initPremadeLesson(title, text){
 	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
 		// Set the 'Edit' tab as the active tab
 		document.getElementById('nav-edit-tab').classList.add('active');
@@ -267,10 +272,14 @@ function loadPremadeLesson(title, text){
 	document.getElementById('textarea-navbar-title').innerText = title;
 	
 	//load text into edit mode text area
-	document.getElementById('editText').value = text;
+	const textarea = document.getElementById('editText');
+	textarea.value = text;
+    
+    // Trigger the input event
+    textarea.dispatchEvent(new Event('input'));
 }
 
-function loadCustomLesson(title)
+function initCustomLesson(title)
 {
 	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
 		// Set the 'Edit' tab as the active tab
@@ -284,6 +293,40 @@ function loadCustomLesson(title)
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
 	
+	
+}
+
+function loadTextIntoLearnTab(text) {
+    const learnTextElement = document.getElementById('learnText');
+
+    // Split the text into words and whitespace, and wrap each word in a span element
+    const chunks = text.split(/(\s+)/).map((chunk) => {
+        if (/\s+/.test(chunk)) {
+            // If the chunk is whitespace, return it as-isDebugMode
+			return '<span> </span>'
+            //return chunk;
+        } else {
+            // If the chunk is a word, wrap it in a span
+            return `<span class="clickable-word">${chunk}</span>`;
+        }
+    });
+
+    // Join the chunks back together and set the HTML of the learnText element
+    learnTextElement.innerHTML = chunks.join('');
+	p(learnTextElement.innerHTML);
+
+    // Add click event listeners to each word
+    const wordElements = learnTextElement.getElementsByClassName('clickable-word');
+    for (let i = 0; i < wordElements.length; i++) {
+        wordElements[i].addEventListener('click', () => {
+            // This function will be called when the word is clicked
+            handleWordClick(wordElements[i].textContent);
+        });
+    }
+}
+
+function handleWordClick(word) {
+    p(`The word "${word}" was clicked`);
 }
 
 

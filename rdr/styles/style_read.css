@@ -70,6 +70,17 @@ html,body {
 
 }
 
+.clickable-word {
+	white-space: pre-wrap; 
+    cursor: pointer;
+	transition: color 0.3s ease-in-out; 
+}
+
+.clickable-word:hover {
+    color: LightSeaGreen;
+}
+
+
 .textarea-tab-content{
 	display: flex;
   flex-grow: 1;
