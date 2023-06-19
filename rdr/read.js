@@ -219,13 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  textareaContainer.classList.remove('full-width');
 	}
   });
-  
-  // Get the lessonName from sessionStorage
-  const lessonName = sessionStorage.getItem('lessonName');
-
-  // Now you can use lessonName to load the appropriate lesson text
-  // Let's assume you have a function called loadLesson that takes a lesson name and loads the text
-  loadLesson(lessonName);
+  loadLesson(sessionStorage.getItem('lessonName'));
 });
 
 function loadLesson(lessonName) {
