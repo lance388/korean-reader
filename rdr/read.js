@@ -284,13 +284,13 @@ function activateEditTab(){
 	}
 }
 
-function activateEditTab(){
+function activateLearnTab(){
 	if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
-		// Set the 'Edit' tab as the active tab
+
 		document.getElementById('nav-learn-tab').classList.add('active');
 		document.getElementById('nav-learn').classList.add('show', 'active');
 
-		// Remove the 'active' class from the 'Learn' tab
+
 		document.getElementById('nav-edit-tab').classList.remove('active');
 		document.getElementById('nav-edit').classList.remove('show', 'active');
 	}
