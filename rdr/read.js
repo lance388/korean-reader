@@ -1,5 +1,6 @@
 let isDebugMode = true;
 var dbfire;
+var protectText = false;
 
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
@@ -73,42 +74,56 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 function initializeUI(){
 	document.addEventListener('DOMContentLoaded', function() {
-	  var sidebar = document.getElementById('sidebar');
-	  var sidebarContainer = document.querySelector('.sidebar-container');
-	  var textareaContainer = document.querySelector('.textarea-container');
-	  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
-	  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
-	  var navLearnTab = document.getElementById('nav-learn-tab');
-	  
+		  var sidebar = document.getElementById('sidebar');
+		  var sidebarContainer = document.querySelector('.sidebar-container');
+		  var textareaContainer = document.querySelector('.textarea-container');
+		  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
+		  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
+		  var navLearnTab = document.getElementById('nav-learn-tab');
+		  var clearTextButton = document.getElementById('nav-clear-tab');
+		  
+			
+		  textareaFullscreenButton.addEventListener('click', function() {
+			if(sidebarContainer.classList.contains('hidden')) {
+				  sidebarContainer.classList.remove('hidden');
+				  textareaContainer.classList.remove('full-width');
+				} else {
+				  sidebarContainer.classList.add('hidden');
+				  textareaContainer.classList.add('full-width');
+				  sidebarContainer.classList.remove('full-width');
+			}
+		  });
+		  
+		  sidebarFullscreenButton.addEventListener('click', function() {
+			if(textareaContainer.classList.contains('hidden')) {
+				  textareaContainer.classList.remove('hidden');
+				  sidebarContainer.classList.remove('full-width');
+				} else {
+				  textareaContainer.classList.add('hidden');
+				  sidebarContainer.classList.add('full-width');
+				  textareaContainer.classList.remove('full-width');
+			}
+		  });
+		  loadLesson(sessionStorage.getItem('lessonName'));
+
+
+			navLearnTab.addEventListener('show.bs.tab', function(e) {
+				loadTextIntoLearnTab(document.getElementById('editText').value);
+			});
+			
 		
-	  textareaFullscreenButton.addEventListener('click', function() {
-		if(sidebarContainer.classList.contains('hidden')) {
-			  sidebarContainer.classList.remove('hidden');
-			  textareaContainer.classList.remove('full-width');
-			} else {
-			  sidebarContainer.classList.add('hidden');
-			  textareaContainer.classList.add('full-width');
-			  sidebarContainer.classList.remove('full-width');
-		}
-	  });
-	  
-	  sidebarFullscreenButton.addEventListener('click', function() {
-		if(textareaContainer.classList.contains('hidden')) {
-			  textareaContainer.classList.remove('hidden');
-			  sidebarContainer.classList.remove('full-width');
-			} else {
-			  textareaContainer.classList.add('hidden');
-			  sidebarContainer.classList.add('full-width');
-			  textareaContainer.classList.remove('full-width');
-		}
-	  });
-	  loadLesson(sessionStorage.getItem('lessonName'));
-
-
-		navLearnTab.addEventListener('show.bs.tab', function(e) {
-			loadTextIntoLearnTab(document.getElementById('editText').value)
+		clearTextButton.addEventListener('click', () => {
+			if(protectText)
+			{
+				alert(protectTextMessage);
+			}
+			else
+			{
+				// Clear the text in the 'Edit' tab
+				document.getElementById('editText').value = '';	
+				activateEditTab();	
+			}
 		});
-
 	});
 }
 
@@ -258,7 +273,8 @@ function processLessonJson(json)
 	
 }
 
-function initPremadeLesson(title, text){
+function activateEditTab()
+{
 	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
 		// Set the 'Edit' tab as the active tab
 		document.getElementById('nav-edit-tab').classList.add('active');
@@ -268,6 +284,13 @@ function initPremadeLesson(title, text){
 		document.getElementById('nav-learn-tab').classList.remove('active');
 		document.getElementById('nav-learn').classList.remove('show', 'active');
 	}
+}
+
+function initPremadeLesson(title, text){
+	protectText = true;
+	protectTextMessage = "Content editing is not permitted for pre-set lessons.";
+	
+	activateEditTab();
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
 	
@@ -281,15 +304,9 @@ function initPremadeLesson(title, text){
 
 function initCustomLesson(title)
 {
-	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
-		// Set the 'Edit' tab as the active tab
-		document.getElementById('nav-edit-tab').classList.add('active');
-		document.getElementById('nav-edit').classList.add('show', 'active');
-
-		// Remove the 'active' class from the 'Learn' tab
-		document.getElementById('nav-learn-tab').classList.remove('active');
-		document.getElementById('nav-learn').classList.remove('show', 'active');
-	}
+	protectText = false;
+	lessonType = "custom";
+	activateEditTab();
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
 	
@@ -313,7 +330,6 @@ function loadTextIntoLearnTab(text) {
 
     // Join the chunks back together and set the HTML of the learnText element
     learnTextElement.innerHTML = chunks.join('');
-	p(learnTextElement.innerHTML);
 
     // Add click event listeners to each word
     const wordElements = learnTextElement.getElementsByClassName('clickable-word');
