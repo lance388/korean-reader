@@ -303,7 +303,7 @@ function loadTextIntoLearnTab(text) {
     const chunks = text.split(/(\s+)/).map((chunk) => {
         if (/\s+/.test(chunk)) {
             // If the chunk is whitespace, return it as-isDebugMode
-			return '<span> </span>'
+			return '<span class="white-space">&nbsp;</span>';
             //return chunk;
         } else {
             // If the chunk is a word, wrap it in a span
