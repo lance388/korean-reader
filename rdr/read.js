@@ -1,5 +1,8 @@
 let isDebugMode = true;
+let lessonLanguage = "ko";
 var dbfire;
+const wordsPerPage = 100;  
+
 //var protectText = false;
 
 const firebaseConfig = {
@@ -108,7 +111,7 @@ function initializeUI(){
 
 
 			navLearnTab.addEventListener('show.bs.tab', function(e) {
-				loadTextIntoLearnTab(document.getElementById('editText').value);
+				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
 			});
 			
 		
@@ -294,6 +297,7 @@ function activateLearnTab(){
 		document.getElementById('nav-edit-tab').classList.remove('active');
 		document.getElementById('nav-edit').classList.remove('show', 'active');
 	}
+	document.getElementById('nav-learn-tab').dispatchEvent(new Event('show.bs.tab'));
 }
 
 function initPremadeLesson(title, text){
@@ -309,7 +313,7 @@ function initPremadeLesson(title, text){
     
     // Trigger the input event
     textarea.dispatchEvent(new Event('input'));
-	var navLearnTab = document.getElementById('nav-learn-tab');
+	//var navLearnTab = document.getElementById('nav-learn-tab');
 	//navLearnTab.addEventListener('show.bs.tab', function(e) {
 	//			loadTextIntoLearnTab(document.getElementById('editText').value);
 	//		});
@@ -326,35 +330,64 @@ function initCustomLesson(title){
 	activateEditTab();
 }
 
-function loadTextIntoLearnTab(text) {
-	p("text before: <br>"+text);
+function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
 
-    // Split the text into words and whitespace, and wrap each word in a span element
-    const chunks = text.split(/(\s+)/).map((chunk) => {
-        if (/\s+/.test(chunk)) {
-            // If the chunk is whitespace, return it as-isDebugMode
-			return '<span class="white-space">&nbsp;</span>';
-            //return chunk;
+    // Split the text into words and whitespace (including new lines), and wrap each word in a span element
+    // Split the text into words and whitespace (including new lines), and wrap each word in a span element
+    let chunks = text.split(/(\s+|\n)/).flatMap((chunk) => {
+        if (chunk === '\n') {
+            // If the chunk is a newline, return a <br> element
+            return '<span class="non-text"><br></span>';
+        } else if (/\s+/.test(chunk)) {
+            // If the chunk is whitespace, return it as-is
+            return '<span class="non-text">&nbsp;</span>';
         } else {
-            // If the chunk is a word, wrap it in a span
-            return `<span class="clickable-word">${chunk}</span>`;
+            let subChunks;
+            // Further split the chunk into Korean and non-Korean text
+            if (language == "ko") {
+                subChunks = chunk.split(/([\uAC00-\uD7AF]+)/).filter(Boolean);
+            } 
+            // For English, include only latin letters
+            else if (language == "en") {
+                subChunks = chunk.split(/([a-zA-Z]+)/).filter(Boolean);
+            }
+            // For Chinese, include only Chinese characters
+            else if (language == "cn") {
+                subChunks = chunk.split(/([\p{Script=Han}]+)/u).filter(Boolean);
+            }
+            return subChunks.map((subChunk) => {
+                if ((language == "ko" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
+                    (language == "en" && /[a-zA-Z]/.test(subChunk)) ||
+                    (language == "cn" && /[\p{Script=Han}]/u.test(subChunk))) {
+                    // If the subChunk is in the appropriate language, wrap it in a span
+                    return `<span class="clickable-word">${subChunk}</span>`;
+                } else {
+                    // If the subChunk is not a word (or if the language is not correct), it's non-text
+                    return `<span class="non-text">${subChunk}</span>`;
+                }
+            });
         }
     });
 
-    // Join the chunks back together and set the HTML of the learnText element
-    learnTextElement.innerHTML = chunks.join('');
-	p("text after: <br>"+learnTextElement.innerHTML);
-	
-    // Add click event listeners to each word
-    const wordElements = learnTextElement.getElementsByClassName('clickable-word');
-    for (let i = 0; i < wordElements.length; i++) {
-        wordElements[i].addEventListener('click', () => {
-            // This function will be called when the word is clicked
-            handleWordClick(wordElements[i].textContent);
-        });
+    // Divide the chunks into pages
+    const pages = [];
+    while (chunks.length) {
+        pages.push(chunks.splice(0, wordsPerPage));
     }
+
+    // Clear the current content
+    learnTextElement.innerHTML = '';
+
+    // Create and render the pages
+    pages.forEach((page, index) => {
+        const pageElement = document.createElement('div');
+        pageElement.className = 'page';
+        pageElement.innerHTML = page.join('');
+        learnTextElement.appendChild(pageElement);
+    });
 }
+
 
 function handleWordClick(word) {
     p(`The word "${word}" was clicked`);
