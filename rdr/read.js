@@ -333,12 +333,10 @@ function initCustomLesson(title){
 function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
 
-    // Split the text into words and whitespace (including new lines), and wrap each word in a span element
-    // Split the text into words and whitespace (including new lines), and wrap each word in a span element
-    let chunks = text.split(/(\s+|\n)/).flatMap((chunk) => {
-        if (chunk === '\n') {
+    let chunks = text.split(/(\s+|\n+)/).flatMap((chunk) => {
+        if(/\n+/.test(chunk)) {
             // If the chunk is a newline, return a <br> element
-            return '<span class="non-text"><br></span>';
+            return '<span class="non-text"><br><br></span>';
         } else if (/\s+/.test(chunk)) {
             // If the chunk is whitespace, return it as-is
             return '<span class="non-text">&nbsp;</span>';

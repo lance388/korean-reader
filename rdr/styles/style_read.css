@@ -1,45 +1,78 @@
-html,body {
-
+html, body {
+	height:100vh;
+	width:100%;
+	display: flex;
+    flex-direction: column;
+	 margin:0;
+	 padding:0;
 }
 
 .container-fluid {
+   display: flex;
+   flex-grow: 1;
+   width:100%;
+    margin:0;
+	padding:0;
    
 }
 
 .row {
-	
+	width:100%;
+	 margin:0;
+	 padding:0;
 }
 
 .textarea-container{
-	
+	display: flex;
+   flex-grow: 1;
+   margin:0;
+   padding:.3em;
 }
 
 
 
 .textarea-tab-content{
-
+	display: flex;
+   flex-grow: 1;
+   flex-direction: column;
+   margin:0;
+   padding:0;
+   
+   
 }
 
 .learn-textarea {
     box-sizing: border-box; /* Add this */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
     background-color: #f9f9f9; /* Light grey color for the background */
-    resize: none; 
-	flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
+	height:1px;
+	overflow-y: scroll;
+	margin:0;
+   padding:0;
 	
-	margin-bottom:7px;
+}
+
+.edit-textarea {
+    box-sizing: border-box; /* Add this */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
+    font-size: 1.5em; /* Adjust the font size to fit the container */
+    line-height: 1.6; /* More space between lines for easier reading */
+    color: #333; /* Dark grey color for the text */
+    background-color: #f9f9f9; /* Light grey color for the background */
+	height:100%;
+	display: flex;
+    resize: none; 
+
 }
 
 #learnText {
     flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     box-sizing: border-box; /* add this line */
+	margin:0;
+   padding:0;
 	
 }
 
@@ -157,7 +190,6 @@ html,body {
     max-width: 100%;
 	position: fixed;
     width: 100%;
-    height: 100%;
 }
 
 .textarea-container.hidden {
@@ -170,24 +202,14 @@ html,body {
 
 
 
-.edit-textarea {
-    box-sizing: border-box; /* Add this */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
-    font-size: 1.5em; /* Adjust the font size to fit the container */
-    line-height: 1.6; /* More space between lines for easier reading */
-    color: #333; /* Dark grey color for the text */
-    background-color: #f9f9f9; /* Light grey color for the background */
-	height:100%;
-	display: flex;
-    resize: none; 
-    overflow: auto; /* Enable scrolling within textarea */
-}
+
 
 
 
 .sidebar-container {
     display: flex;  /* Make it a flex container */
     flex-direction: column;  /* Make its children stack vertically */
+	padding:.3em;
 }
 
 .custom-statsarea {
@@ -195,7 +217,7 @@ html,body {
     border-radius: 5px;
     padding: 1em;
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
-    overflow: auto; /* Enable scrolling if the content overflows */
+
     flex-direction: column; /* Make its children stack vertically */
 	flex-grow: 1;
 
