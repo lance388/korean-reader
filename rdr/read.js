@@ -75,7 +75,23 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
+function setOnlineMode(state)
+{
+		//todo write a title somewhere
+}
+
 function initializeUI(){
+	
+	window.addEventListener('online', function(e) {
+		console.log("You are online.");
+		setOnlineMode(1);
+	});
+
+	window.addEventListener('offline', function(e) {
+		console.log("You are offline.");
+		setOnlineMode(0);
+	});
+	
 	document.addEventListener('DOMContentLoaded', function() {
 		  var sidebar = document.getElementById('sidebar');
 		  var sidebarContainer = document.querySelector('.sidebar-container');
@@ -218,11 +234,12 @@ function showSigninElements(show)
 	{
 		if(show)
 		{
-			//todo
+			//TODO set a title somewhere to offline mode
+			document.getElementById("loginButton").innerText = "Sign in";
 		}
 		else
 		{
-			//todo
+			document.getElementById("loginButton").innerText = "Sign out";
 		}
 	}
 	
@@ -379,7 +396,7 @@ function loadTextIntoLearnTab(text, language) {
 
     // Create and render the pages
     pages.forEach((page, index) => {
-        const pageElement = document.createElement('div');
+        const pageElement = document.createElement('span');
         pageElement.className = 'page';
         pageElement.innerHTML = page.join('');
         learnTextElement.appendChild(pageElement);

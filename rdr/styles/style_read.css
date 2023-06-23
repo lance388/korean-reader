@@ -53,8 +53,6 @@ html, body {
 }
 
 .edit-textarea {
-    box-sizing: border-box; /* Add this */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
     font-size: 1.5em; /* Adjust the font size to fit the container */
     line-height: 1.6; /* More space between lines for easier reading */
     color: #333; /* Dark grey color for the text */
@@ -62,26 +60,30 @@ html, body {
 	height:100%;
 	display: flex;
     resize: none; 
+	margin:0;
+   padding:.4em;
 
 }
 
 #learnText {
     flex-direction: row;
     border: 1px solid #ddd;
+    border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     box-sizing: border-box; /* add this line */
 	margin:0;
-   padding:0;
-	
+   padding:10px;
 }
 
 
 .page {
-    border: 1px solid #ddd;
+
 	font-size: 1.5em;
 	line-height: 1.6; /* More space between lines for easier reading */
     color: #333; /* Dark grey color for the text */
+	margin:0;
+   padding:0;
 }
 
 
