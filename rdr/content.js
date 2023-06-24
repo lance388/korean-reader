@@ -28,16 +28,35 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     p("User has logged in.");
 	logUser(user);
-	showSigninElements(false);
+	displaySigninElements("signedInMode");
   } else {
-    // No user is signed in.
-	showSigninElements(true);
+    if (window.location.protocol === "file:") {
+		// Running locally
+		displaySigninElements("offlineMode");
+	} 
+	else
+	{
+		displaySigninElements("signedOutMode");
+	}
   }
 });
 
-	function initializeUI()
+function initializeUI()
 {
-	//todo
+	if (window.location.protocol === "file:") {
+		// Running locally
+		displaySigninElements("offlineMode");
+		p("User is running the website locally");
+	} 
+	
+	window.addEventListener('online', function(e) {
+		displaySigninElements("signedOutMode");
+	});
+
+	window.addEventListener('offline', function(e) {
+		displaySigninElements("offlineMode");
+		p("user is offline");
+	});
 }
 
 initializeUI();
@@ -51,7 +70,7 @@ window.handleCredentialResponse = (response) => {
         // [START signout]
 		handleSignOut();
         //firebase.auth().signOut();
-		showSigninElements(true);
+		displaySigninElements("signedOutMode");
         // [END signout]
       } else {
         var email = document.getElementById('signin-email').value;
@@ -79,7 +98,7 @@ window.handleCredentialResponse = (response) => {
           }
           p(error);
 		  p("Signed in with email");
-		  showSigninElements(false);
+		  displaySigninElements("signedInMode");
           // [END_EXCLUDE]
         });
         // [END authwithemail]
@@ -102,7 +121,7 @@ window.handleCredentialResponse = (response) => {
 			// IdP data available in result.additionalUserInfo.profile.
 			  // ...
 			  p("Signed in with Google");
-			  showSigninElements(false);
+			  displaySigninElements("signedInMode");
 		  }).catch((error) => {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -118,23 +137,33 @@ window.handleCredentialResponse = (response) => {
 	function handleSignOut() {
 		firebase.auth().signOut().then(() => {
 		  // Sign-out successful.
-		  showSigninElements(true);
+		  displaySigninElements("signedOutMode");
 		}).catch((error) => {
 		  // An error happened.
 		});
 	}
 
-function showSigninElements(show)
+function displaySigninElements(state)
+{
+	switch(state)
 	{
-		if(show)
-		{
-			//todo
-		}
-		else
-		{
-			//todo
-		}
+			case "offlineMode":
+				document.getElementById('loginButton').style.display = 'none';
+				document.getElementById("loggedInState").innerText = "Working in offline mode";
+				document.getElementById("loginButton").innerText = "Sign in";
+			break;
+			case "signedOutMode":
+				document.getElementById('loginButton').style.display = '';
+				document.getElementById("loggedInState").innerText = "Working in signed-out mode";
+				document.getElementById("loginButton").innerText = "Sign in";
+			break;
+			case "signedInMode":
+				document.getElementById('loginButton').style.display = '';
+				document.getElementById("loggedInState").innerText = "Logged in as "+firebase.auth().currentUser;
+				document.getElementById("loginButton").innerText = "Sign out";
+			break;
 	}
+}
 	
 function logUser(user)
 {

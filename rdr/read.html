@@ -36,27 +36,33 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-	<div class="container">
+<div class="container">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
+        <div class="container-fluid d-flex justify-content-between">
             <a class="navbar-brand" href="index.html">
-            <img src="img/icons/ms-icon-144x144.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
-            Reader
+                <img src="img/icons/ms-icon-144x144.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                Reader
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-						<a href="content.html" class="btn btn-outline-success">Lessons</a>
-                        <a href="login.html" id="loginButton" class="btn btn-outline-success">Login</a>
-                    </li>
-                </ul>
+            <div id="loggedInState"></div>
+            <div class="d-flex">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="content.html" class="btn btn-outline-success">Lessons</a>
+                            <a href="login.html" id="loginButton" class="btn btn-outline-success">Login</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
 </div>
+
+
+
 	
 
     <div class="container-fluid">
