@@ -1,7 +1,16 @@
-let isDebugMode = true;
-let lessonLanguage = "ko";
+var isDebugMode = true;
+var lessonLanguage = "ko";
 var dbfire;
-const wordsPerPage = 100;  
+const wordsPerPage = 200;
+const pagesToLookAheadBehind = 2;
+var scrollDebounceTimer;
+const scrollDebounceTimeout = 100;
+const colouriseTimeout = 100;
+var pageMax=0;
+var colourisePending = false;
+var colouriseInProgress = false;
+var signedInState = "signedOut";
+var db;
 
 //var protectText = false;
 
@@ -27,10 +36,11 @@ function initialize()
 {
 	initializeFirebase();
 	initializeUI();
-	initializeSaving();
+	initializeIndexedDB();
+	initializeTextSaving();
 }
 
-function initializeSaving(){
+function initializeTextSaving(){
 	let saveTimeout = null;
 	const saveDelay = 5000; // Save after 5 seconds
 	const textarea = document.getElementById('editText');
@@ -69,15 +79,18 @@ firebase.auth().onAuthStateChanged(function(user) {
     p("User has logged in.");
 	logUser(user);
 	displaySigninElements("signedInMode");
+	signedInState="signedIn";
   } else {
     // No user is signed in.
 	if (window.location.protocol === "file:") {
 		// Running locally
 		displaySigninElements("offlineMode");
+		signedInState="offline";
 	} 
 	else
 	{
 		displaySigninElements("signedOutMode");
+		signedInState="signedOut";
 	}
   }
 });
@@ -89,6 +102,19 @@ function initializeUI(){
 		displaySigninElements("offlineMode");
 		p("User is running the website locally");
 	} 
+
+	document.getElementById('nav-learn').addEventListener('scroll', function(e) {
+		clearTimeout(scrollDebounceTimer);
+		scrollDebounceTimer = setTimeout(() => {
+			let visibleSpans = findVisibleSpans();
+			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
+			if (!colouriseInProgress) {
+                    colouriseInProgress = true;
+                    colourise(); // initiate the colorising operation
+            }
+			
+		}, scrollDebounceTimeout);
+	});
 	
 	document.addEventListener('DOMContentLoaded', function() {
 		  var sidebar = document.getElementById('sidebar');
@@ -126,6 +152,7 @@ function initializeUI(){
 
 			navLearnTab.addEventListener('show.bs.tab', function(e) {
 				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
+				document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 			});
 			
 		
@@ -322,6 +349,7 @@ function activateLearnTab(){
 		document.getElementById('nav-edit').classList.remove('show', 'active');
 	}
 	document.getElementById('nav-learn-tab').dispatchEvent(new Event('show.bs.tab'));
+	document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 }
 
 function initPremadeLesson(title, text){
@@ -356,7 +384,6 @@ function initCustomLesson(title){
 
 function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
-
     let chunks = text.split(/(\s+|\n+)/).flatMap((chunk) => {
         if(/\n+/.test(chunk)) {
             // If the chunk is a newline, return a <br> element
@@ -405,16 +432,156 @@ function loadTextIntoLearnTab(text, language) {
     pages.forEach((page, index) => {
         const pageElement = document.createElement('span');
         pageElement.className = 'page';
+		pageElement.id = index;
         pageElement.innerHTML = page.join('');
         learnTextElement.appendChild(pageElement);
     });
+	pageMax = pages.length-1;
 }
+
+function findVisibleSpans() {
+    const spans = document.querySelectorAll('.page');
+    let firstVisible, lastVisible;
+
+    for (let i = 0; i < spans.length; i++) {
+        const rect = spans[i].getBoundingClientRect();
+        
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0 &&
+                          rect.left < window.innerWidth && rect.right >= 0;
+
+        if (isVisible) {
+            if (!firstVisible) firstVisible = parseInt(spans[i].id);
+            lastVisible = parseInt(spans[i].id); 
+        }
+    }
+
+    return {
+        firstVisible: firstVisible,
+        lastVisible: lastVisible
+    };
+}
+
 
 
 function handleWordClick(word) {
     p(`The word "${word}" was clicked`);
 }
 
+function setActiveText(firstVisible,lastVisible){
+    let firstActivePage = Math.max(0, firstVisible - pagesToLookAheadBehind);
+    let lastActivePage = Math.min(pageMax, lastVisible + pagesToLookAheadBehind);
+    const pages = document.querySelectorAll('.page');
+    
+    pages.forEach((page, index) => {
+        if(index >= firstActivePage && index <= lastActivePage) {
+            if(!page.classList.contains("active")) {
+                page.classList.add('active');
+                colourisePending = true;
+            }
+        } else {
+            if(page.classList.contains("active")) {
+                page.classList.remove('active');
+            }
+        }
+    });
+}
+
+function colourise() {
+    if (colourisePending) {
+		
+		const page = document.querySelector('.page.active:not(.colourised)');
+		
+		if(page)
+		{
+			const clickableWords = page.querySelectorAll('span.clickable-word');
+			clickableWords.forEach(word => {
+				word.classList.add('unknown');
+			});
+			page.classList.add('colourised');
+		}
+		else
+		{
+			colourisePending = false;
+			colouriseInProgress = false;
+			return;
+		}
+		colouriseInProgress = false;
+        setTimeout(colourise, colouriseTimeout); // this delays the next call for 100ms, adjust to your needs
+    }
+	else
+	{
+		colouriseInProgress = false;
+	}
+}
+
+function initializeIndexedDB(){
+	if (!window.indexedDB) {
+		alert("Your browser doesn't support a stable version of IndexedDB");
+		p("Your browser doesn't support a stable version of IndexedDB");
+	}
+	else{			
+		var request = indexedDB.open("wordsdb",3);
+		request.onupgradeneeded = function() {
+			  db = request.result;
+			  var store = db.createObjectStore("wordsdb", {keyPath: "word"});
+			  var appearancesIndex = store.createIndex("by_appearance", "appearance");
+		};
+		request.onerror = function(event) {
+			p("Database error: " + event.target.errorCode);
+		};
+		request.onsuccess = function() {
+			  db = request.result;
+			  initializeVocabulary();
+		};
+	}
+}
+
+function initializeVocabularyFromIndexedDB(){
+	var arrLearning = [];
+	var arrKnown = [];
+	var arrUnknown = [];
+	var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+	var request = objectStore.getAll();
+	request.onerror = function(event) {
+	    alert("Unable to retrieve data from database!");
+	};
+	request.onsuccess = function(event) {  
+	    if(request.result) {
+			var req = request.result;
+			for(var i=0;i<req.length;i++)
+			{
+				var w = req[i].word;
+				var a = req[i].appearances;
+						
+				if(!w.includes("$"))
+				{
+					var remainder = a%3;
+							
+					if(remainder==0){
+						arrUnknown.push(w);
+					}
+					else if(remainder==1){
+						arrLearning.push(w);
+					}
+					else if(remainder==2){
+						arrKnown.push(w);
+					}
+				}
+			}
+			p(arrUnknown);
+			p(arrLearning);
+			p(arrKnown);
+		}
+	}
+}
+
+function initializeVocabulary(){
+	if(signedInState=="offline"||"signedOut")
+	{
+		//TODO clear vocabulary first
+		initializeVocabularyFromIndexedDB();
+	}
+}
 
 
 
