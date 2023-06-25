@@ -11,6 +11,9 @@ var colourisePending = false;
 var colouriseInProgress = false;
 var signedInState = "signedOut";
 var db;
+var	vocabularyLearning;
+var	vocabularyKnown;
+var	vocabularyUnknown;
 
 //var protectText = false;
 
@@ -24,7 +27,10 @@ const firebaseConfig = {
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
 };
 
-initialize();
+document.addEventListener("DOMContentLoaded", function() {
+  // Your initialize function here
+  initialize();
+});
 
 function p(...messages) {
   if (isDebugMode) {
@@ -32,12 +38,21 @@ function p(...messages) {
   }
 }
 
-function initialize()
-{
-	initializeFirebase();
-	initializeUI();
-	initializeIndexedDB();
-	initializeTextSaving();
+function initialize(){
+	// Show loading overlay
+
+	document.getElementById('loading-overlay').style.display = 'flex';
+	
+	initializeIndexedDB(function() {
+		initializeFirebase();
+		initializeTextSaving();
+		initializeVocabulary();
+		initializeUI();
+		// Hide loading overlay
+		document.getElementById('loading-overlay').style.display = 'none';
+	});
+	
+	
 }
 
 function initializeTextSaving(){
@@ -54,6 +69,8 @@ function initializeTextSaving(){
 
 		// Schedule a new save
 		saveTimeout = setTimeout(() => {
+			//TODO disable saving for premade lessons
+			
 			// This is where you'd put your saving code. For now, just log the text.
 			p("text saved");
 
@@ -96,7 +113,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function initializeUI(){
-	
 	if (window.location.protocol === "file:") {
 		// Running locally
 		displaySigninElements("offlineMode");
@@ -115,8 +131,7 @@ function initializeUI(){
 			
 		}, scrollDebounceTimeout);
 	});
-	
-	document.addEventListener('DOMContentLoaded', function() {
+	//document.addEventListener('DOMContentLoaded', function() {
 		  var sidebar = document.getElementById('sidebar');
 		  var sidebarContainer = document.querySelector('.sidebar-container');
 		  var textareaContainer = document.querySelector('.textarea-container');
@@ -168,7 +183,7 @@ function initializeUI(){
 				activateEditTab();	
 			//}
 		});
-	});
+	//});
 }
 
 
@@ -271,7 +286,7 @@ function displaySigninElements(state)
 			break;
 			case "signedInMode":
 				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Logged in as "+firebase.auth().currentUser;
+				document.getElementById("loggedInState").innerText = "Signed in as "+firebase.auth().currentUser.displayName;
 				document.getElementById("loginButton").innerText = "Sign out";
 			break;
 	}
@@ -495,7 +510,16 @@ function colourise() {
 		{
 			const clickableWords = page.querySelectorAll('span.clickable-word');
 			clickableWords.forEach(word => {
-				word.classList.add('unknown');
+				const wordText = word.textContent
+				if(vocabularyLearning.has(wordText)){
+					word.classList.add('learning');
+				}
+				else if(vocabularyKnown.has(wordText)){
+					word.classList.add('known');
+				}
+				else{
+					word.classList.add('unknown');
+				}
 			});
 			page.classList.add('colourised');
 		}
@@ -514,7 +538,7 @@ function colourise() {
 	}
 }
 
-function initializeIndexedDB(){
+function initializeIndexedDB(callback){
 	if (!window.indexedDB) {
 		alert("Your browser doesn't support a stable version of IndexedDB");
 		p("Your browser doesn't support a stable version of IndexedDB");
@@ -531,15 +555,15 @@ function initializeIndexedDB(){
 		};
 		request.onsuccess = function() {
 			  db = request.result;
-			  initializeVocabulary();
+			  callback();
 		};
 	}
 }
 
 function initializeVocabularyFromIndexedDB(){
-	var arrLearning = [];
-	var arrKnown = [];
-	var arrUnknown = [];
+	vocabularyLearning = new Set();
+	vocabularyKnown = new Set();
+	vocabularyUnknown = new Set();
 	var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
 	var request = objectStore.getAll();
 	request.onerror = function(event) {
@@ -552,33 +576,30 @@ function initializeVocabularyFromIndexedDB(){
 			{
 				var w = req[i].word;
 				var a = req[i].appearances;
-						
-				if(!w.includes("$"))
-				{
-					var remainder = a%3;
+				var remainder = a%3;
 							
 					if(remainder==0){
-						arrUnknown.push(w);
+						vocabularyUnknown.add(w);
 					}
 					else if(remainder==1){
-						arrLearning.push(w);
+						vocabularyLearning.add(w);
 					}
-					else if(remainder==2){
-						arrKnown.push(w);
+					else{
+						vocabularyKnown.add(w);
 					}
-				}
 			}
-			p(arrUnknown);
-			p(arrLearning);
-			p(arrKnown);
 		}
 	}
 }
 
 function initializeVocabulary(){
-	if(signedInState=="offline"||"signedOut")
+	if(signedInState=="offline"||signedInState=="signedOut")
 	{
-		//TODO clear vocabulary first
+		initializeVocabularyFromIndexedDB();
+	}
+	else
+	{
+		//TODO instead of this, use the firedb
 		initializeVocabularyFromIndexedDB();
 	}
 }
