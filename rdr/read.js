@@ -402,7 +402,7 @@ function loadTextIntoLearnTab(text, language) {
     let chunks = text.split(/(\s+|\n+)/).flatMap((chunk) => {
         if(/\n+/.test(chunk)) {
             // If the chunk is a newline, return a <br> element
-            return '<span class="non-text"><br><br></span>';
+            return '<span class="non-text"><br></span>';
         } else if (/\s+/.test(chunk)) {
             // If the chunk is whitespace, return it as-is
             return '<span class="non-text">&nbsp;</span>';
