@@ -28,8 +28,8 @@ const firebaseConfig = {
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-  // Your initialize function here
-  initialize();
+  // Your initialise function here
+  initialise();
 });
 
 function p(...messages) {
@@ -38,16 +38,16 @@ function p(...messages) {
   }
 }
 
-function initialize(){
+function initialise(){
 	// Show loading overlay
 
 	document.getElementById('loading-overlay').style.display = 'flex';
 	
-	initializeIndexedDB(function() {
-		initializeFirebase();
-		initializeTextSaving();
-		initializeVocabulary();
-		initializeUI();
+	initialiseIndexedDB(function() {
+		initialiseFirebase();
+		initialiseTextSaving();
+		initialiseVocabulary();
+		initialiseUI();
 		// Hide loading overlay
 		document.getElementById('loading-overlay').style.display = 'none';
 	});
@@ -55,7 +55,7 @@ function initialize(){
 	
 }
 
-function initializeTextSaving(){
+function initialiseTextSaving(){
 	let saveTimeout = null;
 	const saveDelay = 5000; // Save after 5 seconds
 	const textarea = document.getElementById('editText');
@@ -83,8 +83,8 @@ function initializeTextSaving(){
 	});
 }
 
-// Initialize Firebase
-function initializeFirebase() {
+// initialise Firebase
+function initialiseFirebase() {
   firebase.initializeApp(firebaseConfig);
   dbfire = firebase.firestore();
 }
@@ -112,7 +112,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-function initializeUI(){
+function initialiseUI(){
 	if (window.location.protocol === "file:") {
 		// Running locally
 		displaySigninElements("offlineMode");
@@ -126,7 +126,7 @@ function initializeUI(){
 			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
 			if (!colouriseInProgress) {
                     colouriseInProgress = true;
-                    colourise(); // initiate the colorising operation
+                    colourisePage(); // initiate the colorising operation
             }
 			
 		}, scrollDebounceTimeout);
@@ -318,7 +318,7 @@ function loadLesson(lessonName) {
   fetch(`lessons/${lessonName}.json`)  // use backticks here
     .then(response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Lesson failed to load');
       }
       return response.json();
     })
@@ -399,11 +399,11 @@ function initCustomLesson(title){
 
 function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
-    let chunks = text.split(/(\s+|\n+)/).flatMap((chunk) => {
-        if(/\n+/.test(chunk)) {
+    let chunks = text.split(/(\s|\n)/).flatMap((chunk) => {
+        if(/\n/.test(chunk)) {
             // If the chunk is a newline, return a <br> element
             return '<span class="non-text"><br></span>';
-        } else if (/\s+/.test(chunk)) {
+        } else if (/\s/.test(chunk)) {
             // If the chunk is whitespace, return it as-is
             return '<span class="non-text">&nbsp;</span>';
         } else {
@@ -452,6 +452,14 @@ function loadTextIntoLearnTab(text, language) {
         learnTextElement.appendChild(pageElement);
     });
 	pageMax = pages.length-1;
+
+	const words = learnTextElement.querySelectorAll('.clickable-word');
+    words.forEach(word => {
+        word.addEventListener('click', () => {
+            const wordText = word.textContent;
+            handleWordClick(wordText);
+        });
+    });
 }
 
 function findVisibleSpans() {
@@ -479,7 +487,38 @@ function findVisibleSpans() {
 
 
 function handleWordClick(word) {
-    p(`The word "${word}" was clicked`);
+    promoteOneLevel(word);
+	//delete colourised class from all pages
+	const pages = document.querySelectorAll('.page.colourised');
+
+    pages.forEach(page => {
+        page.classList.remove('colourised');
+	});
+	colourisePending = true;
+	if (!colouriseInProgress) {
+        colouriseInProgress = true;
+        colourisePage(); // initiate the colorising operation
+    }
+}
+
+function promoteOneLevel(word)
+{
+	if(vocabularyLearning.has(word)){
+		vocabularyLearning.delete(word);
+		vocabularyKnown.add(word);
+	}
+	else if(vocabularyKnown.has(word)){
+		vocabularyKnown.delete(word);
+		vocabularyUnknown.add(word);
+	}
+	else if(vocabularyUnknown.has(word)){
+		vocabularyUnknown.delete(word);
+		vocabularyLearning.add(word);
+	}
+	else
+	{
+		vocabularyLearning.add(word);
+	}
 }
 
 function setActiveText(firstVisible,lastVisible){
@@ -501,27 +540,31 @@ function setActiveText(firstVisible,lastVisible){
     });
 }
 
-function colourise() {
+function colourisePage() {
     if (colourisePending) {
-		
 		const page = document.querySelector('.page.active:not(.colourised)');
-		
 		if(page)
 		{
+			page.classList.add('colourised');
 			const clickableWords = page.querySelectorAll('span.clickable-word');
 			clickableWords.forEach(word => {
 				const wordText = word.textContent
 				if(vocabularyLearning.has(wordText)){
 					word.classList.add('learning');
+					word.classList.remove('known');
+					word.classList.remove('unknown');
 				}
 				else if(vocabularyKnown.has(wordText)){
 					word.classList.add('known');
+					word.classList.remove('learning');
+					word.classList.remove('unknown');
 				}
 				else{
 					word.classList.add('unknown');
+					word.classList.remove('known');
+					word.classList.remove('learning');
 				}
 			});
-			page.classList.add('colourised');
 		}
 		else
 		{
@@ -530,7 +573,7 @@ function colourise() {
 			return;
 		}
 		colouriseInProgress = false;
-        setTimeout(colourise, colouriseTimeout); // this delays the next call for 100ms, adjust to your needs
+        setTimeout(colourisePage, colouriseTimeout); // this delays the next call for 100ms, adjust to your needs
     }
 	else
 	{
@@ -538,7 +581,7 @@ function colourise() {
 	}
 }
 
-function initializeIndexedDB(callback){
+function initialiseIndexedDB(callback){
 	if (!window.indexedDB) {
 		alert("Your browser doesn't support a stable version of IndexedDB");
 		p("Your browser doesn't support a stable version of IndexedDB");
@@ -560,7 +603,7 @@ function initializeIndexedDB(callback){
 	}
 }
 
-function initializeVocabularyFromIndexedDB(){
+function initialiseVocabularyFromIndexedDB(){
 	vocabularyLearning = new Set();
 	vocabularyKnown = new Set();
 	vocabularyUnknown = new Set();
@@ -592,15 +635,13 @@ function initializeVocabularyFromIndexedDB(){
 	}
 }
 
-function initializeVocabulary(){
-	if(signedInState=="offline"||signedInState=="signedOut")
-	{
-		initializeVocabularyFromIndexedDB();
+function initialiseVocabulary(){
+	if(signedInState=="offline"||signedInState=="signedOut"){
+		initialiseVocabularyFromIndexedDB();
 	}
-	else
-	{
+	else{
 		//TODO instead of this, use the firedb
-		initializeVocabularyFromIndexedDB();
+		initialiseVocabularyFromIndexedDB();
 	}
 }
 
