@@ -177,7 +177,10 @@ function initialiseUI(){
 			}
 		  });
 		  
+		  
+		  p("here1");
 		  lessonID = sessionStorage.getItem('lessonID');
+		  p("here2");
 			if(lessonID) {
 				saveLastOpenedLessonID();
 				loadLesson();
@@ -193,6 +196,7 @@ function initialiseUI(){
 					}
 				});
 			}
+			p("here3");
 
 		  
 
