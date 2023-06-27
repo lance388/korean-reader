@@ -660,16 +660,16 @@ function initialiseIndexedDB(callback) {
         var request = indexedDB.open("wordsdb", 7);
         request.onupgradeneeded = function() {
             db = request.result;
-            if (!db.objectStoreNames.contains('wordsdb')) {
+           // if (!db.objectStoreNames.contains('wordsdb')) {
                 var store = db.createObjectStore("wordsdb", {keyPath: "word"});
                 var appearancesIndex = store.createIndex("by_appearance", "appearance");
-            }
-            if (!db.objectStoreNames.contains('lessonsdb')) {
+            //}
+            //if (!db.objectStoreNames.contains('lessonsdb')) {
                 var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
-            }
-            if (!db.objectStoreNames.contains('settings')) {
+            //}
+            //if (!db.objectStoreNames.contains('settings')) {
                 var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
-            }
+            //}
         };
         request.onerror = function(event) {
             p("Database error: " + event.target.errorCode);
