@@ -22,7 +22,6 @@ var lessonSavingEnabled=false;
 var lessonID;
 
 //var protectText = false;
-p("Start js");
 
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
@@ -654,13 +653,16 @@ function colourisePage() {
 }
 
 function initialiseIndexedDB(callback) {
+	p("start");
     if (!window.indexedDB) {
         alert("Your browser doesn't support a stable version of IndexedDB");
         p("Your browser doesn't support a stable version of IndexedDB");
-    } else {        
+    } else {
+		p("here1");        
         var request = indexedDB.open("wordsdb", 6);
         request.onupgradeneeded = function() {
             db = request.result;
+			p("here2"); 
             if (!db.objectStoreNames.contains('wordsdb')) {
                 var store = db.createObjectStore("wordsdb", {keyPath: "word"});
                 // var appearancesIndex = store.createIndex("by_appearance", "appearance");
@@ -671,6 +673,7 @@ function initialiseIndexedDB(callback) {
             if (!db.objectStoreNames.contains('settings')) {
                 var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
             }
+			p("here3");
         };
         request.onerror = function(event) {
             p("Database error: " + event.target.errorCode);
@@ -680,6 +683,7 @@ function initialiseIndexedDB(callback) {
             callback();
         };
     }
+	p("finished");
 }
 
 
