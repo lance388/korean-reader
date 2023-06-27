@@ -653,19 +653,16 @@ function colourisePage() {
 }
 
 function initialiseIndexedDB(callback) {
-	p("start");
     if (!window.indexedDB) {
         alert("Your browser doesn't support a stable version of IndexedDB");
         p("Your browser doesn't support a stable version of IndexedDB");
-    } else {
-		p("here1");        
-        var request = indexedDB.open("wordsdb", 6);
+    } else {      
+        var request = indexedDB.open("wordsdb", 7);
         request.onupgradeneeded = function() {
             db = request.result;
-			p("here2"); 
             if (!db.objectStoreNames.contains('wordsdb')) {
                 var store = db.createObjectStore("wordsdb", {keyPath: "word"});
-                // var appearancesIndex = store.createIndex("by_appearance", "appearance");
+                var appearancesIndex = store.createIndex("by_appearance", "appearance");
             }
             if (!db.objectStoreNames.contains('lessonsdb')) {
                 var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
@@ -673,7 +670,6 @@ function initialiseIndexedDB(callback) {
             if (!db.objectStoreNames.contains('settings')) {
                 var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
             }
-			p("here3");
         };
         request.onerror = function(event) {
             p("Database error: " + event.target.errorCode);
@@ -683,7 +679,6 @@ function initialiseIndexedDB(callback) {
             callback();
         };
     }
-	p("finished");
 }
 
 
