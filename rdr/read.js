@@ -46,14 +46,18 @@ function p(...messages) {
 
 function initialise(){
 	// Show loading overlay
-
+	p("Start initialise");
 	document.getElementById('loading-overlay').style.display = 'flex';
-	
 	initialiseIndexedDB(function() {
+		p("Completed initialiseIndexedDB");
 		initialiseFirebase();
+		p("Completed initialiseFirebase");
 		initialiseVocabulary();
+		p("Completed initialiseVocabulary");
 		initialiseUI();
+		p("Completed initialiseUI");
 		initialiseTextSaving();
+		p("Completed initialiseTextSaving");
 		// Hide loading overlay
 		document.getElementById('loading-overlay').style.display = 'none';
 	});
@@ -178,9 +182,7 @@ function initialiseUI(){
 		  });
 		  
 		  
-		  p("here1");
 		  lessonID = sessionStorage.getItem('lessonID');
-		  p("here2");
 			if(lessonID) {
 				saveLastOpenedLessonID();
 				loadLesson();
@@ -196,7 +198,6 @@ function initialiseUI(){
 					}
 				});
 			}
-			p("here3");
 
 		  
 
