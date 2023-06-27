@@ -656,12 +656,9 @@ function initialiseIndexedDB(callback) {
     if (!window.indexedDB) {
         alert("Your browser doesn't support a stable version of IndexedDB");
         p("Your browser doesn't support a stable version of IndexedDB");
-    } else {
-		p("here1");		
+    } else {		
         var request = indexedDB.open("wordsdb", 7);
-		p("here2");
         request.onupgradeneeded = function() {
-			p("here1");
             db = request.result;
             if (!db.objectStoreNames.contains('wordsdb')) {
                 var store = db.createObjectStore("wordsdb", {keyPath: "word"});
@@ -673,13 +670,11 @@ function initialiseIndexedDB(callback) {
             if (!db.objectStoreNames.contains('settings')) {
                 var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
             }
-			p("setting done?");
         };
         request.onerror = function(event) {
             p("Database error: " + event.target.errorCode);
         };
         request.onsuccess = function() {
-			p("success?");
             db = request.result;
             callback();
         };
