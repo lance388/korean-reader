@@ -188,6 +188,7 @@ function initialiseUI(){
 				loadLesson();
 			} else {
 				getLastOpenedLessonID(function(lastOpenedLessonID) {
+					p("lessonID: "+lessonID);
 					if(lastOpenedLessonID) {
 						lessonID = lastOpenedLessonID;
 						saveLastOpenedLessonID();
