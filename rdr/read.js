@@ -22,6 +22,7 @@ var lessonSavingEnabled=false;
 var lessonID;
 
 //var protectText = false;
+p("Start js");
 
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
