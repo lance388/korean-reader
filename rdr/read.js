@@ -1,19 +1,25 @@
 var isDebugMode = true;
 var lessonLanguage = "ko";
 var dbfire;
-const wordsPerPage = 200;
+const wordsPerPage = 100;
 const pagesToLookAheadBehind = 2;
 var scrollDebounceTimer;
-const scrollDebounceTimeout = 100;
-const colouriseTimeout = 100;
+const scrollDebounceTimeout = 40;
+const colouriseTimeout = 5;
+const saveVocabularyTimeout = 4000;
 var pageMax=0;
 var colourisePending = false;
 var colouriseInProgress = false;
+var vocabularySaveInProgress = false;
 var signedInState = "signedOut";
 var db;
 var	vocabularyLearning;
 var	vocabularyKnown;
 var	vocabularyUnknown;
+var lessonWordArray=[];
+var lessonWordCount=0;
+var lessonSavingEnabled=false;
+var lessonID;
 
 //var protectText = false;
 
@@ -45,9 +51,9 @@ function initialise(){
 	
 	initialiseIndexedDB(function() {
 		initialiseFirebase();
-		initialiseTextSaving();
 		initialiseVocabulary();
 		initialiseUI();
+		initialiseTextSaving();
 		// Hide loading overlay
 		document.getElementById('loading-overlay').style.display = 'none';
 	});
@@ -70,9 +76,17 @@ function initialiseTextSaving(){
 		// Schedule a new save
 		saveTimeout = setTimeout(() => {
 			//TODO disable saving for premade lessons
-			
+			if(lessonSavingEnabled){
+				var lesson = {
+					title: lessonID,
+					text: document.getElementById('editText').value
+				};
+				
+				saveCustomLessonToIndexedDB(lesson);
+				p("lesson saved");
+			}
 			// This is where you'd put your saving code. For now, just log the text.
-			p("text saved");
+			
 
 			// Optionally, you can use IndexedDB or any other storage mechanism to store the data.
 			// For example: saveToIndexedDB(textarea.value);
@@ -162,7 +176,25 @@ function initialiseUI(){
 				  textareaContainer.classList.remove('full-width');
 			}
 		  });
-		  loadLesson(sessionStorage.getItem('lessonName'));
+		  
+		  lessonID = sessionStorage.getItem('lessonID');
+			if(lessonID) {
+				saveLastOpenedLessonID();
+				loadLesson();
+			} else {
+				getLastOpenedLessonID(function(lastOpenedLessonID) {
+					if(lastOpenedLessonID) {
+						lessonID = lastOpenedLessonID;
+						saveLastOpenedLessonID();
+						loadLesson();
+					} else {
+						// If no last opened lesson ID is found, redirect to content.html
+						window.location.href = 'content.html';
+					}
+				});
+			}
+
+		  
 
 
 			navLearnTab.addEventListener('show.bs.tab', function(e) {
@@ -311,34 +343,29 @@ function logUser(user)
 
 
 
-function loadLesson(lessonName) {
+function loadLesson() {
   // Load lesson text based on lessonName
-  p("Loading lesson:", lessonName);
-
-  fetch(`lessons/${lessonName}.json`)  // use backticks here
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Lesson failed to load');
-      }
-      return response.json();
-    })
-    .then(lesson => {
-        // Now you can work with your lesson object
-        processLessonJson(lesson);
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-function processLessonJson(json){
-	
-	if (/^custom\d+$/.test(json.type)) {
-		initCustomLesson(json.title);
+  p("Loading lesson:", lessonID);
+	if (/^custom\d+$/.test(lessonID)) {
+		p("Custom lesson loading...");
+		initCustomLesson();
 	}
 	else{
-		initPremadeLesson(json.title, json.text);
-		
+	  fetch(`lessons/${lessonID}.json`)  // use backticks here
+		.then(response => {
+		  if (!response.ok) {
+			throw new Error('Lesson failed to load');
+		  }
+		  return response.json();
+		})
+		.then(lesson => {
+			p("Premade lesson loading...");
+			// Now you can work with your lesson object
+			//processLessonJson(lesson);
+			initPremadeLesson(lesson.title, lesson.text);
+		})
+		.catch(error => console.error('Error:', error));
 	}
-	
 }
 
 function activateEditTab(){
@@ -373,7 +400,7 @@ function initPremadeLesson(title, text){
 	document.getElementById('nav-clear-tab').disabled=true;
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
-	
+	lessonSavingEnabled=false;
 	//load text into edit mode text area
 	const textarea = document.getElementById('editText');
 	textarea.value = text;
@@ -388,13 +415,45 @@ function initPremadeLesson(title, text){
 	activateLearnTab();
 }
 
-function initCustomLesson(title){
+function formatTitle(title) {
+    // Split the title into words (assuming the format is always "custom1", "custom2", etc.)
+    let words = title.split(/(\d+)/);  // This will split the title into ["custom", "1"]
+
+    // Convert the first character of the first word to uppercase
+    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+
+    // Join the words back together with a space in between
+    let formattedTitle = words.join(' ');
+
+    return formattedTitle;
+}
+
+function initCustomLesson(){
 	document.getElementById('nav-clear-tab').disabled=false;
-	//protectText = false;
-	//lessonType = "custom";
-	document.getElementById('textarea-navbar-title').innerText = title;
 	
+	document.getElementById('textarea-navbar-title').innerText = formatTitle(lessonID);
+	lessonSavingEnabled=true;
 	activateEditTab();
+	
+	if(signedInState=="offline"||signedInState=="signedOut"){
+		getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+			if(lesson){
+				const textarea = document.getElementById('editText');
+				textarea.value = lesson.text;
+				textarea.dispatchEvent(new Event('input'));
+			}
+		});
+	}
+	else{
+		//TODO instead of this, use the firedb
+		getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+			if(lesson){
+				const textarea = document.getElementById('editText');
+				textarea.value = lesson.text;
+				textarea.dispatchEvent(new Event('input'));
+			}
+		});
+	}
 }
 
 function loadTextIntoLearnTab(text, language) {
@@ -454,12 +513,15 @@ function loadTextIntoLearnTab(text, language) {
 	pageMax = pages.length-1;
 
 	const words = learnTextElement.querySelectorAll('.clickable-word');
+	var lessonText = [];
     words.forEach(word => {
+		lessonText.push(word.textContent);
         word.addEventListener('click', () => {
             const wordText = word.textContent;
             handleWordClick(wordText);
         });
     });
+	initialiseLessonText(lessonText);
 }
 
 function findVisibleSpans() {
@@ -484,8 +546,6 @@ function findVisibleSpans() {
     };
 }
 
-
-
 function handleWordClick(word) {
     promoteOneLevel(word);
 	//delete colourised class from all pages
@@ -497,27 +557,26 @@ function handleWordClick(word) {
 	colourisePending = true;
 	if (!colouriseInProgress) {
         colouriseInProgress = true;
-        colourisePage(); // initiate the colorising operation
+        colourisePage();
+    }
+	
+	if (!vocabularySaveInProgress) {
+        vocabularySaveInProgress = true;
+        setTimeout(saveVocabulary, saveVocabularyTimeout); 
     }
 }
 
-function promoteOneLevel(word)
-{
-	if(vocabularyLearning.has(word)){
-		vocabularyLearning.delete(word);
-		vocabularyKnown.add(word);
+function promoteOneLevel(word){
+	let wordObj = lessonWordArray.find(w => w.word === word);
+	if(!wordObj){
+		console.error("Word "+word+" not found in lesson text.");
 	}
-	else if(vocabularyKnown.has(word)){
-		vocabularyKnown.delete(word);
-		vocabularyUnknown.add(word);
-	}
-	else if(vocabularyUnknown.has(word)){
-		vocabularyUnknown.delete(word);
-		vocabularyLearning.add(word);
-	}
-	else
-	{
-		vocabularyLearning.add(word);
+	
+	switch(wordObj.level){
+		case "known": wordObj.level = "unknown"; break;
+		case "learning": wordObj.level = "known"; break;
+		case "unknown": wordObj.level = "learning"; break;
+		default: console.error("Word "+word+" has an invalid level.");
 	}
 }
 
@@ -549,20 +608,27 @@ function colourisePage() {
 			const clickableWords = page.querySelectorAll('span.clickable-word');
 			clickableWords.forEach(word => {
 				const wordText = word.textContent
-				if(vocabularyLearning.has(wordText)){
-					word.classList.add('learning');
-					word.classList.remove('known');
-					word.classList.remove('unknown');
+				let wordObj = lessonWordArray.find(w => w.word === wordText);
+				if(!wordObj){
+					console.error("Word "+wordText+" not found in lesson text.");
 				}
-				else if(vocabularyKnown.has(wordText)){
-					word.classList.add('known');
-					word.classList.remove('learning');
-					word.classList.remove('unknown');
-				}
-				else{
-					word.classList.add('unknown');
-					word.classList.remove('known');
-					word.classList.remove('learning');
+				switch(wordObj.level){
+					case "known":
+						word.classList.add('known');
+						word.classList.remove('learning');
+						word.classList.remove('unknown');
+						break;
+					case "learning":
+						word.classList.add('learning');
+						word.classList.remove('known');
+						word.classList.remove('unknown');
+						break;
+					case "unknown":
+						word.classList.add('unknown');
+						word.classList.remove('known');
+						word.classList.remove('learning');
+						break;
+					default: console.error("Word "+wordText+" has an invalid level.");
 				}
 			});
 		}
@@ -573,7 +639,7 @@ function colourisePage() {
 			return;
 		}
 		colouriseInProgress = false;
-        setTimeout(colourisePage, colouriseTimeout); // this delays the next call for 100ms, adjust to your needs
+        setTimeout(colourisePage, colouriseTimeout); 
     }
 	else
 	{
@@ -581,27 +647,35 @@ function colourisePage() {
 	}
 }
 
-function initialiseIndexedDB(callback){
-	if (!window.indexedDB) {
-		alert("Your browser doesn't support a stable version of IndexedDB");
-		p("Your browser doesn't support a stable version of IndexedDB");
-	}
-	else{			
-		var request = indexedDB.open("wordsdb",3);
-		request.onupgradeneeded = function() {
-			  db = request.result;
-			  var store = db.createObjectStore("wordsdb", {keyPath: "word"});
-			  var appearancesIndex = store.createIndex("by_appearance", "appearance");
-		};
-		request.onerror = function(event) {
-			p("Database error: " + event.target.errorCode);
-		};
-		request.onsuccess = function() {
-			  db = request.result;
-			  callback();
-		};
-	}
+function initialiseIndexedDB(callback) {
+    if (!window.indexedDB) {
+        alert("Your browser doesn't support a stable version of IndexedDB");
+        p("Your browser doesn't support a stable version of IndexedDB");
+    } else {        
+        var request = indexedDB.open("wordsdb", 6);
+        request.onupgradeneeded = function() {
+            db = request.result;
+            if (!db.objectStoreNames.contains('wordsdb')) {
+                var store = db.createObjectStore("wordsdb", {keyPath: "word"});
+                // var appearancesIndex = store.createIndex("by_appearance", "appearance");
+            }
+            if (!db.objectStoreNames.contains('lessonsdb')) {
+                var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
+            }
+            if (!db.objectStoreNames.contains('settings')) {
+                var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
+            }
+        };
+        request.onerror = function(event) {
+            p("Database error: " + event.target.errorCode);
+        };
+        request.onsuccess = function() {
+            db = request.result;
+            callback();
+        };
+    }
 }
+
 
 function initialiseVocabularyFromIndexedDB(){
 	vocabularyLearning = new Set();
@@ -644,6 +718,175 @@ function initialiseVocabulary(){
 		initialiseVocabularyFromIndexedDB();
 	}
 }
+
+function initialiseLessonText(w){
+	lessonWordCount = 0;
+	let wordCountObj = w.reduce((acc, word) => {
+		acc[word] = acc[word] ? acc[word] + 1 : 1;
+		return acc;
+	}, {});
+
+	lessonWordArray = Object.entries(wordCountObj).map(([word, count]) => {
+		lessonWordCount+=count;
+		let level = "unknown";
+		let initialLevel = "unknown";
+		if (vocabularyLearning.has(word)) {
+			level = "learning";
+			initialLevel = "learning";
+		} else if (vocabularyKnown.has(word)) {
+			level = "known";
+			initialLevel = "known";
+		}
+		return {word, count, level, initialLevel};
+	});
+}
+
+function saveVocabulary(){
+	if(signedInState=="offline"||signedInState=="signedOut"){
+		saveVocabularyIndexedDB();
+	}
+	else{
+		//TODO instead of this, use the firedb
+		saveVocabularyIndexedDB();
+	}
+	
+	p("Vocabulary Saved.");
+	vocabularySaveInProgress = false;
+}
+
+function saveVocabularyIndexedDB()
+{
+	let wordsToSave=[];
+	let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
+    wordsToUpdate.forEach(wordObj => {
+		
+		
+		let wordText = wordObj.word;
+		let level = wordObj.level;
+		wordObj.initialLevel = level;
+		
+		//p("wordObj.level "+wordObj.level);
+	//p("wordObj.initialLevel "+wordObj.initialLevel);
+	
+		p("Updating word in indexedDB: "+wordText);
+		switch(level){
+			case "known":
+				wordsToSave.push({ word: wordText, appearances: 2 });
+				break;
+			case "learning":
+				wordsToSave.push({ word: wordText, appearances: 1 });
+				break;
+			case "unknown":
+				wordsToSave.push({ word: wordText, appearances: 0 });
+				break;
+			default: console.error("Word "+wordText+" has an invalid level.");
+		}		
+    });
+	putVocabularyIntoIndexedDB(wordsToSave);
+}
+
+function putVocabularyIntoIndexedDB(wordsToSave) {
+    const transaction = db.transaction(["wordsdb"], "readwrite");
+    const objectStore = transaction.objectStore("wordsdb");
+    
+    wordsToSave.forEach((record) => {
+        const request = objectStore.put(record);
+        request.onerror = function(event) {
+            console.error("Error adding record: ", record, event);
+        };
+    });
+
+    transaction.oncomplete = function() {
+        console.log("All records added successfully!");
+    };
+
+    transaction.onerror = function() {
+        console.error("Error occurred when adding records:", transaction.error);
+    };
+}
+
+
+function getCustomLessonFromIndexedDB(i, callback) {
+    var transaction = db.transaction(["lessonsdb"]);
+    var objectStore = transaction.objectStore("lessonsdb");
+    var request = objectStore.get(i);
+
+    request.onerror = function(event) {
+        alert("Unable to retrieve data from database!");
+    };
+
+    request.onsuccess = function(event) {  
+        if(request.result) {
+            callback(request.result);
+        } else {
+            console.log("No data record found for the title: " + i);
+        }
+    };
+}
+
+
+function saveCustomLessonToIndexedDB(lesson) {
+    var transaction = db.transaction(["lessonsdb"], "readwrite");
+    var objectStore = transaction.objectStore("lessonsdb");
+    var request = objectStore.put(lesson);
+
+    request.onerror = function(event) {
+        alert("Unable to save data to database!");
+    };
+
+    request.onsuccess = function(event) {  
+        console.log("Lesson saved successfully with the title: " + lesson.title);
+    };
+}
+
+/*
+function saveCustomLesson(){
+	if(signedInState=="offline"||signedInState=="signedOut"){
+		saveCustomLessonInIndexedDB();
+	}
+	else{
+		//TODO instead of this, use the firedb
+		saveCustomLessonInIndexedDB();
+	}
+}
+*/
+
+function getLastOpenedLessonID(callback) {
+    var transaction = db.transaction(["settings"], "readonly");
+    var store = transaction.objectStore("settings");
+    var request = store.get('lastOpenedLesson');
+
+    request.onerror = function(event) {
+        console.log("Error retrieving last opened lesson ID: ", event.target.error);
+    };
+
+    request.onsuccess = function(event) {  
+        if(request.result) {
+            callback(request.result.lessonID);
+        } else {
+            p("No last opened lesson ID found!");
+        }
+    };
+}
+
+function saveLastOpenedLessonID() {
+    var transaction = db.transaction(["settings"], "readwrite");
+    var store = transaction.objectStore("settings");
+    var request = store.put({id: 'lastOpenedLesson', lessonID: lessonID});
+
+    request.onerror = function(event) {
+        console.log("Error saving last opened lesson ID: ", event.target.error);
+    };
+
+    request.onsuccess = function(event) {  
+        console.log("Last opened lesson ID saved successfully!");
+    };
+}
+
+
+
+
+
 
 
 

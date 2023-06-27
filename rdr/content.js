@@ -191,12 +191,12 @@ function logUser(user)
       event.preventDefault();
 
       // Get the lesson name from the data-lesson attribute of the clicked card
-      const lessonName = this.querySelector('.lesson-card').dataset.lesson;
+      const lessonID = this.querySelector('.lesson-card').dataset.lesson;
 
       // Store the lesson name in sessionStorage
-      sessionStorage.setItem('lessonName', lessonName);
+      sessionStorage.setItem('lessonID', lessonID);
 	  
-	  p('Stored lessonName:', sessionStorage.getItem('lessonName'));
+	  p('Stored lessonID:', sessionStorage.getItem('lessonID'));
 
       // Navigate to the new page
       window.location.href = this.href;
