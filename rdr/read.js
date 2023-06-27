@@ -656,8 +656,10 @@ function initialiseIndexedDB(callback) {
     if (!window.indexedDB) {
         alert("Your browser doesn't support a stable version of IndexedDB");
         p("Your browser doesn't support a stable version of IndexedDB");
-    } else {      
+    } else {
+		p("here1");		
         var request = indexedDB.open("wordsdb", 7);
+		p("here2");
         request.onupgradeneeded = function() {
 			p("here1");
             db = request.result;
