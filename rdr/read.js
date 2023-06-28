@@ -684,7 +684,7 @@ function initialiseIndexedDB(callback) {
 }
 
 
-function initialiseVocabularyFromIndexedDB(){
+function initialiseVocabularyFromIndexedDB(callback){
 	vocabularyLearning = new Set();
 	vocabularyKnown = new Set();
 	vocabularyUnknown = new Set();
@@ -712,17 +712,19 @@ function initialiseVocabularyFromIndexedDB(){
 						vocabularyKnown.add(w);
 					}
 			}
+			callback(); // callback after data has been processed
 		}
 	}
 }
 
-function initialiseVocabulary(){
+
+function initialiseVocabulary(callback){
 	if(signedInState=="offline"||signedInState=="signedOut"){
-		initialiseVocabularyFromIndexedDB();
+		initialiseVocabularyFromIndexedDB(callback);
 	}
 	else{
 		//TODO instead of this, use the firedb
-		initialiseVocabularyFromIndexedDB();
+		initialiseVocabularyFromIndexedDB(callback);
 	}
 }
 
