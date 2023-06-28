@@ -52,18 +52,18 @@ function initialise(){
 		p("Completed initialiseIndexedDB");
 		initialiseFirebase();
 		p("Completed initialiseFirebase");
-		initialiseVocabulary();
-		p("Completed initialiseVocabulary");
-		initialiseUI();
-		p("Completed initialiseUI");
-		initialiseTextSaving();
-		p("Completed initialiseTextSaving");
-		// Hide loading overlay
-		document.getElementById('loading-overlay').style.display = 'none';
+		initialiseVocabulary(function() {
+			p("Completed initialiseVocabulary");
+			initialiseUI();
+			p("Completed initialiseUI");
+			initialiseTextSaving();
+			p("Completed initialiseTextSaving");
+			// Hide loading overlay
+			document.getElementById('loading-overlay').style.display = 'none';
+		});
 	});
-	
-	
 }
+
 
 function initialiseTextSaving(){
 	let saveTimeout = null;
