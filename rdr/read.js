@@ -45,6 +45,27 @@ function p(...messages) {
 }
 
 function initialise(){
+    p("Start initialise");
+    document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
+
+    initialiseIndexedDB().then(() => {
+        p("Completed initialiseIndexedDB");
+        return initialiseFirebase();
+    }).then(() => {
+        p("Completed initialiseFirebase");
+        return initialiseVocabulary();
+    }).then(() => {
+        p("Completed initialiseVocabulary");
+        return initialiseUI();
+    }).then(() => {
+        initialiseTextSaving();
+		document.getElementById('loading-overlay').style.display = 'none';
+		 p("Initialisation complete");
+    }).catch((error) => {
+        // Handle any errors
+        console.error("An error occurred:", error);
+    });
+	/*
 	// Show loading overlay
 	p("Start initialise");
 	document.getElementById('loading-overlay').style.display = 'flex';
@@ -62,6 +83,7 @@ function initialise(){
 			document.getElementById('loading-overlay').style.display = 'none';
 		});
 	});
+	*/
 }
 
 
@@ -101,11 +123,23 @@ function initialiseTextSaving(){
 	});
 }
 
+
+
+
+
 // initialise Firebase
 function initialiseFirebase() {
-  firebase.initializeApp(firebaseConfig);
-  dbfire = firebase.firestore();
+    return new Promise((resolve, reject) => {
+        try {
+            firebase.initializeApp(firebaseConfig);
+            dbfire = firebase.firestore();
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
+
 
 
 
@@ -131,6 +165,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function initialiseUI(){
+	return new Promise((resolve, reject) => {
 	if (window.location.protocol === "file:") {
 		// Running locally
 		displaySigninElements("offlineMode");
@@ -204,7 +239,7 @@ function initialiseUI(){
 
 
 			navLearnTab.addEventListener('show.bs.tab', function(e) {
-				p("Loading vocabulary into learn tab");
+				p("Loading text into learn tab");
 				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
 				document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 			});
@@ -223,6 +258,9 @@ function initialiseUI(){
 			//}
 		});
 	//});
+	
+	resolve();
+    });
 }
 
 
@@ -580,9 +618,21 @@ function promoteOneLevel(word){
 	}
 	
 	switch(wordObj.level){
-		case "known": wordObj.level = "unknown"; break;
-		case "learning": wordObj.level = "known"; break;
-		case "unknown": wordObj.level = "learning"; break;
+		case "known":
+			wordObj.level = "unknown";
+			vocabularyKnown.delete(word);
+			vocabularyUnknown.add(word);
+			break;
+		case "learning":
+			wordObj.level = "known";
+			vocabularyLearning.delete(word);
+			vocabularyKnown.add(word);
+			break;
+		case "unknown":
+			wordObj.level = "learning";
+			vocabularyUnknown.delete(word);
+			vocabularyLearning.add(word);
+			break;
 		default: console.error("Word "+word+" has an invalid level.");
 	}
 }
@@ -654,6 +704,42 @@ function colourisePage() {
 	}
 }
 
+function initialiseIndexedDB() {
+    return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+            const errorMessage = "Your browser doesn't support a stable version of IndexedDB";
+            alert(errorMessage);
+            p(errorMessage);
+            reject(new Error(errorMessage));
+        } else {
+            var request = indexedDB.open("wordsdb", 7);
+            request.onupgradeneeded = function() {
+                db = request.result;
+                if (!db.objectStoreNames.contains('wordsdb')) {
+                    var store = db.createObjectStore("wordsdb", {keyPath: "word"});
+                    var appearancesIndex = store.createIndex("by_appearance", "appearance");
+                }
+                if (!db.objectStoreNames.contains('lessonsdb')) {
+                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
+                }
+                if (!db.objectStoreNames.contains('settings')) {
+                    var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
+                }
+            };
+            request.onerror = function(event) {
+                const errorMessage = "Database error: " + event.target.errorCode;
+                p(errorMessage);
+                reject(new Error(errorMessage));
+            };
+            request.onsuccess = function() {
+                db = request.result;
+                resolve();
+            };
+        }
+    });
+}
+
+/*
 function initialiseIndexedDB(callback) {
     if (!window.indexedDB) {
         alert("Your browser doesn't support a stable version of IndexedDB");
@@ -682,8 +768,9 @@ function initialiseIndexedDB(callback) {
         };
     }
 }
+*/
 
-
+/*
 function initialiseVocabularyFromIndexedDB(callback){
 	vocabularyLearning = new Set();
 	vocabularyKnown = new Set();
@@ -716,8 +803,57 @@ function initialiseVocabularyFromIndexedDB(callback){
 		}
 	}
 }
+*/
+
+function initialiseVocabularyFromIndexedDB(){
+    return new Promise((resolve, reject) => {
+        vocabularyLearning = new Set();
+        vocabularyKnown = new Set();
+        vocabularyUnknown = new Set();
+        var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
+        var request = objectStore.getAll();
+        request.onerror = function(event) {
+            reject("Unable to retrieve data from database!");
+        };
+        request.onsuccess = function(event) {  
+            if(request.result) {
+                var req = request.result;
+                for(var i=0;i<req.length;i++)
+                {
+                    var w = req[i].word;
+                    var a = req[i].appearances;
+                    var remainder = a%3;
+
+                    if(remainder==0){
+                        vocabularyUnknown.add(w);
+                    }
+                    else if(remainder==1){
+                        vocabularyLearning.add(w);
+                    }
+                    else{
+                        vocabularyKnown.add(w);
+                    }
+                }
+                resolve(); // resolve the promise after data has been processed
+            }
+        }
+    });
+}
+
+function initialiseVocabulary(){
+    return new Promise((resolve, reject) => {
+        if(signedInState=="offline"||signedInState=="signedOut"){
+            initialiseVocabularyFromIndexedDB().then(resolve).catch(reject);
+        }
+        else{
+            //TODO instead of this, use the firedb
+            initialiseVocabularyFromIndexedDB().then(resolve).catch(reject);
+        }
+    });
+}
 
 
+/*
 function initialiseVocabulary(callback){
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		initialiseVocabularyFromIndexedDB(callback);
@@ -727,6 +863,7 @@ function initialiseVocabulary(callback){
 		initialiseVocabularyFromIndexedDB(callback);
 	}
 }
+*/
 
 function initialiseLessonText(w){
 	lessonWordCount = 0;
@@ -834,6 +971,9 @@ function getCustomLessonFromIndexedDB(i, callback) {
 }
 
 
+
+
+
 function saveCustomLessonToIndexedDB(lesson) {
     var transaction = db.transaction(["lessonsdb"], "readwrite");
     var objectStore = transaction.objectStore("lessonsdb");
@@ -847,6 +987,7 @@ function saveCustomLessonToIndexedDB(lesson) {
         console.log("Lesson saved successfully with the title: " + lesson.title);
     };
 }
+
 
 /*
 function saveCustomLesson(){
