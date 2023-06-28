@@ -204,6 +204,7 @@ function initialiseUI(){
 
 
 			navLearnTab.addEventListener('show.bs.tab', function(e) {
+				p("Loading vocabulary into learn tab");
 				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
 				document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 			});
