@@ -36,14 +36,6 @@ const firebaseConfig = {
 document.addEventListener("DOMContentLoaded", function() {
   // Your initialise function here
   initialise();
-  
-	firebase.auth().onAuthStateChanged(function(user) {
-		initialise();
-	});
-});
-
-firebase.auth().onAuthStateChanged(function(user) {
-	initialise();
 });
 
 function p(...messages) {
@@ -153,7 +145,12 @@ function initialiseCredentials() {
             firebase.initializeApp(firebaseConfig);
             dbfire = firebase.firestore();
 			checkLoginState();
-            resolve();
+			
+			firebase.auth().onAuthStateChanged(function(user) {
+				initialise();
+			});
+			
+			resolve();
         } catch (error) {
             reject(error);
         }
