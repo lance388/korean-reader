@@ -20,6 +20,8 @@ var lessonWordArray;
 var lessonWordCount;
 var lessonSavingEnabled;
 var lessonID;
+var signInFirstRun = true;
+
 
 //var protectText = false;
 
@@ -34,7 +36,7 @@ const firebaseConfig = {
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-  // Your initialise function here
+    document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 	initialiseCredentials();
 	initialise();
 });
@@ -47,7 +49,7 @@ function p(...messages) {
 
 function initialise(){
     p("Start initialise");
-	
+	document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 	lessonSavingEnabled=false;
 	vocabularySaveInProgress = false;
 	colouriseInProgress = false;
@@ -56,8 +58,6 @@ function initialise(){
 	lessonWordArray=[];
 	pageMax=0;
 	lessonLanguage = "korean";
-	
-    document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 
     initialiseIndexedDB().then(() => {
         p("Completed initialiseIndexedDB");
@@ -161,7 +161,10 @@ function onAuthStateChanged(user) {
       signedInState="signedOut";
     }
   }
-  initialise();
+  if(!signInFirstRun){
+	  initialise();
+  }
+  signInFirstRun = false;
 }
 
 
@@ -954,7 +957,7 @@ function saveVocabulary(){
 		//p("wordObj.level "+wordObj.level);
 	//p("wordObj.initialLevel "+wordObj.initialLevel);
 	
-		p("Updating word in indexedDB: "+wordText);
+		p("Updating word: "+wordText);
 		switch(level){
 			case "known":
 				wordsToSave.push({ word: wordText, appearances: 2, level: "known" });
