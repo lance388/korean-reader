@@ -893,7 +893,7 @@ function loadVocabularyFromFireDB(type, lang, uid) {
         });
 }
 
-function initialiseVocabulary() {
+function initialiseVocabularyFromFireDB() {
     p("Loading vocabulary from Fire DB");
 	let user = firebase.auth().currentUser;
     return Promise.all([
