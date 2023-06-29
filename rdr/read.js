@@ -20,7 +20,6 @@ var lessonWordArray;
 var lessonWordCount;
 var lessonSavingEnabled;
 var lessonID;
-var isFirstAuthStateChange = true;
 
 //var protectText = false;
 
@@ -146,32 +145,12 @@ function initialiseCredentials() {
             dbfire = firebase.firestore();
 
             // Check initial login state
-            //checkLoginState();
-			
-			firebase.auth().onAuthStateChanged(function(user) {
-			  if (isFirstAuthStateChange) {
-				// Do your initial login checks here
-				if (user) {
-				  console.log("User has logged in.");
-				  logUser(user);
-				  displaySigninElements("signedInMode");
-				  signedInState="signedIn";
-				} else {
-				  if (window.location.protocol === "file:") {
-					displaySigninElements("offlineMode");
-					signedInState="offline";
-				  } else {
-					displaySigninElements("signedOutMode");
-					signedInState="signedOut";
-				  }
-				}
+            checkLoginState();
 
-				isFirstAuthStateChange = false;
-			  } else {
-				// Handle subsequent login state changes here
-				initialise();
-			  }
-			});
+            // Only then attach onAuthStateChanged
+            firebase.auth().onAuthStateChanged(onAuthStateChanged);
+			
+			
 
             resolve();
         } catch (error) {
@@ -182,10 +161,10 @@ function initialiseCredentials() {
 
 // This function will be called whenever the auth state changes
 function onAuthStateChanged(user) {
-    initialise();
+    //initialiseVocabulary();
+	checkLoginState();
 }
 
-/*
 function checkLoginState() {
   var user = firebase.auth().currentUser;
 
@@ -207,7 +186,7 @@ function checkLoginState() {
     }
   }
 }
-*/
+
 
 
 
