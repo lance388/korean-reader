@@ -161,6 +161,7 @@ function onAuthStateChanged(user) {
       signedInState="signedOut";
     }
   }
+  initialise();
 }
 
 
