@@ -1,5 +1,5 @@
 var isDebugMode = true;
-var lessonLanguage = "korean";
+var lessonLanguage;
 var dbfire;
 const wordsPerPage = 100;
 const pagesToLookAheadBehind = 2;
@@ -7,18 +7,18 @@ var scrollDebounceTimer;
 const scrollDebounceTimeout = 40;
 const colouriseTimeout = 5;
 const saveVocabularyTimeout = 4000;
-var pageMax=0;
-var colourisePending = false;
-var colouriseInProgress = false;
-var vocabularySaveInProgress = false;
-var signedInState = "signedOut";
+var pageMax;
+var colourisePending;
+var colouriseInProgress;
+var vocabularySaveInProgress;
+var signedInState;
 var db;
 var	vocabularyLearning;
 var	vocabularyKnown;
 var	vocabularyUnknown;
-var lessonWordArray=[];
-var lessonWordCount=0;
-var lessonSavingEnabled=false;
+var lessonWordArray;
+var lessonWordCount;
+var lessonSavingEnabled;
 var lessonID;
 
 //var protectText = false;
@@ -36,6 +36,14 @@ const firebaseConfig = {
 document.addEventListener("DOMContentLoaded", function() {
   // Your initialise function here
   initialise();
+  
+	firebase.auth().onAuthStateChanged(function(user) {
+		initialise();
+	});
+});
+
+firebase.auth().onAuthStateChanged(function(user) {
+	initialise();
 });
 
 function p(...messages) {
@@ -46,13 +54,24 @@ function p(...messages) {
 
 function initialise(){
     p("Start initialise");
+	
+	lessonSavingEnabled=false;
+	signedInState = "signedOut";
+	vocabularySaveInProgress = false;
+	colouriseInProgress = false;
+	colourisePending = false;
+	lessonWordCount=0;
+	lessonWordArray=[];
+	pageMax=0;
+	lessonLanguage = "korean";
+	
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 
     initialiseIndexedDB().then(() => {
         p("Completed initialiseIndexedDB");
-        return initialiseFirebase();
+        return initialiseCredentials();
     }).then(() => {
-        p("Completed initialiseFirebase");
+        p("Completed initialiseCredentials");
         return initialiseVocabulary();
     }).then(() => {
         p("Completed initialiseVocabulary");
@@ -128,11 +147,12 @@ function initialiseTextSaving(){
 
 
 // initialise Firebase
-function initialiseFirebase() {
+function initialiseCredentials() {
     return new Promise((resolve, reject) => {
         try {
             firebase.initializeApp(firebaseConfig);
             dbfire = firebase.firestore();
+			checkLoginState();
             resolve();
         } catch (error) {
             reject(error);
@@ -140,29 +160,33 @@ function initialiseFirebase() {
     });
 }
 
+function checkLoginState() {
+  var user = firebase.auth().currentUser;
 
-
-
-firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    p("User has logged in.");
-	logUser(user);
-	displaySigninElements("signedInMode");
-	signedInState="signedIn";
+    // User is signed in.
+    console.log("User has logged in.");
+    logUser(user);
+    displaySigninElements("signedInMode");
+    signedInState="signedIn";
   } else {
     // No user is signed in.
-	if (window.location.protocol === "file:") {
-		// Running locally
-		displaySigninElements("offlineMode");
-		signedInState="offline";
-	} 
-	else
-	{
-		displaySigninElements("signedOutMode");
-		signedInState="signedOut";
-	}
+    if (window.location.protocol === "file:") {
+      // Running locally
+      displaySigninElements("offlineMode");
+      signedInState="offline";
+    } else {
+      displaySigninElements("signedOutMode");
+      signedInState="signedOut";
+    }
   }
-});
+}
+
+
+
+
+
+
 
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
