@@ -20,7 +20,6 @@ var lessonWordArray;
 var lessonWordCount;
 var lessonSavingEnabled;
 var lessonID;
-var signInFirstRun = true;
 
 
 //var protectText = false;
@@ -161,10 +160,7 @@ function onAuthStateChanged(user) {
       signedInState="signedOut";
     }
   }
-  if(!signInFirstRun){
-	  initialise();
-  }
-  signInFirstRun = false;
+	initialise();
 }
 
 
@@ -897,7 +893,7 @@ function loadVocabularyFromFireDB(type, lang, uid) {
         });
 }
 
-function initialiseVocabularyFromFireDB() {
+function initialiseVocabulary() {
     p("Loading vocabulary from Fire DB");
 	let user = firebase.auth().currentUser;
     return Promise.all([
