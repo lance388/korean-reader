@@ -11,7 +11,7 @@ var pageMax;
 var colourisePending;
 var colouriseInProgress;
 var vocabularySaveInProgress;
-var signedInState;
+var signedInState = "signedOut";
 var db;
 var	vocabularyLearning;
 var	vocabularyKnown;
@@ -35,7 +35,8 @@ const firebaseConfig = {
 
 document.addEventListener("DOMContentLoaded", function() {
   // Your initialise function here
-  initialise();
+	initialiseCredentials();
+	initialise();
 });
 
 function p(...messages) {
@@ -48,7 +49,6 @@ function initialise(){
     p("Start initialise");
 	
 	lessonSavingEnabled=false;
-	signedInState = "signedOut";
 	vocabularySaveInProgress = false;
 	colouriseInProgress = false;
 	colourisePending = false;
@@ -61,9 +61,6 @@ function initialise(){
 
     initialiseIndexedDB().then(() => {
         p("Completed initialiseIndexedDB");
-        return initialiseCredentials();
-    }).then(() => {
-        p("Completed initialiseCredentials");
         return initialiseVocabulary();
     }).then(() => {
         p("Completed initialiseVocabulary");
@@ -139,35 +136,14 @@ function initialiseTextSaving(){
 
 // Initialise Firebase
 function initialiseCredentials() {
-    return new Promise((resolve, reject) => {
-        try {
-            firebase.initializeApp(firebaseConfig);
-            dbfire = firebase.firestore();
-
-            // Check initial login state
-            checkLoginState();
-
-            // Only then attach onAuthStateChanged
-            firebase.auth().onAuthStateChanged(onAuthStateChanged);
-			
-			
-
-            resolve();
-        } catch (error) {
-            reject(error);
-        }
-    });
+    firebase.initializeApp(firebaseConfig);
+    dbfire = firebase.firestore();
+    firebase.auth().onAuthStateChanged(onAuthStateChanged);		
 }
 
 // This function will be called whenever the auth state changes
 function onAuthStateChanged(user) {
-    //initialiseVocabulary();
-	checkLoginState();
-}
-
-function checkLoginState() {
-  var user = firebase.auth().currentUser;
-
+    var user = firebase.auth().currentUser;
   if (user) {
     // User is signed in.
     console.log("User has logged in.");
