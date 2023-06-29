@@ -1,5 +1,5 @@
 var isDebugMode = true;
-var lessonLanguage = "ko";
+var lessonLanguage = "korean";
 var dbfire;
 const wordsPerPage = 100;
 const pagesToLookAheadBehind = 2;
@@ -513,7 +513,7 @@ function loadTextIntoLearnTab(text, language) {
         } else {
             let subChunks;
             // Further split the chunk into Korean and non-Korean text
-            if (language == "ko") {
+            if (language == "korean") {
                 subChunks = chunk.split(/([\uAC00-\uD7AF]+)/).filter(Boolean);
             } 
             // For English, include only latin letters
@@ -525,7 +525,7 @@ function loadTextIntoLearnTab(text, language) {
                 subChunks = chunk.split(/([\p{Script=Han}]+)/u).filter(Boolean);
             }
             return subChunks.map((subChunk) => {
-                if ((language == "ko" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
+                if ((language == "korean" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
                     (language == "en" && /[a-zA-Z]/.test(subChunk)) ||
                     (language == "cn" && /[\p{Script=Han}]/u.test(subChunk))) {
                     // If the subChunk is in the appropriate language, wrap it in a span
@@ -807,6 +807,7 @@ function initialiseVocabularyFromIndexedDB(callback){
 
 function initialiseVocabularyFromIndexedDB(){
     return new Promise((resolve, reject) => {
+		p("Loading vocabulary from Indexed DB");
         vocabularyLearning = new Set();
         vocabularyKnown = new Set();
         vocabularyUnknown = new Set();
@@ -846,11 +847,56 @@ function initialiseVocabulary(){
             initialiseVocabularyFromIndexedDB().then(resolve).catch(reject);
         }
         else{
-            //TODO instead of this, use the firedb
-            initialiseVocabularyFromIndexedDB().then(resolve).catch(reject);
+            initialiseVocabularyFromFireDB().then(resolve).catch(reject);
         }
     });
 }
+
+function createFireDBDocument(collection, type, lang, uid, w) {
+    p("creating document "+type);
+    return dbfire.collection(collection).add({
+        words: w,
+        language: lang,
+        type: type,
+        author_uid: uid
+    }, { merge: true });
+}
+
+function loadVocabularyFromFireDB(type, lang, uid) {
+    return dbfire.collection("vocabulary")
+        .where("author_uid", "==", uid)
+        .where("type", "==", type)
+        .where("language", "==", lang)
+        .get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                switch(type) {
+                    case "known":
+                        doc.data().words.forEach(word => vocabularyKnown.add(word));
+                        break;
+                    case "learning":
+                        doc.data().words.forEach(word => vocabularyLearning.add(word));
+                        break;
+                    case "unknown":
+                        doc.data().words.forEach(word => vocabularyUnknown.add(word));
+                        break;
+                }
+            });
+            if(querySnapshot.empty) {
+                return createFireDBDocument("vocabulary", type, lang, uid, []);
+            }
+        });
+}
+
+function initialiseVocabularyFromFireDB() {
+    p("Loading vocabulary from Fire DB");
+    return Promise.all([
+        loadVocabularyFromFireDB("known", lessonLanguage, user.uid),
+        loadVocabularyFromFireDB("learning", lessonLanguage, user.uid),
+        loadVocabularyFromFireDB("unknown", lessonLanguage, user.uid)
+    ]);
+}
+
 
 
 /*
@@ -888,20 +934,7 @@ function initialiseLessonText(w){
 }
 
 function saveVocabulary(){
-	if(signedInState=="offline"||signedInState=="signedOut"){
-		saveVocabularyIndexedDB();
-	}
-	else{
-		//TODO instead of this, use the firedb
-		saveVocabularyIndexedDB();
-	}
 	
-	p("Vocabulary Saved.");
-	vocabularySaveInProgress = false;
-}
-
-function saveVocabularyIndexedDB()
-{
 	let wordsToSave=[];
 	let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
     wordsToUpdate.forEach(wordObj => {
@@ -928,8 +961,56 @@ function saveVocabularyIndexedDB()
 			default: console.error("Word "+wordText+" has an invalid level.");
 		}		
     });
-	putVocabularyIntoIndexedDB(wordsToSave);
+	
+	
+	
+	if(signedInState=="offline"||signedInState=="signedOut"){
+		putVocabularyIntoIndexedDB(wordsToSave);
+	}
+	else{
+		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
+	}
+	
 }
+
+function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
+    // Group words by type
+    let wordsByType = {
+        "unknown": [],
+        "learning": [],
+        "known": []
+    };
+    
+    wordsToSave.forEach((wordObj) => {
+        wordsByType[wordObj.level].push(wordObj.word);
+    });
+
+    // For each type
+    ["unknown", "learning", "known"].forEach((type) => {
+        // Get a reference to the document in Firestore
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("type", "==", type)
+            .where("language", "==", lang)
+            .limit(1); // assuming there's only one document per type per user per language
+
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // Update the document in Firestore
+                    dbfire.collection('vocabulary').doc(doc.id).set({
+                        words: wordsByType[type]
+                    }, { merge: true })
+                    .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+                    .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
+                });
+            })
+            .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
+			
+			vocabularySaveInProgress = false;
+    });
+}
+
 
 function putVocabularyIntoIndexedDB(wordsToSave) {
     const transaction = db.transaction(["wordsdb"], "readwrite");
@@ -943,6 +1024,7 @@ function putVocabularyIntoIndexedDB(wordsToSave) {
     });
 
     transaction.oncomplete = function() {
+		vocabularySaveInProgress = false;
         console.log("All records added successfully!");
     };
 

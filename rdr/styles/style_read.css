@@ -1,3 +1,10 @@
+:root
+{
+	--unknown-word-bg: #F5A9E1;
+	--learning-word-bg: #FFFF66;
+	--known-word-bg: #99FF00;
+}
+
 html, body {
 	height:100vh;
 	width:100%;
@@ -226,17 +233,14 @@ html, body {
 }
 
 .unknown {
-    background-color: pink;
+    background-color: var(--unknown-word-bg);
 }
 
 .learning {
-    background-color: yellow;
+    background-color: var(--learning-word-bg);
 }
 
 .known {
-    background-color: green;
+    background-color: var(--known-word-bg);
 }
-
-
-
 
