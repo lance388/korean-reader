@@ -957,13 +957,13 @@ function saveVocabulary(){
 		p("Updating word in indexedDB: "+wordText);
 		switch(level){
 			case "known":
-				wordsToSave.push({ word: wordText, appearances: 2 });
+				wordsToSave.push({ word: wordText, appearances: 2, level: "known" });
 				break;
 			case "learning":
-				wordsToSave.push({ word: wordText, appearances: 1 });
+				wordsToSave.push({ word: wordText, appearances: 1, level: "learning" });
 				break;
 			case "unknown":
-				wordsToSave.push({ word: wordText, appearances: 0 });
+				wordsToSave.push({ word: wordText, appearances: 0, level: "unknown" });
 				break;
 			default: console.error("Word "+wordText+" has an invalid level.");
 		}		
