@@ -36,8 +36,11 @@ const firebaseConfig = {
 
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
-	initialiseCredentials();
-	initialise();
+	initialiseCredentials().then(() => {
+		console.log("User's authentication state has been determined.");
+		initialise();
+	});
+	
 });
 
 function p(...messages) {
@@ -137,32 +140,34 @@ function initialiseTextSaving(){
 function initialiseCredentials() {
     firebase.initializeApp(firebaseConfig);
     dbfire = firebase.firestore();
-    firebase.auth().onAuthStateChanged(onAuthStateChanged);		
+    return new Promise(resolve => {
+        firebase.auth().onAuthStateChanged(user => {
+            onAuthStateChanged(user);
+            resolve();
+        });
+    });
 }
 
 // This function will be called whenever the auth state changes
 function onAuthStateChanged(user) {
-    var user = firebase.auth().currentUser;
-  if (user) {
-    // User is signed in.
-    console.log("User has logged in.");
-    logUser(user);
-    displaySigninElements("signedInMode");
-    signedInState="signedIn";
-  } else {
-    // No user is signed in.
-    if (window.location.protocol === "file:") {
-      // Running locally
-      displaySigninElements("offlineMode");
-      signedInState="offline";
+    if (user) {
+        // User is signed in.
+        console.log("User has logged in.");
+        logUser(user);
+        displaySigninElements("signedInMode");
+        signedInState="signedIn";
     } else {
-      displaySigninElements("signedOutMode");
-      signedInState="signedOut";
+        // No user is signed in.
+        if (window.location.protocol === "file:") {
+            // Running locally
+            displaySigninElements("offlineMode");
+            signedInState="offline";
+        } else {
+            displaySigninElements("signedOutMode");
+            signedInState="signedOut";
+        }
     }
-  }
-	initialise();
 }
-
 
 
 
