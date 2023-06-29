@@ -896,6 +896,7 @@ function loadVocabularyFromFireDB(type, lang, uid) {
 
 function initialiseVocabularyFromFireDB() {
     p("Loading vocabulary from Fire DB");
+	let user = firebase.auth().currentUser;
     return Promise.all([
         loadVocabularyFromFireDB("known", lessonLanguage, user.uid),
         loadVocabularyFromFireDB("learning", lessonLanguage, user.uid),
@@ -974,6 +975,7 @@ function saveVocabulary(){
 		putVocabularyIntoIndexedDB(wordsToSave);
 	}
 	else{
+		let user = firebase.auth().currentUser;
 		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
 	}
 	
