@@ -191,6 +191,8 @@ function onAuthStateChanged(user) {
         //logUser(user);
         displaySigninElements("signedInMode");
         signedInState="signedIn";
+		
+		checkAndMigrateData(user.uid);
     } else {
         if (window.location.protocol === "file:") {
             displaySigninElements("offlineMode");
@@ -1413,6 +1415,32 @@ function saveLastOpenedLessonID() {
     request.onsuccess = function(event) {  
         console.log("Last opened lesson ID saved successfully!");
     };
+}
+
+function checkAndMigrateData(uid) {
+    // Check if the migration has already been done
+    let migrationFlagRef = dbfire.collection('migrationFlags').doc(uid);
+
+    migrationFlagRef.get()
+        .then((doc) => {
+            if (!doc.exists) {
+                // If the flag does not exist, run the migration
+                migrateData(uid);
+
+                // Then set the flag
+                migrationFlagRef.set({ migrated: true })
+                    .catch((error) => console.error(`Error setting migration flag:`, error));
+            } else {
+                console.log(`Migration has already been done for user ${uid}`);
+            }
+        })
+        .catch((error) => console.error(`Error checking migration flag:`, error));
+}
+
+function migrateData(uid) {
+    // Your migration logic here
+    // ...
+	p("Migrating data...");
 }
 
 
