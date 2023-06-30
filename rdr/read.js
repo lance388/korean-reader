@@ -96,15 +96,17 @@ function initialise(){
 }
 
 function checkWordInVocabularies(word) {
+	var str="";
     if (vocabularyLearning.has(word)) {
-        return 'learning';
+        str+= 'learning';
     } else if (vocabularyKnown.has(word)) {
-        return 'known';
+        str+= 'known';
     } else if (vocabularyUnknown.has(word)) {
-        return 'unknown';
+        str+= 'unknown';
     } else {
         return 'not found';
     }
+	return str;
 }
 
 
