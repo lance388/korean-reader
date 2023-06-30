@@ -1438,10 +1438,93 @@ function checkAndMigrateData(uid) {
 }
 
 function migrateData(uid) {
-    // Your migration logic here
-    // ...
-	p("Migrating data...");
+    let oldTypes = ["known", "learning", "unknown"];
+    let fetchPromises = oldTypes.map((type) => {
+        return dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("type", "==", type)
+            .get()
+            .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    // Assuming there is only one document of each type for each user
+                    let docData = querySnapshot.docs[0].data();
+                    return docData.words || [];
+                }
+                return [];
+            });
+    });
+
+    Promise.all(fetchPromises)
+        .then(([knownWords, learningWords, unknownWords]) => {
+            // Create new data structure
+            let newData = {
+                "author_uid": uid,
+                "language": "korean", // or fetch it from old data
+                "type": "vocab_v2",
+                "known": knownWords,
+                "learning": learningWords,
+                "unknown": unknownWords
+            };
+
+            // Add new data structure to DB
+            return dbfire.collection('vocabulary').add(newData);
+        })
+        .then(() => {
+            // Update migration flag
+            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+        })
+        .then(() => {
+            p("Data migration complete.");
+        })
+        .catch((error) => {
+            console.error(`Error during data migration:`, error);
+        });
 }
+function migrateData(uid) {
+	p("Migrating data...");
+    let oldTypes = ["known", "learning", "unknown"];
+    let fetchPromises = oldTypes.map((type) => {
+        return dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("type", "==", type)
+            .get()
+            .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    // Assuming there is only one document of each type for each user
+                    let docData = querySnapshot.docs[0].data();
+                    return docData.words || [];
+                }
+                return [];
+            });
+    });
+
+    Promise.all(fetchPromises)
+        .then(([knownWords, learningWords, unknownWords]) => {
+            // Create new data structure
+            let newData = {
+                "author_uid": uid,
+                "language": "korean", // or fetch it from old data
+                "type": "vocab_v2",
+                "known": knownWords,
+                "learning": learningWords,
+                "unknown": unknownWords
+            };
+
+            // Add new data structure to DB
+            return dbfire.collection('vocabulary').add(newData);
+        })
+        .then(() => {
+            // Update migration flag
+            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+        })
+        .then(() => {
+            p("Data migration complete.");
+        })
+        .catch((error) => {
+            console.error(`Error during data migration:`, error);
+        });
+}
+
 
 
 
