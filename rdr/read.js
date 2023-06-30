@@ -154,7 +154,6 @@ function initialiseCredentials() {
             } catch (err) {
                 reject(err);
             }
-			printFireDBVocabItems(user.uid, "korean");
         });
     });
 }
@@ -917,7 +916,6 @@ function loadVocabularyFromFireDB(type, lang, uid) {
                         break;
                     case "unknown":
                         doc.data().words.forEach(word => vocabularyUnknown.add(word));
-						p("word :"+word);
                         break;
                 }
             });
@@ -1021,6 +1019,10 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         "learning": [],
         "known": []
     };
+	
+	
+	p("before");
+	printFireDBVocabItems(user.uid, "korean");
     
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
@@ -1042,7 +1044,8 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                     dbfire.collection('vocabulary').doc(doc.id).set({
                         words: wordsByType[type]
                     }, { merge: true })
-                    .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+                    //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+					.then(() => console.log(printFireDBVocabItems(user.uid, "korean")))
                     .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
                 });
             })
