@@ -68,9 +68,9 @@ function initialise(){
         p("Completed initialiseIndexedDB");
         return initialiseVocabulary();
     }).then(() => {
-		p("1 "+vocabularyKnown);
-		p("2 "+vocabularyLearning);
-		p("3 "+vocabularyUnknown);
+		p("1 "+vocabularyKnown.size);
+		p("2 "+vocabularyLearning.size);
+		p("3 "+vocabularyUnknown.size);
         p("Completed initialiseVocabulary");
         return initialiseUI();
     }).then(() => {
