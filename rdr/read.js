@@ -1085,7 +1085,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     });
 	
 	p("---START---");
-	getWordType(uid,lang, word);
+	getWordType(uid,lang, "저녁이에요");
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
