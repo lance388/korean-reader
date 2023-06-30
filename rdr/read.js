@@ -900,6 +900,7 @@ function createFireDBDocument(collection, type, lang, uid, w) {
 }
 
 function loadVocabularyFromFireDB(type, lang, uid) {
+	p("here1");
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
         .where("type", "==", type)
