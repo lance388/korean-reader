@@ -154,9 +154,29 @@ function initialiseCredentials() {
             } catch (err) {
                 reject(err);
             }
+			printFireDBVocabItems(user.uid);
         });
     });
 }
+
+function printFireDBVocabItems(uid) {
+    return dbfire.collection("vocabulary")
+        .where("author_uid", "==", uid)
+        .get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                const docData = doc.data();
+                console.log(`Document ID: ${doc.id}`);
+                console.log(`Type: ${docData.type}`);
+                console.log(`Language: ${docData.language}`);
+                console.log(`Words: ${docData.words}`);
+            });
+        })
+        .catch(function(error) {
+            console.error("Error getting documents: ", error);
+        });
+}
+
 
 // This function will be called whenever the auth state changes
 function onAuthStateChanged(user) {
@@ -890,7 +910,6 @@ function loadVocabularyFromFireDB(type, lang, uid) {
                 switch(type) {
                     case "known":
                         doc.data().words.forEach(word => vocabularyKnown.add(word));
-						p("word :"+word);
                         break;
                     case "learning":
                         doc.data().words.forEach(word => vocabularyLearning.add(word));
