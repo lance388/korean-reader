@@ -897,7 +897,6 @@ function createFireDBDocument(collection, type, lang, uid, w) {
 }
 
 function loadVocabularyFromFireDB(type, lang, uid) {
-	p("here1");
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
         .where("type", "==", type)
@@ -1020,7 +1019,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 	
 	
 	p("before");
-	printFireDBVocabItems(user.uid, "korean");
+	printFireDBVocabItems(uid, "korean");
     
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
@@ -1043,7 +1042,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                         words: wordsByType[type]
                     }, { merge: true })
                     //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-					.then(() => console.log(printFireDBVocabItems(user.uid, "korean")))
+					.then(() => console.log(printFireDBVocabItems(uid, "korean")))
                     .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
                 });
             })
