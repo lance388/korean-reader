@@ -1080,6 +1080,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
     });
+	
+	p("---START---");
+	printFireDBVocabItems();
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
@@ -1101,7 +1104,8 @@ docRef.get()
                 dbfire.collection('vocabulary').doc(doc.id).update({
                     words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
                 })
-                .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+                //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+				.then(() => printFireDBVocabItems();
                 .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
             }
         });
