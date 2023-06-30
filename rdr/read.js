@@ -1105,7 +1105,7 @@ docRef.get()
                     words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
                 })
                 //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-				.then(() => printFireDBVocabItems();
+				.then(() => printFireDBVocabItems())
                 .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
             }
         });
