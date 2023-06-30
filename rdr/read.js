@@ -1098,44 +1098,43 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
     });
-	p("start save");
-	p(checkWordInVocabularies("저녁이에요"));
-	//p("---START---");
-	//printFireDBVocabItems(uid,lang, word);
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
-        // Get a reference to the document in Firestore
-        // Get a reference to the document in Firestore
-// Get a reference to the document in Firestore
-let docRef = dbfire.collection('vocabulary')
-    .where("author_uid", "==", uid)
-    .where("type", "==", type)
-    .where("language", "==", lang)
-    .limit(1); // assuming there's only one document per type per user per language
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("type", "==", type)
+            .where("language", "==", lang)
+            .limit(1); 
 
-docRef.get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // Check if there are any words of this type to add
-            if (wordsByType[type].length > 0) {
-                // Update the document in Firestore
-                dbfire.collection('vocabulary').doc(doc.id).update({
-                    words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
-                })
-                //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-				.then(() => p(checkWordInVocabularies("저녁이에요")))
-                .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
-            }
-        });
-    })
-    .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // Check if there are any words of this type to add
+                    if (wordsByType[type].length > 0) {
+                        // remove words from other types if exist
+                        ["unknown", "learning", "known"].forEach((otherType) => {
+                            if (otherType !== type) {
+                                dbfire.collection('vocabulary').doc(doc.id).update({
+                                    words: firebase.firestore.FieldValue.arrayRemove(...wordsByType[type])
+                                })
+                            }
+                        });
 
+                        // Update the document in Firestore
+                        dbfire.collection('vocabulary').doc(doc.id).update({
+                            words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
+                        })
+                        .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
+                    }
+                });
+            })
+            .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
 
-			
-			vocabularySaveInProgress = false;
+        vocabularySaveInProgress = false;
     });
 }
+
 
 
 function putVocabularyIntoIndexedDB(wordsToSave) {
