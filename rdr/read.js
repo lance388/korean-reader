@@ -1017,9 +1017,10 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         "known": []
     };
 	
-	
-	p("before");
+	p("*****************************");
+	p("BEFORE");
 	printFireDBVocabItems(uid, "korean");
+	p("**");
     
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
