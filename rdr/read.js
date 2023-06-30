@@ -186,7 +186,6 @@ function onAuthStateChanged(user) {
         }
     }
 	initialise();
-	initialise();
 }
 
 function onNavLearnScroll(e) {
