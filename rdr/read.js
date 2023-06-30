@@ -1098,6 +1098,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
     });
+	
+	p("saving");
+	p(checkWordInVocabularies("저녁이에요"));
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
