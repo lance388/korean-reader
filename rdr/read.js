@@ -821,13 +821,16 @@ function colourisePage() {
 }
 
 function initialiseIndexedDB() {
+	p("here-2!");
     return new Promise((resolve, reject) => {
+		p("here-1!");
         if (!window.indexedDB) {
             const errorMessage = "Your browser doesn't support a stable version of IndexedDB";
             alert(errorMessage);
             p(errorMessage);
             reject(new Error(errorMessage));
         } else {
+			p("here0!");
             var request = indexedDB.open("wordsdb", 8);
             request.onupgradeneeded = function() {
 				p("here1!");
