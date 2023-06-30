@@ -16,7 +16,7 @@ var signedInState = "signedOut";
 var db;
 var	vocabularyLearning;
 var	vocabularyKnown;
-var	vocabularyUnknown;
+//var	vocabularyUnknown;
 var lessonWordArray;
 var lessonWordCount;
 var lessonSavingEnabled;
@@ -65,7 +65,7 @@ function initialise(){
 	lessonLanguage = "korean";
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
-    vocabularyUnknown = new Set();
+    //vocabularyUnknown = new Set();
 	if (saveTextTimer !== null) {
         clearTimeout(saveTextTimer);
     }
@@ -101,9 +101,10 @@ function checkWordInVocabularies(word) {
         str+= 'learning';
     } else if (vocabularyKnown.has(word)) {
         str+= 'known';
-    } else if (vocabularyUnknown.has(word)) {
-        str+= 'unknown';
-    } else {
+    } //else if (vocabularyUnknown.has(word)) {
+     //   str+= 'unknown';
+    //}
+	else {
         return 'not found';
     }
 	return str;
@@ -731,7 +732,7 @@ function promoteOneLevel(word){
 		case "known":
 			wordObj.level = "unknown";
 			vocabularyKnown.delete(word);
-			vocabularyUnknown.add(word);
+			//vocabularyUnknown.add(word);
 			break;
 		case "learning":
 			wordObj.level = "known";
@@ -740,7 +741,7 @@ function promoteOneLevel(word){
 			break;
 		case "unknown":
 			wordObj.level = "learning";
-			vocabularyUnknown.delete(word);
+			//vocabularyUnknown.delete(word);
 			vocabularyLearning.add(word);
 			break;
 		default: console.error("Word "+word+" has an invalid level.");
@@ -827,12 +828,12 @@ function initialiseIndexedDB() {
             p(errorMessage);
             reject(new Error(errorMessage));
         } else {
-            var request = indexedDB.open("wordsdb", 7);
+            var request = indexedDB.open("wordsdb", 8);
             request.onupgradeneeded = function() {
                 db = request.result;
                 if (!db.objectStoreNames.contains('wordsdb')) {
                     var store = db.createObjectStore("wordsdb", {keyPath: "word"});
-                    var appearancesIndex = store.createIndex("by_appearance", "appearance");
+                    //var appearancesIndex = store.createIndex("by_appearance", "appearance");
                 }
                 if (!db.objectStoreNames.contains('lessonsdb')) {
                     var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
@@ -934,13 +935,14 @@ function initialiseVocabularyFromIndexedDB(){
                 for(var i=0;i<req.length;i++)
                 {
                     var w = req[i].word;
-                    var a = req[i].appearances;
-                    var remainder = a%3;
+                    var a = req[i].level;
+                    //var remainder = a%3;
 
-                    if(remainder==0){
-                        vocabularyUnknown.add(w);
-                    }
-                    else if(remainder==1){
+                    //if(remainder==0){
+                    //    vocabularyUnknown.add(w);
+                    //}
+                    //else
+					if(a=="learning"){
                         vocabularyLearning.add(w);
                     }
                     else{
@@ -1045,7 +1047,7 @@ function loadVocabularyFromFireDB(lang, uid) {
                     let docData = doc.data();
                     docData.known.forEach(word => vocabularyKnown.add(word));
                     docData.learning.forEach(word => vocabularyLearning.add(word));
-                    docData.unknown.forEach(word => vocabularyUnknown.add(word));
+                    //docData.unknown.forEach(word => vocabularyUnknown.add(word));
                 });
                 resolve();
             })
@@ -1106,6 +1108,7 @@ function initialiseLessonText(w){
 function saveVocabulary(){
 	
 	let wordsToSave=[];
+	let wordsToDelete=[];
 	let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
     wordsToUpdate.forEach(wordObj => {
 		
@@ -1120,13 +1123,13 @@ function saveVocabulary(){
 		p("Updating word: "+wordText);
 		switch(level){
 			case "known":
-				wordsToSave.push({ word: wordText, appearances: 2, level: "known" });
+				wordsToSave.push({ word: wordText, level: "known" });
 				break;
 			case "learning":
-				wordsToSave.push({ word: wordText, appearances: 1, level: "learning" });
+				wordsToSave.push({ word: wordText, level: "learning" });
 				break;
 			case "unknown":
-				wordsToSave.push({ word: wordText, appearances: 0, level: "unknown" });
+				wordsToDelete.push({ word: wordText, level: "unknown" });
 				break;
 			default: console.error("Word "+wordText+" has an invalid level.");
 		}		
@@ -1136,10 +1139,12 @@ function saveVocabulary(){
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
+		deleteVocabularyFromIndexedDB(wordsToDelete);
 	}
 	else{
 		let user = firebase.auth().currentUser;
 		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
+		deleteVocabularyFromFireDB(wordsToDelete, lessonLanguage, user.uid);
 	}
 	
 }
@@ -1255,7 +1260,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let newWords = {
-        "unknown": [],
         "learning": [],
         "known": []
     };
@@ -1281,7 +1285,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                         updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
                         
                         // Remove these words from the other categories
-                        let otherTypes = ["unknown", "learning", "known"].filter(e => e !== wordType);
+                        let otherTypes = ["learning", "known"].filter(e => e !== wordType);
                         otherTypes.forEach(otherType => {
                             updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
                         });
@@ -1310,11 +1314,31 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 
 
+function deleteVocabularyFromFireDB(wordsToDelete, lang, uid){
+	p("Deleting words from fireDB");
+}
 
+
+function deleteVocabularyFromIndexedDB(wordsToDelete){
+	p("Deleting words from indexedDB");
+}
 
 
 
 function putVocabularyIntoIndexedDB(wordsToSave) {
+	
+	
+	let newWords = {
+        "unknown": [],
+        "learning": [],
+        "known": []
+    };
+
+    wordsToSave.forEach((wordObj) => {
+        newWords[wordObj.level].push(wordObj.word);
+    });
+	
+	
     const transaction = db.transaction(["wordsdb"], "readwrite");
     const objectStore = transaction.objectStore("wordsdb");
     
@@ -1438,51 +1462,8 @@ function checkAndMigrateData(uid) {
 }
 
 function migrateData(uid) {
-    let oldTypes = ["known", "learning", "unknown"];
-    let fetchPromises = oldTypes.map((type) => {
-        return dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("type", "==", type)
-            .get()
-            .then((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    // Assuming there is only one document of each type for each user
-                    let docData = querySnapshot.docs[0].data();
-                    return docData.words || [];
-                }
-                return [];
-            });
-    });
-
-    Promise.all(fetchPromises)
-        .then(([knownWords, learningWords, unknownWords]) => {
-            // Create new data structure
-            let newData = {
-                "author_uid": uid,
-                "language": "korean", // or fetch it from old data
-                "type": "vocab_v2",
-                "known": knownWords,
-                "learning": learningWords,
-                "unknown": unknownWords
-            };
-
-            // Add new data structure to DB
-            return dbfire.collection('vocabulary').add(newData);
-        })
-        .then(() => {
-            // Update migration flag
-            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
-        })
-        .then(() => {
-            p("Data migration complete.");
-        })
-        .catch((error) => {
-            console.error(`Error during data migration:`, error);
-        });
-}
-function migrateData(uid) {
 	p("Migrating data...");
-    let oldTypes = ["known", "learning", "unknown"];
+    let oldTypes = ["known", "learning"];
     let fetchPromises = oldTypes.map((type) => {
         return dbfire.collection('vocabulary')
             .where("author_uid", "==", uid)
@@ -1499,15 +1480,14 @@ function migrateData(uid) {
     });
 
     Promise.all(fetchPromises)
-        .then(([knownWords, learningWords, unknownWords]) => {
+        .then(([knownWords, learningWords]) => {
             // Create new data structure
             let newData = {
                 "author_uid": uid,
                 "language": "korean", // or fetch it from old data
                 "type": "vocab_v2",
                 "known": knownWords,
-                "learning": learningWords,
-                "unknown": unknownWords
+                "learning": learningWords
             };
 
             // Add new data structure to DB
