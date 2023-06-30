@@ -830,7 +830,7 @@ function initialiseIndexedDB() {
         } else {
             var request = indexedDB.open("wordsdb", 8);
             request.onupgradeneeded = function() {
-				p("here!");
+				p("here1!");
                 db = request.result;
                 if (!db.objectStoreNames.contains('wordsdb')) {
                     var store = db.createObjectStore("wordsdb", {keyPath: "word"});
@@ -849,6 +849,7 @@ function initialiseIndexedDB() {
                 reject(new Error(errorMessage));
             };
             request.onsuccess = function() {
+				p("here2!");
                 db = request.result;
                 resolve();
             };
