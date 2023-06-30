@@ -887,6 +887,7 @@ function loadVocabularyFromFireDB(type, lang, uid) {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
+				p("word :"+word);
                 switch(type) {
                     case "known":
                         doc.data().words.forEach(word => vocabularyKnown.add(word));
