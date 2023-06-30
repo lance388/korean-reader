@@ -162,7 +162,7 @@ function printFireDBVocabItems(uid,lang) {
                 console.log(`Document ID: ${doc.id}`);
                 console.log(`Type: ${docData.type}`);
                 console.log(`Language: ${docData.language}`);
-                console.log(`Words: ${docData.words}`);
+                //console.log(`Words: ${docData.words}`);
             });
         })
         .catch(function(error) {
