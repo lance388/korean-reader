@@ -1085,7 +1085,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     });
 	
 	p("---START---");
-	getWordType(uid,lang, "저녁이에요");
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
@@ -1107,8 +1106,7 @@ docRef.get()
                 dbfire.collection('vocabulary').doc(doc.id).update({
                     words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
                 })
-                //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-				.then(() => getWordType(uid,lang, "저녁이에요"))
+                .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
                 .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
             }
         });
