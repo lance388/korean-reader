@@ -22,8 +22,6 @@ var lessonSavingEnabled;
 var lessonID;
 
 
-//var protectText = false;
-
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
@@ -37,9 +35,9 @@ const firebaseConfig = {
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 	initialiseCredentials().then(() => {
-		console.log("User's authentication state has been determined.");
-		initialise();
-	});
+		//console.log("User's authentication state has been determined.");
+	//	initialise();
+	//});
 	
 });
 
@@ -75,46 +73,22 @@ function initialise(){
 		document.getElementById('loading-overlay').style.display = 'none';
 		 p("Initialisation complete");
     }).catch((error) => {
-        // Handle any errors
         console.error("An error occurred:", error);
     });
-	/*
-	// Show loading overlay
-	p("Start initialise");
-	document.getElementById('loading-overlay').style.display = 'flex';
-	initialiseIndexedDB(function() {
-		p("Completed initialiseIndexedDB");
-		initialiseFirebase();
-		p("Completed initialiseFirebase");
-		initialiseVocabulary(function() {
-			p("Completed initialiseVocabulary");
-			initialiseUI();
-			p("Completed initialiseUI");
-			initialiseTextSaving();
-			p("Completed initialiseTextSaving");
-			// Hide loading overlay
-			document.getElementById('loading-overlay').style.display = 'none';
-		});
-	});
-	*/
 }
 
 
 function initialiseTextSaving(){
 	let saveTimeout = null;
-	const saveDelay = 5000; // Save after 5 seconds
+	const saveDelay = 5000;
 	const textarea = document.getElementById('editText');
 
-	// Listen for input events (i.e., when the user types in the textarea)
 	textarea.addEventListener('input', () => {
-		// If a save is already scheduled, cancel it
 		if (saveTimeout !== null) {
 			clearTimeout(saveTimeout);
 		}
 
-		// Schedule a new save
 		saveTimeout = setTimeout(() => {
-			//TODO disable saving for premade lessons
 			if(lessonSavingEnabled){
 				var lesson = {
 					title: lessonID,
@@ -124,22 +98,12 @@ function initialiseTextSaving(){
 				saveCustomLessonToIndexedDB(lesson);
 				p("lesson saved");
 			}
-			// This is where you'd put your saving code. For now, just log the text.
-			
-
-			// Optionally, you can use IndexedDB or any other storage mechanism to store the data.
-			// For example: saveToIndexedDB(textarea.value);
-			
-			// Reset saveTimeout so we know no save is scheduled
 			saveTimeout = null;
 		}, saveDelay);
 	});
 }
 
-
-
-
-// Initialise Firebase
+/*
 function initialiseCredentials() {
     firebase.initializeApp(firebaseConfig);
     dbfire = firebase.firestore();
@@ -154,6 +118,16 @@ function initialiseCredentials() {
         });
     });
 }
+*/
+
+function initialiseCredentials() {
+    firebase.initializeApp(firebaseConfig);
+    dbfire = firebase.firestore();
+    firebase.auth().onAuthStateChanged(user => {
+        onAuthStateChanged(user);
+    });
+}
+
 
 function printFireDBVocabItems(uid,lang) {
     return dbfire.collection("vocabulary")
@@ -174,19 +148,14 @@ function printFireDBVocabItems(uid,lang) {
         });
 }
 
-
-// This function will be called whenever the auth state changes
 function onAuthStateChanged(user) {
     if (user) {
-        // User is signed in.
-        console.log("User has logged in.");
-        logUser(user);
+        p("User has logged in.");
+        //logUser(user);
         displaySigninElements("signedInMode");
         signedInState="signedIn";
     } else {
-        // No user is signed in.
         if (window.location.protocol === "file:") {
-            // Running locally
             displaySigninElements("offlineMode");
             signedInState="offline";
         } else {
@@ -194,6 +163,7 @@ function onAuthStateChanged(user) {
             signedInState="signedOut";
         }
     }
+	initialise();
 }
 
 
@@ -203,11 +173,10 @@ function onAuthStateChanged(user) {
 
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
-	if (window.location.protocol === "file:") {
-		// Running locally
-		displaySigninElements("offlineMode");
-		p("User is running the website locally");
-	} 
+//	if (window.location.protocol === "file:") {
+//		displaySigninElements("offlineMode");
+//		p("User is running the website locally");
+//	} 
 
 	document.getElementById('nav-learn').addEventListener('scroll', function(e) {
 		clearTimeout(scrollDebounceTimer);
@@ -216,12 +185,11 @@ function initialiseUI(){
 			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
 			if (!colouriseInProgress) {
                     colouriseInProgress = true;
-                    colourisePage(); // initiate the colorising operation
+                    colourisePage();
             }
 			
 		}, scrollDebounceTimeout);
 	});
-	//document.addEventListener('DOMContentLoaded', function() {
 		  var sidebar = document.getElementById('sidebar');
 		  var sidebarContainer = document.querySelector('.sidebar-container');
 		  var textareaContainer = document.querySelector('.textarea-container');
@@ -266,7 +234,6 @@ function initialiseUI(){
 						saveLastOpenedLessonID();
 						loadLesson();
 					} else {
-						// If no last opened lesson ID is found, redirect to content.html
 						window.location.href = 'content.html';
 					}
 				});
@@ -283,18 +250,9 @@ function initialiseUI(){
 			
 		
 		clearTextButton.addEventListener('click', () => {
-			//if(protectText)
-			//{
-			//	alert(protectTextMessage);
-			//}
-			//else
-			//{
-				// Clear the text in the 'Edit' tab
 				document.getElementById('editText').value = '';	
 				activateEditTab();	
-			//}
 		});
-	//});
 	
 	resolve();
     });
@@ -308,11 +266,8 @@ window.handleCredentialResponse = (response) => {
 	
 	function toggleSignIn() {
       if (firebase.auth().currentUser) {
-        // [START signout]
 		handleSignOut();
-        //firebase.auth().signOut();
 		displaySigninElements("signedOutMode");
-        // [END signout]
       } else {
         var email = document.getElementById('signin-email').value;
         var password = document.getElementById('signin-password').value;
@@ -324,14 +279,9 @@ window.handleCredentialResponse = (response) => {
           alert('Please enter a password.');
           return;
         }
-        // Sign in with email and pass.
-        // [START authwithemail]
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-          // Handle Errors here.
-		  p("toggle sign in 2");
           var errorCode = error.code;
           var errorMessage = error.message;
-          // [START_EXCLUDE]
           if (errorCode === 'auth/wrong-password') {
             alert('Wrong password.');
           } else {
@@ -340,9 +290,7 @@ window.handleCredentialResponse = (response) => {
           p(error);
 		  p("Signed in with email");
 		  displaySigninElements("signedInMode");
-          // [END_EXCLUDE]
         });
-        // [END authwithemail]
       }
     }
 
@@ -354,33 +302,23 @@ window.handleCredentialResponse = (response) => {
 		  .then((result) => {
 			/** @type {firebase.auth.OAuthCredential} */
 			var credential = result.credential;
-
-			// This gives you a Google Access Token. You can use it to access the Google API.
 			var token = credential.accessToken;
-			// The signed-in user info.
 			var user = result.user;
-			// IdP data available in result.additionalUserInfo.profile.
-			  // ...
 			  p("Signed in with Google");
 			  displaySigninElements("signedInMode");
 		  }).catch((error) => {
-			// Handle Errors here.
 			var errorCode = error.code;
 			var errorMessage = error.message;
-			// The email of the user's account used.
 			var email = error.email;
-			// The firebase.auth.AuthCredential type that was used.
 			var credential = error.credential;
-			// ...
 		  });
     }
 	
 	function handleSignOut() {
 		firebase.auth().signOut().then(() => {
-		  // Sign-out successful.
 		  displaySigninElements("signedOutMode");
 		}).catch((error) => {
-		  // An error happened.
+			
 		});
 	}
 
@@ -426,14 +364,13 @@ function logUser(user)
 
 
 function loadLesson() {
-  // Load lesson text based on lessonName
   p("Loading lesson:", lessonID);
 	if (/^custom\d+$/.test(lessonID)) {
 		p("Custom lesson loading...");
 		initCustomLesson();
 	}
 	else{
-	  fetch(`lessons/${lessonID}.json`)  // use backticks here
+	  fetch(`lessons/${lessonID}.json`)
 		.then(response => {
 		  if (!response.ok) {
 			throw new Error('Lesson failed to load');
@@ -442,8 +379,6 @@ function loadLesson() {
 		})
 		.then(lesson => {
 			p("Premade lesson loading...");
-			// Now you can work with your lesson object
-			//processLessonJson(lesson);
 			initPremadeLesson(lesson.title, lesson.text);
 		})
 		.catch(error => console.error('Error:', error));
@@ -452,11 +387,9 @@ function loadLesson() {
 
 function activateEditTab(){
 	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
-		// Set the 'Edit' tab as the active tab
 		document.getElementById('nav-edit-tab').classList.add('active');
 		document.getElementById('nav-edit').classList.add('show', 'active');
 
-		// Remove the 'active' class from the 'Learn' tab
 		document.getElementById('nav-learn-tab').classList.remove('active');
 		document.getElementById('nav-learn').classList.remove('show', 'active');
 	}
@@ -477,23 +410,14 @@ function activateLearnTab(){
 }
 
 function initPremadeLesson(title, text){
-	//protectText = true;
-	//protectTextMessage = "Content editing is not permitted for pre-set lessons.";
 	document.getElementById('nav-clear-tab').disabled=true;
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
 	lessonSavingEnabled=false;
-	//load text into edit mode text area
 	const textarea = document.getElementById('editText');
 	textarea.value = text;
     
-    // Trigger the input event
     textarea.dispatchEvent(new Event('input'));
-	//var navLearnTab = document.getElementById('nav-learn-tab');
-	//navLearnTab.addEventListener('show.bs.tab', function(e) {
-	//			loadTextIntoLearnTab(document.getElementById('editText').value);
-	//		});
-	
 	activateLearnTab();
 }
 
@@ -1016,12 +940,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         "learning": [],
         "known": []
     };
-	
-	p("*****************************");
-	p("BEFORE");
-	printFireDBVocabItems(uid, "korean");
-	p("**");
-    
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
     });
