@@ -887,16 +887,18 @@ function loadVocabularyFromFireDB(type, lang, uid) {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-				p("word :"+word);
                 switch(type) {
                     case "known":
                         doc.data().words.forEach(word => vocabularyKnown.add(word));
+						p("word :"+word);
                         break;
                     case "learning":
                         doc.data().words.forEach(word => vocabularyLearning.add(word));
+						p("word :"+word);
                         break;
                     case "unknown":
                         doc.data().words.forEach(word => vocabularyUnknown.add(word));
+						p("word :"+word);
                         break;
                 }
             });
