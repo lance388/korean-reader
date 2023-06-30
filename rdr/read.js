@@ -7,6 +7,7 @@ var scrollDebounceTimer = null;
 const scrollDebounceTimeout = 40;
 const colouriseTimeout = 5;
 const saveVocabularyTimeout = 4000;
+const saveTextTimeout = 5000;
 var pageMax;
 var colourisePending;
 var colouriseInProgress;
@@ -20,7 +21,7 @@ var lessonWordArray;
 var lessonWordCount;
 var lessonSavingEnabled;
 var lessonID;
-var saveTextTimeout = null;
+var saveTextTimer = null;
 var saveVocabularyTimer = null;
 var colourisePageTimeout = null;
 
@@ -65,8 +66,8 @@ function initialise(){
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
     vocabularyUnknown = new Set();
-	if (saveTextTimeout !== null) {
-        clearTimeout(saveTextTimeout);
+	if (saveTextTimer !== null) {
+        clearTimeout(saveTextTimer);
     }
 	if (scrollDebounceTimer !== null) {
             clearTimeout(scrollDebounceTimer);
@@ -94,18 +95,12 @@ function initialise(){
     });
 }
 
-
-function initialiseTextSaving(){
-	saveTextTimeout = null;
-	const saveDelay = 5000;
-	const textarea = document.getElementById('editText');
-
-	textarea.addEventListener('input', () => {
-		if (saveTextTimeout !== null) {
-			clearTimeout(saveTextTimeout);
+function onTextareaInput() {
+	if (saveTextTimer !== null) {
+			clearTimeout(saveTextTimer);
 		}
 
-		saveTextTimeout = setTimeout(() => {
+		saveTextTimer = setTimeout(() => {
 			if(lessonSavingEnabled){
 				var lesson = {
 					title: lessonID,
@@ -115,9 +110,19 @@ function initialiseTextSaving(){
 				saveCustomLessonToIndexedDB(lesson);
 				p("lesson saved");
 			}
-			saveTextTimeout = null;
-		}, saveDelay);
-	});
+			saveTextTimer = null;
+		}, saveTextTimeout);
+}
+
+
+function initialiseTextSaving(){
+	const textarea = document.getElementById('editText');
+	
+	// Remove the existing listener, if it exists
+    textarea.removeEventListener('input', onTextareaInput);
+
+    // Add the listener
+    textarea.addEventListener('input', onTextareaInput);
 }
 
 /*
@@ -184,18 +189,119 @@ function onAuthStateChanged(user) {
 	initialise();
 }
 
+function onNavLearnScroll(e) {
+    if (scrollDebounceTimer !== null) {
+            clearTimeout(scrollDebounceTimer);
+        }
+		scrollDebounceTimer = setTimeout(() => {
+			let visibleSpans = findVisibleSpans();
+			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
+			if (!colouriseInProgress) {
+                    colouriseInProgress = true;
+                    colourisePage();
+            }
+			
+		}, scrollDebounceTimeout);
+}
+
+function onTextareaFullscreenButtonClick() {
+	var textareaContainer = document.querySelector('.textarea-container');
+	var sidebarContainer = document.querySelector('.sidebar-container');
+	
+	if(sidebarContainer.classList.contains('hidden')) {
+				  sidebarContainer.classList.remove('hidden');
+				  textareaContainer.classList.remove('full-width');
+				} else {
+				  sidebarContainer.classList.add('hidden');
+				  textareaContainer.classList.add('full-width');
+				  sidebarContainer.classList.remove('full-width');
+			}
+	
+	
+}
+
+function onSidebarFullscreenButtonClick() {
+	var textareaContainer = document.querySelector('.textarea-container');
+	var sidebarContainer = document.querySelector('.sidebar-container');
+	
+	if(textareaContainer.classList.contains('hidden')) {
+				  textareaContainer.classList.remove('hidden');
+				  sidebarContainer.classList.remove('full-width');
+				} else {
+				  textareaContainer.classList.add('hidden');
+				  sidebarContainer.classList.add('full-width');
+				  textareaContainer.classList.remove('full-width');
+			}
+}
+
+function onNavLearnTabShowBsTab(e) {
+    p("Loading text into learn tab");
+				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
+				document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
+}
+
+function onClearTextButtonClick() {
+    document.getElementById('editText').value = '';	
+				activateEditTab();
+}
 
 
 
+function initialiseUI(){
+	return new Promise((resolve, reject) => {
+		
+		var navLearn = document.getElementById('nav-learn');
+		  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
+		  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
+		  var navLearnTab = document.getElementById('nav-learn-tab');
+		  var clearTextButton = document.getElementById('nav-clear-tab');
+		  
+		navLearn.removeEventListener('scroll', onNavLearnScroll);
+        textareaFullscreenButton.removeEventListener('click', onTextareaFullscreenButtonClick);
+        sidebarFullscreenButton.removeEventListener('click', onSidebarFullscreenButtonClick);
+        navLearnTab.removeEventListener('show.bs.tab', onNavLearnTabShowBsTab);
+        clearTextButton.removeEventListener('click', onClearTextButtonClick);
+
+		navLearn.addEventListener('scroll', onNavLearnScroll);
+        textareaFullscreenButton.addEventListener('click', onTextareaFullscreenButtonClick);
+        sidebarFullscreenButton.addEventListener('click', onSidebarFullscreenButtonClick);
+        navLearnTab.addEventListener('show.bs.tab', onNavLearnTabShowBsTab);
+        clearTextButton.addEventListener('click', onClearTextButtonClick);		
+	
+		  
+		  lessonID = sessionStorage.getItem('lessonID');
+			if(lessonID) {
+				saveLastOpenedLessonID();
+				loadLesson();
+			} else {
+				getLastOpenedLessonID(function(lastOpenedLessonID) {
+					p("lessonID: "+lessonID);
+					if(lastOpenedLessonID) {
+						lessonID = lastOpenedLessonID;
+						saveLastOpenedLessonID();
+						loadLesson();
+					} else {
+						window.location.href = 'content.html';
+					}
+				});
+			}
+
+		  
+
+	
+	resolve();
+    });
+}
 
 
+/*
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
 //	if (window.location.protocol === "file:") {
 //		displaySigninElements("offlineMode");
 //		p("User is running the website locally");
 //	} 
-
+	
 	document.getElementById('nav-learn').addEventListener('scroll', function(e) {
 		if (scrollDebounceTimer !== null) {
             clearTimeout(scrollDebounceTimer);
@@ -277,7 +383,7 @@ function initialiseUI(){
 	resolve();
     });
 }
-
+*/
 
 
 window.handleCredentialResponse = (response) => {
@@ -539,15 +645,17 @@ function loadTextIntoLearnTab(text, language) {
 	pageMax = pages.length-1;
 
 	const words = learnTextElement.querySelectorAll('.clickable-word');
-	var lessonText = [];
+    var lessonText = [];
     words.forEach(word => {
-		lessonText.push(word.textContent);
-        word.addEventListener('click', () => {
-            const wordText = word.textContent;
-            handleWordClick(wordText);
-        });
+        lessonText.push(word.textContent);
+        word.addEventListener('click', onWordClick);
     });
-	initialiseLessonText(lessonText);
+    initialiseLessonText(lessonText);
+}
+
+function onWordClick() {
+    const wordText = this.textContent;
+    handleWordClick(wordText);
 }
 
 function findVisibleSpans() {
