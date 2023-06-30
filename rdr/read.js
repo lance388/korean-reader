@@ -3,7 +3,7 @@ var lessonLanguage;
 var dbfire;
 const wordsPerPage = 100;
 const pagesToLookAheadBehind = 2;
-var scrollDebounceTimer;
+var scrollDebounceTimer = null;
 const scrollDebounceTimeout = 40;
 const colouriseTimeout = 5;
 const saveVocabularyTimeout = 4000;
@@ -20,6 +20,9 @@ var lessonWordArray;
 var lessonWordCount;
 var lessonSavingEnabled;
 var lessonID;
+var saveTextTimeout = null;
+var saveVocabularyTimer = null;
+var colourisePageTimeout = null;
 
 
 const firebaseConfig = {
@@ -62,6 +65,19 @@ function initialise(){
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
     vocabularyUnknown = new Set();
+	if (saveTextTimeout !== null) {
+        clearTimeout(saveTextTimeout);
+    }
+	if (scrollDebounceTimer !== null) {
+            clearTimeout(scrollDebounceTimer);
+    }
+	if (saveVocabularyTimer !== null) {
+            clearTimeout(saveVocabularyTimer);
+    }
+	if (colourisePageTimeout !== null) {
+            clearTimeout(colourisePageTimeout);
+    }
+	
 
     initialiseIndexedDB().then(() => {
         p("Completed initialiseIndexedDB");
@@ -80,16 +96,16 @@ function initialise(){
 
 
 function initialiseTextSaving(){
-	let saveTimeout = null;
+	saveTextTimeout = null;
 	const saveDelay = 5000;
 	const textarea = document.getElementById('editText');
 
 	textarea.addEventListener('input', () => {
-		if (saveTimeout !== null) {
-			clearTimeout(saveTimeout);
+		if (saveTextTimeout !== null) {
+			clearTimeout(saveTextTimeout);
 		}
 
-		saveTimeout = setTimeout(() => {
+		saveTextTimeout = setTimeout(() => {
 			if(lessonSavingEnabled){
 				var lesson = {
 					title: lessonID,
@@ -99,7 +115,7 @@ function initialiseTextSaving(){
 				saveCustomLessonToIndexedDB(lesson);
 				p("lesson saved");
 			}
-			saveTimeout = null;
+			saveTextTimeout = null;
 		}, saveDelay);
 	});
 }
@@ -165,6 +181,7 @@ function onAuthStateChanged(user) {
         }
     }
 	initialise();
+	initialise();
 }
 
 
@@ -180,7 +197,9 @@ function initialiseUI(){
 //	} 
 
 	document.getElementById('nav-learn').addEventListener('scroll', function(e) {
-		clearTimeout(scrollDebounceTimer);
+		if (scrollDebounceTimer !== null) {
+            clearTimeout(scrollDebounceTimer);
+        }
 		scrollDebounceTimer = setTimeout(() => {
 			let visibleSpans = findVisibleSpans();
 			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
@@ -569,7 +588,12 @@ function handleWordClick(word) {
 	
 	if (!vocabularySaveInProgress) {
         vocabularySaveInProgress = true;
-        setTimeout(saveVocabulary, saveVocabularyTimeout); 
+		
+		if (saveVocabularyTimer !== null) {
+            clearTimeout(saveVocabularyTimer);
+        }
+		saveVocabularyTimer = setTimeout(saveVocabulary, saveVocabularyTimeout); 
+        
     }
 }
 
@@ -658,7 +682,12 @@ function colourisePage() {
 			return;
 		}
 		colouriseInProgress = false;
-        setTimeout(colourisePage, colouriseTimeout); 
+		
+		if (colourisePageTimeout !== null) {
+            clearTimeout(colourisePageTimeout);
+		}
+		
+        colourisePageTimeout = setTimeout(colourisePage, colouriseTimeout); 
     }
 	else
 	{
