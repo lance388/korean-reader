@@ -141,9 +141,13 @@ function initialiseCredentials() {
     firebase.initializeApp(firebaseConfig);
     dbfire = firebase.firestore();
     return new Promise(resolve => {
-        firebase.auth().onAuthStateChanged(user => {
-            onAuthStateChanged(user);
-            resolve();
+        firebase.auth().onAuthStateChanged(async user => {
+            try {
+                await onAuthStateChanged(user);
+                resolve();
+            } catch (err) {
+                reject(err);
+            }
         });
     });
 }
