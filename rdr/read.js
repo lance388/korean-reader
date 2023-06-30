@@ -998,10 +998,13 @@ function createFireDBDocument(collection, type, lang, uid, w) {
         });
 }*/
 
+
+/*
 function loadVocabularyFromFireDB(lang, uid) {
     let docRef = dbfire.collection('vocabulary')
         .where("author_uid", "==", uid)
         .where("language", "==", lang)
+		.where("type", "==", "vocab_v2")
         .limit(1);
 
     docRef.get()
@@ -1024,6 +1027,43 @@ function initialiseVocabularyFromFireDB() {
         loadVocabularyFromFireDB("unknown", lessonLanguage, user.uid)
     ]);
 }
+*/
+
+function loadVocabularyFromFireDB(lang, uid) {
+    return new Promise((resolve, reject) => {
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", "vocab_v2")
+            .limit(1);
+    
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let docData = doc.data();
+                    docData.known.forEach(word => vocabularyKnown.add(word));
+                    docData.learning.forEach(word => vocabularyLearning.add(word));
+                    docData.unknown.forEach(word => vocabularyUnknown.add(word));
+                });
+                resolve();
+            })
+            .catch((error) => {
+                console.log("Error getting document:", error);
+                reject(error);
+            });
+    });
+}
+
+function initialiseVocabularyFromFireDB() {
+    p("Loading vocabulary from Fire DB");
+    let user = firebase.auth().currentUser;
+    return Promise.all([
+        loadVocabularyFromFireDB(lessonLanguage, user.uid)
+    ]).catch((error) => {
+        console.log("Error initializing vocabulary:", error);
+    });
+}
+
 
 
 
@@ -1225,22 +1265,37 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let docRef = dbfire.collection('vocabulary')
         .where("author_uid", "==", uid)
         .where("language", "==", lang)
+        .where("type", "==", "vocab_v2")
         .limit(1);
 
     docRef.get()
         .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
+            if (!querySnapshot.empty) {
+                let doc = querySnapshot.docs[0];
                 let updateObject = {};
                 Object.keys(newWords).forEach(wordType => {
                     updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
                 });
-                
-                dbfire.collection('vocabulary').doc(doc.id).update(updateObject)
+
+                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
                     .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
-            });
+            } else {
+                let updateObject = {
+                    author_uid: uid,
+                    language: lang,
+                    type: "vocab_v2"
+                };
+                Object.keys(newWords).forEach(wordType => {
+                    updateObject[wordType] = newWords[wordType];
+                });
+
+                dbfire.collection('vocabulary').add(updateObject)
+                    .catch((error) => console.error(`Error adding vocabulary in Fire DB:`, error));
+            }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
 }
+
 
 
 
