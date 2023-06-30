@@ -972,7 +972,7 @@ function createFireDBDocument(collection, type, lang, uid, w) {
     }, { merge: true });
 }
 
-function loadVocabularyFromFireDB(type, lang, uid) {
+/*function loadVocabularyFromFireDB(type, lang, uid) {
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
         .where("type", "==", type)
@@ -995,9 +995,23 @@ function loadVocabularyFromFireDB(type, lang, uid) {
             if(querySnapshot.empty) {
                 return createFireDBDocument("vocabulary", type, lang, uid, []);
             }
-			
-			p("loaded");
-			p(checkWordInVocabularies("저녁이에요"));
+        });
+}*/
+
+function loadVocabularyFromFireDB(lang, uid) {
+    let docRef = dbfire.collection('vocabulary')
+        .where("author_uid", "==", uid)
+        .where("language", "==", lang)
+        .limit(1);
+
+    docRef.get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let docData = doc.data();
+                docData.known.forEach(word => vocabularyKnown.add(word));
+                docData.learning.forEach(word => vocabularyLearning.add(word));
+                docData.unknown.forEach(word => vocabularyUnknown.add(word));
+            });
         });
 }
 
@@ -1100,9 +1114,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         wordsByType[wordObj.level].push(wordObj.word);
     });
-	
-	p("saving");
-	p(checkWordInVocabularies("저녁이에요"));
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
@@ -1140,7 +1151,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     });
 }
 */
-
+/*
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     // Group words by type
     let wordsByType = {
@@ -1197,6 +1208,38 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
         vocabularySaveInProgress = false;
     });
+}
+*/
+
+function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
+    let newWords = {
+        "unknown": [],
+        "learning": [],
+        "known": []
+    };
+
+    wordsToSave.forEach((wordObj) => {
+        newWords[wordObj.level].push(wordObj.word);
+    });
+
+    let docRef = dbfire.collection('vocabulary')
+        .where("author_uid", "==", uid)
+        .where("language", "==", lang)
+        .limit(1);
+
+    docRef.get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                let updateObject = {};
+                Object.keys(newWords).forEach(wordType => {
+                    updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
+                });
+                
+                dbfire.collection('vocabulary').doc(doc.id).update(updateObject)
+                    .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
+            });
+        })
+        .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
 }
 
 
