@@ -1029,25 +1029,26 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
         // Get a reference to the document in Firestore
-        let docRef = dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("type", "==", type)
-            .where("language", "==", lang)
-            .limit(1); // assuming there's only one document per type per user per language
+        // Get a reference to the document in Firestore
+let docRef = dbfire.collection('vocabulary')
+    .where("author_uid", "==", uid)
+    .where("type", "==", type)
+    .where("language", "==", lang)
+    .limit(1); // assuming there's only one document per type per user per language
 
-        docRef.get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // Update the document in Firestore
-                    dbfire.collection('vocabulary').doc(doc.id).set({
-                        words: wordsByType[type]
-                    }, { merge: true })
-                    //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-					.then(() => console.log(printFireDBVocabItems(uid, "korean")))
-                    .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
-                });
+docRef.get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // Update the document in Firestore
+            dbfire.collection('vocabulary').doc(doc.id).update({
+                words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
             })
-            .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
+            .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+            .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
+        });
+    })
+    .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
+
 			
 			vocabularySaveInProgress = false;
     });
