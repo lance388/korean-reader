@@ -909,6 +909,9 @@ function initialiseVocabularyFromFireDB() {
         loadVocabularyFromFireDB("known", lessonLanguage, user.uid),
         loadVocabularyFromFireDB("learning", lessonLanguage, user.uid),
         loadVocabularyFromFireDB("unknown", lessonLanguage, user.uid)
+		p("1 "+vocabularyKnown);
+		p("2 "+vocabularyLearning);
+		p("3 "+vocabularyUnknown);
     ]);
 }
 
