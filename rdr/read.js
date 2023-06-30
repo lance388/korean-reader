@@ -154,14 +154,15 @@ function initialiseCredentials() {
             } catch (err) {
                 reject(err);
             }
-			printFireDBVocabItems(user.uid);
+			printFireDBVocabItems(user.uid, lessonLanguage);
         });
     });
 }
 
-function printFireDBVocabItems(uid) {
+function printFireDBVocabItems(uid,lang) {
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
+		.where("author_language", "==", lang)
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
@@ -913,7 +914,6 @@ function loadVocabularyFromFireDB(type, lang, uid) {
                         break;
                     case "learning":
                         doc.data().words.forEach(word => vocabularyLearning.add(word));
-						p("word :"+word);
                         break;
                     case "unknown":
                         doc.data().words.forEach(word => vocabularyUnknown.add(word));
