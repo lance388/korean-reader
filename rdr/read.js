@@ -995,7 +995,7 @@ function loadVocabularyFromFireDB(type, lang, uid) {
             }
 			
 			p("loaded");
-			checkWordInVocabularies("저녁이에요");
+			p(checkWordInVocabularies("저녁이에요"));
         });
 }
 
@@ -1097,7 +1097,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         wordsByType[wordObj.level].push(wordObj.word);
     });
 	p("start save");
-	checkWordInVocabularies("저녁이에요");
+	p(checkWordInVocabularies("저녁이에요"));
 	//p("---START---");
 	//printFireDBVocabItems(uid,lang, word);
 
@@ -1122,7 +1122,7 @@ docRef.get()
                     words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
                 })
                 //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-				//.then(() => checkWordInVocabularies("저녁이에요"))
+				.then(() => p(checkWordInVocabularies("저녁이에요")))
                 .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
             }
         });
