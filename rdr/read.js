@@ -1104,8 +1104,8 @@ docRef.get()
                 dbfire.collection('vocabulary').doc(doc.id).update({
                     words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
                 })
-                //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
-				.then(() => printFireDBVocabItems(uid,lang))
+                .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+				//.then(() => printFireDBVocabItems(uid,lang))
                 .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
             }
         });
