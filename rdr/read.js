@@ -151,27 +151,24 @@ function initialiseCredentials() {
 }
 
 
-function getWordType(uid, lang, word) {
+function printFireDBVocabItems(uid,lang) {
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
-        .where("language", "==", lang)
-        .where("words", "array-contains", word)
+		.where("language", "==", lang)
         .get()
         .then(function(querySnapshot) {
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
+            querySnapshot.forEach(function(doc) {
                 const docData = doc.data();
-                return docData.type; // Return the type of the word
-            } else {
-                console.log(`No document found for word: ${word}`);
-                return null;
-            }
+                console.log(`Document ID: ${doc.id}`);
+                console.log(`Type: ${docData.type}`);
+                console.log(`Language: ${docData.language}`);
+                console.log(`Words: ${docData.words}`);
+            });
         })
         .catch(function(error) {
             console.error("Error getting documents: ", error);
         });
 }
-
 
 function onAuthStateChanged(user) {
     if (user) {
@@ -1084,7 +1081,8 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         wordsByType[wordObj.level].push(wordObj.word);
     });
 	
-	p("---START---");
+	//p("---START---");
+	//printFireDBVocabItems(uid,lang, word);
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
@@ -1106,7 +1104,8 @@ docRef.get()
                 dbfire.collection('vocabulary').doc(doc.id).update({
                     words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
                 })
-                .then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+                //.then(() => console.log(`Vocabulary of type ${type} updated successfully in Fire DB!`))
+				.then(() => printFireDBVocabItems(uid,lang))
                 .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
             }
         });
