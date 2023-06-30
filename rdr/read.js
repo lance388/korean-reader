@@ -1258,10 +1258,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         "known": []
     };
 
-    console.log("Words to save: ", wordsToSave);
-
     wordsToSave.forEach((wordObj) => {
-        console.log("Word object: ", wordObj);
         newWords[wordObj.level].push(wordObj.word);
     });
 
@@ -1274,19 +1271,24 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     docRef.get()
         .then((querySnapshot) => {
             if (!querySnapshot.empty) {
-				let doc = querySnapshot.docs[0];
-				let updateObject = {};
-				Object.keys(newWords).forEach(wordType => {
-					if (newWords[wordType].length > 0) {
-						updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
-					}
-				});
+                let doc = querySnapshot.docs[0];
+                let updateObject = {};
+                Object.keys(newWords).forEach(wordType => {
+                    if (newWords[wordType].length > 0) {
+                        // Update the correct category with new words
+                        updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
+                        
+                        // Remove these words from the other categories
+                        let otherTypes = ["unknown", "learning", "known"].filter(e => e !== wordType);
+                        otherTypes.forEach(otherType => {
+                            updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
+                        });
+                    }
+                });
 
-				console.log("Update object: ", updateObject);
-
-				dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
-					.catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
-			} else {
+                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
+                    .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
+            } else {
                 let updateObject = {
                     author_uid: uid,
                     language: lang,
@@ -1301,8 +1303,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
-        vocabularySaveInProgress = false;
+		vocabularySaveInProgress = false;
 }
+
 
 
 
