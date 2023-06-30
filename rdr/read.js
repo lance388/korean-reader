@@ -1258,7 +1258,10 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         "known": []
     };
 
+    console.log("Words to save: ", wordsToSave);
+
     wordsToSave.forEach((wordObj) => {
+        console.log("Word object: ", wordObj);
         newWords[wordObj.level].push(wordObj.word);
     });
 
@@ -1296,8 +1299,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
-		vocabularySaveInProgress = false;
+        vocabularySaveInProgress = false;
 }
+
 
 
 
