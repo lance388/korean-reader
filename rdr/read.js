@@ -1082,7 +1082,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     });
 	
 	p("---START---");
-	printFireDBVocabItems();
+	printFireDBVocabItems(uid,lang);
 
     // For each type
     ["unknown", "learning", "known"].forEach((type) => {
