@@ -1296,6 +1296,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
+		vocabularySaveInProgress = false;
 }
 
 
