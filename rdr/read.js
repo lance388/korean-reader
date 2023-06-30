@@ -34,7 +34,8 @@ const firebaseConfig = {
 
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
-	initialiseCredentials().then(() => {
+	initialiseCredentials();
+	//initialiseCredentials().then(() => {
 		//console.log("User's authentication state has been determined.");
 	//	initialise();
 	//});
