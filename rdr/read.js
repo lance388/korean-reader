@@ -830,10 +830,11 @@ function initialiseIndexedDB() {
         } else {
             var request = indexedDB.open("wordsdb", 8);
             request.onupgradeneeded = function() {
+				p("here!");
                 db = request.result;
                 if (!db.objectStoreNames.contains('wordsdb')) {
                     var store = db.createObjectStore("wordsdb", {keyPath: "word"});
-                    var appearancesIndex = store.createIndex("by_appearance", "appearance");
+                    //var appearancesIndex = store.createIndex("by_appearance", "appearance");
                 }
                 if (!db.objectStoreNames.contains('lessonsdb')) {
                     var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
