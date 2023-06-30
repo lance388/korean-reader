@@ -79,7 +79,7 @@ function initialise(){
             clearTimeout(colourisePageTimeout);
     }
 	
-
+	p("Begin initialise IndexedDB");
     initialiseIndexedDB().then(() => {
         p("Completed initialiseIndexedDB");
         return initialiseVocabulary();
@@ -1329,7 +1329,6 @@ function putVocabularyIntoIndexedDB(wordsToSave) {
 	
 	
 	let newWords = {
-        "unknown": [],
         "learning": [],
         "known": []
     };
@@ -1455,7 +1454,7 @@ function checkAndMigrateData(uid) {
                 migrationFlagRef.set({ migrated: true })
                     .catch((error) => console.error(`Error setting migration flag:`, error));
             } else {
-                console.log(`Migration has already been done for user ${uid}`);
+                p(`Migration has already been done`);
             }
         })
         .catch((error) => console.error(`Error checking migration flag:`, error));
