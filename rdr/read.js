@@ -1088,6 +1088,8 @@ function saveVocabulary(){
 	
 }
 
+
+/*
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     // Group words by type
     let wordsByType = {
@@ -1121,6 +1123,65 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                                 dbfire.collection('vocabulary').doc(doc.id).update({
                                     words: firebase.firestore.FieldValue.arrayRemove(...wordsByType[type])
                                 })
+                            }
+                        });
+
+                        // Update the document in Firestore
+                        dbfire.collection('vocabulary').doc(doc.id).update({
+                            words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
+                        })
+                        .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
+                    }
+                });
+            })
+            .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
+
+        vocabularySaveInProgress = false;
+    });
+}
+*/
+
+function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
+    // Group words by type
+    let wordsByType = {
+        "unknown": [],
+        "learning": [],
+        "known": []
+    };
+    wordsToSave.forEach((wordObj) => {
+        wordsByType[wordObj.level].push(wordObj.word);
+    });
+
+    // For each type
+    ["unknown", "learning", "known"].forEach((type) => {
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("type", "==", type)
+            .where("language", "==", lang)
+            .limit(1); 
+
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // Check if there are any words of this type to add
+                    if (wordsByType[type].length > 0) {
+                        // remove words from other types if exist
+                        ["unknown", "learning", "known"].forEach((otherType) => {
+                            if (otherType !== type) {
+                                let otherDocRef = dbfire.collection('vocabulary')
+                                    .where("author_uid", "==", uid)
+                                    .where("type", "==", otherType)
+                                    .where("language", "==", lang)
+                                    .limit(1);
+
+                                otherDocRef.get()
+                                    .then((otherQuerySnapshot) => {
+                                        otherQuerySnapshot.forEach((otherDoc) => {
+                                            dbfire.collection('vocabulary').doc(otherDoc.id).update({
+                                                words: firebase.firestore.FieldValue.arrayRemove(...wordsByType[type])
+                                            })
+                                        });
+                                    })
                             }
                         });
 
