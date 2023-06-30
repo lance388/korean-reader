@@ -60,6 +60,9 @@ function initialise(){
 	lessonWordArray=[];
 	pageMax=0;
 	lessonLanguage = "korean";
+	vocabularyLearning = new Set();
+    vocabularyKnown = new Set();
+    vocabularyUnknown = new Set();
 
     initialiseIndexedDB().then(() => {
         p("Completed initialiseIndexedDB");
@@ -822,9 +825,6 @@ function initialiseVocabularyFromIndexedDB(callback){
 function initialiseVocabularyFromIndexedDB(){
     return new Promise((resolve, reject) => {
 		p("Loading vocabulary from Indexed DB");
-        vocabularyLearning = new Set();
-        vocabularyKnown = new Set();
-        vocabularyUnknown = new Set();
         var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
         var request = objectStore.getAll();
         request.onerror = function(event) {
