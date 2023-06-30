@@ -1274,17 +1274,19 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     docRef.get()
         .then((querySnapshot) => {
             if (!querySnapshot.empty) {
-                let doc = querySnapshot.docs[0];
-                let updateObject = {};
-                Object.keys(newWords).forEach(wordType => {
-                    if (newWords[wordType].length > 0) {
-                        updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
-                    }
-                });
+				let doc = querySnapshot.docs[0];
+				let updateObject = {};
+				Object.keys(newWords).forEach(wordType => {
+					if (newWords[wordType].length > 0) {
+						updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
+					}
+				});
 
-                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
-                    .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
-            } else {
+				console.log("Update object: ", updateObject);
+
+				dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
+					.catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
+			} else {
                 let updateObject = {
                     author_uid: uid,
                     language: lang,
