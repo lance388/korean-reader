@@ -154,7 +154,7 @@ function initialiseCredentials() {
             } catch (err) {
                 reject(err);
             }
-			printFireDBVocabItems(user.uid, lessonLanguage);
+			printFireDBVocabItems(user.uid, "korean");
         });
     });
 }
@@ -162,7 +162,7 @@ function initialiseCredentials() {
 function printFireDBVocabItems(uid,lang) {
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
-		.where("author_language", "==", lang)
+		.where("language", "==", lang)
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
