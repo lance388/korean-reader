@@ -905,9 +905,7 @@ function initialiseIndexedDB() {
             p(errorMessage);
             reject(new Error(errorMessage));
         } else {
-			p("here0!");
             var request = indexedDB.open("wordsdb", 9);
-			p("here0.5!");
             request.onupgradeneeded = function() {
 				p("here1!");
                 db = request.result;
@@ -935,7 +933,6 @@ function initialiseIndexedDB() {
                 reject(new Error(errorMessage));
             };
             request.onsuccess = function() {
-				p("here2!");
                 db = request.result;
                 resolve();
             };
