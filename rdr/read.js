@@ -217,6 +217,13 @@ async function migrateData(uid, lang) {
     let types = ["known", "learning"];
     
     try {
+		
+		let docRef = dbfire.collection('vocabulary')
+        .where("author_uid", "==", uid)
+        .where("language", "==", lang)
+        .where("type", "==", "vocab_v2")
+        .limit(1);
+		
 		p("here");
 		printFireDBVocabItems(uid,lang);
 		
