@@ -38,11 +38,10 @@ const firebaseConfig = {
 
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
-	//initialiseCredentials();
-
+	initialiseCredentials();
 	//initialiseCredentials().then(() => {
 		//console.log("User's authentication state has been determined.");
-		initialise();
+	//	initialise();
 	//});
 	
 });
@@ -922,6 +921,13 @@ function initialiseIndexedDB() {
                     var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
                 }
             };
+			request.onblocked = function(event) {
+				p("Request blocked!");
+			};
+
+			request.onsuccess = function(event) {
+				p("Request succeeded!");
+			};
             request.onerror = function(event) {
                 const errorMessage = "Database error: " + event.target.errorCode;
                 p(errorMessage);
