@@ -173,7 +173,7 @@ async function onAuthStateChanged(user) {
         //logUser(user);
         displaySigninElements("signedInMode");
         signedInState="signedIn";
-		
+		//
         // Wait for the migration to finish
         await checkAndMigrateData(user.uid);
     } else {
