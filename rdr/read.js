@@ -1220,7 +1220,7 @@ function initialiseLessonText(w){
 function saveVocabulary(){
 	
 	let wordsToSave=[];
-	let wordsToDelete=[];
+	//let wordsToDelete=[];
 	let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
     wordsToUpdate.forEach(wordObj => {
 		
@@ -1241,7 +1241,8 @@ function saveVocabulary(){
 				wordsToSave.push({ word: wordText, level: "learning" });
 				break;
 			case "unknown":
-				wordsToDelete.push({ word: wordText, level: "unknown" });
+				wordsToSave.push({ word: wordText, level: "unknown" });
+				//wordsToDelete.push({ word: wordText, level: "unknown" });
 				break;
 			default: console.error("Word "+wordText+" has an invalid level.");
 		}		
@@ -1251,12 +1252,12 @@ function saveVocabulary(){
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
-		deleteVocabularyFromIndexedDB(wordsToDelete);
+		//deleteVocabularyFromIndexedDB(wordsToDelete);
 	}
 	else{
 		let user = firebase.auth().currentUser;
 		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
-		deleteVocabularyFromFireDB(wordsToDelete, lessonLanguage, user.uid);
+		//deleteVocabularyFromFireDB(wordsToDelete, lessonLanguage, user.uid);
 	}
 	
 }
@@ -1373,7 +1374,8 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let newWords = {
         "learning": [],
-        "known": []
+        "known": [],
+        "unknown": []	
     };
 
     wordsToSave.forEach((wordObj) => {
@@ -1427,7 +1429,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 
 
-function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
+/*function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
     console.log("Deleting words from fireDB");
 
     let unknownWords = wordsToDelete.map(wordObj => wordObj.word);
@@ -1457,7 +1459,7 @@ function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
-}
+}*/
 
 
 
