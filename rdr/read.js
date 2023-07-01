@@ -1220,7 +1220,7 @@ function initialiseLessonText(w){
 function saveVocabulary(){
 	
 	let wordsToSave=[];
-	//let wordsToDelete=[];
+	let wordsToDelete=[];
 	let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
     wordsToUpdate.forEach(wordObj => {
 		
@@ -1242,7 +1242,7 @@ function saveVocabulary(){
 				break;
 			case "unknown":
 				wordsToSave.push({ word: wordText, level: "unknown" });
-				//wordsToDelete.push({ word: wordText, level: "unknown" });
+				wordsToDelete.push({ word: wordText, level: "unknown" });
 				break;
 			default: console.error("Word "+wordText+" has an invalid level.");
 		}		
@@ -1252,7 +1252,7 @@ function saveVocabulary(){
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
-		//deleteVocabularyFromIndexedDB(wordsToDelete);
+		deleteVocabularyFromIndexedDB(wordsToDelete);
 	}
 	else{
 		let user = firebase.auth().currentUser;
@@ -1262,114 +1262,6 @@ function saveVocabulary(){
 	
 }
 
-
-/*
-function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
-    // Group words by type
-    let wordsByType = {
-        "unknown": [],
-        "learning": [],
-        "known": []
-    };
-    wordsToSave.forEach((wordObj) => {
-        wordsByType[wordObj.level].push(wordObj.word);
-    });
-
-    // For each type
-    ["unknown", "learning", "known"].forEach((type) => {
-        let docRef = dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("type", "==", type)
-            .where("language", "==", lang)
-            .limit(1); 
-
-        docRef.get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // Check if there are any words of this type to add
-                    if (wordsByType[type].length > 0) {
-                        // remove words from other types if exist
-                        ["unknown", "learning", "known"].forEach((otherType) => {
-                            if (otherType !== type) {
-                                dbfire.collection('vocabulary').doc(doc.id).update({
-                                    words: firebase.firestore.FieldValue.arrayRemove(...wordsByType[type])
-                                })
-                            }
-                        });
-
-                        // Update the document in Firestore
-                        dbfire.collection('vocabulary').doc(doc.id).update({
-                            words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
-                        })
-                        .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
-                    }
-                });
-            })
-            .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
-
-        vocabularySaveInProgress = false;
-    });
-}
-*/
-/*
-function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
-    // Group words by type
-    let wordsByType = {
-        "unknown": [],
-        "learning": [],
-        "known": []
-    };
-    wordsToSave.forEach((wordObj) => {
-        wordsByType[wordObj.level].push(wordObj.word);
-    });
-
-    // For each type
-    ["unknown", "learning", "known"].forEach((type) => {
-        let docRef = dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("type", "==", type)
-            .where("language", "==", lang)
-            .limit(1); 
-
-        docRef.get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // Check if there are any words of this type to add
-                    if (wordsByType[type].length > 0) {
-                        // remove words from other types if exist
-                        ["unknown", "learning", "known"].forEach((otherType) => {
-                            if (otherType !== type) {
-                                let otherDocRef = dbfire.collection('vocabulary')
-                                    .where("author_uid", "==", uid)
-                                    .where("type", "==", otherType)
-                                    .where("language", "==", lang)
-                                    .limit(1);
-
-                                otherDocRef.get()
-                                    .then((otherQuerySnapshot) => {
-                                        otherQuerySnapshot.forEach((otherDoc) => {
-                                            dbfire.collection('vocabulary').doc(otherDoc.id).update({
-                                                words: firebase.firestore.FieldValue.arrayRemove(...wordsByType[type])
-                                            })
-                                        });
-                                    })
-                            }
-                        });
-
-                        // Update the document in Firestore
-                        dbfire.collection('vocabulary').doc(doc.id).update({
-                            words: firebase.firestore.FieldValue.arrayUnion(...wordsByType[type])
-                        })
-                        .catch((error) => console.error(`Error updating vocabulary of type ${type} in Fire DB:`, error));
-                    }
-                });
-            })
-            .catch((error) => console.error(`Error retrieving vocabulary document of type ${type}:`, error));
-
-        vocabularySaveInProgress = false;
-    });
-}
-*/
 
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let newWords = {
@@ -1395,18 +1287,17 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                 let updateObject = {};
                 Object.keys(newWords).forEach(wordType => {
                     if (newWords[wordType].length > 0) {
-                        // Update the correct category with new words
-                        updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
-                        
-                        // Remove these words from the other categories
-                        let otherTypes = ["learning", "known"].filter(e => e !== wordType);
-                        otherTypes.forEach(otherType => {
-                            updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
-                        });
+                        // Remove words from "known" and "learning" if it is marked as "unknown"
+                        if (wordType === "unknown") {
+                            updateObject["known"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
+                            updateObject["learning"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
+                        } else {
+                            updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
+                        }
                     }
                 });
 
-                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
+                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true })
                     .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
             } else {
                 let updateObject = {
@@ -1423,8 +1314,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
-		vocabularySaveInProgress = false;
+    vocabularySaveInProgress = false;
 }
+
 
 
 
