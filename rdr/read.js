@@ -217,22 +217,17 @@ async function migrateData(uid, lang) {
     let types = ["known", "learning"];
     
     try {
-		
-		let docRef = dbfire.collection('vocabulary')
-        .where("author_uid", "==", uid)
-        .where("language", "==", lang)
-        .where("type", "==", "vocab_v2")
-        .limit(1);
-		
-		p("here");
-		printFireDBVocabItems(uid,lang);
-		
         for (let type of types) {
-            let querySnapshot = await dbfire.collection('vocabulary')
-                .where("author_uid", "==", uid)
-                .where("language", "==", lang)
-                .where("type", "==", type)
-                .get();
+            let querySnapshot;
+			try {
+				querySnapshot = await dbfire.collection('vocabulary')
+								.where("author_uid", "==", uid)
+								.where("language", "==", lang)
+								.where("type", "==", type)
+								.get();
+			} catch(error) {
+				console.error('Error occurred while fetching data:', error);
+			}
 
             if (querySnapshot.empty) {
                 console.log(`No documents found for type ${type}.`);
