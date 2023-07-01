@@ -211,7 +211,7 @@ function checkAndMigrateData(uid) {
 
 
 function migrateData(uid) {
-	p("Migrating data...");
+    p("Migrating data...");
     let oldTypes = ["known", "learning"];
     let fetchPromises = oldTypes.map((type) => {
         return dbfire.collection('vocabulary')
@@ -228,31 +228,37 @@ function migrateData(uid) {
             });
     });
 
-    Promise.all(fetchPromises)
-        .then(([knownWords, learningWords]) => {
-            // Create new data structure
-            let newData = {
-                "author_uid": uid,
-                "language": "korean", // or fetch it from old data
-                "type": "vocab_v2",
-                "known": knownWords,
-                "learning": learningWords
-            };
+    // Notice that this function is now wrapped in a new Promise
+    return new Promise((resolve, reject) => {
+        Promise.all(fetchPromises)
+            .then(([knownWords, learningWords]) => {
+                // Create new data structure
+                let newData = {
+                    "author_uid": uid,
+                    "language": "korean", // or fetch it from old data
+                    "type": "vocab_v2",
+                    "known": knownWords,
+                    "learning": learningWords
+                };
 
-            // Add new data structure to DB
-            return dbfire.collection('vocabulary').add(newData);
-        })
-        .then(() => {
-            // Update migration flag
-            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
-        })
-        .then(() => {
-            p("Data migration complete.");
-        })
-        .catch((error) => {
-            console.error(`Error during data migration:`, error);
-        });
+                // Add new data structure to DB
+                return dbfire.collection('vocabulary').add(newData);
+            })
+            .then(() => {
+                // Update migration flag
+                return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+            })
+            .then(() => {
+                p("Data migration complete.");
+                resolve();  // resolve the promise
+            })
+            .catch((error) => {
+                console.error(`Error during data migration:`, error);
+                reject(error); // reject the promise
+            });
+    });
 }
+
 
 
 
