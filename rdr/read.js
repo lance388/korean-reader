@@ -167,6 +167,96 @@ function initialiseCredentials() {
 }
 
 
+async function onAuthStateChanged(user) {
+    if (user) {
+        p("User has logged in.");
+        //logUser(user);
+        displaySigninElements("signedInMode");
+        signedInState="signedIn";
+		
+        // Wait for the migration to finish
+        await checkAndMigrateData(user.uid);
+    } else {
+        if (window.location.protocol === "file:") {
+            displaySigninElements("offlineMode");
+            signedInState="offline";
+        } else {
+            displaySigninElements("signedOutMode");
+            signedInState="signedOut";
+        }
+    }
+    initialise();
+}
+
+function checkAndMigrateData(uid) {
+    // Check if the migration has already been done
+    let migrationFlagRef = dbfire.collection('migrationFlags').doc(uid);
+
+    // Note the new return here
+    return migrationFlagRef.get()
+        .then((doc) => {
+            if (!doc.exists) {
+                // If the flag does not exist, run the migration
+                return migrateData(uid); // This function also needs to return a Promise
+            } else {
+                p(`Migration has already been done`);
+                return Promise.resolve(); // Resolve immediately if no migration is necessary
+            }
+        })
+        .catch((error) => {
+            console.error(`Error checking migration flag:`, error);
+            return Promise.reject(error); // Important to reject promise in case of error
+        });
+}
+
+
+function migrateData(uid) {
+	p("Migrating data...");
+    let oldTypes = ["known", "learning"];
+    let fetchPromises = oldTypes.map((type) => {
+        return dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("type", "==", type)
+            .get()
+            .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    // Assuming there is only one document of each type for each user
+                    let docData = querySnapshot.docs[0].data();
+                    return docData.words || [];
+                }
+                return [];
+            });
+    });
+
+    Promise.all(fetchPromises)
+        .then(([knownWords, learningWords]) => {
+            // Create new data structure
+            let newData = {
+                "author_uid": uid,
+                "language": "korean", // or fetch it from old data
+                "type": "vocab_v2",
+                "known": knownWords,
+                "learning": learningWords
+            };
+
+            // Add new data structure to DB
+            return dbfire.collection('vocabulary').add(newData);
+        })
+        .then(() => {
+            // Update migration flag
+            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+        })
+        .then(() => {
+            p("Data migration complete.");
+        })
+        .catch((error) => {
+            console.error(`Error during data migration:`, error);
+        });
+}
+
+
+
+
 function printFireDBVocabItems(uid,lang) {
     return dbfire.collection("vocabulary")
         .where("author_uid", "==", uid)
@@ -186,25 +276,6 @@ function printFireDBVocabItems(uid,lang) {
         });
 }
 
-function onAuthStateChanged(user) {
-    if (user) {
-        p("User has logged in.");
-        //logUser(user);
-        displaySigninElements("signedInMode");
-        signedInState="signedIn";
-		
-		checkAndMigrateData(user.uid);
-    } else {
-        if (window.location.protocol === "file:") {
-            displaySigninElements("offlineMode");
-            signedInState="offline";
-        } else {
-            displaySigninElements("signedOutMode");
-            signedInState="signedOut";
-        }
-    }
-	initialise();
-}
 
 function onNavLearnScroll(e) {
     if (scrollDebounceTimer !== null) {
@@ -1444,71 +1515,6 @@ function saveLastOpenedLessonID() {
         console.log("Last opened lesson ID saved successfully!");
     };
 }
-
-function checkAndMigrateData(uid) {
-    // Check if the migration has already been done
-    let migrationFlagRef = dbfire.collection('migrationFlags').doc(uid);
-
-    migrationFlagRef.get()
-        .then((doc) => {
-            if (!doc.exists) {
-                // If the flag does not exist, run the migration
-                migrateData(uid);
-
-                // Then set the flag
-                migrationFlagRef.set({ migrated: true })
-                    .catch((error) => console.error(`Error setting migration flag:`, error));
-            } else {
-                p(`Migration has already been done`);
-            }
-        })
-        .catch((error) => console.error(`Error checking migration flag:`, error));
-}
-
-function migrateData(uid) {
-	p("Migrating data...");
-    let oldTypes = ["known", "learning"];
-    let fetchPromises = oldTypes.map((type) => {
-        return dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("type", "==", type)
-            .get()
-            .then((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    // Assuming there is only one document of each type for each user
-                    let docData = querySnapshot.docs[0].data();
-                    return docData.words || [];
-                }
-                return [];
-            });
-    });
-
-    Promise.all(fetchPromises)
-        .then(([knownWords, learningWords]) => {
-            // Create new data structure
-            let newData = {
-                "author_uid": uid,
-                "language": "korean", // or fetch it from old data
-                "type": "vocab_v2",
-                "known": knownWords,
-                "learning": learningWords
-            };
-
-            // Add new data structure to DB
-            return dbfire.collection('vocabulary').add(newData);
-        })
-        .then(() => {
-            // Update migration flag
-            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
-        })
-        .then(() => {
-            p("Data migration complete.");
-        })
-        .catch((error) => {
-            console.error(`Error during data migration:`, error);
-        });
-}
-
 
 
 
