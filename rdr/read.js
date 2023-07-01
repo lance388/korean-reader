@@ -1429,42 +1429,27 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 // Deleting vocabulary from Firebase
 function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
-    console.log("Deleting words from fireDB");
+    let unknownWords = wordsToDelete.map(wordObj => wordObj.word);
 
-    let wordsToRemove = {
-        "unknown": []
-    };
-
-    wordsToDelete.forEach((wordObj) => {
-        wordsToRemove[wordObj.level].push(wordObj.word);
-    });
-
-    let docRef = dbfire.collection('vocabulary')
+    dbfire.collection('vocabulary')
         .where("author_uid", "==", uid)
         .where("language", "==", lang)
         .where("type", "==", "vocab_v2")
-        .limit(1);
-
-    docRef.get()
+        .limit(1)
+        .get()
         .then((querySnapshot) => {
             if (!querySnapshot.empty) {
-                let doc = querySnapshot.docs[0];
-                let updateObject = {};
-                Object.keys(wordsToRemove).forEach(wordType => {
-                    if (wordsToRemove[wordType].length > 0) {
-                        // Remove these words from the categories
-                        updateObject[wordType] = firebase.firestore.FieldValue.arrayRemove(...wordsToRemove[wordType]);
-                    }
+                let docId = querySnapshot.docs[0].id;
+                dbfire.collection('vocabulary').doc(docId).update({
+                    "unknown": firebase.firestore.FieldValue.arrayRemove(...unknownWords)
                 });
-
-                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
-                    .catch((error) => console.error(`Error removing vocabulary from Fire DB:`, error));
             } else {
                 console.error("No vocabulary document found to delete words.");
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
 }
+
 
 
 // Deleting vocabulary from IndexedDB
