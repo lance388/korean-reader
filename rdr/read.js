@@ -176,7 +176,7 @@ async function onAuthStateChanged(user) {
 		////
 		////
         // Wait for the migration to finish
-        //await checkAndMigrateData(user.uid);
+        await checkAndMigrateData(user.uid);
     } else {
         if (window.location.protocol === "file:") {
             displaySigninElements("offlineMode");
@@ -198,7 +198,7 @@ function checkAndMigrateData(uid) {
         .then((doc) => {
             if (!doc.exists) {
                 // If the flag does not exist, run the migration
-                return migrateData(uid); // This function also needs to return a Promise
+                return migrateDataInChunks(uid,500); // This function also needs to return a Promise
             } else {
                 p(`Migration has already been done`);
                 return Promise.resolve(); // Resolve immediately if no migration is necessary
@@ -210,55 +210,80 @@ function checkAndMigrateData(uid) {
         });
 }
 
+async function migrateDataInChunks(uid, batchSize) {
+    p("Migrating data in chunks...");
 
-function migrateData(uid) {
-    p("Migrating data...");
     let oldTypes = ["known", "learning"];
-    let fetchPromises = oldTypes.map((type) => {
-        return dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("type", "==", type)
-            .get()
-            .then((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    // Assuming there is only one document of each type for each user
-                    let docData = querySnapshot.docs[0].data();
-                    return docData.words || [];
-                }
-                return [];
-            });
-    });
 
-    // Notice that this function is now wrapped in a new Promise
-    return new Promise((resolve, reject) => {
-        Promise.all(fetchPromises)
-            .then(([knownWords, learningWords]) => {
-                // Create new data structure
-                let newData = {
-                    "author_uid": uid,
-                    "language": "korean", // or fetch it from old data
-                    "type": "vocab_v2",
-                    "known": knownWords,
-                    "learning": learningWords
-                };
+    // This array will store all the batch migration promises
+    let migrationPromises = [];
 
-                // Add new data structure to DB
-                return dbfire.collection('vocabulary').add(newData);
-            })
-            .then(() => {
-                // Update migration flag
-                return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
-            })
-            .then(() => {
-                p("Data migration complete.");
-                resolve();  // resolve the promise
-            })
-            .catch((error) => {
-                console.error(`Error during data migration:`, error);
-                reject(error); // reject the promise
-            });
-    });
+    for(let type of oldTypes) {
+        let lastDoc = null;
+
+        while(true) {  // We will break out of this loop from within
+            let query = dbfire.collection('vocabulary')
+                .where("author_uid", "==", uid)
+                .where("type", "==", type)
+                .orderBy('word')  // Needs to be a field that all documents have. Could be a timestamp, for instance
+                .limit(batchSize);
+
+            // If this is not the first batch, start after the last document from the previous batch
+            if(lastDoc) {
+                query = query.startAfter(lastDoc);
+            }
+
+            let batchPromise = query.get()
+                .then((querySnapshot) => {
+                    if(querySnapshot.empty) {
+                        return Promise.resolve([]);  // Resolve with an empty array
+                    }
+
+                    // Keep track of the last document in this batch
+                    lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+                    let words = [];
+                    querySnapshot.forEach((doc) => {
+                        words.push(doc.data().words);
+                    });
+
+                    return words;
+                })
+                .then((words) => {
+                    // Process this batch of words...
+
+                    // Add new data structure to DB
+                    return dbfire.collection('vocabulary').add({
+                        "author_uid": uid,
+                        "language": "korean",
+                        "type": "vocab_v2",
+                        "known": type === "known" ? words : [],
+                        "learning": type === "learning" ? words : []
+                    });
+                });
+
+            migrationPromises.push(batchPromise);
+
+            // If we fetched less than batchSize documents, we're done
+            if(querySnapshot.size < batchSize) {
+                break;
+            }
+        }
+    }
+
+    return Promise.all(migrationPromises)
+        .then(() => {
+            // Update migration flag
+            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+        })
+        .then(() => {
+            p("Data migration complete.");
+        })
+        .catch((error) => {
+            console.error(`Error during data migration:`, error);
+        });
 }
+
 
 
 
