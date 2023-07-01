@@ -217,6 +217,9 @@ async function migrateData(uid, lang) {
     let types = ["known", "learning"];
     
     try {
+		p("here");
+		printFireDBVocabItems(uid,lang);
+		
         for (let type of types) {
             let querySnapshot = await dbfire.collection('vocabulary')
                 .where("author_uid", "==", uid)
@@ -245,7 +248,7 @@ async function migrateData(uid, lang) {
         if(knownWords.length == 0 && learningWords.length == 0) {
             console.log("No documents to migrate found");
             // Update migration flag
-            await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+            //await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
 
             p("Data migration complete.");
             return; // End execution here
