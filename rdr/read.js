@@ -215,20 +215,18 @@ async function migrateDataInChunks(uid, batchSize) {
 
     let oldTypes = ["known", "learning"];
 
-    // This array will store all the batch migration promises
     let migrationPromises = [];
 
     for(let type of oldTypes) {
         let lastDoc = null;
 
-        while(true) {  // We will break out of this loop from within
+        while(true) {  
             let query = dbfire.collection('vocabulary')
                 .where("author_uid", "==", uid)
                 .where("type", "==", type)
-                .orderBy('word')  // Needs to be a field that all documents have. Could be a timestamp, for instance
+                .orderBy('word')
                 .limit(batchSize);
 
-            // If this is not the first batch, start after the last document from the previous batch
             if(lastDoc) {
                 query = query.startAfter(lastDoc);
             }
@@ -236,10 +234,9 @@ async function migrateDataInChunks(uid, batchSize) {
             let batchPromise = query.get()
                 .then((querySnapshot) => {
                     if(querySnapshot.empty) {
-                        return Promise.resolve([]);  // Resolve with an empty array
+                        return Promise.resolve([]); 
                     }
 
-                    // Keep track of the last document in this batch
                     lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
 
                     let words = [];
@@ -247,25 +244,36 @@ async function migrateDataInChunks(uid, batchSize) {
                         words.push(doc.data().words);
                     });
 
-                    return words;
-                })
-                .then((words) => {
-                    // Process this batch of words...
+                    // If we fetched less than batchSize documents, we're done
+                    if(querySnapshot.size < batchSize) {
+                        return {done: true, words: words};
+                    }
 
-                    // Add new data structure to DB
+                    return {done: false, words: words};
+                })
+                .then((result) => {
+                    if(result.done) {
+                        return dbfire.collection('vocabulary').add({
+                            "author_uid": uid,
+                            "language": "korean",
+                            "type": "vocab_v2",
+                            "known": type === "known" ? result.words : [],
+                            "learning": type === "learning" ? result.words : []
+                        });
+                    }
                     return dbfire.collection('vocabulary').add({
                         "author_uid": uid,
                         "language": "korean",
                         "type": "vocab_v2",
-                        "known": type === "known" ? words : [],
-                        "learning": type === "learning" ? words : []
+                        "known": type === "known" ? result.words : [],
+                        "learning": type === "learning" ? result.words : []
                     });
                 });
 
             migrationPromises.push(batchPromise);
 
-            // If we fetched less than batchSize documents, we're done
-            if(querySnapshot.size < batchSize) {
+            // Break the loop if done
+            if (batchPromise.done) {
                 break;
             }
         }
@@ -273,7 +281,6 @@ async function migrateDataInChunks(uid, batchSize) {
 
     return Promise.all(migrationPromises)
         .then(() => {
-            // Update migration flag
             return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
         })
         .then(() => {
@@ -283,6 +290,7 @@ async function migrateDataInChunks(uid, batchSize) {
             console.error(`Error during data migration:`, error);
         });
 }
+
 
 
 
