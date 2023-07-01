@@ -1427,8 +1427,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 
 
-// Deleting vocabulary from Firebase
 function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
+    console.log("Deleting words from fireDB");
+
     let unknownWords = wordsToDelete.map(wordObj => wordObj.word);
 
     dbfire.collection('vocabulary')
@@ -1440,15 +1441,22 @@ function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
         .then((querySnapshot) => {
             if (!querySnapshot.empty) {
                 let docId = querySnapshot.docs[0].id;
+                console.log("Deleting from document with ID:", docId);
+                console.log("Words to delete:", unknownWords);
                 dbfire.collection('vocabulary').doc(docId).update({
                     "unknown": firebase.firestore.FieldValue.arrayRemove(...unknownWords)
-                });
+                })
+                .then(() => {
+                    console.log("Deletion successful!");
+                })
+                .catch((error) => console.error(`Error removing vocabulary from Fire DB:`, error));
             } else {
                 console.error("No vocabulary document found to delete words.");
             }
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
 }
+
 
 
 
