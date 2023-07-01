@@ -1428,43 +1428,73 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 
 // Deleting vocabulary from Firebase
-function deleteVocabularyFromFireDB(wordsToDelete, lang, uid){
-	p("Deleting words from fireDB");
-  
-  wordsToDelete.forEach(wordObj => {
-    // assuming firestore is already initialized
-    firebase.firestore().collection('vocabulary').doc(uid).collection(lang)
-      .doc(wordObj.word)
-      .delete()
-      .then(() => {
-        p(`Word: ${wordObj.word} successfully deleted!`);
-      })
-      .catch((error) => {
-        console.error("Error removing word: ", error);
-      });
-  });
+function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
+    console.log("Deleting words from fireDB");
+
+    let wordsToRemove = {
+        "unknown": []
+    };
+
+    wordsToDelete.forEach((wordObj) => {
+        wordsToRemove[wordObj.level].push(wordObj.word);
+    });
+
+    let docRef = dbfire.collection('vocabulary')
+        .where("author_uid", "==", uid)
+        .where("language", "==", lang)
+        .where("type", "==", "vocab_v2")
+        .limit(1);
+
+    docRef.get()
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                let doc = querySnapshot.docs[0];
+                let updateObject = {};
+                Object.keys(wordsToRemove).forEach(wordType => {
+                    if (wordsToRemove[wordType].length > 0) {
+                        // Remove these words from the categories
+                        updateObject[wordType] = firebase.firestore.FieldValue.arrayRemove(...wordsToRemove[wordType]);
+                    }
+                });
+
+                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, {merge: true})
+                    .catch((error) => console.error(`Error removing vocabulary from Fire DB:`, error));
+            } else {
+                console.error("No vocabulary document found to delete words.");
+            }
+        })
+        .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
 }
+
 
 // Deleting vocabulary from IndexedDB
-function deleteVocabularyFromIndexedDB(wordsToDelete){
-	p("Deleting words from indexedDB");
+function deleteVocabularyFromIndexedDB(wordsToDelete) {
+    console.log("Deleting words from indexedDB");
 
-	// assuming db is an instance of an open IndexedDB database
-	let transaction = db.transaction(["vocabulary"], "readwrite");
-	let objectStore = transaction.objectStore("vocabulary");
+    let transaction = db.transaction(["wordsdb"], "readwrite");
+    let objectStore = transaction.objectStore("wordsdb");
 
-	wordsToDelete.forEach(wordObj => {
-		let request = objectStore.delete(wordObj.word);
+    wordsToDelete.forEach(wordObj => {
+        let request = objectStore.delete(wordObj.word);
 
-		request.onsuccess = function(event) {
-			p(`Word: ${wordObj.word} successfully deleted!`);
-		};
+        request.onsuccess = function(event) {
+            console.log(`Word: ${wordObj.word} successfully deleted!`);
+        };
 
-		request.onerror = function(event) {
-			console.error("Error removing word: ", event.target.errorCode);
-		};
-	});
+        request.onerror = function(event) {
+            console.error("Error removing word: ", event.target.errorCode);
+        };
+    });
+
+    transaction.oncomplete = function() {
+        console.log("All records deleted successfully!");
+    };
+
+    transaction.onerror = function() {
+        console.error("Error occurred when deleting records:", transaction.error);
+    };
 }
+
 
 
 
