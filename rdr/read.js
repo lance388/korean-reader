@@ -189,7 +189,7 @@ async function onAuthStateChanged(user) {
     initialise();
 }
 
-function checkAndMigrateData(uid) {
+function checkAndMigrateData(lang, uid) {
     // Check if the migration has already been done
     let migrationFlagRef = dbfire.collection('migrationFlags').doc(uid);
 
@@ -198,7 +198,7 @@ function checkAndMigrateData(uid) {
         .then((doc) => {
             if (!doc.exists) {
                 // If the flag does not exist, run the migration
-                return migrateDataInChunks(uid,500); // This function also needs to return a Promise
+                return migrateData(lang, uid); // This function also needs to return a Promise
             } else {
                 p(`Migration has already been done`);
                 return Promise.resolve(); // Resolve immediately if no migration is necessary
@@ -210,55 +210,35 @@ function checkAndMigrateData(uid) {
         });
 }
 
-async function migrateDataInChunks(uid, batchSize) {
-    p("Migrating data in chunks...");
-
-    let oldTypes = ["known", "learning"];
-
-    for(let type of oldTypes) {
-        let lastDoc = null;
-        let shouldContinue = true;
-
-        while(shouldContinue) {  
-            let query = dbfire.collection('vocabulary')
-                .where("author_uid", "==", uid)
-                .where("type", "==", type)
-                .orderBy('word')
-                .limit(batchSize);
-
-            if(lastDoc) {
-                query = query.startAfter(lastDoc);
-            }
-
-            let querySnapshot = await query.get();
-
-            p(`Documents retrieved for type ${type}: ${querySnapshot.size}`);  // Debugging output
-
-            if(querySnapshot.empty) {
-                break;
-            }
-
-            lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-
-            let words = [];
-            querySnapshot.forEach((doc) => {
-                words.push(doc.data().word);
+async function migrateData(uid) {
+    p("Migrating data...");
+	
+	/*
+	return new Promise((resolve, reject) => {
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", "vocab_v2")
+            .limit(1);
+    
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let docData = doc.data();
+                    docData.known.forEach(word => vocabularyKnown.add(word));
+                    docData.learning.forEach(word => vocabularyLearning.add(word));
+                    //docData.unknown.forEach(word => vocabularyUnknown.add(word));
+                });
+                resolve();
+            })
+            .catch((error) => {
+                console.log("Error getting document:", error);
+                reject(error);
             });
-
-            await dbfire.collection('vocabulary').add({
-                "author_uid": uid,
-                "language": "korean",
-                "type": "vocab_v2",
-                "known": type === "known" ? words : [],
-                "learning": type === "learning" ? words : []
-            });
-
-            shouldContinue = querySnapshot.size === batchSize;
-        }
-    }
-
+    });
+	*/
     // Update migration flag
-    await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+    //await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
     
     p("Data migration complete.");
 }
@@ -1156,11 +1136,13 @@ function initialiseVocabularyFromFireDB() {
     p("Loading vocabulary from Fire DB");
     let user = firebase.auth().currentUser;
     return Promise.all([
+        checkAndMigrateData(lessonLanguage, user.uid),
         loadVocabularyFromFireDB(lessonLanguage, user.uid)
     ]).catch((error) => {
         console.log("Error initializing vocabulary:", error);
     });
 }
+
 
 
 
