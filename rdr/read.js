@@ -907,6 +907,7 @@ function initialiseIndexedDB() {
         } else {
 			p("here0!");
             var request = indexedDB.open("wordsdb", 9);
+			p("here0.5!");
             request.onupgradeneeded = function() {
 				p("here1!");
                 db = request.result;
