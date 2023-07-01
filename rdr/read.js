@@ -1510,6 +1510,7 @@ function getLastOpenedLessonID(callback) {
             callback(request.result.lessonID);
         } else {
             p("No last opened lesson ID found!");
+			window.location.href = 'content.html';
         }
     };
 }
