@@ -176,7 +176,7 @@ async function onAuthStateChanged(user) {
 		////
 		////
         // Wait for the migration to finish
-        await checkAndMigrateData(user.uid);
+        //await checkAndMigrateData(user.uid);
     } else {
         if (window.location.protocol === "file:") {
             displaySigninElements("offlineMode");
