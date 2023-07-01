@@ -1172,7 +1172,7 @@ function initialiseVocabularyFromFireDB() {
     p("Loading vocabulary from Fire DB");
     let user = firebase.auth().currentUser;
     return Promise.all([
-        checkAndMigrateData(lessonLanguage, user.uid),
+        //checkAndMigrateData(lessonLanguage, user.uid),
         loadVocabularyFromFireDB(lessonLanguage, user.uid)
     ]).catch((error) => {
         console.log("Error initializing vocabulary:", error);
