@@ -215,12 +215,11 @@ async function migrateDataInChunks(uid, batchSize) {
 
     let oldTypes = ["known", "learning"];
 
-    let migrationPromises = [];
-
     for(let type of oldTypes) {
         let lastDoc = null;
+        let shouldContinue = true;
 
-        while(true) {  
+        while(shouldContinue) {  
             let query = dbfire.collection('vocabulary')
                 .where("author_uid", "==", uid)
                 .where("type", "==", type)
@@ -231,65 +230,37 @@ async function migrateDataInChunks(uid, batchSize) {
                 query = query.startAfter(lastDoc);
             }
 
-            let batchPromise = query.get()
-                .then((querySnapshot) => {
-                    if(querySnapshot.empty) {
-                        return Promise.resolve([]); 
-                    }
+            let querySnapshot = await query.get();
 
-                    lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-
-                    let words = [];
-                    querySnapshot.forEach((doc) => {
-                        words.push(doc.data().words);
-                    });
-
-                    // If we fetched less than batchSize documents, we're done
-                    if(querySnapshot.size < batchSize) {
-                        return {done: true, words: words};
-                    }
-
-                    return {done: false, words: words};
-                })
-                .then((result) => {
-                    if(result.done) {
-                        return dbfire.collection('vocabulary').add({
-                            "author_uid": uid,
-                            "language": "korean",
-                            "type": "vocab_v2",
-                            "known": type === "known" ? result.words : [],
-                            "learning": type === "learning" ? result.words : []
-                        });
-                    }
-                    return dbfire.collection('vocabulary').add({
-                        "author_uid": uid,
-                        "language": "korean",
-                        "type": "vocab_v2",
-                        "known": type === "known" ? result.words : [],
-                        "learning": type === "learning" ? result.words : []
-                    });
-                });
-
-            migrationPromises.push(batchPromise);
-
-            // Break the loop if done
-            if (batchPromise.done) {
+            if(querySnapshot.empty) {
                 break;
             }
+
+            lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+            let words = [];
+            querySnapshot.forEach((doc) => {
+                words.push(doc.data().word);
+            });
+
+            await dbfire.collection('vocabulary').add({
+                "author_uid": uid,
+                "language": "korean",
+                "type": "vocab_v2",
+                "known": type === "known" ? words : [],
+                "learning": type === "learning" ? words : []
+            });
+
+            shouldContinue = querySnapshot.size === batchSize;
         }
     }
 
-    return Promise.all(migrationPromises)
-        .then(() => {
-            return dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
-        })
-        .then(() => {
-            p("Data migration complete.");
-        })
-        .catch((error) => {
-            console.error(`Error during data migration:`, error);
-        });
+    // Update migration flag
+    await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+    
+    p("Data migration complete.");
 }
+
 
 
 
