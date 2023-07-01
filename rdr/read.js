@@ -38,10 +38,11 @@ const firebaseConfig = {
 
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
-	initialiseCredentials();
+	//initialiseCredentials();
+
 	//initialiseCredentials().then(() => {
 		//console.log("User's authentication state has been determined.");
-	//	initialise();
+		initialise();
 	//});
 	
 });
@@ -898,9 +899,7 @@ function colourisePage() {
 }
 
 function initialiseIndexedDB() {
-	p("here-2!");
     return new Promise((resolve, reject) => {
-		p("here-1!");
         if (!window.indexedDB) {
             const errorMessage = "Your browser doesn't support a stable version of IndexedDB";
             alert(errorMessage);
