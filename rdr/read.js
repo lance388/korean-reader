@@ -210,38 +210,69 @@ function checkAndMigrateData(lang, uid) {
         });
 }
 
-async function migrateData(uid) {
+async function migrateData(uid, lang) {
     p("Migrating data...");
-	
-	/*
-	return new Promise((resolve, reject) => {
-        let docRef = dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("language", "==", lang)
-            .where("type", "==", "vocab_v2")
-            .limit(1);
+    let knownWords = [];
+    let learningWords = [];
+    let types = ["known", "learning"];
     
-        docRef.get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let docData = doc.data();
-                    docData.known.forEach(word => vocabularyKnown.add(word));
-                    docData.learning.forEach(word => vocabularyLearning.add(word));
-                    //docData.unknown.forEach(word => vocabularyUnknown.add(word));
-                });
-                resolve();
-            })
-            .catch((error) => {
-                console.log("Error getting document:", error);
-                reject(error);
+    try {
+        for (let type of types) {
+            let querySnapshot = await dbfire.collection('vocabulary')
+                .where("author_uid", "==", uid)
+                .where("language", "==", lang)
+                .where("type", "==", type)
+                .get();
+
+            if (querySnapshot.empty) {
+                console.log(`No documents found for type ${type}.`);
+                continue;
+            }
+
+            querySnapshot.forEach((doc) => {
+                if (type === "known") {
+                    knownWords.push(doc.data().word);
+                } else if (type === "learning") {
+                    learningWords.push(doc.data().word);
+                }
             });
-    });
-	*/
-    // Update migration flag
-    //await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
-    
-    p("Data migration complete.");
+        }
+
+        // Print out the arrays
+        console.log("Known words: ", knownWords);
+        console.log("Learning words: ", learningWords);
+
+        if(knownWords.length == 0 && learningWords.length == 0) {
+            console.log("No documents to migrate found");
+            // Update migration flag
+            await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+
+            p("Data migration complete.");
+            return; // End execution here
+        }
+
+        // Here you can write these words to your new collection/document
+        // Example:
+		/*
+        await dbfire.collection('vocabulary').add({
+            "author_uid": uid,
+            "language": lang,
+            "type": "vocab_v2",
+            "known": knownWords,
+            "learning": learningWords
+        });
+		*/
+
+        // Update migration flag
+        //await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
+
+        p("Data migration complete.");
+    } catch (error) {
+        console.error("Error migrating data: ", error);
+    }
 }
+
+
 
 
 
