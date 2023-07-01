@@ -211,15 +211,17 @@ function checkAndMigrateData(uid) {
 }
 
 async function migrateDataInChunks(uid, batchSize) {
-    p("Migrating data in chunks...");
+    console.log("Migrating data in chunks...");
 
     let oldTypes = ["known", "learning"];
 
     for(let type of oldTypes) {
+        console.log(`Migrating type: ${type}`);
         let lastDoc = null;
         let shouldContinue = true;
 
         while(shouldContinue) {  
+            console.log("Starting new batch");
             let query = dbfire.collection('vocabulary')
                 .where("author_uid", "==", uid)
                 .where("type", "==", type)
@@ -233,6 +235,7 @@ async function migrateDataInChunks(uid, batchSize) {
             let querySnapshot = await query.get();
 
             if(querySnapshot.empty) {
+                console.log(`No more documents for type: ${type}`);
                 break;
             }
 
@@ -242,6 +245,9 @@ async function migrateDataInChunks(uid, batchSize) {
             querySnapshot.forEach((doc) => {
                 words.push(doc.data().word);
             });
+
+            console.log(`Batch words: ${words}`);
+            console.log(`Last document ID: ${lastDoc.id}`);
 
             await dbfire.collection('vocabulary').add({
                 "author_uid": uid,
@@ -258,8 +264,9 @@ async function migrateDataInChunks(uid, batchSize) {
     // Update migration flag
     await dbfire.collection('migrationFlags').doc(uid).set({migrated: true});
     
-    p("Data migration complete.");
+    console.log("Data migration complete.");
 }
+
 
 
 
