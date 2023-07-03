@@ -24,6 +24,9 @@ var lessonID;
 var saveTextTimer = null;
 var saveVocabularyTimer = null;
 var colourisePageTimeout = null;
+var naverDictionaryLanguage;
+var sidebarTab;
+var pendingDictionaryLookup ="";
 
 
 const firebaseConfig = {
@@ -63,8 +66,13 @@ function initialise(){
 	lessonWordArray=[];
 	pageMax=0;
 	lessonLanguage = "korean";
+	naverDictionaryLanguage="en";
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
+	document.querySelector('#dictionary-iframe').src = 'https://en.dict.naver.com/#/main';
+	pendingDictionaryLookup ="";
+
+	
     //vocabularyUnknown = new Set();
 	if (saveTextTimer !== null) {
         clearTimeout(saveTextTimer);
@@ -77,6 +85,7 @@ function initialise(){
     }
 	if (colourisePageTimeout !== null) {
             clearTimeout(colourisePageTimeout);
+			initialiseDataTables();
     }
 	
 	p("Begin initialise IndexedDB");
@@ -365,6 +374,23 @@ function onClearTextButtonClick() {
 }
 
 
+function onStatisticsTabButtonClick() {
+    sidebarTab = "statistics";
+	p("Statistics tab opened");
+}
+
+function onDictionaryTabButtonClick() {
+    sidebarTab = "dictionary";
+	handleDictionaryLookup();
+	p("Dictionary tab opened");
+}
+
+function onWordlistTabButtonClick() {
+    sidebarTab = "wordlist";
+	fillWordlistTable();
+	p("Wordlist tab opened");
+}
+
 
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
@@ -374,7 +400,13 @@ function initialiseUI(){
 		  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
 		  var navLearnTab = document.getElementById('nav-learn-tab');
 		  var clearTextButton = document.getElementById('nav-clear-tab');
+		  var statisticsTabButton = document.getElementById('statistics-tab');;
+		  var wordlistTabButton = document.getElementById('wordlist-tab');
+		  var dictionaryTabButton = document.getElementById('dictionary-tab');
 		  
+		  statisticsTabButton.removeEventListener('click',onStatisticsTabButtonClick);
+		  wordlistTabButton.removeEventListener('click',onWordlistTabButtonClick);
+		  dictionaryTabButton.removeEventListener('click',onDictionaryTabButtonClick);
 		navLearn.removeEventListener('scroll', onNavLearnScroll);
         textareaFullscreenButton.removeEventListener('click', onTextareaFullscreenButtonClick);
         sidebarFullscreenButton.removeEventListener('click', onSidebarFullscreenButtonClick);
@@ -385,8 +417,13 @@ function initialiseUI(){
         textareaFullscreenButton.addEventListener('click', onTextareaFullscreenButtonClick);
         sidebarFullscreenButton.addEventListener('click', onSidebarFullscreenButtonClick);
         navLearnTab.addEventListener('show.bs.tab', onNavLearnTabShowBsTab);
-        clearTextButton.addEventListener('click', onClearTextButtonClick);		
-	
+        clearTextButton.addEventListener('click', onClearTextButtonClick);
+		statisticsTabButton.addEventListener('click',onStatisticsTabButtonClick);
+		wordlistTabButton.addEventListener('click',onWordlistTabButtonClick);
+		dictionaryTabButton.addEventListener('click',onDictionaryTabButtonClick);
+		
+		
+		document.getElementById('dictionary-tab').click();
 		  
 		  lessonID = sessionStorage.getItem('lessonID');
 			if(lessonID) {
@@ -822,6 +859,8 @@ function handleWordClick(word) {
 		saveVocabularyTimer = setTimeout(saveVocabulary, saveVocabularyTimeout); 
         
     }
+	pendingDictionaryLookup=word;
+	handleDictionaryLookup();
 }
 
 function promoteOneLevel(word){
@@ -1242,7 +1281,6 @@ function saveVocabulary(){
 				break;
 			case "unknown":
 				wordsToSave.push({ word: wordText, level: "unknown" });
-				wordsToDelete.push({ word: wordText, level: "unknown" });
 				break;
 			default: console.error("Word "+wordText+" has an invalid level.");
 		}		
@@ -1252,7 +1290,7 @@ function saveVocabulary(){
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
-		deleteVocabularyFromIndexedDB(wordsToDelete);
+		//deleteVocabularyFromIndexedDB(wordsToDelete);
 	}
 	else{
 		let user = firebase.auth().currentUser;
@@ -1319,107 +1357,48 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 
 
-
-
-/*function deleteVocabularyFromFireDB(wordsToDelete, lang, uid) {
-    console.log("Deleting words from fireDB");
-
-    let unknownWords = wordsToDelete.map(wordObj => wordObj.word);
-
-    dbfire.collection('vocabulary')
-        .where("author_uid", "==", uid)
-        .where("language", "==", lang)
-        .where("type", "==", "vocab_v2")
-        .limit(1)
-        .get()
-        .then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-                let doc = querySnapshot.docs[0];
-                let updatedVocabulary = doc.data();
-
-                // Remove the words from the "unknown" array
-                updatedVocabulary.unknown = updatedVocabulary.unknown.filter(word => !unknownWords.includes(word));
-
-                // Update the document with the modified vocabulary
-                dbfire.collection('vocabulary').doc(doc.id).update(updatedVocabulary)
-                    .then(() => {
-                        console.log("Deletion successful!");
-                    })
-                    .catch((error) => console.error(`Error removing vocabulary from Fire DB:`, error));
-            } else {
-                console.error("No vocabulary document found to delete words.");
-            }
-        })
-        .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
-}*/
-
-
-
-
-
-// Deleting vocabulary from IndexedDB
-function deleteVocabularyFromIndexedDB(wordsToDelete) {
-    console.log("Deleting words from indexedDB");
-
-    let transaction = db.transaction(["wordsdb"], "readwrite");
-    let objectStore = transaction.objectStore("wordsdb");
-
-    wordsToDelete.forEach(wordObj => {
-        let request = objectStore.delete(wordObj.word);
-
-        request.onsuccess = function(event) {
-            console.log(`Word: ${wordObj.word} successfully deleted!`);
-        };
-
-        request.onerror = function(event) {
-            console.error("Error removing word: ", event.target.errorCode);
-        };
-    });
-
-    transaction.oncomplete = function() {
-        console.log("All records deleted successfully!");
-    };
-
-    transaction.onerror = function() {
-        console.error("Error occurred when deleting records:", transaction.error);
-    };
-}
-
-
-
-
 function putVocabularyIntoIndexedDB(wordsToSave) {
-	
-	
-	let newWords = {
+    let newWords = {
         "learning": [],
-        "known": []
+        "known": [],
+        "unknown": []
     };
 
     wordsToSave.forEach((wordObj) => {
         newWords[wordObj.level].push(wordObj.word);
     });
-	
-	
+
     const transaction = db.transaction(["wordsdb"], "readwrite");
     const objectStore = transaction.objectStore("wordsdb");
-    
+
     wordsToSave.forEach((record) => {
-        const request = objectStore.put(record);
-        request.onerror = function(event) {
-            console.error("Error adding record: ", record, event);
-        };
+        if(record.level === 'unknown') {
+            // If the level is 'known', delete the record instead of adding it.
+            const deleteRequest = objectStore.delete(record.word);
+            deleteRequest.onsuccess = function(event) {
+                console.log(`Word: ${record.word} successfully deleted!`);
+            };
+            deleteRequest.onerror = function(event) {
+                console.error("Error removing word: ", event.target.errorCode);
+            };
+        } else {
+            const putRequest = objectStore.put(record);
+            putRequest.onerror = function(event) {
+                console.error("Error adding record: ", record, event);
+            };
+        }
     });
 
     transaction.oncomplete = function() {
-		vocabularySaveInProgress = false;
-        console.log("All records added successfully!");
+        vocabularySaveInProgress = false;
+        console.log("All operations completed successfully!");
     };
 
     transaction.onerror = function() {
-        console.error("Error occurred when adding records:", transaction.error);
+        console.error("Error occurred when performing operations:", transaction.error);
     };
 }
+
 
 
 function getCustomLessonFromIndexedDB(i, callback) {
@@ -1503,6 +1482,75 @@ function saveLastOpenedLessonID() {
         console.log("Last opened lesson ID saved successfully!");
     };
 }
+
+function handleDictionaryLookup(){
+	if(sidebarTab === "dictionary"){
+		if(pendingDictionaryLookup!=""){
+			document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/mini/search?query="+pendingDictionaryLookup;
+		}
+	}
+}
+
+function fillWordlistTable() {
+    // Get the DataTable instance
+    var table = $('#wordlistTable').DataTable();
+
+    // Clear any existing data
+    table.clear();
+
+    // Prepare the data for table
+    lessonWordArray.forEach(function(item) {
+        // Calculate ratio and frequency
+        var ratio = item.count / lessonWordCount;
+
+		table.row.add({
+            "Count": 1,
+            "Ratio": 2, // Show ratio with 2 decimal points
+            "Word": 3,
+            "Level": 4,
+            "Frequency": 5
+        });
+		
+        // Add the data to the table
+		/*
+        table.row.add({
+            "Count": item.count,
+            "Ratio": ratio.toFixed(2), // Show ratio with 2 decimal points
+            "Word": item.word,
+            "Level": item.level,
+            "Frequency": ""
+        });
+		*/
+    });
+
+    // Redraw the table
+    table.draw();
+}
+
+function initialiseDataTables(){
+    var table;
+    if (!$.fn.DataTable.isDataTable('#wordlistTable')) {
+        // if table does not exist, initialize it with empty data
+        table = $('#wordlistTable').DataTable({
+            scrollX: false,
+            data: [], // initialize with empty array for no data
+            columns: [
+                { data: "Count" },
+                { data: "Ratio" },
+                { data: "Word" },
+                { data: "Level" },
+                { data: "Frequency" }
+            ]
+        });
+    } else {
+        // if table already exists, clear it
+        table = $('#wordlistTable').DataTable();
+        table.clear();
+    }
+    
+    table.draw();
+}
+
 
 
 
