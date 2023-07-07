@@ -208,7 +208,8 @@ html, body {
 }
 
 .clickable-word:hover {
-    color: LightSeaGreen;
+    color: black;
+	font-weight: Medium;
 }
 
 
@@ -286,7 +287,66 @@ html, body {
   font-size: 2vh;
 }
 
-#wordlist-content-area{
-	padding:5%;
+#wordlist-content-area,
+#sentences-content-area,
+#statistics-content-area{
+	padding:2%;
 }
+
+#wordlistTable {
+        width: 100%;  /* Adjust as necessary */
+}
+
+.jump {
+    color: #76A8EF;
+}
+
+#wordlistTable tbody tr:hover,
+#wordlistTable tbody tr:hover td {
+    background-color: #c2d6d6;
+    cursor: pointer;
+}
+
+.checkbox-buttons label, 
+.checkbox-buttons input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* Add a border around table cells and headers, and space out the columns */
+.unique-words-container table, .total-words-container table {
+    width: 100%; /* Make the table full width */
+    border-collapse: collapse; /* Combine borders */
+}
+
+.unique-words-container th, .unique-words-container td, 
+.total-words-container th, .total-words-container td {
+    border: 1px solid #dddddd; /* Add a border */
+    text-align: center; /* Center the text */
+    padding: 8px; /* Add some padding */
+}
+
+/* Make the column headings bold */
+.unique-words-container th, .total-words-container th {
+    font-weight: bold;
+}
+
+/* Make the titles smaller */
+.unique-words-container h2, .total-words-container h2 {
+    font-size: 1.2em;
+}
+
+/* Make the mouse hover just be a regular arrow */
+.unique-words-container table, .total-words-container table {
+    cursor: default;
+}
+
+/* On small screens, make tables more compact */
+@media only screen and (max-width: 600px) {
+    .unique-words-container th, .unique-words-container td, 
+    .total-words-container th, .total-words-container td {
+        padding: 4px;
+    }
+}
+
+
 

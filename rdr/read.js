@@ -9,6 +9,7 @@ const colouriseTimeout = 5;
 const saveVocabularyTimeout = 4000;
 const saveTextTimeout = 5000;
 var pageMax;
+var wordlistTable;
 var colourisePending;
 var colouriseInProgress;
 var vocabularySaveInProgress;
@@ -18,7 +19,7 @@ var	vocabularyLearning;
 var	vocabularyKnown;
 //var	vocabularyUnknown;
 var lessonWordArray;
-var lessonWordCount;
+var lessonTotalWordCount;
 var lessonSavingEnabled;
 var lessonID;
 var saveTextTimer = null;
@@ -27,6 +28,12 @@ var colourisePageTimeout = null;
 var naverDictionaryLanguage;
 var sidebarTab;
 var pendingDictionaryLookup ="";
+var currentJumpIndex = 0;  // to track current highlighted word
+var currentJumpWord = "";  // to track current word
+var lessonUniqueWordCount;
+var totalCounts;
+var uniqueCounts;
+var lessonSentenceArray;
 
 
 const firebaseConfig = {
@@ -62,8 +69,11 @@ function initialise(){
 	vocabularySaveInProgress = false;
 	colouriseInProgress = false;
 	colourisePending = false;
-	lessonWordCount=0;
+	lessonTotalWordCount=0;
 	lessonWordArray=[];
+	lessonSentenceArray=[];
+	totalCounts=[];
+	uniqueCounts=[];
 	pageMax=0;
 	lessonLanguage = "korean";
 	naverDictionaryLanguage="en";
@@ -71,8 +81,9 @@ function initialise(){
     vocabularyKnown = new Set();
 	document.querySelector('#dictionary-iframe').src = 'https://en.dict.naver.com/#/main';
 	pendingDictionaryLookup ="";
-
 	
+	resetJump();
+
     //vocabularyUnknown = new Set();
 	if (saveTextTimer !== null) {
         clearTimeout(saveTextTimer);
@@ -85,7 +96,6 @@ function initialise(){
     }
 	if (colourisePageTimeout !== null) {
             clearTimeout(colourisePageTimeout);
-			initialiseDataTables();
     }
 	
 	p("Begin initialise IndexedDB");
@@ -98,6 +108,7 @@ function initialise(){
     }).then(() => {
         initialiseTextSaving();
 		document.getElementById('loading-overlay').style.display = 'none';
+		initialiseDataTables();
 		 p("Initialisation complete");
     }).catch((error) => {
         console.error("An error occurred:", error);
@@ -379,6 +390,15 @@ function onStatisticsTabButtonClick() {
 	p("Statistics tab opened");
 }
 
+function onSentencesTabButtonClick() {
+    sidebarTab = "sentences";
+	//lessonSentenceArray.forEach((sentence, index) => {
+	//	p(`Sentence ${index + 1}: ${sentence}`);
+	//});
+	
+	p("Sentences tab opened");
+}
+
 function onDictionaryTabButtonClick() {
     sidebarTab = "dictionary";
 	handleDictionaryLookup();
@@ -387,7 +407,10 @@ function onDictionaryTabButtonClick() {
 
 function onWordlistTabButtonClick() {
     sidebarTab = "wordlist";
-	fillWordlistTable();
+	//if (!$.fn.DataTable.isDataTable('#wordlistTable')) {
+        // If the table does not exist, fill the table first
+    //    fillWordlistTable();
+   // }
 	p("Wordlist tab opened");
 }
 
@@ -400,13 +423,15 @@ function initialiseUI(){
 		  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
 		  var navLearnTab = document.getElementById('nav-learn-tab');
 		  var clearTextButton = document.getElementById('nav-clear-tab');
-		  var statisticsTabButton = document.getElementById('statistics-tab');;
+		  var statisticsTabButton = document.getElementById('statistics-tab');
+		  var sentencesTabButton = document.getElementById('sentences-tab');
 		  var wordlistTabButton = document.getElementById('wordlist-tab');
 		  var dictionaryTabButton = document.getElementById('dictionary-tab');
 		  
-		  statisticsTabButton.removeEventListener('click',onStatisticsTabButtonClick);
-		  wordlistTabButton.removeEventListener('click',onWordlistTabButtonClick);
-		  dictionaryTabButton.removeEventListener('click',onDictionaryTabButtonClick);
+		statisticsTabButton.removeEventListener('click',onStatisticsTabButtonClick);
+		sentencesTabButton.removeEventListener('click',onSentencesTabButtonClick);
+		wordlistTabButton.removeEventListener('click',onWordlistTabButtonClick);
+		dictionaryTabButton.removeEventListener('click',onDictionaryTabButtonClick);
 		navLearn.removeEventListener('scroll', onNavLearnScroll);
         textareaFullscreenButton.removeEventListener('click', onTextareaFullscreenButtonClick);
         sidebarFullscreenButton.removeEventListener('click', onSidebarFullscreenButtonClick);
@@ -419,6 +444,7 @@ function initialiseUI(){
         navLearnTab.addEventListener('show.bs.tab', onNavLearnTabShowBsTab);
         clearTextButton.addEventListener('click', onClearTextButtonClick);
 		statisticsTabButton.addEventListener('click',onStatisticsTabButtonClick);
+		sentencesTabButton.addEventListener('click',onSentencesTabButtonClick);
 		wordlistTabButton.addEventListener('click',onWordlistTabButtonClick);
 		dictionaryTabButton.addEventListener('click',onDictionaryTabButtonClick);
 		
@@ -448,98 +474,6 @@ function initialiseUI(){
 	resolve();
     });
 }
-
-
-/*
-function initialiseUI(){
-	return new Promise((resolve, reject) => {
-//	if (window.location.protocol === "file:") {
-//		displaySigninElements("offlineMode");
-//		p("User is running the website locally");
-//	} 
-	
-	document.getElementById('nav-learn').addEventListener('scroll', function(e) {
-		if (scrollDebounceTimer !== null) {
-            clearTimeout(scrollDebounceTimer);
-        }
-		scrollDebounceTimer = setTimeout(() => {
-			let visibleSpans = findVisibleSpans();
-			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
-			if (!colouriseInProgress) {
-                    colouriseInProgress = true;
-                    colourisePage();
-            }
-			
-		}, scrollDebounceTimeout);
-	});
-		  var sidebar = document.getElementById('sidebar');
-		  var sidebarContainer = document.querySelector('.sidebar-container');
-		  var textareaContainer = document.querySelector('.textarea-container');
-		  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
-		  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
-		  var navLearnTab = document.getElementById('nav-learn-tab');
-		  var clearTextButton = document.getElementById('nav-clear-tab');
-		  
-			
-		  textareaFullscreenButton.addEventListener('click', function() {
-			if(sidebarContainer.classList.contains('hidden')) {
-				  sidebarContainer.classList.remove('hidden');
-				  textareaContainer.classList.remove('full-width');
-				} else {
-				  sidebarContainer.classList.add('hidden');
-				  textareaContainer.classList.add('full-width');
-				  sidebarContainer.classList.remove('full-width');
-			}
-		  });
-		  
-		  sidebarFullscreenButton.addEventListener('click', function() {
-			if(textareaContainer.classList.contains('hidden')) {
-				  textareaContainer.classList.remove('hidden');
-				  sidebarContainer.classList.remove('full-width');
-				} else {
-				  textareaContainer.classList.add('hidden');
-				  sidebarContainer.classList.add('full-width');
-				  textareaContainer.classList.remove('full-width');
-			}
-		  });
-		  
-		  
-		  lessonID = sessionStorage.getItem('lessonID');
-			if(lessonID) {
-				saveLastOpenedLessonID();
-				loadLesson();
-			} else {
-				getLastOpenedLessonID(function(lastOpenedLessonID) {
-					p("lessonID: "+lessonID);
-					if(lastOpenedLessonID) {
-						lessonID = lastOpenedLessonID;
-						saveLastOpenedLessonID();
-						loadLesson();
-					} else {
-						window.location.href = 'content.html';
-					}
-				});
-			}
-
-		  
-
-
-			navLearnTab.addEventListener('show.bs.tab', function(e) {
-				p("Loading text into learn tab");
-				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
-				document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
-			});
-			
-		
-		clearTextButton.addEventListener('click', () => {
-				document.getElementById('editText').value = '';	
-				activateEditTab();	
-		});
-	
-	resolve();
-    });
-}
-*/
 
 
 window.handleCredentialResponse = (response) => {
@@ -620,7 +554,7 @@ function displaySigninElements(state)
 			break;
 			case "signedInMode":
 				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Signed in as "+firebase.auth().currentUser.displayName;
+				document.getElementById("loggedInState").innerText = "Signed in";
 				document.getElementById("loginButton").innerText = "Sign out";
 			break;
 	}
@@ -804,9 +738,39 @@ function loadTextIntoLearnTab(text, language) {
     var lessonText = [];
     words.forEach(word => {
         lessonText.push(word.textContent);
-        word.addEventListener('click', onWordClick);
+       // word.addEventListener('click', onWordClick);
     });
     initialiseLessonText(lessonText);
+	fillWordlistTable();
+	
+	words.forEach(word => {
+        word.addEventListener('click', onWordClick);
+    });
+	
+	// Split the text into sentences and check if it contains a clickable word
+	let index=1;
+	lessonSentenceArray = learnTextElement.innerHTML.split(/[.!?。？！\n]|<br>/)
+		.map(sentence => {
+			// create a temporary HTML element
+			let temp = document.createElement('div');
+			// set its innerHTML to your HTML data
+			temp.innerHTML = sentence;
+			// retrieve its innerText
+			let textContent = temp.innerText
+			const wordCount = (sentence.match(/clickable-word/g) || []).length;
+			if (wordCount > 0) {
+				let returnObj = {
+					sentence: textContent,
+					wordCount: wordCount,
+					number: index
+				};
+				index++;
+				return returnObj;
+			}
+		})
+		.filter(Boolean);
+
+	fillSentencelistTable();
 }
 
 function onWordClick() {
@@ -837,7 +801,10 @@ function findVisibleSpans() {
 }
 
 function handleWordClick(word) {
-    promoteOneLevel(word);
+	if(currentJumpWord!=""){
+			resetJump();
+	}
+    var newLevel = promoteOneLevel(word);
 	//delete colourised class from all pages
 	const pages = document.querySelectorAll('.page.colourised');
 
@@ -861,9 +828,11 @@ function handleWordClick(word) {
     }
 	pendingDictionaryLookup=word;
 	handleDictionaryLookup();
+	updateWordInTable(word,newLevel);
 }
 
 function promoteOneLevel(word){
+	var newLevel="";
 	let wordObj = lessonWordArray.find(w => w.word === word);
 	if(!wordObj){
 		console.error("Word "+word+" not found in lesson text.");
@@ -871,22 +840,26 @@ function promoteOneLevel(word){
 	
 	switch(wordObj.level){
 		case "known":
-			wordObj.level = "unknown";
+			newLevel="unknown"
+			wordObj.level = newLevel;
 			vocabularyKnown.delete(word);
 			//vocabularyUnknown.add(word);
 			break;
 		case "learning":
-			wordObj.level = "known";
+			newLevel="known"
+			wordObj.level = newLevel;
 			vocabularyLearning.delete(word);
 			vocabularyKnown.add(word);
 			break;
 		case "unknown":
-			wordObj.level = "learning";
+			newLevel="learning"
+			wordObj.level = newLevel;
 			//vocabularyUnknown.delete(word);
 			vocabularyLearning.add(word);
 			break;
 		default: console.error("Word "+word+" has an invalid level.");
 	}
+	return newLevel
 }
 
 function setActiveText(firstVisible,lastVisible){
@@ -1234,26 +1207,30 @@ function initialiseVocabulary(callback){
 }
 */
 
-function initialiseLessonText(w){
-	lessonWordCount = 0;
-	let wordCountObj = w.reduce((acc, word) => {
-		acc[word] = acc[word] ? acc[word] + 1 : 1;
-		return acc;
-	}, {});
+function initialiseLessonText(w) {
+    lessonTotalWordCount = 0;
+	lessonUniqueWordCount = 0;
+    let wordCountObj = w.reduce((acc, word) => {
+        acc[word] = acc[word] ? acc[word] + 1 : 1;
+        return acc;
+    }, {});
 
-	lessonWordArray = Object.entries(wordCountObj).map(([word, count]) => {
-		lessonWordCount+=count;
-		let level = "unknown";
-		let initialLevel = "unknown";
-		if (vocabularyLearning.has(word)) {
-			level = "learning";
-			initialLevel = "learning";
-		} else if (vocabularyKnown.has(word)) {
-			level = "known";
-			initialLevel = "known";
-		}
-		return {word, count, level, initialLevel};
-	});
+    lessonWordArray = Object.entries(wordCountObj).map(([word, count]) => {
+        lessonTotalWordCount += count;
+        let level = "unknown";
+        let initialLevel = "unknown";
+        if (vocabularyLearning.has(word)) {
+            level = "learning";
+            initialLevel = "learning";
+        } else if (vocabularyKnown.has(word)) {
+            level = "known";
+            initialLevel = "known";
+        }
+        return {word, count, level, initialLevel};
+    });
+
+    // calculate the number of unique words
+    lessonUniqueWordCount = lessonWordArray.length;
 }
 
 function saveVocabulary(){
@@ -1491,6 +1468,7 @@ function handleDictionaryLookup(){
 	}
 }
 
+/*
 function fillWordlistTable() {
     // Get the DataTable instance
     var table = $('#wordlistTable').DataTable();
@@ -1501,57 +1479,369 @@ function fillWordlistTable() {
     // Prepare the data for table
     lessonWordArray.forEach(function(item) {
         // Calculate ratio and frequency
-        var ratio = item.count / lessonWordCount;
-
-		table.row.add({
-            "Count": 1,
-            "Ratio": 2, // Show ratio with 2 decimal points
-            "Word": 3,
-            "Level": 4,
-            "Frequency": 5
-        });
+        var ratio = 100*item.count / lessonTotalWordCount;
 		
         // Add the data to the table
-		/*
+		
         table.row.add({
             "Count": item.count,
-            "Ratio": ratio.toFixed(2), // Show ratio with 2 decimal points
+            "Ratio": ratio.toFixed(2)+"%", // Show ratio with 2 decimal points
             "Word": item.word,
             "Level": item.level,
-            "Frequency": ""
+            "Frequency": 1
         });
-		*/
+		
     });
 
     // Redraw the table
     table.draw();
 }
+*/
+
+function fillWordlistTable() {
+    // Get the DataTable instance
+    var wordlistTable = $('#wordlistTable').DataTable();
+
+    // Clear any existing data
+    wordlistTable.clear();
+
+    // Prepare the data for tables
+    uniqueCounts = { unknown: 0, learning: 0, known: 0 };
+    totalCounts = { unknown: 0, learning: 0, known: 0 };
+
+    lessonWordArray.forEach(function(item) {
+        // Calculate ratio
+        var ratio = 100 * item.count / lessonTotalWordCount;
+
+        // Increase the counts
+        uniqueCounts[item.level]++;
+        totalCounts[item.level] += item.count;
+
+        // Add the data to the wordlistTable
+        wordlistTable.row.add({
+            "Count": item.count,
+            "Ratio": ratio.toFixed(2) + "%", // Show ratio with 2 decimal points
+            "Word": item.word,
+            "Level": item.level,
+            "Frequency": 1
+        });
+    });
+
+    // Add the data to the uniqueWordsTable and totalWordsTable
+    var uniqueWordsHtml = `
+        <tr>
+            <td>${uniqueCounts.unknown} (${(100 * uniqueCounts.unknown / lessonUniqueWordCount).toFixed(2)}%)</td>
+            <td>${uniqueCounts.learning} (${(100 * uniqueCounts.learning / lessonUniqueWordCount).toFixed(2)}%)</td>
+            <td>${uniqueCounts.known} (${(100 * uniqueCounts.known / lessonUniqueWordCount).toFixed(2)}%)</td>
+            <td>${lessonUniqueWordCount}</td>
+        </tr>
+    `;
+    var totalWordsHtml = `
+        <tr>
+            <td>${totalCounts.unknown} (${(100 * totalCounts.unknown / lessonTotalWordCount).toFixed(2)}%)</td>
+            <td>${totalCounts.learning} (${(100 * totalCounts.learning / lessonTotalWordCount).toFixed(2)}%)</td>
+            <td>${totalCounts.known} (${(100 * totalCounts.known / lessonTotalWordCount).toFixed(2)}%)</td>
+            <td>${lessonTotalWordCount}</td>
+        </tr>
+    `;
+    $("#uniqueWordsTable tbody").html(uniqueWordsHtml);
+    $("#totalWordsTable tbody").html(totalWordsHtml);
+
+    // Redraw the table
+    wordlistTable.draw();
+}
+
+
+
+function fillSentencelistTable() {
+    // Get the DataTable instance
+    var sentencelistTable = $('#sentencelistTable').DataTable();
+
+    // Clear any existing data
+    sentencelistTable.clear();
+	
+    //console.log("lessonSentenceArray: ", lessonSentenceArray); // debug line
+
+    lessonSentenceArray.forEach(function(item, index) {
+        //console.log("Adding row: ", item); // debug line
+        // Add the data to the sentencelistTable
+        sentencelistTable.row.add({
+            "#": item.number,
+            "Sentence": item.sentence,
+            "n": item.wordCount,
+            "?": 1,
+            "%": 1
+        })
+    });
+
+    // Redraw the table
+    sentencelistTable.draw();
+}
+
+
+
+
+function updateWordInTable(word, newLevel, oldLevel) {
+    // Get the DataTable instance
+    var table = $('#wordlistTable').DataTable();
+    var count = 0;
+
+    // Iterate over each row in the table
+    table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+        var data = this.data();
+
+        // If this row's Word matches the specified word
+        if (data.Word == word) {
+            // Update the Level of this row
+            data.Level = newLevel;
+            count = data.Count;
+
+            // Invalidate the data for this row to ensure DataTables
+            // knows the data has changed and the row should be re-drawn
+            this.invalidate();
+        }
+    });
+
+    // Update global counts
+    uniqueCounts[oldLevel]--;
+    uniqueCounts[newLevel]++;
+    totalCounts[oldLevel] -= count;
+    totalCounts[newLevel] += count;
+
+    // Redraw the summary tables
+    var uniqueWordsHtml = `
+        <tr>
+            <td>${uniqueCounts.unknown} (${(100 * uniqueCounts.unknown / lessonUniqueWordCount).toFixed(2)}%)</td>
+            <td>${uniqueCounts.learning} (${(100 * uniqueCounts.learning / lessonUniqueWordCount).toFixed(2)}%)</td>
+            <td>${uniqueCounts.known} (${(100 * uniqueCounts.known / lessonUniqueWordCount).toFixed(2)}%)</td>
+            <td>${lessonUniqueWordCount}</td>
+        </tr>
+    `;
+    var totalWordsHtml = `
+        <tr>
+            <td>${totalCounts.unknown} (${(100 * totalCounts.unknown / lessonTotalWordCount).toFixed(2)}%)</td>
+            <td>${totalCounts.learning} (${(100 * totalCounts.learning / lessonTotalWordCount).toFixed(2)}%)</td>
+            <td>${totalCounts.known} (${(100 * totalCounts.known / lessonTotalWordCount).toFixed(2)}%)</td>
+            <td>${lessonTotalWordCount}</td>
+        </tr>
+    `;
+    $("#uniqueWordsTable tbody").html(uniqueWordsHtml);
+    $("#totalWordsTable tbody").html(totalWordsHtml);
+
+    // Redraw the table to reflect the changes
+    table.draw();
+}
+
+
+
 
 function initialiseDataTables(){
+	$.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+			if (settings.nTable.id !== 'wordlistTable') {
+            // if this is not the wordlistTable, don't filter the data
+            return true;
+        }
+            var unknown = document.getElementById("unknownRadioButton").checked;
+            var learning = document.getElementById("learningRadioButton").checked;
+            var known = document.getElementById("knownRadioButton").checked;
+            
+            var level = data[3]; // Get level from the data (4th column, 0-indexed)
+
+            // Check the condition based on the level
+            if ((unknown && level == "unknown") || 
+                (learning && level == "learning") || 
+                (known && level == "known")) {
+                return true;
+            }
+            return false;
+        }
+    );
+	
+	
     var table;
     if (!$.fn.DataTable.isDataTable('#wordlistTable')) {
         // if table does not exist, initialize it with empty data
         table = $('#wordlistTable').DataTable({
+			paging: true,
+			scrollCollapse: false,
+			deferRender: true,
+			iDisplayLength: 25,
+			info: false,
+			order: [[ 0, "desc" ]],
+			select: 'single',
             scrollX: false,
-            data: [], // initialize with empty array for no data
             columns: [
                 { data: "Count" },
                 { data: "Ratio" },
-                { data: "Word" },
+                { data: "Word"},
                 { data: "Level" },
                 { data: "Frequency" }
             ]
+
         });
     } else {
         // if table already exists, clear it
         table = $('#wordlistTable').DataTable();
         table.clear();
     }
+	
+	// Add a click event listener to the table
+	$('#wordlistTable').on('click', 'tr', function() {
+		// Get the DataTable instance
+		var table = $('#wordlistTable').DataTable();
+
+		// Get the data for the clicked row
+		var data = table.row(this).data();
+
+		// Get the word from the data
+		var word = data.Word;
+		
+		jumpToWord(word);
+	});
+
+	
     
     table.draw();
+	
+		// Event listener to the checkboxes, redraw on click
+    $("input[name='status']").on("click", function () {
+        table.draw();
+    });
+	
+	//TODO get default from settings
+	document.getElementById('unknownRadioButton').checked = true;
+    document.getElementById('learningRadioButton').checked = true;
+	document.getElementById('knownRadioButton').checked = false;
+	
+	
+	
+	var table2;
+	if (!$.fn.DataTable.isDataTable('#sentencelistTable')) {
+        // if table does not exist, initialize it with empty data
+        table2 = $('#sentencelistTable').DataTable({
+			paging: true,
+			scrollCollapse: false,
+			deferRender: true,
+			iDisplayLength: 25,
+			info: false,
+			order: [[ 0, "asc" ]],
+			select: 'single',
+            scrollX: false,
+            columns: [
+                { data: "#" },
+                { data: "Sentence" },
+                { data: "n"},
+                { data: "?" },
+                { data: "%" }
+            ]
+        });
+    } else {
+        // if table already exists, clear it
+        table2 = $('#sentencelistTable').DataTable();
+        table2.clear();
+    }
+	
+	// Add a click event listener to the table
+	$('#sentencelistTable').on('click', 'tr', function() {
+		// Get the DataTable instance
+		var table2 = $('#sentencelistTable').DataTable();
+
+		// Get the data for the clicked row
+		var data = table2.row(this).data();
+
+		// Get the word from the data
+		var word = data.Sentence;
+		
+		jumpToSentence(word);
+	});
+
+	
+    
+    table2.draw();
+	
 }
 
 
+function jumpToSentence(sentence) {
+    p("Jumping to " + sentence);
+	
+    // Get all .clickable-word elements that contain the word
+    var wordElements = $("#learnText.innerText:contains('" + sentence + "')");
+	//p(document.getElementById('learnText'));
+    // If no matching elements, return
+    if (wordElements.length === 0) {
+        return;
+    }
+
+    // If it's a new word, reset the currentIndex
+    if (currentJumpWord !== sentence) {
+        currentJumpIndex = 0;
+        currentJumpWord = sentence;
+    }
+
+    // Remove highlight from all elements
+    $(".jump").removeClass("jump");
+
+    // Get the current element
+    var currentElement = $(wordElements[currentJumpIndex]);
+
+    // Scroll to the current element
+    $('#nav-learn').animate({
+    scrollTop: $('#nav-learn').scrollTop() + currentElement.position().top 
+               - $('#nav-learn').height() / 2 + currentElement.height() / 2
+}, 100);
+
+    // Highlight the current element
+    //currentElement.addClass("jump");
+
+    // Increase currentIndex by 1 for the next call
+    currentJumpIndex = (currentJumpIndex + 1) % wordElements.length;
+}
+
+
+
+function jumpToWord(word) {
+    p("Jumping to " + word);
+	
+    // Get all .clickable-word elements that contain the word
+    var wordElements = $("#learnText .page .clickable-word:contains('" + word + "')");
+
+    // If no matching elements, return
+    if (wordElements.length === 0) {
+        return;
+    }
+
+    // If it's a new word, reset the currentIndex
+    if (currentJumpWord !== word) {
+        currentJumpIndex = 0;
+        currentJumpWord = word;
+    }
+
+    // Remove highlight from all elements
+    $(".jump").removeClass("jump");
+
+    // Get the current element
+    var currentElement = $(wordElements[currentJumpIndex]);
+
+    // Scroll to the current element
+    $('#nav-learn').animate({
+    scrollTop: $('#nav-learn').scrollTop() + currentElement.position().top 
+               - $('#nav-learn').height() / 2 + currentElement.height() / 2
+}, 100);
+
+    // Highlight the current element
+    currentElement.addClass("jump");
+
+    // Increase currentIndex by 1 for the next call
+    currentJumpIndex = (currentJumpIndex + 1) % wordElements.length;
+}
+
+function resetJump(){
+	$(".jump").removeClass("jump");
+	currentJumpIndex = 0;
+    currentJumpWord = "";
+}
 
 
 

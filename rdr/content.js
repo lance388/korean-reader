@@ -159,7 +159,7 @@ function displaySigninElements(state)
 			break;
 			case "signedInMode":
 				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Signed in as "+firebase.auth().currentUser.displayName;
+				document.getElementById("loggedInState").innerText = "Signed in";
 				document.getElementById("loginButton").innerText = "Sign out";
 			break;
 	}

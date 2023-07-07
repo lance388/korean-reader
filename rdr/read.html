@@ -143,7 +143,8 @@
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
 							<a class="nav-item nav-link active" id="dictionary-tab" data-bs-toggle="tab" href="#dictionary-content-area" role="tab" aria-controls="dictionary-content-area" aria-selected="true">Dictionary</a>
 							<a class="nav-item nav-link" id="wordlist-tab" data-bs-toggle="tab" href="#wordlist-content-area" role="tab" aria-controls="wordlist-content-area" aria-selected="false">Wordlist</a>
-							<a class="nav-item nav-link" id="statistics-tab" data-bs-toggle="tab" href="#stats-content-area" role="tab" aria-controls="stats-content-area" aria-selected="false">Statistics</a>
+							<a class="nav-item nav-link" id="sentences-tab" data-bs-toggle="tab" href="#sentences-content-area" role="tab" aria-controls="sentences-content-area" aria-selected="false">Sentences</a>
+							<a hidden class="nav-item nav-link" id="statistics-tab" data-bs-toggle="tab" href="#stats-content-area" role="tab" aria-controls="stats-content-area" aria-selected="false">Statistics</a>
 						</div>
 					</div>
 					<div class="d-flex">
@@ -158,22 +159,58 @@
 					<iframe id="dictionary-iframe" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
 					</div>
 					<div class="tab-pane fade" id="wordlist-content-area" role="tabpanel" aria-labelledby="nav-wordlist-tab">
+					
+					<div class="unique-words-container">
+						<h2>Unique Word Summary</h2>
+						<table id="uniqueWordsTable" class="display">
+							<thead>
+								<tr>
+									<th>Unknown</th>
+									<th>Learning</th>
+									<th>Known</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- Table data will go here -->
+							</tbody>
+						</table>
+					</div>
+					<br>
+					<div class="total-words-container">
+						<h2>Total Word Summary</h2>
+						<table id="totalWordsTable" class="display">
+							<thead>
+								<tr>
+									<th>Unknown</th>
+									<th>Learning</th>
+									<th>Known</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- Table data will go here -->
+							</tbody>
+						</table>
+					</div>
+					<br><br>
 					<div class="checkbox-container">
 					  <div class="checkbox-buttons">
-						<label for="unknown">Unknown</label>
-						<input type="checkbox" id="unknown" name="status" value="unknown">
+						<label for="unknownRadioButton">Unknown</label>
+						<input type="checkbox" id="unknownRadioButton" name="status" value="unknown">
 					  </div>
 					  
 					  <div class="checkbox-buttons">
-						<label for="learning">Learning</label>
-						<input type="checkbox" id="learning" name="status" value="learning">
+						<label for="learningRadioButton">Learning</label>
+						<input type="checkbox" id="learningRadioButton" name="status" value="learning">
 					  </div>
 
 					  <div class="checkbox-buttons">
-						<label for="known">Known</label>
-						<input type="checkbox" id="known" name="status" value="known">
+						<label for="knownRadioButton">Known</label>
+						<input type="checkbox" id="knownRadioButton" name="status" value="known">
 					  </div>
 					</div>
+					<br>
 					<table id="wordlistTable" class="display">
 						<thead>
 							<tr>
@@ -188,6 +225,21 @@
 						</tbody>
 					</table>
 
+					</div>
+					<div class="tab-pane fade" id="sentences-content-area" role="tabpanel" aria-labelledby="nav-sentences-tab">
+					<table id="sentencelistTable" class="display">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Sentence</th>
+								<th>n</th>
+								<th>?</th>
+								<th>%</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
 					</div>
 					<div class="tab-pane fade" id="stats-content-area" role="tabpanel" aria-labelledby="nav-statistics-tab">
 					</div>
