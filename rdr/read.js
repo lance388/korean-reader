@@ -679,121 +679,6 @@ function initCustomLesson(){
 }
 
 
-/*
-function loadTextIntoLearnTab(text, language) {
-    const learnTextElement = document.getElementById('learnText');
-    let chunks = text.split(/(\s|\n)/).flatMap((chunk) => {
-        if(/\n/.test(chunk)) {
-            // If the chunk is a newline, return a <br> element
-            return '<span class="non-text"><br></span>';
-        } else if (/\s/.test(chunk)) {
-            // If the chunk is whitespace, return it as-is
-            return '<span class="non-text">&nbsp;</span>';
-        } else {
-            let subChunks;
-            // Further split the chunk into Korean and non-Korean text
-            if (language == "korean") {
-                subChunks = chunk.split(/([\uAC00-\uD7AF]+)/).filter(Boolean);
-            } 
-            // For English, include only latin letters
-            else if (language == "en") {
-                subChunks = chunk.split(/([a-zA-Z]+)/).filter(Boolean);
-            }
-            // For Chinese, include only Chinese characters
-            else if (language == "cn") {
-                subChunks = chunk.split(/([\p{Script=Han}]+)/u).filter(Boolean);
-            }
-            return subChunks.map((subChunk) => {
-                if ((language == "korean" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
-                    (language == "en" && /[a-zA-Z]/.test(subChunk)) ||
-                    (language == "cn" && /[\p{Script=Han}]/u.test(subChunk))) {
-                    // If the subChunk is in the appropriate language, wrap it in a span
-                    return `<span class="clickable-word">${subChunk}</span>`;
-                } else {
-                    // If the subChunk is not a word (or if the language is not correct), it's non-text
-                    return `<span class="non-text">${subChunk}</span>`;
-                }
-            });
-        }
-    });
-
-    // Divide the chunks into pages
-    const pages = [];
-    while (chunks.length) {
-        pages.push(chunks.splice(0, wordsPerPage));
-    }
-
-    // Clear the current content
-    learnTextElement.innerHTML = '';
-
-    // Create and render the pages
-    pages.forEach((page, index) => {
-        const pageElement = document.createElement('span');
-        pageElement.className = 'page';
-		pageElement.id = index;
-        pageElement.innerHTML = page.join('');
-        learnTextElement.appendChild(pageElement);
-    });
-	pageMax = pages.length-1;
-
-	const words = learnTextElement.querySelectorAll('.clickable-word');
-	var lessonText = [];
-	words.forEach(word => {
-		lessonText.push(word.textContent);
-		word.addEventListener('click', onWordClick);
-	});
-	initialiseLessonText(lessonText);
-	fillWordlistTable();
-
-	// construct sentences
-	let sentences = [];
-	words.forEach((word, index) => {
-		let sentenceIndex = word.dataset.sentence;
-		if(!sentences[sentenceIndex]){
-			sentences[sentenceIndex] = {
-				number: sentenceIndex,
-				sentence: word.textContent,
-				wordCount: 1,
-			};
-		} else {
-			sentences[sentenceIndex].sentence += ' ' + word.textContent;
-			sentences[sentenceIndex].wordCount += 1;
-		}
-	});
-
-	fillSentencelistTable(sentences);
-
-	// Split the text into sentences and check if it contains a clickable word
-let index=1;
-lessonSentenceArray = learnTextElement.innerHTML.split(/[.!?。？！\n]|<br>/)
-    .map(sentence => {
-        // create a temporary HTML element
-        let temp = document.createElement('div');
-        // set its innerHTML to your HTML data
-        temp.innerHTML = sentence;
-        // retrieve its innerText
-        let textContent = temp.innerText;
-        const wordCount = (sentence.match(/clickable-word/g) || []).length;
-        if (wordCount > 0) {
-            // get the position of the sentence in #nav-learn
-            // This assumes that #nav-learn contains the sentence.
-            let sentenceStartIndex = document.querySelector('#nav-learn').innerText.indexOf(textContent);
-            
-            let returnObj = {
-                sentence: textContent,
-                wordCount: wordCount,
-                number: index,
-                startIndex: sentenceStartIndex
-            };
-            index++;
-            return returnObj;
-        }
-    })
-    .filter(Boolean);
-	fillSentencelistTable();
-}
-
-*/
 
 
 function loadTextIntoLearnTab(text, language) {
@@ -801,6 +686,7 @@ function loadTextIntoLearnTab(text, language) {
     // Split the text into sentences
     let rawSentences = text.split(/(?<=[.!?。？！\n])/);
     let chunks = [];
+	sentences=[];
     let sentenceIndex = 0;
     rawSentences.forEach((sentence) => {
         let sentenceChunks = sentence.split(/(\s|\n)/).flatMap((chunk) => {
@@ -870,26 +756,34 @@ function loadTextIntoLearnTab(text, language) {
 	initialiseLessonText(lessonText);
 	fillWordlistTable();
 
-	// construct sentencs
 	words = learnTextElement.querySelectorAll('.clickable-word, .non-text');
-		sentences = [];
-		words.forEach((word, index) => {
-			let sentenceIndex = word.dataset.sentence;
+	// construct sentencs
+	words.forEach((word, index) => {
+		let sentenceIndex = word.dataset.sentence;
+		if (!sentences[sentenceIndex]) {
+			sentences[sentenceIndex] = {
+				sentenceIndex: sentenceIndex,
+				sentence: word.textContent,
+				clickableWords: word.classList.contains('clickable-word') ? [word.textContent] : [],
+			};
+		} else {
+			sentences[sentenceIndex].sentence += word.textContent;
 			if (word.classList.contains('clickable-word')) {
-				if (!sentences[sentenceIndex]) {
-					sentences[sentenceIndex] = {
-						index: sentenceIndex,
-						sentence: word.textContent,
-						wordCount: 1,
-						// startIndex: you need to decide how you want to calculate this
-					};
-				} else {
-					sentences[sentenceIndex].sentence += word.textContent;
-					sentences[sentenceIndex].wordCount++;
-				}
+				sentences[sentenceIndex].clickableWords.push(word.textContent);
 			}
-		});
-
+		}
+	});
+	
+	let currentIndex = 1; // Initialize the currentIndex
+	sentences.forEach((sentence, index) => {
+		if (sentence.clickableWords.length > 0) {
+			sentence.validSentenceIndex = currentIndex;
+			currentIndex++;
+		} else {
+			delete sentences[index]; // Remove the sentence from the array
+		}
+});
+	sentences = sentences.filter(Boolean);
 	fillSentencelistTable();
 
 }
@@ -1692,28 +1586,30 @@ function fillSentencelistTable() {
 
     sentences.forEach(function(item, index) {
         // Add the data to the sentencelistTable
-        sentencelistTable.row.add({
-            "#": item.index,
-            "Sentence": item.sentence,
-            "n": item.wordCount,
-            "?": 1,
-            "%": 1
-        });
+			sentencelistTable.row.add({
+			//	"#": item.sentenceIndex,
+				"#": item.validSentenceIndex,
+				"Sentence": item.sentence,
+				"n": item.clickableWords.length,
+				"?": 1,
+				"%": 1
+			});
     });
 
     // Redraw the table
     sentencelistTable.draw();
 
+	p(sentences);
+
     // Add a click event listener to the table rows
     $('#sentencelistTable').on('click', 'tr', function() {
-		var rowData = sentencelistTable.row(this).data();
-		//console.log('Clicked row data:', rowData);
-		var sentenceIndex = rowData['#'];
-        //var sentenceIndex = $(this).data('#');
-        //console.log('sentenceIndex:', sentenceIndex);
-        jumpToSentence(sentences[sentenceIndex]);
+        var rowData = sentencelistTable.row(this).data();
+		p(rowData);
+        var i = sentences.findIndex(item => item.validSentenceIndex === rowData['#']);
+        jumpToSentence(sentences[i].sentenceIndex);
     });
 }
+
 
 
 
@@ -1895,7 +1791,7 @@ function jumpToSentence(sentenceObject) {
     console.log("Jumping to sentence:", sentenceObject.sentence);
 	
     // Get all word elements of the sentence
-    var wordElements = $("#learnText .page .clickable-word[data-sentence='" + sentenceObject.index + "'], #learnText .page .non-text[data-sentence='" + sentenceObject.index + "']");
+    var wordElements = $("#learnText .page .clickable-word[data-sentence='" + sentenceObject.sentenceIndex + "'], #learnText .page .non-text[data-sentence='" + sentenceObject.sentenceIndex + "']");
 
 
     // If no matching elements, return
