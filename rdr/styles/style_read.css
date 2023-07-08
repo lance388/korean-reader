@@ -298,7 +298,7 @@ html, body {
 }
 
 .jump {
-    color: #76A8EF;
+    background-color: #76A8EF;
 }
 
 #wordlistTable tbody tr:hover,
