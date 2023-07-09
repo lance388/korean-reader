@@ -1585,29 +1585,36 @@ function fillSentencelistTable() {
     sentencelistTable.clear();
 
     sentences.forEach(function(item, index) {
-        // Add the data to the sentencelistTable
-			sentencelistTable.row.add({
-			//	"#": item.sentenceIndex,
-				"#": item.validSentenceIndex,
-				"Sentence": item.sentence,
-				"n": item.clickableWords.length,
-				"?": 1,
-				"%": 1
-			});
+    let questionCount = 0;
+    item.clickableWords.forEach(function(word) {
+        const matchingWord = lessonWordArray.find(function(lessonWord) {
+            return lessonWord.word === word;
+        });
+        if (matchingWord && matchingWord.level !== "known") {
+            questionCount++;
+        }
     });
+
+    // Add the data to the sentencelistTable
+    sentencelistTable.row.add({
+        "#": item.validSentenceIndex,
+        "Sentence": item.sentence,
+        "n": item.clickableWords.length,
+        "?": questionCount,
+        "%": 1
+    });
+});
 
     // Redraw the table
     sentencelistTable.draw();
 
-	p(sentences);
-
     // Add a click event listener to the table rows
-    $('#sentencelistTable').on('click', 'tr', function() {
-        var rowData = sentencelistTable.row(this).data();
-		p(rowData);
-        var i = sentences.findIndex(item => item.validSentenceIndex === rowData['#']);
-        jumpToSentence(sentences[i].sentenceIndex);
-    });
+	$('#sentencelistTable').on('click', 'tr', function() {
+		var rowData = sentencelistTable.row(this).data();
+		var thisSentence = sentences.find(item => item.validSentenceIndex === rowData["#"]);
+		jumpToSentence(thisSentence);
+	});
+
 }
 
 
@@ -1788,7 +1795,7 @@ function initialiseDataTables(){
 
 
 function jumpToSentence(sentenceObject) {
-    console.log("Jumping to sentence:", sentenceObject.sentence);
+    p("Jumping to sentence:", sentenceObject.sentence);
 	
     // Get all word elements of the sentence
     var wordElements = $("#learnText .page .clickable-word[data-sentence='" + sentenceObject.sentenceIndex + "'], #learnText .page .non-text[data-sentence='" + sentenceObject.sentenceIndex + "']");

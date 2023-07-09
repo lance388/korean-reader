@@ -298,11 +298,13 @@ html, body {
 }
 
 .jump {
-    background-color: #76A8EF;
+    color: blue;
 }
 
 #wordlistTable tbody tr:hover,
-#wordlistTable tbody tr:hover td {
+#wordlistTable tbody tr:hover td,
+#setencelistTable tbody tr:hover,
+#sentencelistTable tbody tr:hover td {
     background-color: #c2d6d6;
     cursor: pointer;
 }
