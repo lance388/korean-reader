@@ -852,7 +852,8 @@ function handleWordClick(word) {
     }
 	pendingDictionaryLookup=word;
 	handleDictionaryLookup();
-	updateWordInTable(word,newLevel);
+	updateWordInWordTable(word,newLevel);
+	updateWordInSentencesTable(word,newLevel);
 }
 
 function promoteOneLevel(word){
@@ -1577,6 +1578,9 @@ function fillWordlistTable() {
 
 
 
+
+
+
 function fillSentencelistTable() {
     // Get the DataTable instance
     var sentencelistTable = $('#sentencelistTable').DataTable();
@@ -1596,20 +1600,22 @@ sentences.forEach(function(item, index) {
         if (matchingWord) {
             let wordHtml = word;
             if (matchingWord.level === "known") {
-                wordHtml = `<span class="known">${word}</span>`;
+                //wordHtml = `<span class="known">${word}</span>`;
             } else if (matchingWord.level === "learning") {
-                wordHtml = `<span class="learning">${word}</span>`;
+                //wordHtml = `<span class="learning">${word}</span>`;
 				questionCount++;
             }
 			else{
-				wordHtml = `<span class="unknown">${word}</span>`;
+				//wordHtml = `<span class="unknown">${word}</span>`;
 				questionCount++;
 			}
             sentenceHtml = sentenceHtml.replace(word, wordHtml);
         }
     });
 	
-	let percentKnown = (1-(questionCount/sentenceLength))*100+"%"
+
+	
+	let percentKnown = ((1-(questionCount/sentenceLength))*100).toFixed(2)+"%";
 
     // Add the data to the sentencelistTable
     sentencelistTable.row.add({
@@ -1620,29 +1626,165 @@ sentences.forEach(function(item, index) {
         "%": percentKnown
     });
 });
-;
-
 	
-
     // Redraw the table
     sentencelistTable.draw();
 
+
+let currentPageRows = sentencelistTable.rows({ page: 'current' });
+
+currentPageRows.every(function() {
+  let rowData = this.data();
+  let index = rowData["#"];
+  let thisSentence = sentences.find(item => item.validSentenceIndex === index);
+  let sentenceHtml = thisSentence.sentence;
+
+  thisSentence.clickableWords.forEach(function(word) {
+    const matchingWord = lessonWordArray.find(function(lessonWord) {
+      return lessonWord.word === word;
+    });
+
+    if (matchingWord) {
+      let wordHtml = word;
+      if (matchingWord.level === "known") {
+        wordHtml = `<span class="known">${word}</span>`;
+      } else if (matchingWord.level === "learning") {
+        wordHtml = `<span class="learning">${word}</span>`;
+      } else {
+        wordHtml = `<span class="unknown">${word}</span>`;
+      }
+      sentenceHtml = sentenceHtml.replace(word, wordHtml);
+    }
+  });
+
+  // Update the "Sentence" field in the current rowData
+  rowData["Sentence"] = sentenceHtml;
+
+  // Update the data for the current row
+  this.data(rowData);
+});
+
+// Redraw only the affected rows
+//currentPageRows.draw();
+
+
+
+//$('#sentencelistTable').on('page.dt', function () {
+//	var table = $(this).DataTable();
+//	colourSentences(table);
+//});
+
+$('#sentencelistTable').on('draw.dt', function () {
+    var table = $(this).DataTable();
+    colourSentences(table);
+});
+
+
     // Add a click event listener to the table rows
-	$('#sentencelistTable').on('click', 'tr', function() {
+	$('#sentencelistTable').on('click', 'tr:not(:first)', function() {
 		var rowData = sentencelistTable.row(this).data();
 		var thisSentence = sentences.find(item => item.validSentenceIndex === rowData["#"]);
 		jumpToSentence(thisSentence);
 	});
 
+	
+
+
+}
+
+function colourSentences(table){
+	
+  let currentPageRows = table.rows({ page: 'current' });
+
+	currentPageRows.every(function() {
+	  let rowData = this.data();
+	  let index = rowData["#"];
+	  let thisSentence = sentences.find(item => item.validSentenceIndex === index);
+	  let sentenceHtml = thisSentence.sentence;
+
+	  thisSentence.clickableWords.forEach(function(word) {
+		const matchingWord = lessonWordArray.find(function(lessonWord) {
+		  return lessonWord.word === word;
+		});
+
+		if (matchingWord) {
+		  let wordHtml = word;
+		  if (matchingWord.level === "known") {
+			wordHtml = `<span class="known">${word}</span>`;
+		  } else if (matchingWord.level === "learning") {
+			wordHtml = `<span class="learning">${word}</span>`;
+		  } else {
+			wordHtml = `<span class="unknown">${word}</span>`;
+		  }
+		  sentenceHtml = sentenceHtml.replace(word, wordHtml);
+		}
+	  });
+
+	  // Update the "Sentence" field in the current rowData
+	  rowData["Sentence"] = sentenceHtml;
+
+	  // Update the data for the current row
+	  this.data(rowData);
+	});
+
+	// Redraw only the affected rows
+	//currentPageRows.draw();
+}
+
+function updateWordInSentencesTable(word, newLevel){
+	var oldLevel;
+	switch(newLevel){
+		case "learning":oldLevel="unknown";break;
+		case "unknown":oldLevel="known";break;
+		case "known":oldLevel="learning";break;
+	}
+	var table = $('#sentencelistTable').DataTable();
+	table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+        var rowData = this.data();
+        let index = rowData["#"];
+		let thisSentence = sentences.find(item => item.validSentenceIndex === index);
+		 if (thisSentence.clickableWords.includes(word)) {
+            
+			let sentenceLength = thisSentence.clickableWords.length;
+			let questionCount=0;
+			thisSentence.clickableWords.forEach(function(word) {
+				const matchingWord = lessonWordArray.find(function(lessonWord) {
+					return lessonWord.word === word;
+				});
+				if (matchingWord) {
+					if (matchingWord.level === "known") {
+					} else if (matchingWord.level === "learning") {
+						questionCount++;
+					}
+					else{
+						questionCount++;
+					}
+				}
+			});
+
+			let percentKnown = ((1-(questionCount/sentenceLength))*100).toFixed(2)+"%";
+			rowData["%"] = percentKnown;
+			rowData["?"] = questionCount;
+
+		  // Update the data for the current row
+		  this.data(rowData);
+        }
+    });
+	colourSentences(table);
 }
 
 
 
 
 
-
-
-function updateWordInTable(word, newLevel, oldLevel) {
+function updateWordInWordTable(word, newLevel) {
+	
+	var oldLevel;
+	switch(newLevel){
+		case "learning":oldLevel="unknown";break;
+		case "unknown":oldLevel="known";break;
+		case "known":oldLevel="learning";break;
+	}
     // Get the DataTable instance
     var table = $('#wordlistTable').DataTable();
     var count = 0;
@@ -1697,27 +1839,38 @@ function updateWordInTable(word, newLevel, oldLevel) {
 
 
 function initialiseDataTables(){
-	$.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-			if (settings.nTable.id !== 'wordlistTable') {
-            // if this is not the wordlistTable, don't filter the data
-            return true;
-        }
-            var unknown = document.getElementById("unknownRadioButton").checked;
-            var learning = document.getElementById("learningRadioButton").checked;
-            var known = document.getElementById("knownRadioButton").checked;
-            
-            var level = data[3]; // Get level from the data (4th column, 0-indexed)
+	$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+  if (settings.nTable.id === 'wordlistTable') {
+    var unknown = document.getElementById("unknownRadioButton").checked;
+    var learning = document.getElementById("learningRadioButton").checked;
+    var known = document.getElementById("knownRadioButton").checked;
 
-            // Check the condition based on the level
-            if ((unknown && level == "unknown") || 
-                (learning && level == "learning") || 
-                (known && level == "known")) {
-                return true;
-            }
-            return false;
-        }
-    );
+    var level = data[3]; // Get level from the data (4th column, 0-indexed)
+
+    // Check the condition based on the level
+    if ((unknown && level == "unknown") ||
+        (learning && level == "learning") ||
+        (known && level == "known")) {
+      return true;
+    }
+    return false;
+  } else if (settings.nTable.id === 'sentencelistTable') {
+    var hideKnownSentences = document.getElementById("hideKnownSentencesRadioButton").checked;
+    var percentKnown = data[4];
+
+    // Check the condition based on the percentage
+    if (!(hideKnownSentences && percentKnown == "100.00%")) {
+      return true;
+    }
+    return false;
+  } else {
+    return true;
+  }
+});
+
+	
+
+	
 	
 	
     var table;
@@ -1729,6 +1882,7 @@ function initialiseDataTables(){
 			deferRender: true,
 			iDisplayLength: 25,
 			info: false,
+			lengthChange: false,
 			order: [[ 0, "desc" ]],
 			select: 'single',
             scrollX: false,
@@ -1747,8 +1901,10 @@ function initialiseDataTables(){
         table.clear();
     }
 	
+	
+	
 	// Add a click event listener to the table
-	$('#wordlistTable').on('click', 'tr', function() {
+	$('#wordlistTable').on('click', 'tr:not(:first)', function() {
 		// Get the DataTable instance
 		var table = $('#wordlistTable').DataTable();
 
@@ -1770,10 +1926,7 @@ function initialiseDataTables(){
         table.draw();
     });
 	
-	//TODO get default from settings
-	document.getElementById('unknownRadioButton').checked = true;
-    document.getElementById('learningRadioButton').checked = true;
-	document.getElementById('knownRadioButton').checked = false;
+
 	
 	
 	
@@ -1784,9 +1937,10 @@ function initialiseDataTables(){
 			paging: true,
 			scrollCollapse: false,
 			deferRender: true,
+			lengthChange: false,
 			iDisplayLength: 25,
 			info: false,
-			order: [[ 0, "asc" ]],
+			order: [[ 4, "desc" ]],
 			select: 'single',
             scrollX: false,
             columns: [
@@ -1802,13 +1956,19 @@ function initialiseDataTables(){
         table2 = $('#sentencelistTable').DataTable();
         table2.clear();
     }
-
-
-
-
-	
     
     table2.draw();
+	
+	$("#hideKnownSentencesRadioButton").on("click", function() {
+		$('#sentencelistTable').DataTable().draw(); // redraw the table
+	});
+	
+		//TODO get default from settings
+	document.getElementById('unknownRadioButton').checked = true;
+    document.getElementById('learningRadioButton').checked = true;
+	document.getElementById('knownRadioButton').checked = false;
+	
+	document.getElementById('hideKnownSentencesRadioButton').checked = true;
 	
 }
 
@@ -1832,10 +1992,10 @@ function jumpToSentence(sentenceObject) {
 
     // Scroll to the first word element
     var firstWordElement = $(wordElements[0]);
-    $('#nav-learn').animate({
-        scrollTop: $('#nav-learn').scrollTop() + firstWordElement.position().top 
-                   - $('#nav-learn').height() / 2 + firstWordElement.height() / 2
-    }, 100);
+	$('#nav-learn').animate({
+		scrollTop: $('#nav-learn').scrollTop() + firstWordElement.position().top 
+				   - $('#nav-learn').height() / 2 + firstWordElement.height() / 2
+	}, 100);
 
     // Highlight all word elements
     wordElements.addClass("jump");
@@ -1875,6 +2035,7 @@ function jumpToWord(word) {
     scrollTop: $('#nav-learn').scrollTop() + currentElement.position().top 
                - $('#nav-learn').height() / 2 + currentElement.height() / 2
 }, 100);
+
 
     // Highlight the current element
     currentElement.addClass("jump");

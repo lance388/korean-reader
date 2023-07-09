@@ -29,33 +29,36 @@ html, body {
 	 padding:0;
 }
 
-.textarea-container{
+.textarea-container,
+.sidebar-container{
 	display: flex;
    flex-grow: 1;
    margin:0;
    padding:.3em;
 }
 
-.sidebar-container {
-    
-   margin:0;
-	padding:.3em;
+#wordlist-content-area,
+#sentences-content-area,
+#statistics-content-area,
+#nav-learn {
+    box-sizing: border-box; /* Add this */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
+    background-color: #f9f9f9; /* Light grey color for the background */
+	height:1px;
+	overflow-y: scroll;
+	margin:0;
+   padding:2%;
+	
 }
 
 
 
-.textarea-tab-content{
-	display: flex;
-   flex-grow: 1;
-   flex-direction: column;
-   margin:0;
-   padding:0;
-}
 
+.textarea-tab-content,
 .sidebararea-tab-content{
 	display: flex;
    flex-grow: 1;
-   
+   flex-direction: column;
    margin:0;
    padding:0;
 }
@@ -87,16 +90,7 @@ html, body {
 	border:0;
 }
 
-#nav-learn {
-    box-sizing: border-box; /* Add this */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
-    background-color: #f9f9f9; /* Light grey color for the background */
-	height:1px;
-	overflow-y: scroll;
-	margin:0;
-   padding:0;
-	
-}
+
 
 .edit-textarea {
     font-size: 1.5em; /* Adjust the font size to fit the container */
@@ -249,14 +243,6 @@ html, body {
     display: none;
 }
 
-#dictionary-content-area{
-	
-}
-
-#dictionary-iframe{
-
-}
-
 
 
 
@@ -287,18 +273,14 @@ html, body {
   font-size: 2vh;
 }
 
-#wordlist-content-area,
-#sentences-content-area,
-#statistics-content-area{
-	padding:2%;
-}
+
 
 #wordlistTable {
         width: 100%;  /* Adjust as necessary */
 }
 
 .jump {
-    color: blue;
+    background-color: #5a96e0;
 }
 
 #wordlistTable tbody tr:hover,
