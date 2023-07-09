@@ -380,9 +380,14 @@ function onNavLearnTabShowBsTab(e) {
 }
 
 function onClearTextButtonClick() {
-    document.getElementById('editText').value = '';	
-				activateEditTab();
+    var result = confirm('Are you sure you want to clear the text?');
+    
+    if (result) {
+        document.getElementById('editText').value = '';
+        activateEditTab();
+    }
 }
+
 
 
 function onStatisticsTabButtonClick() {
@@ -448,6 +453,11 @@ function initialiseUI(){
 		wordlistTabButton.addEventListener('click',onWordlistTabButtonClick);
 		dictionaryTabButton.addEventListener('click',onDictionaryTabButtonClick);
 		
+		
+		$('#learnText').on('click', function() {
+			resetJump();
+		});
+
 		
 		document.getElementById('dictionary-tab').click();
 		  
@@ -819,15 +829,22 @@ function findVisibleSpans() {
 }
 
 function handleWordClick(word) {
+	//if(currentJumpWord!=""){
+	//		if(word==currentJumpWord){
+	//			resetJump();
+	//			return;
+	//		}
+	//		else{
+	//			resetJump();
+	//		}
+	//}
+	
 	if(currentJumpWord!=""){
-			if(word==currentJumpWord){
-				resetJump();
-				return;
-			}
-			else{
-				resetJump();
-			}
+		resetJump();
+		return;
 	}
+	
+	
     var newLevel = promoteOneLevel(word);
 	//delete colourised class from all pages
 	const pages = document.querySelectorAll('.page.colourised');
@@ -1771,6 +1788,14 @@ function updateWordInSentencesTable(word, newLevel){
         }
     });
 	colourSentences(table);
+	// redraw the table, maintaining current paging position
+    table.draw(false);
+
+    // Check if the current page has any data
+    if (table.page.info().recordsDisplay == 0) {
+        // If not, navigate to the last page that does
+        table.page('previous').draw('page');
+    }
 }
 
 
@@ -1832,13 +1857,27 @@ function updateWordInWordTable(word, newLevel) {
     $("#totalWordsTable tbody").html(totalWordsHtml);
 
     // Redraw the table to reflect the changes
-    table.draw();
+    table.draw(false);
+
+    // Check if the current page has any data
+    if (table.page.info().recordsDisplay == 0) {
+        // If not, navigate to the last page that does
+        table.page('previous').draw('page');
+    }
 }
 
 
 
 
 function initialiseDataTables(){
+	
+			//TODO get default from settings
+	document.getElementById('unknownRadioButton').checked = true;
+    document.getElementById('learningRadioButton').checked = true;
+	document.getElementById('knownRadioButton').checked = false;
+	
+	document.getElementById('hideKnownSentencesRadioButton').checked = true;
+	
 	$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
   if (settings.nTable.id === 'wordlistTable') {
     var unknown = document.getElementById("unknownRadioButton").checked;
@@ -1913,7 +1952,7 @@ function initialiseDataTables(){
 
 		// Get the word from the data
 		var word = data.Word;
-		
+		pendingDictionaryLookup=word;
 		jumpToWord(word);
 	});
 
@@ -1963,12 +2002,7 @@ function initialiseDataTables(){
 		$('#sentencelistTable').DataTable().draw(); // redraw the table
 	});
 	
-		//TODO get default from settings
-	document.getElementById('unknownRadioButton').checked = true;
-    document.getElementById('learningRadioButton').checked = true;
-	document.getElementById('knownRadioButton').checked = false;
-	
-	document.getElementById('hideKnownSentencesRadioButton').checked = true;
+
 	
 }
 

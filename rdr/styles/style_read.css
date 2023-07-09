@@ -37,9 +37,7 @@ html, body {
    padding:.3em;
 }
 
-#wordlist-content-area,
-#sentences-content-area,
-#statistics-content-area,
+
 #nav-learn {
     box-sizing: border-box; /* Add this */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
@@ -47,8 +45,19 @@ html, body {
 	height:1px;
 	overflow-y: scroll;
 	margin:0;
-   padding:2%;
-	
+	padding:0;
+}
+
+#wordlist-content-area,
+#sentences-content-area,
+#statistics-content-area{
+	box-sizing: border-box; /* Add this */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
+    background-color: #f9f9f9; /* Light grey color for the background */
+	height:1px;
+	overflow-y: scroll;
+	margin:0;
+	padding:2%;
 }
 
 
@@ -156,7 +165,7 @@ html, body {
 }
 
 .nav-item.nav-link {
-    font-size: 1.5em;
+    font-size: 1em;
     padding: 0.5em 1em;
     border-radius: 5px;
     transition: background-color 0.3s ease;
