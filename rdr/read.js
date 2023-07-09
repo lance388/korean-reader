@@ -1584,26 +1584,45 @@ function fillSentencelistTable() {
     // Clear any existing data
     sentencelistTable.clear();
 
-    sentences.forEach(function(item, index) {
-    let questionCount = 0;
+
+sentences.forEach(function(item, index) {
+    let sentenceHtml = item.sentence;
+	let sentenceLength = item.clickableWords.length;
+	let questionCount=0;
     item.clickableWords.forEach(function(word) {
         const matchingWord = lessonWordArray.find(function(lessonWord) {
             return lessonWord.word === word;
         });
-        if (matchingWord && matchingWord.level !== "known") {
-            questionCount++;
+        if (matchingWord) {
+            let wordHtml = word;
+            if (matchingWord.level === "known") {
+                wordHtml = `<span class="known">${word}</span>`;
+            } else if (matchingWord.level === "learning") {
+                wordHtml = `<span class="learning">${word}</span>`;
+				questionCount++;
+            }
+			else{
+				wordHtml = `<span class="unknown">${word}</span>`;
+				questionCount++;
+			}
+            sentenceHtml = sentenceHtml.replace(word, wordHtml);
         }
     });
+	
+	let percentKnown = (1-(questionCount/sentenceLength))*100+"%"
 
     // Add the data to the sentencelistTable
     sentencelistTable.row.add({
         "#": item.validSentenceIndex,
-        "Sentence": item.sentence,
-        "n": item.clickableWords.length,
+        "Sentence": sentenceHtml,
+        "n": sentenceLength,
         "?": questionCount,
-        "%": 1
+        "%": percentKnown
     });
 });
+;
+
+	
 
     // Redraw the table
     sentencelistTable.draw();
