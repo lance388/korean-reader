@@ -1510,35 +1510,6 @@ function handleDictionaryLookup(){
 	}
 }
 
-/*
-function fillWordlistTable() {
-    // Get the DataTable instance
-    var table = $('#wordlistTable').DataTable();
-
-    // Clear any existing data
-    table.clear();
-
-    // Prepare the data for table
-    lessonWordArray.forEach(function(item) {
-        // Calculate ratio and frequency
-        var ratio = 100*item.count / lessonTotalWordCount;
-		
-        // Add the data to the table
-		
-        table.row.add({
-            "Count": item.count,
-            "Ratio": ratio.toFixed(2)+"%", // Show ratio with 2 decimal points
-            "Word": item.word,
-            "Level": item.level,
-            "Frequency": 1
-        });
-		
-    });
-
-    // Redraw the table
-    table.draw();
-}
-*/
 
 function fillWordlistTable() {
     // Get the DataTable instance
@@ -1565,7 +1536,7 @@ function fillWordlistTable() {
             "Ratio": ratio.toFixed(2) + "%", // Show ratio with 2 decimal points
             "Word": item.word,
             "Level": item.level,
-            "Frequency": 1
+            "Frequency": ""
         });
     });
 
@@ -1591,6 +1562,14 @@ function fillWordlistTable() {
 
     // Redraw the table
     wordlistTable.draw();
+	colourWordTable(wordlistTable);
+	//wordlistTable.draw();
+	
+	$('#wordlistTable').on('draw.dt', function () {
+		var tab = $(this).DataTable();
+		colourWordTable(tab);
+	});
+	
 }
 
 
@@ -1646,8 +1625,9 @@ sentences.forEach(function(item, index) {
 	
     // Redraw the table
     sentencelistTable.draw();
-
-
+	colourSentences(sentencelistTable);
+	//sentencelistTable.draw();
+/*
 let currentPageRows = sentencelistTable.rows({ page: 'current' });
 
 currentPageRows.every(function() {
@@ -1680,7 +1660,7 @@ currentPageRows.every(function() {
   // Update the data for the current row
   this.data(rowData);
 });
-
+*/
 // Redraw only the affected rows
 //currentPageRows.draw();
 
@@ -1741,12 +1721,45 @@ function colourSentences(table){
 	  rowData["Sentence"] = sentenceHtml;
 
 	  // Update the data for the current row
-	  this.data(rowData);
+	  this.data(rowData).invalidate();
 	});
 
 	// Redraw only the affected rows
 	//currentPageRows.draw();
 }
+
+function colourWordTable(table) {
+    let currentPageRows = table.rows({ page: 'current' });
+
+    currentPageRows.every(function() {
+        let rowData = this.data();
+		var tempElement = document.createElement('div');
+        tempElement.innerHTML = rowData["Word"];
+
+        // Get the text content of the tempElement, which will be the word without any HTML tags
+        let word = tempElement.textContent;
+
+        const matchingWord = lessonWordArray.find(function(lessonWord) {
+            return lessonWord.word === word;
+        });
+
+        if (matchingWord) {
+            let wordHtml = word;
+            if (matchingWord.level === "known") {
+                wordHtml = `<span class="known">${word}</span>`;
+            } else if (matchingWord.level === "learning") {
+                wordHtml = `<span class="learning">${word}</span>`;
+            } else {
+                wordHtml = `<span class="unknown">${word}</span>`;
+            }
+            rowData["Word"] = wordHtml;
+
+            // Update the data and invalidate the row to redraw it
+            this.data(rowData).invalidate();
+        }
+    });
+}
+
 
 function updateWordInSentencesTable(word, newLevel){
 	var oldLevel;
@@ -1789,13 +1802,13 @@ function updateWordInSentencesTable(word, newLevel){
     });
 	colourSentences(table);
 	// redraw the table, maintaining current paging position
-    table.draw(false);
+    //table.draw(false);
 
     // Check if the current page has any data
-    if (table.page.info().recordsDisplay == 0) {
-        // If not, navigate to the last page that does
-        table.page('previous').draw('page');
-    }
+    //if (table.page.info().recordsDisplay == 0) {
+    //    // If not, navigate to the last page that does
+   //    table.page('previous').draw('page');
+    //}
 }
 
 
@@ -1817,9 +1830,14 @@ function updateWordInWordTable(word, newLevel) {
     // Iterate over each row in the table
     table.rows().every(function(rowIdx, tableLoop, rowLoop) {
         var data = this.data();
+		 // Create a temporary DOM element and set its innerHTML to the data.Word
+        var tempElement = document.createElement('div');
+        tempElement.innerHTML = data.Word;
 
+        // Get the text content of the tempElement, which will be the word without any HTML tags
+        var innerWord = tempElement.textContent;
         // If this row's Word matches the specified word
-        if (data.Word == word) {
+        if (innerWord == word) {
             // Update the Level of this row
             data.Level = newLevel;
             count = data.Count;
@@ -1864,6 +1882,8 @@ function updateWordInWordTable(word, newLevel) {
         // If not, navigate to the last page that does
         table.page('previous').draw('page');
     }
+	
+	colourWordTable(table);
 }
 
 
@@ -1951,10 +1971,19 @@ function initialiseDataTables(){
 		var data = table.row(this).data();
 
 		// Get the word from the data
-		var word = data.Word;
+		var wordHtml = data.Word;
+
+		// Create a temporary DOM element and set its innerHTML to the wordHtml
+		var tempElement = document.createElement('div');
+		tempElement.innerHTML = wordHtml;
+
+		// Get the text content of the tempElement, which will be the word without any HTML tags
+		var word = tempElement.textContent;
+		
 		pendingDictionaryLookup=word;
 		jumpToWord(word);
 	});
+
 
 	
     
@@ -2045,7 +2074,9 @@ function jumpToWord(word) {
     p("Jumping to " + word);
 	
     // Get all .clickable-word elements that contain the word
-    var wordElements = $("#learnText .page .clickable-word:contains('" + word + "')");
+    var wordElements = $("#learnText .page .clickable-word").filter(function() {
+        return $(this).text() === word;
+    });
 
     // If no matching elements, return
     if (wordElements.length === 0) {
@@ -2066,10 +2097,9 @@ function jumpToWord(word) {
 
     // Scroll to the current element
     $('#nav-learn').animate({
-    scrollTop: $('#nav-learn').scrollTop() + currentElement.position().top 
-               - $('#nav-learn').height() / 2 + currentElement.height() / 2
-}, 100);
-
+        scrollTop: $('#nav-learn').scrollTop() + currentElement.position().top 
+                   - $('#nav-learn').height() / 2 + currentElement.height() / 2
+    }, 100);
 
     // Highlight the current element
     currentElement.addClass("jump");
@@ -2077,6 +2107,7 @@ function jumpToWord(word) {
     // Increase currentIndex by 1 for the next call
     currentJumpIndex = (currentJumpIndex + 1) % wordElements.length;
 }
+
 
 function resetJump(){
 	$(".jump").removeClass("jump");
