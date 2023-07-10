@@ -38,12 +38,13 @@ html, body {
 }
 
 
-#nav-learn {
+#nav-learn,
+#nav-edit {
     box-sizing: border-box; /* Add this */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
     background-color: #f9f9f9; /* Light grey color for the background */
 	height:1px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	margin:0;
 	padding:0;
 }
@@ -101,38 +102,37 @@ html, body {
 
 
 
-.edit-textarea {
-    font-size: 1.5em; /* Adjust the font size to fit the container */
-    line-height: 1.6; /* More space between lines for easier reading */
-    color: #333; /* Dark grey color for the text */
-    background-color: #f9f9f9; /* Light grey color for the background */
-	height:100%;
-	display: flex;
-    resize: none; 
-	margin:0;
-   padding:.4em;
 
-}
 
-#learnText {
+#learnText, #editText {
     flex-direction: row;
     border: 1px solid #ddd;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     box-sizing: border-box; /* add this line */
 	margin:0;
    padding:10px;
+   overflow-wrap: break-word;
+  word-wrap: break-word;
+  resize:none;
+  font-size: 1.5em; /* Adjust the font size to fit the container */
+    line-height: 1.6; /* More space between lines for easier reading */
+    color: #333; /* Dark grey color for the text */
+    background-color: #f9f9f9; /* Light grey color for the background */
+	line-height: 1.6; /* More space between lines for easier reading */
+	 
+  
 }
+
+#editText {
+    height:100%;
+}
+
 
 
 .page {
 
-	font-size: 1.5em;
-	line-height: 1.6; /* More space between lines for easier reading */
-    color: #333; /* Dark grey color for the text */
-	margin:0;
-   padding:0;
 }
 
 

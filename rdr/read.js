@@ -374,9 +374,19 @@ function onSidebarFullscreenButtonClick() {
 }
 
 function onNavLearnTabShowBsTab(e) {
-    p("Loading text into learn tab");
+    p("Opened learn tab");
 				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
 				document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
+			//	var scrollPosition = $('#editText').scrollTop();
+			//	p("edit scroll pos: "+scrollPosition);
+			//$('#nav-learn').scrollTop(scrollPosition);
+}
+
+function onNavEditTabShowBsTab(e) {
+    p("Opened edit tab");
+		//var scrollPosition = $('#nav-learn').scrollTop();
+		//p("learn scroll pos: "+scrollPosition);
+		//$('#editText').scrollTop(scrollPosition);
 }
 
 function onClearTextButtonClick() {
@@ -423,43 +433,34 @@ function onWordlistTabButtonClick() {
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
 		
-		var navLearn = document.getElementById('nav-learn');
-		  var textareaFullscreenButton = document.getElementById('textareaFullscreenButton');
-		  var sidebarFullscreenButton = document.getElementById('sideBarFullscreenButton');
-		  var navLearnTab = document.getElementById('nav-learn-tab');
-		  var clearTextButton = document.getElementById('nav-clear-tab');
-		  var statisticsTabButton = document.getElementById('statistics-tab');
-		  var sentencesTabButton = document.getElementById('sentences-tab');
-		  var wordlistTabButton = document.getElementById('wordlist-tab');
-		  var dictionaryTabButton = document.getElementById('dictionary-tab');
-		  
-		statisticsTabButton.removeEventListener('click',onStatisticsTabButtonClick);
-		sentencesTabButton.removeEventListener('click',onSentencesTabButtonClick);
-		wordlistTabButton.removeEventListener('click',onWordlistTabButtonClick);
-		dictionaryTabButton.removeEventListener('click',onDictionaryTabButtonClick);
-		navLearn.removeEventListener('scroll', onNavLearnScroll);
-        textareaFullscreenButton.removeEventListener('click', onTextareaFullscreenButtonClick);
-        sidebarFullscreenButton.removeEventListener('click', onSidebarFullscreenButtonClick);
-        navLearnTab.removeEventListener('show.bs.tab', onNavLearnTabShowBsTab);
-        clearTextButton.removeEventListener('click', onClearTextButtonClick);
+	$(function() {
+		$('#statistics-tab').off('click').on('click', onStatisticsTabButtonClick);
+		$('#sentences-tab').off('click').on('click', onSentencesTabButtonClick);
+		$('#wordlist-tab').off('click').on('click', onWordlistTabButtonClick);
+		$('#dictionary-tab').off('click').on('click', onDictionaryTabButtonClick);
+		$('#nav-learn').off('scroll').on('scroll', onNavLearnScroll);
+		$('#textareaFullscreenButton').off('click').on('click', onTextareaFullscreenButtonClick);
+		$('#sideBarFullscreenButton').off('click').on('click', onSidebarFullscreenButtonClick);
+		$('#nav-learn-tab').off('show.bs.tab').on('show.bs.tab', onNavLearnTabShowBsTab);
+		$('#nav-edit-tab').off('show.bs.tab').on('show.bs.tab', onNavEditTabShowBsTab);
+		$('#nav-clear-tab').off('click').on('click', onClearTextButtonClick);
+	});
 
-		navLearn.addEventListener('scroll', onNavLearnScroll);
-        textareaFullscreenButton.addEventListener('click', onTextareaFullscreenButtonClick);
-        sidebarFullscreenButton.addEventListener('click', onSidebarFullscreenButtonClick);
-        navLearnTab.addEventListener('show.bs.tab', onNavLearnTabShowBsTab);
-        clearTextButton.addEventListener('click', onClearTextButtonClick);
-		statisticsTabButton.addEventListener('click',onStatisticsTabButtonClick);
-		sentencesTabButton.addEventListener('click',onSentencesTabButtonClick);
-		wordlistTabButton.addEventListener('click',onWordlistTabButtonClick);
-		dictionaryTabButton.addEventListener('click',onDictionaryTabButtonClick);
 		
 		
 		$('#learnText').on('click', function() {
 			resetJump();
 		});
+		
+		$('#learnText').on('contextmenu', function(event) {
+			event.preventDefault();
+			resetJump();
+		});
+
 
 		
-		document.getElementById('dictionary-tab').click();
+		$("#dictionary-tab").trigger('click');
+		onDictionaryTabButtonClick();
 		  
 		  lessonID = sessionStorage.getItem('lessonID');
 			if(lessonID) {
@@ -612,28 +613,30 @@ function loadLesson() {
 }
 
 function activateEditTab(){
-	if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
-		document.getElementById('nav-edit-tab').classList.add('active');
-		document.getElementById('nav-edit').classList.add('show', 'active');
+    if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
+        document.getElementById('nav-edit-tab').classList.add('active');
+        document.getElementById('nav-edit').classList.add('show', 'active');
 
-		document.getElementById('nav-learn-tab').classList.remove('active');
-		document.getElementById('nav-learn').classList.remove('show', 'active');
-	}
+        document.getElementById('nav-learn-tab').classList.remove('active');
+        document.getElementById('nav-learn').classList.remove('show', 'active');
+    }
 }
 
 function activateLearnTab(){
-	if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
+    if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
 
-		document.getElementById('nav-learn-tab').classList.add('active');
-		document.getElementById('nav-learn').classList.add('show', 'active');
+        document.getElementById('nav-learn-tab').classList.add('active');
+        document.getElementById('nav-learn').classList.add('show', 'active');
 
 
-		document.getElementById('nav-edit-tab').classList.remove('active');
-		document.getElementById('nav-edit').classList.remove('show', 'active');
-	}
-	document.getElementById('nav-learn-tab').dispatchEvent(new Event('show.bs.tab'));
-	document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
+        document.getElementById('nav-edit-tab').classList.remove('active');
+        document.getElementById('nav-edit').classList.remove('show', 'active');
+    }
+    document.getElementById('nav-learn-tab').dispatchEvent(new Event('show.bs.tab'));
+
+    //document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 }
+
 
 function initPremadeLesson(title, text){
 	document.getElementById('nav-clear-tab').disabled=true;
@@ -642,6 +645,7 @@ function initPremadeLesson(title, text){
 	lessonSavingEnabled=false;
 	const textarea = document.getElementById('editText');
 	textarea.value = text;
+	
     
     textarea.dispatchEvent(new Event('input'));
 	activateLearnTab();
@@ -762,6 +766,7 @@ function loadTextIntoLearnTab(text, language) {
 	words.forEach(word => {
 		lessonText.push(word.textContent);
 		word.addEventListener('click', onWordClick);
+		word.addEventListener('contextmenu', onWordRightClick);
 	});
 	initialiseLessonText(lessonText);
 	fillWordlistTable();
@@ -805,6 +810,14 @@ function onWordClick() {
     const wordText = this.textContent;
     handleWordClick(wordText);
 }
+
+function onWordRightClick(e) {
+    e.preventDefault();
+	const wordText = this.textContent;
+	pendingDictionaryLookup=wordText;
+	handleDictionaryLookup();
+}
+
 
 function findVisibleSpans() {
     const spans = document.querySelectorAll('.page');
@@ -1140,62 +1153,6 @@ function createFireDBDocument(collection, type, lang, uid, w) {
     }, { merge: true });
 }
 
-/*function loadVocabularyFromFireDB(type, lang, uid) {
-    return dbfire.collection("vocabulary")
-        .where("author_uid", "==", uid)
-        .where("type", "==", type)
-        .where("language", "==", lang)
-        .get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                switch(type) {
-                    case "known":
-                        doc.data().words.forEach(word => vocabularyKnown.add(word));
-                        break;
-                    case "learning":
-                        doc.data().words.forEach(word => vocabularyLearning.add(word));
-                        break;
-                    case "unknown":
-                        doc.data().words.forEach(word => vocabularyUnknown.add(word));
-                        break;
-                }
-            });
-            if(querySnapshot.empty) {
-                return createFireDBDocument("vocabulary", type, lang, uid, []);
-            }
-        });
-}*/
-
-
-/*
-function loadVocabularyFromFireDB(lang, uid) {
-    let docRef = dbfire.collection('vocabulary')
-        .where("author_uid", "==", uid)
-        .where("language", "==", lang)
-		.where("type", "==", "vocab_v2")
-        .limit(1);
-
-    docRef.get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let docData = doc.data();
-                docData.known.forEach(word => vocabularyKnown.add(word));
-                docData.learning.forEach(word => vocabularyLearning.add(word));
-                docData.unknown.forEach(word => vocabularyUnknown.add(word));
-            });
-        });
-}
-
-function initialiseVocabularyFromFireDB() {
-    p("Loading vocabulary from Fire DB");
-	let user = firebase.auth().currentUser;
-    return Promise.all([
-        loadVocabularyFromFireDB("known", lessonLanguage, user.uid),
-        loadVocabularyFromFireDB("learning", lessonLanguage, user.uid),
-        loadVocabularyFromFireDB("unknown", lessonLanguage, user.uid)
-    ]);
-}
-*/
 
 function loadVocabularyFromFireDB(lang, uid) {
     return new Promise((resolve, reject) => {
@@ -1211,7 +1168,6 @@ function loadVocabularyFromFireDB(lang, uid) {
                     let docData = doc.data();
                     docData.known.forEach(word => vocabularyKnown.add(word));
                     docData.learning.forEach(word => vocabularyLearning.add(word));
-                    //docData.unknown.forEach(word => vocabularyUnknown.add(word));
                 });
                 resolve();
             })
@@ -1626,50 +1582,7 @@ sentences.forEach(function(item, index) {
     // Redraw the table
     sentencelistTable.draw();
 	colourSentences(sentencelistTable);
-	//sentencelistTable.draw();
-/*
-let currentPageRows = sentencelistTable.rows({ page: 'current' });
 
-currentPageRows.every(function() {
-  let rowData = this.data();
-  let index = rowData["#"];
-  let thisSentence = sentences.find(item => item.validSentenceIndex === index);
-  let sentenceHtml = thisSentence.sentence;
-
-  thisSentence.clickableWords.forEach(function(word) {
-    const matchingWord = lessonWordArray.find(function(lessonWord) {
-      return lessonWord.word === word;
-    });
-
-    if (matchingWord) {
-      let wordHtml = word;
-      if (matchingWord.level === "known") {
-        wordHtml = `<span class="known">${word}</span>`;
-      } else if (matchingWord.level === "learning") {
-        wordHtml = `<span class="learning">${word}</span>`;
-      } else {
-        wordHtml = `<span class="unknown">${word}</span>`;
-      }
-      sentenceHtml = sentenceHtml.replace(word, wordHtml);
-    }
-  });
-
-  // Update the "Sentence" field in the current rowData
-  rowData["Sentence"] = sentenceHtml;
-
-  // Update the data for the current row
-  this.data(rowData);
-});
-*/
-// Redraw only the affected rows
-//currentPageRows.draw();
-
-
-
-//$('#sentencelistTable').on('page.dt', function () {
-//	var table = $(this).DataTable();
-//	colourSentences(table);
-//});
 
 $('#sentencelistTable').on('draw.dt', function () {
     var table = $(this).DataTable();
@@ -1681,12 +1594,9 @@ $('#sentencelistTable').on('draw.dt', function () {
 	$('#sentencelistTable').on('click', 'tr:not(:first)', function() {
 		var rowData = sentencelistTable.row(this).data();
 		var thisSentence = sentences.find(item => item.validSentenceIndex === rowData["#"]);
+		pendingDictionaryLookup=thisSentence.sentence;
 		jumpToSentence(thisSentence);
 	});
-
-	
-
-
 }
 
 function colourSentences(table){
