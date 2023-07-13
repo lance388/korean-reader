@@ -401,11 +401,13 @@ function onClearTextButtonClick() {
 
 
 function onStatisticsTabButtonClick() {
+	toggleSidebarTab();
     sidebarTab = "statistics";
 	p("Statistics tab opened");
 }
 
 function onSentencesTabButtonClick() {
+	toggleSidebarTab();
     sidebarTab = "sentences";
 	//lessonSentenceArray.forEach((sentence, index) => {
 	//	p(`Sentence ${index + 1}: ${sentence}`);
@@ -415,12 +417,14 @@ function onSentencesTabButtonClick() {
 }
 
 function onDictionaryTabButtonClick() {
+	toggleSidebarTab();
     sidebarTab = "dictionary";
 	handleDictionaryLookup();
 	p("Dictionary tab opened");
 }
 
 function onWordlistTabButtonClick() {
+	toggleSidebarTab();
     sidebarTab = "wordlist";
 	//if (!$.fn.DataTable.isDataTable('#wordlistTable')) {
         // If the table does not exist, fill the table first
@@ -429,6 +433,19 @@ function onWordlistTabButtonClick() {
 	p("Wordlist tab opened");
 }
 
+function toggleSidebarTab(){
+var textareaContainer = document.querySelector('.textarea-container');
+	var sidebarContainer = document.querySelector('.sidebar-container');
+	
+	if(sidebarContainer.classList.contains('hidden')) {
+		sidebarContainer.classList.remove('hidden');
+		textareaContainer.classList.remove('full-width');
+	} else {
+		sidebarContainer.classList.add('hidden');
+		textareaContainer.classList.add('full-width');
+		sidebarContainer.classList.remove('full-width');
+	}
+}
 
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
@@ -457,7 +474,28 @@ function initialiseUI(){
 			resetJump();
 		});
 
-
+/*
+		$(".toggle-tab").click(function(){
+			p("here toggle tab");
+			var $this = $(this);
+			var $activeTab = $this.hasClass('active');
+			var targetTab = $this.attr('href');
+			var textareaContainer = document.querySelector('.textarea-container');
+			var sidebarContainer = document.querySelector('.sidebar-container');
+			
+			if($activeTab) {
+				$this.removeClass('active');
+				$(targetTab).removeClass('show active');
+				sidebarContainer.classList.add('hidden');
+				textareaContainer.classList.add('full-width');
+			} else {
+				$this.addClass('active');
+				$(targetTab).addClass('show active');
+				sidebarContainer.classList.remove('hidden');
+				textareaContainer.classList.remove('full-width');
+			}
+		});
+*/
 		
 		$("#dictionary-tab").trigger('click');
 		onDictionaryTabButtonClick();
@@ -551,6 +589,7 @@ window.handleCredentialResponse = (response) => {
 
 function displaySigninElements(state)
 {
+	/*
 	switch(state)
 	{
 			case "offlineMode":
@@ -569,6 +608,7 @@ function displaySigninElements(state)
 				document.getElementById("loginButton").innerText = "Sign out";
 			break;
 	}
+	*/
 }
 	
 function logUser(user)
@@ -639,6 +679,7 @@ function activateLearnTab(){
 
 
 function initPremadeLesson(title, text){
+	activateEditTab()
 	document.getElementById('nav-clear-tab').disabled=true;
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
