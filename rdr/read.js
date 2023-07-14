@@ -1344,7 +1344,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         newWords[wordObj.level].push(wordObj.word);
     });
-
+	
+	p("here1 "+newWords);
+	
     let docRef = dbfire.collection('vocabulary')
         .where("author_uid", "==", uid)
         .where("language", "==", lang)
