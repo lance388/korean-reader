@@ -679,6 +679,7 @@ function activateLearnTab(){
         document.getElementById('nav-edit-tab').classList.remove('active');
         document.getElementById('nav-edit').classList.remove('show', 'active');
     }
+	p("here1");
     document.getElementById('nav-learn-tab').dispatchEvent(new Event('show.bs.tab'));
 
     //document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
@@ -1045,7 +1046,6 @@ function initialiseIndexedDB() {
         } else {
             var request = indexedDB.open("wordsdb", 9);
             request.onupgradeneeded = function() {
-				p("here1!");
                 db = request.result;
                 if (!db.objectStoreNames.contains('wordsdb')) {
                     var store = db.createObjectStore("wordsdb", {keyPath: "word"});
