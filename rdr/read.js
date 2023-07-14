@@ -1226,7 +1226,6 @@ function loadVocabularyFromFireDB(lang, uid) {
                     docData.known.forEach(word => vocabularyKnown.add(word));
                     docData.learning.forEach(word => vocabularyLearning.add(word));
                 });
-				printVocabulary();
                 resolve();
             })
             .catch((error) => {
