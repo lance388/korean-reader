@@ -679,8 +679,7 @@ function activateLearnTab(){
         document.getElementById('nav-edit-tab').classList.remove('active');
         document.getElementById('nav-edit').classList.remove('show', 'active');
     }
-	p("here1");
-    document.getElementById('nav-learn-tab').dispatchEvent(new Event('show.bs.tab'));
+    $('#nav-learn-tab').trigger('show.bs.tab');
 
     //document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 }
