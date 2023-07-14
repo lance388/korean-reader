@@ -1334,7 +1334,7 @@ function saveVocabulary(){
 
 
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
-	p("Putting vocab in fire DB");
+	p("Putting word into fire DB");
     let newWords = {
         "learning": [],
         "known": [],
@@ -1344,8 +1344,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         newWords[wordObj.level].push(wordObj.word);
     });
-	
-	p("here1 "+newWords);
 	
     let docRef = dbfire.collection('vocabulary')
         .where("author_uid", "==", uid)
@@ -1361,6 +1359,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                 Object.keys(newWords).forEach(wordType => {
                     if (newWords[wordType].length > 0) {
                         // Remove words from "known" and "learning" if it is marked as "unknown"
+							p("word type: "+wordType);
                         if (wordType === "unknown") {
                             updateObject["known"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
                             updateObject["learning"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
@@ -1380,6 +1379,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                 };
                 Object.keys(newWords).forEach(wordType => {
                     updateObject[wordType] = newWords[wordType];
+					p("Word saved.");
                 });
 
                 dbfire.collection('vocabulary').add(updateObject)
