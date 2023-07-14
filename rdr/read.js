@@ -679,7 +679,7 @@ function activateLearnTab(){
 
 
 function initPremadeLesson(title, text){
-	activateEditTab()
+	//activateEditTab()
 	document.getElementById('nav-clear-tab').disabled=true;
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
@@ -689,7 +689,7 @@ function initPremadeLesson(title, text){
 	
     
     textarea.dispatchEvent(new Event('input'));
-	activateLearnTab();
+	//activateLearnTab();
 }
 
 function formatTitle(title) {
