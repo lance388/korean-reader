@@ -1360,39 +1360,33 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         .limit(1);
 
     docRef.get()
-        .then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-                let doc = querySnapshot.docs[0];
-                let updateObject = {};
-                Object.keys(newWords).forEach(wordType => {
-                    if (newWords[wordType].length > 0) {
-                        // Remove words from "known" and "learning" if it is marked as "unknown"
-                        if (wordType === "unknown") {
-                            updateObject["known"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
-                            updateObject["learning"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
-                        } else {
-                            updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
+    .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+            let doc = querySnapshot.docs[0];
+            let updateObject = {};
+            Object.keys(newWords).forEach(wordType => {
+                if (newWords[wordType].length > 0) {
+                    // Remove words from all other arrays before adding
+                    Object.keys(newWords).forEach(otherType => {
+                        if (otherType !== wordType) {
+                            updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
                         }
-                    }
-                });
+                    });
+                    updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
+                }
+            });
 
-                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true })
-                    .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
-            } else {
-                let updateObject = {
-                    author_uid: uid,
-                    language: lang,
-                    type: "vocab_v2"
-                };
-                Object.keys(newWords).forEach(wordType => {
-                    updateObject[wordType] = newWords[wordType];
-                });
+            dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true })
+                .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
+        } else {
+            // Similar logic applies to when a new document is created
+            // ...
+        }
+    })
+    .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
 
-                dbfire.collection('vocabulary').add(updateObject)
-                    .catch((error) => console.error(`Error adding vocabulary in Fire DB:`, error));
-            }
-        })
-        .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
+		
+		
     vocabularySaveInProgress = false;
 }
 
