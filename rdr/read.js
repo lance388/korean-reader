@@ -1233,6 +1233,15 @@ function loadVocabularyFromFireDB(lang, uid) {
                 reject(error);
             });
     });
+	printVocabulary();
+}
+
+function printVocabulary() {
+    console.log("Known vocabulary:");
+    vocabularyKnown.forEach(word => console.log(word));
+
+    console.log("Learning vocabulary:");
+    vocabularyLearning.forEach(word => console.log(word));
 }
 
 function initialiseVocabularyFromFireDB() {
@@ -1334,7 +1343,6 @@ function saveVocabulary(){
 
 
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
-	p("Putting word into fire DB");
     let newWords = {
         "learning": [],
         "known": [],
@@ -1359,7 +1367,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                 Object.keys(newWords).forEach(wordType => {
                     if (newWords[wordType].length > 0) {
                         // Remove words from "known" and "learning" if it is marked as "unknown"
-							p("word type: "+wordType);
                         if (wordType === "unknown") {
                             updateObject["known"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
                             updateObject["learning"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
@@ -1379,7 +1386,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                 };
                 Object.keys(newWords).forEach(wordType => {
                     updateObject[wordType] = newWords[wordType];
-					p("Word saved.");
                 });
 
                 dbfire.collection('vocabulary').add(updateObject)
