@@ -471,16 +471,16 @@ function initialiseUI(){
 	return new Promise((resolve, reject) => {
 		
 	$(function() {
-		$('#statistics-tab').off('click').on('click', onStatisticsTabButtonClick);
-		$('#sentences-tab').off('click').on('click', onSentencesTabButtonClick);
-		$('#wordlist-tab').off('click').on('click', onWordlistTabButtonClick);
-		$('#dictionary-tab').off('click').on('click', onDictionaryTabButtonClick);
-		$('#nav-learn').off('scroll').on('scroll', onNavLearnScroll);
-		$('#textareaFullscreenButton').off('click').on('click', onTextareaFullscreenButtonClick);
-		$('#sideBarFullscreenButton').off('click').on('click', onSidebarFullscreenButtonClick);
-		$('#nav-learn-tab').off('show.bs.tab').on('show.bs.tab', onNavLearnTabShowBsTab);
-		$('#nav-edit-tab').off('show.bs.tab').on('show.bs.tab', onNavEditTabShowBsTab);
-		$('#nav-clear-tab').off('click').on('click', onClearTextButtonClick);
+		$('#statistics-tab').on('click', onStatisticsTabButtonClick);
+		$('#sentences-tab').on('click', onSentencesTabButtonClick);
+		$('#wordlist-tab').on('click', onWordlistTabButtonClick);
+		$('#dictionary-tab').on('click', onDictionaryTabButtonClick);
+		$('#nav-learn').on('scroll', onNavLearnScroll);
+		$('#textareaFullscreenButton').on('click', onTextareaFullscreenButtonClick);
+		$('#sideBarFullscreenButton').on('click', onSidebarFullscreenButtonClick);
+		$('#nav-learn-tab').on('show.bs.tab', onNavLearnTabShowBsTab);
+		$('#nav-edit-tab').on('show.bs.tab', onNavEditTabShowBsTab);
+		$('#nav-clear-tab').on('click', onClearTextButtonClick);
 	});
 
 		
@@ -692,9 +692,6 @@ function initPremadeLesson(title, text){
 	lessonSavingEnabled=false;
 	const textarea = document.getElementById('editText');
 	textarea.value = text;
-	
-	p("here1 "+text);
-	p("here2 "+textarea.value);
     
     textarea.dispatchEvent(new Event('input'));
 	activateLearnTab();
