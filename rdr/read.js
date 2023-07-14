@@ -107,12 +107,32 @@ function initialise(){
         return initialiseUI();
     }).then(() => {
         initialiseTextSaving();
-		document.getElementById('loading-overlay').style.display = 'none';
 		initialiseDataTables();
+		initialiseLesson();
 		 p("Initialisation complete");
+		 document.getElementById('loading-overlay').style.display = 'none';
     }).catch((error) => {
         console.error("An error occurred:", error);
     });
+}
+
+function initialiseLesson(){
+	lessonID = sessionStorage.getItem('lessonID');
+			if(lessonID) {
+				saveLastOpenedLessonID();
+				loadLesson();
+			} else {
+				getLastOpenedLessonID(function(lastOpenedLessonID) {
+					p("lessonID: "+lessonID);
+					if(lastOpenedLessonID) {
+						lessonID = lastOpenedLessonID;
+						saveLastOpenedLessonID();
+						loadLesson();
+					} else {
+						window.location.href = 'content.html';
+					}
+				});
+			}
 }
 
 function checkWordInVocabularies(word) {
@@ -473,6 +493,8 @@ function initialiseUI(){
 			event.preventDefault();
 			resetJump();
 		});
+		
+		activateEditTab();
 
 /*
 		$(".toggle-tab").click(function(){
@@ -497,25 +519,10 @@ function initialiseUI(){
 		});
 */
 		
-		$("#dictionary-tab").trigger('click');
-		onDictionaryTabButtonClick();
+		//$("#dictionary-tab").trigger('click');
+		//onDictionaryTabButtonClick();
 		  
-		  lessonID = sessionStorage.getItem('lessonID');
-			if(lessonID) {
-				saveLastOpenedLessonID();
-				loadLesson();
-			} else {
-				getLastOpenedLessonID(function(lastOpenedLessonID) {
-					p("lessonID: "+lessonID);
-					if(lastOpenedLessonID) {
-						lessonID = lastOpenedLessonID;
-						saveLastOpenedLessonID();
-						loadLesson();
-					} else {
-						window.location.href = 'content.html';
-					}
-				});
-			}
+		  
 
 		  
 
@@ -679,7 +686,6 @@ function activateLearnTab(){
 
 
 function initPremadeLesson(title, text){
-	//activateEditTab()
 	document.getElementById('nav-clear-tab').disabled=true;
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
@@ -689,7 +695,7 @@ function initPremadeLesson(title, text){
 	
     
     textarea.dispatchEvent(new Event('input'));
-	//activateLearnTab();
+	activateLearnTab();
 }
 
 function formatTitle(title) {
