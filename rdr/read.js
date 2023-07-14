@@ -820,8 +820,11 @@ function loadTextIntoLearnTab(text, language) {
 	var lessonText = [];
 	words.forEach(word => {
 		lessonText.push(word.textContent);
-		word.addEventListener('click', onWordClick);
-		word.addEventListener('contextmenu', onWordRightClick);
+		$(function() {
+			$(word).on('click', onWordClick);
+			$(word).on('contextmenu', onWordRightClick);
+		});
+
 	});
 	initialiseLessonText(lessonText);
 	fillWordlistTable();
@@ -1331,6 +1334,7 @@ function saveVocabulary(){
 
 
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
+	p("Putting vocab in fire DB");
     let newWords = {
         "learning": [],
         "known": [],
