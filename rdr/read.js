@@ -693,6 +693,8 @@ function initPremadeLesson(title, text){
 	const textarea = document.getElementById('editText');
 	textarea.value = text;
 	
+	p("here1 "+text);
+	p("here2 "+textarea.value);
     
     textarea.dispatchEvent(new Event('input'));
 	activateLearnTab();
