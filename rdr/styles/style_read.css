@@ -218,10 +218,7 @@ html, body {
 
 
 
-#textarea-navbar-title {
-	font-size: 1.5em;
-    text-align: center;
-}
+
 
 
 
@@ -335,17 +332,33 @@ html, body {
     height:5vh;
     flex-shrink: 0; /* This makes sure that the navbar doesn't shrink */
     background-color: #f8f9fa;
-    padding: 10px 0; /* This creates a 10px gap on the top and bottom of the navbar */
+    padding: 0; /* This creates a 10px gap on the top and bottom of the navbar */
+	margin: 0;
 }
 
+
+
 .nav-item.nav-link {
-    margin-left: 3px;
-	margin-right: 3px;
-    padding: 0.2em 0.5em; /* Reduced padding to fit within navbar */
+    height:5vh;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
     border-radius: 5px;
     transition: background-color 0.3s ease;
     cursor: pointer;
     border: 2px solid #ccc; /* Border for button style */
+    display: flex; /* Added this */
+    align-items: center; /* Added this */
+    justify-content: center; /* Added this */
 }
 
+.vertical-line {
+    border-left: 1px solid #ccc;
+    height: 24px;
+}
+
+#textarea-navbar-title {
+	font-size: 1.5em;
+    text-align: center;
+}
 

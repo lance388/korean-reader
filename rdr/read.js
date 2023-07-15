@@ -427,58 +427,54 @@ function onClearTextButtonClick() {
 
 
 
-function onStatisticsTabButtonClick() {
-	toggleSidebarTab();
-    sidebarTab = "statistics";
-	p("Statistics tab opened");
-}
+
 
 function onSentencesTabButtonClick() {
-	toggleSidebarTab();
+	toggleSidebarTab('sentences');
     sidebarTab = "sentences";
-	//lessonSentenceArray.forEach((sentence, index) => {
-	//	p(`Sentence ${index + 1}: ${sentence}`);
-	//});
-	
 	p("Sentences tab opened");
 }
 
 function onDictionaryTabButtonClick() {
-	toggleSidebarTab();
+	toggleSidebarTab('dictionary');
     sidebarTab = "dictionary";
 	handleDictionaryLookup();
 	p("Dictionary tab opened");
 }
 
 function onWordlistTabButtonClick() {
-	toggleSidebarTab();
+	toggleSidebarTab('wordlist');
     sidebarTab = "wordlist";
-	//if (!$.fn.DataTable.isDataTable('#wordlistTable')) {
-        // If the table does not exist, fill the table first
-    //    fillWordlistTable();
-   // }
 	p("Wordlist tab opened");
 }
 
-function toggleSidebarTab(){
-var textareaContainer = document.querySelector('.textarea-container');
+function toggleSidebarTab(tab){
+    var textareaContainer = document.querySelector('.textarea-container');
 	var sidebarContainer = document.querySelector('.sidebar-container');
 	
-	if(sidebarContainer.classList.contains('hidden')) {
-		sidebarContainer.classList.remove('hidden');
-		textareaContainer.classList.remove('full-width');
-	} else {
-		sidebarContainer.classList.add('hidden');
-		textareaContainer.classList.add('full-width');
-		sidebarContainer.classList.remove('full-width');
-	}
+    if(sidebarTab == tab) {	
+        if(sidebarContainer.classList.contains('hidden')) {
+            sidebarContainer.classList.remove('hidden');
+            textareaContainer.classList.remove('full-width');
+        } else {
+            sidebarContainer.classList.add('hidden');
+            textareaContainer.classList.add('full-width');
+            sidebarContainer.classList.remove('full-width');
+        }
+    } else {
+        // if another tab is selected, make sure the sidebar is visible
+        if(sidebarContainer.classList.contains('hidden')) {
+            sidebarContainer.classList.remove('hidden');
+            textareaContainer.classList.remove('full-width');
+        }
+    }
 }
+
 
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
 		
 	$(function() {
-		$('#statistics-tab').on('click', onStatisticsTabButtonClick);
 		$('#sentences-tab').on('click', onSentencesTabButtonClick);
 		$('#wordlist-tab').on('click', onWordlistTabButtonClick);
 		$('#dictionary-tab').on('click', onDictionaryTabButtonClick);
@@ -487,7 +483,8 @@ function initialiseUI(){
 		$('#sideBarFullscreenButton').on('click', onSidebarFullscreenButtonClick);
 		$('#nav-learn-tab').on('show.bs.tab', onNavLearnTabShowBsTab);
 		$('#nav-edit-tab').on('show.bs.tab', onNavEditTabShowBsTab);
-		$('#nav-clear-tab').on('click', onClearTextButtonClick);
+		//$('#nav-clear-tab').on('click', onClearTextButtonClick);
+		$('#clear-text-button').on('click', onClearTextButtonClick);
 	});
 
 		
@@ -693,7 +690,7 @@ function activateLearnTab(){
 
 
 function initPremadeLesson(title, text){
-	document.getElementById('nav-clear-tab').disabled=true;
+	//document.getElementById('nav-clear-tab').disabled=true;
 	
 	document.getElementById('textarea-navbar-title').innerText = title;
 	lessonSavingEnabled=false;
@@ -719,7 +716,7 @@ function formatTitle(title) {
 }
 
 function initCustomLesson(){
-	document.getElementById('nav-clear-tab').disabled=false;
+	//document.getElementById('nav-clear-tab').disabled=false;
 	
 	document.getElementById('textarea-navbar-title').innerText = formatTitle(lessonID);
 	lessonSavingEnabled=true;

@@ -52,7 +52,7 @@
 <body>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -61,32 +61,48 @@
         <div class="collapse navbar-collapse" id="navbarNav2">
             <!-- Tab links -->
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link" id="nav-learn-tab" data-bs-toggle="tab" href="#nav-learn" role="tab" aria-controls="nav-learn" aria-selected="false"><i class="fas fa-book-open"></i></a>
-                <a class="nav-item nav-link active" id="nav-edit-tab" data-bs-toggle="tab" href="#nav-edit" role="tab" aria-controls="nav-edit" aria-selected="true"><i class="fas fa-edit"></i></a>
+                <a class="nav-item nav-link d-flex align-items-center justify-content-center" id="nav-learn-tab" data-bs-toggle="tab" href="#nav-learn" role="tab" aria-controls="nav-learn" aria-selected="false"><i class="fas fa-book-open"></i></a>
+                <a class="nav-item nav-link active d-flex align-items-center justify-content-center" id="nav-edit-tab" data-bs-toggle="tab" href="#nav-edit" role="tab" aria-controls="nav-edit" aria-selected="true"><i class="fas fa-edit"></i></a>
             </div>
-            <div class="d-flex align-items-center justify-content-center flex-grow-1">
+            <div class="vertical-line mx-3"></div>
+            <div class="d-none d-md-flex align-items-center justify-content-center flex-grow-1">
                 <span id="textarea-navbar-title"></span>
             </div>
+            
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link toggle-tab active d-flex align-items-center justify-content-center" id="dictionary-tab" data-bs-toggle="tab" href="#dictionary-content-area" role="tab" aria-controls="dictionary-content-area" aria-selected="true"><i class="fas fa-book"></i></a>
+                <a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="wordlist-tab" data-bs-toggle="tab" href="#wordlist-content-area" role="tab" aria-controls="wordlist-content-area" aria-selected="false"><i class="fas fa-list-ul"></i></a>
+                <a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="sentences-tab" data-bs-toggle="tab" href="#sentences-content-area" role="tab" aria-controls="sentences-content-area" aria-selected="false"><i class="fas fa-align-justify"></i></a>
+            </div>
+            <div class="vertical-line mx-3"></div>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-item nav-link" id="nav-clear-tab">Clear Text</a>
+                    <button class="btn nav-item nav-link btn-outline-secondary align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#settings-modal"><i class="fas fa-cog"></i></button>
                 </li>
             </ul>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link toggle-tab active" id="dictionary-tab" data-bs-toggle="tab" href="#dictionary-content-area" role="tab" aria-controls="dictionary-content-area" aria-selected="true"><i class="fas fa-book"></i></a>
-				<a class="nav-item nav-link toggle-tab" id="wordlist-tab" data-bs-toggle="tab" href="#wordlist-content-area" role="tab" aria-controls="wordlist-content-area" aria-selected="false"><i class="fas fa-list-ul"></i></a>
-				<a class="nav-item nav-link toggle-tab" id="sentences-tab" data-bs-toggle="tab" href="#sentences-content-area" role="tab" aria-controls="sentences-content-area" aria-selected="false"><i class="fas fa-align-justify"></i></a>
-				<a hidden class="nav-item nav-link toggle-tab" id="statistics-tab" data-bs-toggle="tab" href="#stats-content-area" role="tab" aria-controls="stats-content-area" aria-selected="false"><i class="fas fa-chart-bar"></i></a>
-
-            </div>
-        </div>
-        <div class="d-flex">
-            <button class="btn btn-light" id="textareaFullscreenButton">
-                <i class="bi bi-arrows-fullscreen"></i>
-            </button>
         </div>
     </div>
 </nav>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your settings here -->
+                <button id="login-button" class="btn btn-primary">Login</button>
+                <button id="clear-text-button" class="btn btn-danger">Clear Text</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 	
 	
@@ -221,8 +237,6 @@
 					
 					</div>
 					<br>
-					<div class="tab-pane fade" id="stats-content-area" role="tabpanel" aria-labelledby="nav-statistics-tab">
-					</div>
 				</div>	
 		</div>
 
