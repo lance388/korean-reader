@@ -100,40 +100,75 @@ function initialise(){
 	
 	p("Begin initialise IndexedDB");
     initialiseIndexedDB().then(() => {
-        p("Completed initialiseIndexedDB");
+        p("Completed initialise Indexed DB");
         return initialiseVocabulary();
     }).then(() => {
-        p("Completed initialiseVocabulary");
+        p("Completed initialise Vocabulary");
         return initialiseUI();
     }).then(() => {
+        p("Completed initialise UI");
         initialiseTextSaving();
-		initialiseDataTables();
-		initialiseLesson();
-		 p("Initialisation complete");
-		 document.getElementById('loading-overlay').style.display = 'none';
+        initialiseDataTables();
+        initialiseOptions();
+        return initialiseLesson();
+    }).then(() => {
+        loadLastState();
+        p("Initialisation complete");
+        document.getElementById('loading-overlay').style.display = 'none';
     }).catch((error) => {
         console.error("An error occurred:", error);
     });
 }
 
-function initialiseLesson(){
-	lessonID = sessionStorage.getItem('lessonID');
-			if(lessonID) {
-				saveLastOpenedLessonID();
-				loadLesson();
-			} else {
-				getLastOpenedLessonID(function(lastOpenedLessonID) {
-					p("lessonID: "+lessonID);
-					if(lastOpenedLessonID) {
-						lessonID = lastOpenedLessonID;
-						saveLastOpenedLessonID();
-						loadLesson();
-					} else {
-						window.location.href = 'content.html';
-					}
-				});
-			}
+function initialiseOptions(){
+	
 }
+
+function loadLastState(){
+			getLastEditMode().then((editMode) => {
+			switch(editMode){
+				case "editMode": 
+					activateEditTab(); 
+					break;
+				case "learnMode": 
+					activateLearnTab(); 
+					break;
+				default:
+					activateLearnTab(); 
+			}
+		}).catch((error) => {
+			console.log("Error occurred: ", error);
+		});	
+}
+
+function initialiseLesson() {
+    return new Promise((resolve, reject) => {
+        lessonID = sessionStorage.getItem('lessonID');
+        if (lessonID) {
+            saveLastOpenedLessonID();
+            resolve(loadLesson()); // resolve with the promise returned by loadLesson()
+        } else {
+            // Wrap the getLastOpenedLessonID in a promise
+            new Promise((resolve, reject) => {
+                getLastOpenedLessonID(function(lastOpenedLessonID) {
+                    if (lastOpenedLessonID) {
+                        resolve(lastOpenedLessonID);
+                    } else {
+                        reject('No last opened lesson ID found');
+                    }
+                });
+            }).then((lastOpenedLessonID) => {
+                lessonID = lastOpenedLessonID;
+                saveLastOpenedLessonID();
+                resolve(loadLesson()); // resolve with the promise returned by loadLesson()
+            }).catch((error) => {
+                console.error('Error:', error);
+                reject(error); // pass the error to the outer promise
+            });
+        }
+    });
+}
+
 
 function checkWordInVocabularies(word) {
 	var str="";
@@ -400,6 +435,7 @@ function onSidebarFullscreenButtonClick() {
 
 function onNavLearnTabShowBsTab(e) {
     p("Opened learn tab");
+	saveLastEditMode("learnMode");
 				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
 				//document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 				$('#nav-learn').trigger('scroll');
@@ -411,6 +447,7 @@ function onNavLearnTabShowBsTab(e) {
 
 function onNavEditTabShowBsTab(e) {
     p("Opened edit tab");
+	saveLastEditMode("editMode");
 		//var scrollPosition = $('#nav-learn').scrollTop();
 		//p("learn scroll pos: "+scrollPosition);
 		//$('#editText').scrollTop(scrollPosition);
@@ -498,39 +535,6 @@ function initialiseUI(){
 			resetJump();
 		});
 		
-		activateEditTab();
-
-/*
-		$(".toggle-tab").click(function(){
-			p("here toggle tab");
-			var $this = $(this);
-			var $activeTab = $this.hasClass('active');
-			var targetTab = $this.attr('href');
-			var textareaContainer = document.querySelector('.textarea-container');
-			var sidebarContainer = document.querySelector('.sidebar-container');
-			
-			if($activeTab) {
-				$this.removeClass('active');
-				$(targetTab).removeClass('show active');
-				sidebarContainer.classList.add('hidden');
-				textareaContainer.classList.add('full-width');
-			} else {
-				$this.addClass('active');
-				$(targetTab).addClass('show active');
-				sidebarContainer.classList.remove('hidden');
-				textareaContainer.classList.remove('full-width');
-			}
-		});
-*/
-		
-		//$("#dictionary-tab").trigger('click');
-		//onDictionaryTabButtonClick();
-		  
-		  
-
-		  
-
-	
 	resolve();
     });
 }
@@ -600,27 +604,29 @@ window.handleCredentialResponse = (response) => {
 
 function displaySigninElements(state)
 {
-	/*
-	switch(state)
-	{
-			case "offlineMode":
-				document.getElementById('loginButton').style.display = 'none';
-				document.getElementById("loggedInState").innerText = "Working in offline mode";
-				document.getElementById("loginButton").innerText = "Sign in";
-			break;
-			case "signedOutMode":
-				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Working in signed-out mode";
-				document.getElementById("loginButton").innerText = "Sign in";
-			break;
-			case "signedInMode":
-				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Signed in";
-				document.getElementById("loginButton").innerText = "Sign out";
-			break;
-	}
-	*/
+    const loginButton = document.getElementById('login-button');
+    const signinStateText = document.getElementById('signin-state-text');
+
+    switch(state)
+    {
+        case "offlineMode":
+            loginButton.style.display = 'none';
+            signinStateText.innerText = "Working in offline mode";
+            loginButton.innerText = "Sign in";
+            break;
+        case "signedOutMode":
+            loginButton.style.display = '';
+            signinStateText.innerText = "Working in signed-out mode";
+            loginButton.innerText = "Sign in";
+            break;
+        case "signedInMode":
+            loginButton.style.display = '';
+            signinStateText.innerText = "Signed in";
+            loginButton.innerText = "Sign out";
+            break;
+    }
 }
+
 	
 function logUser(user)
 {
@@ -642,39 +648,53 @@ function logUser(user)
 
 
 function loadLesson() {
-  p("Loading lesson:", lessonID);
-	if (/^custom\d+$/.test(lessonID)) {
-		p("Custom lesson loading...");
-		initCustomLesson();
-	}
-	else{
-	  fetch(`lessons/${lessonID}.json`)
-		.then(response => {
-		  if (!response.ok) {
-			throw new Error('Lesson failed to load');
-		  }
-		  return response.json();
-		})
-		.then(lesson => {
-			p("Premade lesson loading...");
-			initPremadeLesson(lesson.title, lesson.text);
-		})
-		.catch(error => console.error('Error:', error));
-	}
+    return new Promise((resolve, reject) => {
+        p("Loading lesson:", lessonID);
+        if (/^custom\d+$/.test(lessonID)) {
+            p("Custom lesson loading...");
+            initCustomLesson();
+            resolve();
+        }
+        else{
+            fetch(`lessons/${lessonID}.json`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Lesson failed to load');
+                }
+                return response.json();
+            })
+            .then(lesson => {
+                p("Premade lesson loading...");
+                initPremadeLesson(lesson.title, lesson.text);
+                resolve();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reject(error);
+            });
+        }
+    });
 }
 
+
 function activateEditTab(){
-    if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
+	var editTab = new bootstrap.Tab(document.getElementById('nav-edit-tab'));
+    editTab.show();
+  /*  if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
         document.getElementById('nav-edit-tab').classList.add('active');
         document.getElementById('nav-edit').classList.add('show', 'active');
 
         document.getElementById('nav-learn-tab').classList.remove('active');
         document.getElementById('nav-learn').classList.remove('show', 'active');
     }
+	*/
 }
 
 function activateLearnTab(){
-    if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
+	var learnTab = new bootstrap.Tab(document.getElementById('nav-learn-tab'));
+    learnTab.show();
+/*   
+   if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
 
         document.getElementById('nav-learn-tab').classList.add('active');
         document.getElementById('nav-learn').classList.add('show', 'active');
@@ -684,7 +704,7 @@ function activateLearnTab(){
         document.getElementById('nav-edit').classList.remove('show', 'active');
     }
     $('#nav-learn-tab').trigger('show.bs.tab');
-
+*/
     //document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 }
 
@@ -699,7 +719,7 @@ function initPremadeLesson(title, text){
     
 	$('#editText').trigger('input');
     //textarea.dispatchEvent(new Event('input'));
-	activateLearnTab();
+	//activateLearnTab();
 }
 
 function formatTitle(title) {
@@ -720,7 +740,7 @@ function initCustomLesson(){
 	
 	document.getElementById('textarea-navbar-title').innerText = formatTitle(lessonID);
 	lessonSavingEnabled=true;
-	activateEditTab();
+	//activateEditTab();
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		getCustomLessonFromIndexedDB(lessonID, function(lesson) {
@@ -1084,73 +1104,51 @@ function initialiseIndexedDB() {
             };
         }
     });
+}function initialiseIndexedDB() {
+    return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+            const errorMessage = "Your browser doesn't support a stable version of IndexedDB";
+            alert(errorMessage);
+            p(errorMessage);
+            reject(new Error(errorMessage));
+        } else {
+            var request = indexedDB.open("wordsdb", 9);
+            request.onupgradeneeded = function() {
+                db = request.result;
+                if (!db.objectStoreNames.contains('wordsdb')) {
+                    var store = db.createObjectStore("wordsdb", {keyPath: "word"});
+                    //var appearancesIndex = store.createIndex("by_appearance", "appearance");
+                }
+                if (!db.objectStoreNames.contains('lessonsdb')) {
+                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
+                }
+                if (!db.objectStoreNames.contains('settings')) {
+                    var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
+                }
+            };
+			request.onblocked = function(event) {
+				p("Request blocked!");
+			};
+
+			request.onsuccess = function(event) {
+				p("Request succeeded!");
+			};
+            request.onerror = function(event) {
+                const errorMessage = "Database error: " + event.target.errorCode;
+                p(errorMessage);
+                reject(new Error(errorMessage));
+            };
+            request.onsuccess = function() {
+                db = request.result;
+                resolve();
+            };
+        }
+    });
 }
 
-/*
-function initialiseIndexedDB(callback) {
-    if (!window.indexedDB) {
-        alert("Your browser doesn't support a stable version of IndexedDB");
-        p("Your browser doesn't support a stable version of IndexedDB");
-    } else {		
-        var request = indexedDB.open("wordsdb", 7);
-        request.onupgradeneeded = function() {
-            db = request.result;
-            if (!db.objectStoreNames.contains('wordsdb')) {
-                var store = db.createObjectStore("wordsdb", {keyPath: "word"});
-                var appearancesIndex = store.createIndex("by_appearance", "appearance");
-            }
-            if (!db.objectStoreNames.contains('lessonsdb')) {
-                var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
-            }
-            if (!db.objectStoreNames.contains('settings')) {
-                var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
-            }
-        };
-        request.onerror = function(event) {
-            p("Database error: " + event.target.errorCode);
-        };
-        request.onsuccess = function() {
-            db = request.result;
-            callback();
-        };
-    }
-}
-*/
 
-/*
-function initialiseVocabularyFromIndexedDB(callback){
-	vocabularyLearning = new Set();
-	vocabularyKnown = new Set();
-	vocabularyUnknown = new Set();
-	var objectStore = db.transaction(["wordsdb"]).objectStore("wordsdb");
-	var request = objectStore.getAll();
-	request.onerror = function(event) {
-	    alert("Unable to retrieve data from database!");
-	};
-	request.onsuccess = function(event) {  
-	    if(request.result) {
-			var req = request.result;
-			for(var i=0;i<req.length;i++)
-			{
-				var w = req[i].word;
-				var a = req[i].appearances;
-				var remainder = a%3;
-							
-					if(remainder==0){
-						vocabularyUnknown.add(w);
-					}
-					else if(remainder==1){
-						vocabularyLearning.add(w);
-					}
-					else{
-						vocabularyKnown.add(w);
-					}
-			}
-			callback(); // callback after data has been processed
-		}
-	}
-}
-*/
+
+
 
 function initialiseVocabularyFromIndexedDB(){
     return new Promise((resolve, reject) => {
@@ -2095,6 +2093,47 @@ function resetJump(){
 	currentJumpIndex = 0;
     currentJumpWord = "";
 }
+
+function getLastEditMode() {
+    return new Promise((resolve, reject) => {
+        var transaction = db.transaction(["settings"], "readonly");
+        var store = transaction.objectStore("settings");
+        var request = store.get('lastOpenedMode');
+
+        request.onerror = function(event) {
+            console.log("Error retrieving last opened mode: ", event.target.error);
+            reject(event.target.error);
+        };
+
+        request.onsuccess = function(event) {  
+            if(request.result) {
+                p("Last used edit mode: "+request.result.mode);
+                resolve(request.result.mode);
+            } else {
+                console.log("No last opened mode found!");
+                resolve(""); // Returns an empty string if no mode found
+            }
+        };
+    });
+}
+
+
+
+function saveLastEditMode(mode) {
+    var transaction = db.transaction(["settings"], "readwrite");
+    var store = transaction.objectStore("settings");
+    var request = store.put({id: 'lastOpenedMode', mode: mode});
+
+    request.onerror = function(event) {
+        console.log("Error saving last opened mode: ", event.target.error);
+    };
+
+    request.onsuccess = function(event) {  
+        console.log("Last opened mode saved successfully!");
+    };
+}
+
+
 
 
 
