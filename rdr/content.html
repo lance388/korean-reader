@@ -143,12 +143,6 @@
     <li class="nav-item">
       <a class="nav-link custom-tab" id="upper-intermediate-tab" data-bs-toggle="pill" href="#intermediate">Intermediate</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link custom-tab" id="advanced-tab" data-bs-toggle="pill" href="#upperintermediate">Upper Intermediate</a>
-    </li>
-	<li class="nav-item">
-      <a class="nav-link custom-tab" id="advanced-tab" data-bs-toggle="pill" href="#advanced">Advanced</a>
-    </li>
   </ul>
   <!-- ... -->
 </div>
@@ -160,6 +154,7 @@
         <div id="prebeginner" class="container tab-pane active">
             <br>
             <h3>Pre Beginner</h3>
+			<p>Lessons suitable for absolute beginners.</p>
                <div class="container mt-5 lessons-container">
 					
 						<!-- Add lessons here -->
@@ -167,7 +162,7 @@
 					<div class="card lesson-card" data-lesson="pb_greetings1">
 						<div class="card-body">
 							<h5 class="card-title">Greetings 1</h5>
-							<p class="card-text description">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+							<p class="card-text description"></p>
 						</div>
 					</div>
 				</a>
@@ -176,7 +171,52 @@
 					<div class="card lesson-card" data-lesson="pb_numbers1">
 						<div class="card-body">
 							<h5 class="card-title">Numbers 1</h5>
-							<p class="card-text description">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+							<p class="card-text description"></p>
+						</div>
+					</div>
+				</a>
+				
+				<a href="read.html" class="lesson-link">
+					<div class="card lesson-card" data-lesson="pb_numbers2">
+						<div class="card-body">
+							<h5 class="card-title">Numbers 2</h5>
+							<p class="card-text description"></p>
+						</div>
+					</div>
+				</a>
+				
+				<a href="read.html" class="lesson-link">
+					<div class="card lesson-card" data-lesson="pb_postcode">
+						<div class="card-body">
+							<h5 class="card-title">Post Code</h5>
+							<p class="card-text description"></p>
+						</div>
+					</div>
+				</a>
+				
+				<a href="read.html" class="lesson-link">
+					<div class="card lesson-card" data-lesson="pb_mobilenumber">
+						<div class="card-body">
+							<h5 class="card-title">Mobile Number</h5>
+							<p class="card-text description"></p>
+						</div>
+					</div>
+				</a>
+				
+				<a href="read.html" class="lesson-link">
+					<div class="card lesson-card" data-lesson="pb_address">
+						<div class="card-body">
+							<h5 class="card-title">Address</h5>
+							<p class="card-text description"></p>
+						</div>
+					</div>
+				</a>
+				
+				<a href="read.html" class="lesson-link">
+					<div class="card lesson-card" data-lesson="pb_personaldetails">
+						<div class="card-body">
+							<h5 class="card-title">Personal Details</h5>
+							<p class="card-text description"></p>
 						</div>
 					</div>
 				</a>
@@ -185,27 +225,17 @@
         <div id="beginner" class="container tab-pane fade">
             <br>
             <h3>Beginner</h3>
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+            <p>Lessons around the level of TOPIK 1-2</p>
         </div>
         <div id="elementary" class="container tab-pane fade">
             <br>
             <h3>Elementary</h3>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+            <p>Lessons around the level of TOPIK 3-4</p>
         </div>
         <div id="intermediate" class="container tab-pane fade">
             <br>
             <h3>Intermediate</h3>
-            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis.</p>
-        </div>
-        <div id="upperintermediate" class="container tab-pane fade">
-            <br>
-            <h3>Upper Intermediate</h3>
-            <p>Praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias.</p>
-        </div>
-        <div id="advanced" class="container tab-pane fade">
-            <br>
-            <h3>Advanced</h3>
-            <p>Excepturi sint occaecati cupiditate non provident, similique sunt in culpa.</p>
+            <p>Lessons around the level of TOPIK 5-6</p>
         </div>
     </div>
 </div>
@@ -221,5 +251,9 @@
     data-callback="handleCredentialResponse">
     </div>
 </body>
+
+<div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
+  <p>Loading...</p>
+</div>
 
 </html>

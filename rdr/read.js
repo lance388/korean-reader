@@ -112,7 +112,12 @@ function initialise(){
         initialiseOptions();
         return initialiseLesson();
     }).then(() => {
-        loadLastState();
+		p("Completed initialise lesson");
+		if(document.getElementById('editText').value == ''){
+			activateEditTab();
+		}else{
+			loadLastState();
+		}
         p("Initialisation complete");
         document.getElementById('loading-overlay').style.display = 'none';
     }).catch((error) => {
@@ -125,6 +130,7 @@ function initialiseOptions(){
 }
 
 function loadLastState(){
+	
 			getLastEditMode().then((editMode) => {
 			switch(editMode){
 				case "editMode": 
@@ -152,6 +158,7 @@ function initialiseLesson() {
             new Promise((resolve, reject) => {
                 getLastOpenedLessonID(function(lastOpenedLessonID) {
                     if (lastOpenedLessonID) {
+						p("Found lesson: "+lastOpenedLessonID);
                         resolve(lastOpenedLessonID);
                     } else {
                         reject('No last opened lesson ID found');
@@ -524,7 +531,24 @@ function initialiseUI(){
 		$('#clear-text-button').on('click', onClearTextButtonClick);
 	});
 
-		
+	$("#textarea-navbar-title").on("click", function() {
+		window.location.href = 'content.html';
+	});
+	
+	$("#textarea-navbar-title").hover(
+		function() { // on mouseenter
+			$(this).data('originalText', $(this).text());
+			$(this).text("Browse Lessons");
+		},
+		function() { // on mouseleave
+			$(this).text($(this).data('originalText'));
+		}
+	);
+	
+	$('#browse-lessons-button').click(function() {
+		window.location.href = 'content.html';
+	});
+
 		
 		$('#learnText').on('click', function() {
 			resetJump();
@@ -652,8 +676,12 @@ function loadLesson() {
         p("Loading lesson:", lessonID);
         if (/^custom\d+$/.test(lessonID)) {
             p("Custom lesson loading...");
-            initCustomLesson();
-            resolve();
+            initCustomLesson()
+                .then(() => resolve())
+                .catch((error) => {
+                    console.error('Error:', error);
+                    reject(error);
+                });
         }
         else{
             fetch(`lessons/${lessonID}.json`)
@@ -665,8 +693,12 @@ function loadLesson() {
             })
             .then(lesson => {
                 p("Premade lesson loading...");
-                initPremadeLesson(lesson.title, lesson.text);
-                resolve();
+                initPremadeLesson(lesson.title, lesson.text)
+                    .then(() => resolve())
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        reject(error);
+                    });
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -710,16 +742,15 @@ function activateLearnTab(){
 
 
 function initPremadeLesson(title, text){
-	//document.getElementById('nav-clear-tab').disabled=true;
-	
-	document.getElementById('textarea-navbar-title').innerText = title;
-	lessonSavingEnabled=false;
-	const textarea = document.getElementById('editText');
-	textarea.value = text;
-    
-	$('#editText').trigger('input');
-    //textarea.dispatchEvent(new Event('input'));
-	//activateLearnTab();
+    return new Promise((resolve, reject) => {
+        document.getElementById('textarea-navbar-title').innerText = title;
+        $('#current-lesson-title').text(title);
+        lessonSavingEnabled=false;
+        const textarea = document.getElementById('editText');
+        textarea.value = text;
+        $('#editText').trigger('input');
+        resolve();
+    });
 }
 
 function formatTitle(title) {
@@ -736,32 +767,37 @@ function formatTitle(title) {
 }
 
 function initCustomLesson(){
-	//document.getElementById('nav-clear-tab').disabled=false;
-	
-	document.getElementById('textarea-navbar-title').innerText = formatTitle(lessonID);
-	lessonSavingEnabled=true;
-	//activateEditTab();
-	
-	if(signedInState=="offline"||signedInState=="signedOut"){
-		getCustomLessonFromIndexedDB(lessonID, function(lesson) {
-			if(lesson){
-				const textarea = document.getElementById('editText');
-				textarea.value = lesson.text;
-				$('#editText').trigger('input');
-				//textarea.dispatchEvent(new Event('input'));
-			}
-		});
-	}
-	else{
-		//TODO instead of this, use the firedb
-		getCustomLessonFromIndexedDB(lessonID, function(lesson) {
-			if(lesson){
-				const textarea = document.getElementById('editText');
-				textarea.value = lesson.text;
-				$('#editText').trigger('input');
-			}
-		});
-	}
+    return new Promise((resolve, reject) => {
+        var title = formatTitle(lessonID);
+        document.getElementById('textarea-navbar-title').innerText = title;
+        $('#current-lesson-title').text(title);
+        lessonSavingEnabled=true;
+        
+        if(signedInState=="offline"||signedInState=="signedOut"){
+            getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+                if(lesson){
+                    const textarea = document.getElementById('editText');
+                    textarea.value = lesson.text;
+                    $('#editText').trigger('input');
+                    resolve();
+                } else {
+                    console.log('Could not load custom lesson');
+                }
+            });
+        }
+        else{
+            getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+                if(lesson){
+                    const textarea = document.getElementById('editText');
+                    textarea.value = lesson.text;
+                    $('#editText').trigger('input');
+                    resolve();
+                } else {
+                    reject('Could not load custom lesson');
+                }
+            });
+        }
+    });
 }
 
 
@@ -1104,7 +1140,9 @@ function initialiseIndexedDB() {
             };
         }
     });
-}function initialiseIndexedDB() {
+}
+/*
+function initialiseIndexedDB() {
     return new Promise((resolve, reject) => {
         if (!window.indexedDB) {
             const errorMessage = "Your browser doesn't support a stable version of IndexedDB";
@@ -1145,7 +1183,7 @@ function initialiseIndexedDB() {
         }
     });
 }
-
+*/
 
 
 
@@ -1446,7 +1484,7 @@ function putVocabularyIntoIndexedDB(wordsToSave) {
 
 
 function getCustomLessonFromIndexedDB(i, callback) {
-    var transaction = db.transaction(["lessonsdb"]);
+    var transaction = db.transaction(["lessonsdb"], "readwrite");
     var objectStore = transaction.objectStore("lessonsdb");
     var request = objectStore.get(i);
 
@@ -1458,10 +1496,28 @@ function getCustomLessonFromIndexedDB(i, callback) {
         if(request.result) {
             callback(request.result);
         } else {
-            console.log("No data record found for the title: " + i);
+            console.log("No data record found for the title: " + i + ". Creating new record.");
+
+            var newLesson = {
+                id: i,
+                title: i, // Update as per your requirement
+                text: "" // Update as per your requirement
+            };
+
+            var addRequest = objectStore.add(newLesson);
+
+            addRequest.onerror = function(event) {
+                console.log("Failed to create new record: " + event.target.error);
+            };
+
+            addRequest.onsuccess = function(event) {
+                console.log("New record has been created with id: " + event.target.result);
+                callback(newLesson);
+            };
         }
     };
 }
+
 
 
 

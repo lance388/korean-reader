@@ -362,3 +362,11 @@ html, body {
     text-align: center;
 }
 
+#textarea-navbar-title {
+    cursor: pointer;
+    color: black;  /* This is the default color */
+}
+
+#textarea-navbar-title:hover {
+    color: gray;   /* This is the color when you hover */
+}
