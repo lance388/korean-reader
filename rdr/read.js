@@ -559,6 +559,8 @@ function initialiseUI(){
 			resetJump();
 		});
 		
+		activateDictionaryTab();
+		
 	resolve();
     });
 }
@@ -706,6 +708,20 @@ function loadLesson() {
             });
         }
     });
+}
+
+function activateDictionaryTab(){
+	var dictionaryTab = new bootstrap.Tab(document.getElementById('dictionary-tab'));
+    dictionaryTab.show();
+	onDictionaryTabButtonClick();
+  /*  if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
+        document.getElementById('nav-edit-tab').classList.add('active');
+        document.getElementById('nav-edit').classList.add('show', 'active');
+
+        document.getElementById('nav-learn-tab').classList.remove('active');
+        document.getElementById('nav-learn').classList.remove('show', 'active');
+    }
+	*/
 }
 
 

@@ -20,7 +20,7 @@
 
 .lesson-card {
     display: inline-block;
-    width: 18rem; /* Adjust this as needed to fit 5 cards on the screen */
+    width: 100%; /* Adjust this as needed to fit 5 cards on the screen */
     height: 100%; /* Makes the cards full height */
 }
 
