@@ -1028,7 +1028,7 @@ function loadTextIntoLearnTab(text, language) {
 	words.forEach(word => {
 		lessonText.push(word.textContent);
 		$(function() {
-			$(word).on('click touchstart', onWordClick);
+			$(word).on('click', onWordClick);
 			$(word).on('contextmenu', onWordRightClick);
 		});
 
