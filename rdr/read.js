@@ -80,7 +80,7 @@ function initialise(){
 	naverDictionaryLanguage="en";
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
-	document.querySelector('#dictionary-iframe').src = 'https://en.dict.naver.com/#/main';
+	document.querySelector('#dictionary-iframe').src = 'https://korean.dict.naver.com/koendict/#/main';
 	pendingDictionaryLookup ="";
 	enableVoice = false;
 	voiceSelect = document.querySelector('#voice-selection');
@@ -1705,7 +1705,8 @@ function saveLastOpenedLessonID() {
 function handleDictionaryLookup(){
 	if(sidebarTab === "dictionary"){
 		if(pendingDictionaryLookup!=""){
-			document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/mini/search?query="+pendingDictionaryLookup;
+			//document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/mini/search?query="+pendingDictionaryLookup;
+			document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko"+naverDictionaryLanguage+"dict/#/search?query="+pendingDictionaryLookup;
 		}
 	}
 }
