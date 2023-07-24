@@ -34,6 +34,11 @@ var lessonUniqueWordCount;
 var totalCounts;
 var uniqueCounts;
 var sentences;
+var enableVoice;
+var voiceSelect;
+var voices;
+var initialisationComplete = false;
+var voiceSelection;
 
 
 const firebaseConfig = {
@@ -49,11 +54,6 @@ const firebaseConfig = {
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 	initialiseCredentials();
-	//initialiseCredentials().then(() => {
-		//console.log("User's authentication state has been determined.");
-	//	initialise();
-	//});
-	
 });
 
 function p(...messages) {
@@ -81,6 +81,11 @@ function initialise(){
     vocabularyKnown = new Set();
 	document.querySelector('#dictionary-iframe').src = 'https://en.dict.naver.com/#/main';
 	pendingDictionaryLookup ="";
+	enableVoice = false;
+	voiceSelect = document.querySelector('#voice-selection');
+	voices = [];
+	initialisationComplete = false;
+	voiceSelection="";
 	
 	resetJump();
 
@@ -98,60 +103,69 @@ function initialise(){
             clearTimeout(colourisePageTimeout);
     }
 	
-	p("Begin initialise IndexedDB");
-    initialiseIndexedDB().then(() => {
-        p("Completed initialise Indexed DB");
-        return initialiseVocabulary();
-    }).then(() => {
-        p("Completed initialise Vocabulary");
-        return initialiseUI();
-    }).then(() => {
-        p("Completed initialise UI");
-        initialiseTextSaving();
-        initialiseDataTables();
-        initialiseOptions();
-        return initialiseLesson();
-    }).then(() => {
+	initialiseIndexedDB().then(() => {
+    p("Completed initialise Indexed DB");
+    return initialiseVocabulary();
+	}).then(() => {
+		p("Completed initialise Vocabulary");
+		return initialiseUI();
+	}).then(() => {
+		p("Completed initialise UI");
+		initialiseTextSaving();
+		initialiseDataTables();
+		return initialiseSettings();
+	}).then(() => {
+		p("Completed initialise settings");
+		return initialiseLesson();
+	}).then(() => {
 		p("Completed initialise lesson");
-		if(document.getElementById('editText').value == ''){
-			activateEditTab();
-		}else{
-			loadLastState();
-		}
-        p("Initialisation complete");
-        document.getElementById('loading-overlay').style.display = 'none';
+		return initialiseLearnMode();
+	}).then(() => {
+		document.getElementById('loading-overlay').style.display = 'none';
+		initialisationComplete = true;
+		p("Initialisation complete");
+		updateAndSaveSettings();
+	}).catch((error) => {
+		console.error("An error occurred:", error);
+	});
+}
+
+function initialiseLearnMode(){
+	if(document.getElementById('editText').value == ''){
+		// If activateEditTab is async function then return its promise
+		// else wrap it in a Promise.resolve
+		return Promise.resolve(activateEditTab());
+	} else {
+		return loadLastLearnMode();
+	}
+}
+
+function loadLastLearnMode() {
+    // Return the Promise returned by getSettings
+    return getSettings().then((settings) => {
+        var mode = settings.lastOpenedLearnMode;
+        switch(mode) {
+            case "editMode": 
+                activateEditTab(); 
+                break;
+            case "learnMode": 
+                activateLearnTab(); 
+                break;
+            default:
+                activateLearnTab(); 
+        }
     }).catch((error) => {
-        console.error("An error occurred:", error);
-    });
+        console.log("Error occurred: ", error);
+    }); 
 }
 
-function initialiseOptions(){
-	
-}
 
-function loadLastState(){
-	
-			getLastEditMode().then((editMode) => {
-			switch(editMode){
-				case "editMode": 
-					activateEditTab(); 
-					break;
-				case "learnMode": 
-					activateLearnTab(); 
-					break;
-				default:
-					activateLearnTab(); 
-			}
-		}).catch((error) => {
-			console.log("Error occurred: ", error);
-		});	
-}
-
+/*
 function initialiseLesson() {
     return new Promise((resolve, reject) => {
         lessonID = sessionStorage.getItem('lessonID');
         if (lessonID) {
-            saveLastOpenedLessonID();
+            //saveLastOpenedLessonID();
             resolve(loadLesson()); // resolve with the promise returned by loadLesson()
         } else {
             // Wrap the getLastOpenedLessonID in a promise
@@ -166,7 +180,7 @@ function initialiseLesson() {
                 });
             }).then((lastOpenedLessonID) => {
                 lessonID = lastOpenedLessonID;
-                saveLastOpenedLessonID();
+                //saveLastOpenedLessonID();
                 resolve(loadLesson()); // resolve with the promise returned by loadLesson()
             }).catch((error) => {
                 console.error('Error:', error);
@@ -175,6 +189,30 @@ function initialiseLesson() {
         }
     });
 }
+*/
+
+function initialiseLesson() {
+    return new Promise((resolve, reject) => {
+        lessonID = sessionStorage.getItem('lessonID');
+        if (lessonID) {
+            //saveLastOpenedLessonID();
+            resolve(loadLesson()); // resolve with the promise returned by loadLesson()
+        } else {
+			lessonID = settings.lastOpenedLesson;
+            // Get the lastOpenedLesson from settings
+            //var lastOpenedLessonID = window.settings['lastOpenedLesson'];
+            if (lessonID) {
+                p("Found lesson: "+lessonID);
+                //saveLastOpenedLessonID();
+                resolve(loadLesson()); // resolve with the promise returned by loadLesson()
+            } else {
+				window.location.href = 'content.html';
+                reject('No last opened lesson ID found');
+            }
+        }
+    });
+}
+
 
 
 function checkWordInVocabularies(word) {
@@ -442,7 +480,9 @@ function onSidebarFullscreenButtonClick() {
 
 function onNavLearnTabShowBsTab(e) {
     p("Opened learn tab");
-	saveLastEditMode("learnMode");
+	//updateAndSaveSettings();
+	//saveLastEditMode("learnMode");
+	//currentLearnMode = "learnMode";
 				loadTextIntoLearnTab(document.getElementById('editText').value,lessonLanguage);
 				//document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
 				$('#nav-learn').trigger('scroll');
@@ -454,7 +494,9 @@ function onNavLearnTabShowBsTab(e) {
 
 function onNavEditTabShowBsTab(e) {
     p("Opened edit tab");
-	saveLastEditMode("editMode");
+	//updateAndSaveSettings();
+	//currentLearnMode = "editMode";
+	//saveLastEditMode("editMode");
 		//var scrollPosition = $('#nav-learn').scrollTop();
 		//p("learn scroll pos: "+scrollPosition);
 		//$('#editText').scrollTop(scrollPosition);
@@ -527,8 +569,28 @@ function initialiseUI(){
 		$('#sideBarFullscreenButton').on('click', onSidebarFullscreenButtonClick);
 		$('#nav-learn-tab').on('show.bs.tab', onNavLearnTabShowBsTab);
 		$('#nav-edit-tab').on('show.bs.tab', onNavEditTabShowBsTab);
-		//$('#nav-clear-tab').on('click', onClearTextButtonClick);
 		$('#clear-text-button').on('click', onClearTextButtonClick);
+		
+		
+		$('#nav-learn-tab').on('shown.bs.tab', updateAndSaveSettings);
+		$('#nav-edit-tab').on('shown.bs.tab', updateAndSaveSettings);
+		$("#enable-tts-checkbox").on("change", updateAndSaveSettings);
+		$("#voice-selection").on("change", updateAndSaveSettings);
+		$("#volume-control").on('input', function() {
+			var volumeValue = $("#volume-value");
+			volumeValue.text(this.value);
+			updateAndSaveSettings();
+		});
+		$("#pitch-control").on('input', function() {
+			var pitchValue = $("#pitch-value");
+			pitchValue.text(this.value);
+			updateAndSaveSettings();
+		});
+		$("#rate-control").on('input', function() {
+			var rateValue = $("#rate-value");
+			rateValue.text(this.value);
+			updateAndSaveSettings();
+		});
 	});
 
 	$("#textarea-navbar-title").on("click", function() {
@@ -561,9 +623,73 @@ function initialiseUI(){
 		
 		activateDictionaryTab();
 		
+		//TTS
+		var enableTTSCheckbox = document.querySelector('#enable-tts-checkbox');
+
+		// Call the function to populate the dropdown
+		speechSynthesis.voiceschanged = populateVoiceList;
+	//	window.speechSynthesis.addEventListener('voiceschanged', function() {
+	//				//voices = window.speechSynthesis.getVoices();
+	//				//PopulateVoiceDropDown(voices);
+	//				populateVoiceList();
+	//			});
+		 
+		enableTTSCheckbox.onchange = function() {
+			var ttsControls = document.getElementById('tts-controls');
+			enableVoice = this.checked;
+			if (enableVoice) {
+			// Remove the "disabled" class
+				ttsControls.classList.remove('tts-controls-disabled');
+				populateVoiceList();
+			} else {
+				// Add the "disabled" class
+				ttsControls.classList.add('tts-controls-disabled');
+			}
+		}
+
+		
+		
+		
 	resolve();
     });
 }
+
+// This function populates the voice-selection dropdown with the available voices
+function populateVoiceList() {
+    //var voiceSelect = document.querySelector('#voice-selection');
+	console.log("editing voice");
+    // Clear any existing options
+    voiceSelect.innerHTML = '';
+
+    // Get the available voices
+    voices = speechSynthesis.getVoices();
+
+    // Get the selected language
+    var selectedLanguage;
+	switch(lessonLanguage){
+		case "korean":selectedLanguage="ko";break;
+		case "cn":selectedLanguage="zh";break;
+		case "en":selectedLanguage="ko";break;
+		default:console.log("Language not found");
+	}
+
+    // Filter voices to include only voices that start with the selected language
+    voices = voices.filter(function(voice) {
+        return voice.lang.startsWith(selectedLanguage);
+    });
+    // Add each voice as an option in the dropdown
+    voices.forEach(function(voice, i) {
+        var option = document.createElement('option');
+        option.value = voice.name;
+        option.innerHTML = `${voice.name} (${voice.lang})`;
+		
+		if (voice.name === voiceSelection) {
+            option.selected = true;
+        }
+        voiceSelect.appendChild(option);
+    });
+}
+
 
 
 window.handleCredentialResponse = (response) => {
@@ -709,6 +835,10 @@ function loadLesson() {
         }
     });
 }
+
+
+
+
 
 function activateDictionaryTab(){
 	var dictionaryTab = new bootstrap.Tab(document.getElementById('dictionary-tab'));
@@ -936,6 +1066,7 @@ function loadTextIntoLearnTab(text, language) {
 function onWordClick() {
     const wordText = this.textContent;
     handleWordClick(wordText);
+	
 }
 
 function onWordRightClick(e) {
@@ -943,6 +1074,7 @@ function onWordRightClick(e) {
 	const wordText = this.textContent;
 	pendingDictionaryLookup=wordText;
 	handleDictionaryLookup();
+	playWordTTS(wordText);
 }
 
 
@@ -984,6 +1116,7 @@ function handleWordClick(word) {
 		return;
 	}
 	
+	playWordTTS(word);
 	
     var newLevel = promoteOneLevel(word);
 	//delete colourised class from all pages
@@ -1157,49 +1290,7 @@ function initialiseIndexedDB() {
         }
     });
 }
-/*
-function initialiseIndexedDB() {
-    return new Promise((resolve, reject) => {
-        if (!window.indexedDB) {
-            const errorMessage = "Your browser doesn't support a stable version of IndexedDB";
-            alert(errorMessage);
-            p(errorMessage);
-            reject(new Error(errorMessage));
-        } else {
-            var request = indexedDB.open("wordsdb", 9);
-            request.onupgradeneeded = function() {
-                db = request.result;
-                if (!db.objectStoreNames.contains('wordsdb')) {
-                    var store = db.createObjectStore("wordsdb", {keyPath: "word"});
-                    //var appearancesIndex = store.createIndex("by_appearance", "appearance");
-                }
-                if (!db.objectStoreNames.contains('lessonsdb')) {
-                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
-                }
-                if (!db.objectStoreNames.contains('settings')) {
-                    var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
-                }
-            };
-			request.onblocked = function(event) {
-				p("Request blocked!");
-			};
 
-			request.onsuccess = function(event) {
-				p("Request succeeded!");
-			};
-            request.onerror = function(event) {
-                const errorMessage = "Database error: " + event.target.errorCode;
-                p(errorMessage);
-                reject(new Error(errorMessage));
-            };
-            request.onsuccess = function() {
-                db = request.result;
-                resolve();
-            };
-        }
-    });
-}
-*/
 
 
 
@@ -1566,6 +1657,7 @@ function saveCustomLesson(){
 }
 */
 
+/*
 function getLastOpenedLessonID(callback) {
     var transaction = db.transaction(["settings"], "readonly");
     var store = transaction.objectStore("settings");
@@ -1584,7 +1676,9 @@ function getLastOpenedLessonID(callback) {
         }
     };
 }
+*/
 
+/*
 function saveLastOpenedLessonID() {
     var transaction = db.transaction(["settings"], "readwrite");
     var store = transaction.objectStore("settings");
@@ -1598,6 +1692,7 @@ function saveLastOpenedLessonID() {
         console.log("Last opened lesson ID saved successfully!");
     };
 }
+*/
 
 function handleDictionaryLookup(){
 	if(sidebarTab === "dictionary"){
@@ -1715,7 +1810,7 @@ sentences.forEach(function(item, index) {
         "#": item.validSentenceIndex,
         "Sentence": sentenceHtml,
         "n": sentenceLength,
-        "?": questionCount,
+        "x": questionCount,
         "%": percentKnown
     });
 });
@@ -1737,6 +1832,7 @@ $('#sentencelistTable').on('draw.dt', function () {
 		var thisSentence = sentences.find(item => item.validSentenceIndex === rowData["#"]);
 		pendingDictionaryLookup=thisSentence.sentence;
 		jumpToSentence(thisSentence);
+		playWordTTS(thisSentence.sentence);
 	});
 }
 
@@ -1845,7 +1941,7 @@ function updateWordInSentencesTable(word, newLevel){
 
 			let percentKnown = ((1-(questionCount/sentenceLength))*100).toFixed(2)+"%";
 			rowData["%"] = percentKnown;
-			rowData["?"] = questionCount;
+			rowData["x"] = questionCount;
 
 		  // Update the data for the current row
 		  this.data(rowData);
@@ -1853,7 +1949,7 @@ function updateWordInSentencesTable(word, newLevel){
     });
 	colourSentences(table);
 	// redraw the table, maintaining current paging position
-    //table.draw(false);
+    table.draw(false);
 
     // Check if the current page has any data
     //if (table.page.info().recordsDisplay == 0) {
@@ -1964,18 +2060,28 @@ function initialiseDataTables(){
       return true;
     }
     return false;
-  } else if (settings.nTable.id === 'sentencelistTable') {
-    var hideKnownSentences = document.getElementById("hideKnownSentencesRadioButton").checked;
-    var percentKnown = data[4];
-
-    // Check the condition based on the percentage
-    if (!(hideKnownSentences && percentKnown == "100.00%")) {
-      return true;
-    }
-    return false;
-  } else {
-    return true;
   }
+   if (settings.nTable.id === 'sentencelistTable') {
+		var hideKnownSentences = document.getElementById("hideKnownSentencesRadioButton").checked;
+		var unknownWordsInSentence = data[3];
+		if (!hideKnownSentences){
+			return true;
+		}
+		//console.log("***HERE*** "+unknownWordsInSentence);
+		if (hideKnownSentences && unknownWordsInSentence != 0) {
+		  return true;
+		}
+		// Check the condition based on the percentage
+		//if (hideKnownSentences && percentKnown == "100.00%") {
+		//	return false
+		//}
+		//if (!(hideKnownSentences && percentKnown == "100.00%")) {
+		  //return true;
+		//}
+		//return true;
+		return false;
+	  }
+  return true;
 });
 
 	
@@ -2033,6 +2139,7 @@ function initialiseDataTables(){
 		
 		pendingDictionaryLookup=word;
 		jumpToWord(word);
+		playWordTTS(word);
 	});
 
 
@@ -2066,7 +2173,7 @@ function initialiseDataTables(){
                 { data: "#" },
                 { data: "Sentence" },
                 { data: "n"},
-                { data: "?" },
+                { data: "x" },
                 { data: "%" }
             ]
         });
@@ -2165,7 +2272,7 @@ function resetJump(){
 	currentJumpIndex = 0;
     currentJumpWord = "";
 }
-
+/*
 function getLastEditMode() {
     return new Promise((resolve, reject) => {
         var transaction = db.transaction(["settings"], "readonly");
@@ -2188,9 +2295,10 @@ function getLastEditMode() {
         };
     });
 }
+*/
 
 
-
+/*
 function saveLastEditMode(mode) {
     var transaction = db.transaction(["settings"], "readwrite");
     var store = transaction.objectStore("settings");
@@ -2204,13 +2312,204 @@ function saveLastEditMode(mode) {
         console.log("Last opened mode saved successfully!");
     };
 }
+*/
+
+function playWordTTS(word) {
+    if(enableVoice) {
+        // Stop and remove any utterances currently speaking or in the queue
+        speechSynthesis.cancel();
+
+        var utterance = new SpeechSynthesisUtterance(word);
+
+        // Get the selected voice from the dropdown
+		if(!voiceSelect.selectedOptions){
+			return;
+		}
+        var selectedOption = voiceSelect.selectedOptions[0].value;
+        voices.forEach(function(voice) {
+            if(voice.name === selectedOption) {
+                utterance.voice = voice;
+            }
+        });
+
+        // Get volume, rate, and pitch from the respective input controls
+        var volume = document.getElementById('volume-control').value;
+        var rate = document.getElementById('rate-control').value;
+        var pitch = document.getElementById('pitch-control').value;
+
+        // Set volume, rate, and pitch for the utterance
+        utterance.volume = parseFloat(volume); // Volume value is between 0 and 1
+        utterance.rate = parseFloat(rate); // Rate value is between 0.1 and 10
+        utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
+
+        // Speak the utterance
+        speechSynthesis.speak(utterance);
+    }
+}
 
 
+function getCurrentLearnMode() {
+    var learnTab = document.querySelector("#nav-learn-tab");
+    var editTab = document.querySelector("#nav-edit-tab");
+
+    if(learnTab.classList.contains("active")) {
+        return "learnMode";
+    } else if(editTab.classList.contains("active")) {
+        return "editMode";
+    } else {
+        return "";
+    }
+}
 
 
+function updateAndSaveSettings() {
+	
+	if(!initialisationComplete){
+		return;
+	}
+	
+    // Get the current settings.
+    var settings = {
+        enableTTS: $("#enable-tts-checkbox").is(":checked"),
+        voiceSelection: getVoiceSelection(),
+        volume: $("#volume-control").val(),
+        pitch: $("#pitch-control").val(),
+        rate: $("#rate-control").val(),
+        lastOpenedLesson: lessonID, // assuming lessonID is defined elsewhere
+        lastOpenedLearnMode: getCurrentLearnMode()  // assuming currentMode is defined elsewhere
+    };
+
+    // Save settings to the database
+    saveSettings(settings);
+}
+
+function getVoiceSelection(){
+    if($("#voice-selection").val() == "" || $("#voice-selection").val() == null){
+        if(settings.voiceSelection){
+            return settings.voiceSelection;
+        } else {
+            return "";
+        }
+    } else {
+        return $("#voice-selection").val();
+    }
+}
 
 
+function getSettings() {
+    return new Promise((resolve, reject) => {
+        var transaction = db.transaction(["settings"], "readonly");
+        var store = transaction.objectStore("settings");
+        var settings = {};
+
+        // Open a cursor to iterate over all the records in the store
+        var request = store.openCursor();
+
+        request.onerror = function(event) {
+            console.log("Error retrieving settings: ", event.target.error);
+            reject(event.target.error);
+        };
+
+        request.onsuccess = function(event) {  
+            var cursor = event.target.result;
+
+            if (cursor) {
+                // Add each record to the settings object
+                settings[cursor.value.id] = cursor.value.value;
+                cursor.continue();
+            } else {
+                // After the cursor has gone through all the records, resolve the promise
+                resolve(settings);
+            }
+        };
+    });
+}
+    
 
 
+function saveSettings(settings) {
+	
+    // Begin a new transaction
+    var transaction = db.transaction(["settings"], "readwrite");
+    
+    // Get the object store
+    var store = transaction.objectStore("settings");
 
+    // Loop through each property in the settings object
+    for (var key in settings) {
+        if (settings.hasOwnProperty(key)) {
+            // Put (or update) each value in the object store
+            var request = store.put({id: key, value: settings[key]});
 
+            request.onerror = function(event) {
+                console.log("Error saving settings: ", event.target.error);
+            };
+
+            request.onsuccess = function(event) {
+                console.log("Settings saved successfully!");
+            };
+        }
+    }
+}
+
+function initialiseSettings() {
+    return getSettings().then(settings => {
+        // Assign to a global variable
+        window.settings = settings;
+
+         //Log each setting
+        for (let key in settings) {
+            console.log(`Setting found ${key}: ${settings[key]}`);
+        }
+    
+	
+		var enableTTS = settings.enableTTS;
+		voiceSelection = settings.voiceSelection;
+		var volume = settings.volume;
+		var pitch = settings.pitch;
+		var rate = settings.rate;
+	
+	
+        // Check the enableTTS checkbox if it is true
+        if (enableTTS) {
+            $("#enable-tts-checkbox").prop('checked', true);
+			var changeEvent = new Event('change');
+			document.getElementById('enable-tts-checkbox').dispatchEvent(changeEvent);
+        }
+
+        // Select the voice if it exists in the list
+        if (voiceSelection) {
+            $('#voice-selection').val(voiceSelection);
+        }
+		
+			
+    
+	 
+    
+
+        // Set volume, pitch, and rate sliders' values
+        if (volume) {
+            $("#volume-control").val(volume);
+			
+			var volumeControl = $("#volume-control");
+			var volumeValue = $("#volume-value");
+			volumeValue.text(volumeControl.val());
+        }
+
+        if (pitch) {
+            $("#pitch-control").val(pitch);
+			
+			var pitchControl = $("#pitch-control");
+			var pitchValue = $("#pitch-value");
+			pitchValue.text(pitchControl.val());
+        }
+
+        if (rate) {
+            $("#rate-control").val(rate);
+			
+			var rateControl = $("#rate-control");
+			 var rateValue = $("#rate-value");
+			 rateValue.text(rateControl.val());
+        }
+	});	
+}

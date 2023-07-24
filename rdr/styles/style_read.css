@@ -370,3 +370,9 @@ html, body {
 #textarea-navbar-title:hover {
     color: gray;   /* This is the color when you hover */
 }
+
+.tts-controls-disabled {
+    background-color: #ddd; /* Or whatever color you prefer */
+    pointer-events: none; /* Disables click events on child elements */
+    opacity: 0.5; /* Makes the div and its contents semi-transparent */
+}
