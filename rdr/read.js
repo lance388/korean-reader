@@ -39,6 +39,7 @@ var voiceSelect;
 var voices;
 var initialisationComplete = false;
 var voiceSelection;
+var settingsDebounceTimeout;
 
 
 const firebaseConfig = {
@@ -518,20 +519,20 @@ function onClearTextButtonClick() {
 function onSentencesTabButtonClick() {
 	toggleSidebarTab('sentences');
     sidebarTab = "sentences";
-	p("Sentences tab opened");
+	p("Sentences tab clicked.");
 }
 
 function onDictionaryTabButtonClick() {
 	toggleSidebarTab('dictionary');
     sidebarTab = "dictionary";
 	handleDictionaryLookup();
-	p("Dictionary tab opened");
+	p("Dictionary tab clicked.");
 }
 
 function onWordlistTabButtonClick() {
 	toggleSidebarTab('wordlist');
     sidebarTab = "wordlist";
-	p("Wordlist tab opened");
+	p("Wordlist tab clicked.");
 }
 
 function toggleSidebarTab(tab){
@@ -570,7 +571,14 @@ function initialiseUI(){
 		$('#nav-learn-tab').on('show.bs.tab', onNavLearnTabShowBsTab);
 		$('#nav-edit-tab').on('show.bs.tab', onNavEditTabShowBsTab);
 		$('#clear-text-button').on('click', onClearTextButtonClick);
-		
+		$("#toggle-sidebar").click(function() {
+			switch(sidebarTab){
+				case "sentences":onSentencesTabButtonClick();break;
+				case "wordlist":onWordlistTabButtonClick();break;
+				case "dictionary":onDictionaryTabButtonClick();break;
+				default: console.log("SidebarTab not found.");
+			}
+		});
 		
 		$('#nav-learn-tab').on('shown.bs.tab', updateAndSaveSettings);
 		$('#nav-edit-tab').on('shown.bs.tab', updateAndSaveSettings);
@@ -2363,24 +2371,35 @@ function getCurrentLearnMode() {
 
 
 function updateAndSaveSettings() {
-	
-	if(!initialisationComplete){
-		return;
+	// If a timeout is already scheduled, cancel it
+	if (settingsDebounceTimeout) {
+		clearTimeout(settingsDebounceTimeout);
 	}
-	
-    // Get the current settings.
-    var settings = {
-        enableTTS: $("#enable-tts-checkbox").is(":checked"),
-        voiceSelection: getVoiceSelection(),
-        volume: $("#volume-control").val(),
-        pitch: $("#pitch-control").val(),
-        rate: $("#rate-control").val(),
-        lastOpenedLesson: lessonID, // assuming lessonID is defined elsewhere
-        lastOpenedLearnMode: getCurrentLearnMode()  // assuming currentMode is defined elsewhere
-    };
 
-    // Save settings to the database
-    saveSettings(settings);
+	// Schedule a new timeout
+	settingsDebounceTimeout = setTimeout(function() {
+		// Check if initialisation is complete
+		if(!initialisationComplete){
+			return;
+		}
+		
+		// Get the current settings.
+		var settings = {
+			enableTTS: $("#enable-tts-checkbox").is(":checked"),
+			voiceSelection: getVoiceSelection(),
+			volume: $("#volume-control").val(),
+			pitch: $("#pitch-control").val(),
+			rate: $("#rate-control").val(),
+			lastOpenedLesson: lessonID, // assuming lessonID is defined elsewhere
+			lastOpenedLearnMode: getCurrentLearnMode()  // assuming currentMode is defined elsewhere
+		};
+
+		// Save settings to the database
+		saveSettings(settings);
+
+		// Clear the timeout
+		settingsDebounceTimeout = null;
+	}, 1000); // Wait for 500ms since the last invocation to actually execute
 }
 
 function getVoiceSelection(){

@@ -376,3 +376,12 @@ html, body {
     pointer-events: none; /* Disables click events on child elements */
     opacity: 0.5; /* Makes the div and its contents semi-transparent */
 }
+
+
+#toggle-sidebar {
+    position: fixed; /* Fixed positioning to stay in place when scrolling */
+    right: 20px; /* Positioning from the right */
+    bottom: 20px; /* Positioning from the bottom */
+    z-index: 1000; /* High z-index to overlay over other elements */
+    display: none; /* Initially hidden for non-mobile screens */
+}
