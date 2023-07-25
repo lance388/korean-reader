@@ -1027,15 +1027,15 @@ function loadTextIntoLearnTab(text, language) {
 	var lessonText = [];
 	words.forEach(word => {
 		lessonText.push(word.textContent);
-		$(word).on('mouseup touchend', function(e) {
-			e.preventDefault();
+		$(function() {
+			$(word).on('mouseup', onWordClick);
 			$(word).on('contextmenu', onWordRightClick);
 		});
 
 	});
 	initialiseLessonText(lessonText);
 	fillWordlistTable();
-      
+
 	words = learnTextElement.querySelectorAll('.clickable-word, .non-text');
 	// construct sentencs
 	words.forEach((word, index) => {
