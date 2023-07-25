@@ -3,8 +3,10 @@ var lessonLanguage;
 var dbfire;
 const wordsPerPage = 100;
 const pagesToLookAheadBehind = 2;
-var scrollDebounceTimer = null;
-const scrollDebounceTimeout = 40;
+var scrollLearnTabDebounceTimer = null;
+var scrollEditTabDebounceTimer = null;
+const scrollLearnTabDebounceTimeout = 40;
+const scrollEditTabDebounceTimeout = 40;
 const colouriseTimeout = 5;
 const saveVocabularyTimeout = 4000;
 const saveTextTimeout = 5000;
@@ -94,8 +96,11 @@ function initialise(){
 	if (saveTextTimer !== null) {
         clearTimeout(saveTextTimer);
     }
-	if (scrollDebounceTimer !== null) {
-            clearTimeout(scrollDebounceTimer);
+	if (scrollLearnTabDebounceTimer !== null) {
+            clearTimeout(scrollLearnTabDebounceTimer);
+    }
+	if (scrollEditTabDebounceTimer !== null) {
+            clearTimeout(scrollEditTabDebounceTimer);
     }
 	if (saveVocabularyTimer !== null) {
             clearTimeout(saveVocabularyTimer);
@@ -122,6 +127,7 @@ function initialise(){
 		p("Completed initialise lesson");
 		return initialiseLearnMode();
 	}).then(() => {
+		initialiseScroll();
 		document.getElementById('loading-overlay').style.display = 'none';
 		initialisationComplete = true;
 		p("Initialisation complete");
@@ -129,6 +135,17 @@ function initialise(){
 	}).catch((error) => {
 		console.error("An error occurred:", error);
 	});
+}
+
+function initialiseScroll(){
+	var lastScrollArray = settings.lastScrollArray;
+			if(lastScrollArray){
+			 var matchingItem = lastScrollArray.find(item => item.id == lessonID);
+			if(matchingItem) {
+				// if a matching item is found, call the function with its scroll as a parameter
+				scrollTo(matchingItem.scroll);
+			}
+		}
 }
 
 function initialiseLearnMode(){
@@ -161,36 +178,6 @@ function loadLastLearnMode() {
 }
 
 
-/*
-function initialiseLesson() {
-    return new Promise((resolve, reject) => {
-        lessonID = sessionStorage.getItem('lessonID');
-        if (lessonID) {
-            //saveLastOpenedLessonID();
-            resolve(loadLesson()); // resolve with the promise returned by loadLesson()
-        } else {
-            // Wrap the getLastOpenedLessonID in a promise
-            new Promise((resolve, reject) => {
-                getLastOpenedLessonID(function(lastOpenedLessonID) {
-                    if (lastOpenedLessonID) {
-						p("Found lesson: "+lastOpenedLessonID);
-                        resolve(lastOpenedLessonID);
-                    } else {
-                        reject('No last opened lesson ID found');
-                    }
-                });
-            }).then((lastOpenedLessonID) => {
-                lessonID = lastOpenedLessonID;
-                //saveLastOpenedLessonID();
-                resolve(loadLesson()); // resolve with the promise returned by loadLesson()
-            }).catch((error) => {
-                console.error('Error:', error);
-                reject(error); // pass the error to the outer promise
-            });
-        }
-    });
-}
-*/
 
 function initialiseLesson() {
     return new Promise((resolve, reject) => {
@@ -435,10 +422,12 @@ function printFireDBVocabItems(uid,lang) {
 
 
 function onNavLearnScroll(e) {
-    if (scrollDebounceTimer !== null) {
-            clearTimeout(scrollDebounceTimer);
+    if (scrollLearnTabDebounceTimer !== null) {
+            clearTimeout(scrollLearnTabDebounceTimer);
         }
-		scrollDebounceTimer = setTimeout(() => {
+		
+		scrollLearnTabDebounceTimer = setTimeout(() => {
+			console.log("nav-learn Scroll Top Position:", e.target.scrollTop);
 			let visibleSpans = findVisibleSpans();
 			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
 			if (!colouriseInProgress) {
@@ -446,7 +435,20 @@ function onNavLearnScroll(e) {
                     colourisePage();
             }
 			
-		}, scrollDebounceTimeout);
+		}, scrollLearnTabDebounceTimeout);
+}
+
+function onNavEditScroll(e) {
+	
+	
+    if (scrollEditTabDebounceTimer !== null) {
+            clearTimeout(scrollEditTabDebounceTimer);
+        }
+		scrollEditTabDebounceTimer = setTimeout(() => {
+			console.log("nav-edit Scroll Top Position:", e.target.scrollTop); // print scroll position
+			
+		}, scrollEditTabDebounceTimeout);
+		
 }
 
 function onTextareaFullscreenButtonClick() {
@@ -571,6 +573,7 @@ function initialiseUI(){
 		$('#wordlist-tab').on('click', onWordlistTabButtonClick);
 		$('#dictionary-tab').on('click', onDictionaryTabButtonClick);
 		$('#nav-learn').on('scroll', onNavLearnScroll);
+		$('#editText').on('scroll', onNavEditScroll);
 		$('#textareaFullscreenButton').on('click', onTextareaFullscreenButtonClick);
 		$('#sideBarFullscreenButton').on('click', onSidebarFullscreenButtonClick);
 		$('#nav-learn-tab').on('show.bs.tab', onNavLearnTabShowBsTab);
@@ -1004,9 +1007,12 @@ function loadTextIntoLearnTab(text, language) {
                 });
             }
         });
+		//chunks+='<span class="non-text"><br></span>';
         chunks = chunks.concat(sentenceChunks);
+		
         sentenceIndex++;
     });
+	chunks.push('<span class="non-text"><br></span>');
 
     // Divide the chunks into pages
     const pages = [];
@@ -2400,8 +2406,9 @@ function updateAndSaveSettings() {
 			volume: $("#volume-control").val(),
 			pitch: $("#pitch-control").val(),
 			rate: $("#rate-control").val(),
-			lastOpenedLesson: lessonID, // assuming lessonID is defined elsewhere
-			lastOpenedLearnMode: getCurrentLearnMode()  // assuming currentMode is defined elsewhere
+			lastOpenedLesson: lessonID,
+			lastOpenedLearnMode: getCurrentLearnMode(),
+			lastScrollArray: getLastScrollArray(),
 		};
 
 		// Save settings to the database
@@ -2411,6 +2418,44 @@ function updateAndSaveSettings() {
 		settingsDebounceTimeout = null;
 	}, 1000); // Wait for 500ms since the last invocation to actually execute
 }
+
+
+
+function getLastScrollArray() {
+    var scrollArray = settings.lastScrollArray;
+    var currentScroll = getCurrentScroll();
+
+    if (scrollArray) {
+        var lessonExists = scrollArray.some(item => item.id == lessonID);
+        
+        if (lessonExists) {
+            // update scrollArray
+            scrollArray = scrollArray.map(item => {
+                if (item.id == lessonID) {
+                    return { ...item, scroll: currentScroll };
+                } else {
+                    return item;
+                }
+            });
+        } else {
+            // If lessonID is not in scrollArray, add it
+            if (lessonID && lessonID != "") {
+                scrollArray.push({ id: lessonID, scroll: currentScroll });
+            }
+        }
+    } else {
+        // If scrollArray doesn't exist, initialize it with the current lessonID and scroll
+        if (lessonID && lessonID != "") {
+            scrollArray = [{ id: lessonID, scroll: currentScroll }];
+        } else {
+            // handle case where there is no lessonID
+            scrollArray = [];
+        }
+    }
+
+    return scrollArray;
+}
+
 
 function getVoiceSelection(){
     if($("#voice-selection").val() == "" || $("#voice-selection").val() == null){
@@ -2497,6 +2542,7 @@ function initialiseSettings() {
 		var volume = settings.volume;
 		var pitch = settings.pitch;
 		var rate = settings.rate;
+		
 	
 	
         // Check the enableTTS checkbox if it is true
@@ -2540,5 +2586,16 @@ function initialiseSettings() {
 			 var rateValue = $("#rate-value");
 			 rateValue.text(rateControl.val());
         }
+		
+
 	});	
+}
+
+function scrollTo(pos){
+	console.log("Scrolling to sentence number: "+pos);
+}
+
+
+function getCurrentScroll(){
+	return 0;
 }
