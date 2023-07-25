@@ -557,6 +557,11 @@ function toggleSidebarTab(tab){
     }
 }
 
+function isSidebarHidden(){
+    var sidebarContainer = document.querySelector('.sidebar-container');
+    return sidebarContainer.classList.contains('hidden');
+}
+
 
 function initialiseUI(){
 	return new Promise((resolve, reject) => {
@@ -1028,7 +1033,7 @@ function loadTextIntoLearnTab(text, language) {
 	words.forEach(word => {
 		lessonText.push(word.textContent);
 		$(function() {
-			$(word).on('mousedown', onWordClick);
+			$(word).on('click', onWordClick);
 			$(word).on('contextmenu', onWordRightClick);
 		});
 
@@ -1083,6 +1088,10 @@ function onWordRightClick(e) {
 	pendingDictionaryLookup=wordText;
 	handleDictionaryLookup();
 	playWordTTS(wordText);
+	
+	if(isSidebarHidden()){
+		toggleSidebarTab();
+	}
 }
 
 
