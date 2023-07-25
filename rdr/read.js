@@ -427,26 +427,24 @@ function onNavLearnScroll(e) {
         }
 		
 		scrollLearnTabDebounceTimer = setTimeout(() => {
-			console.log("nav-learn Scroll Top Position:", e.target.scrollTop);
+			//console.log("nav-learn Scroll Top Position:", e.target.scrollTop);
 			let visibleSpans = findVisibleSpans();
 			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
 			if (!colouriseInProgress) {
                     colouriseInProgress = true;
                     colourisePage();
             }
+			updateAndSaveSettings();
 			
 		}, scrollLearnTabDebounceTimeout);
 }
 
 function onNavEditScroll(e) {
-	
-	
     if (scrollEditTabDebounceTimer !== null) {
             clearTimeout(scrollEditTabDebounceTimer);
         }
 		scrollEditTabDebounceTimer = setTimeout(() => {
-			console.log("nav-edit Scroll Top Position:", e.target.scrollTop); // print scroll position
-			
+			updateAndSaveSettings();
 		}, scrollEditTabDebounceTimeout);
 		
 }
@@ -2593,9 +2591,23 @@ function initialiseSettings() {
 
 function scrollTo(pos){
 	console.log("Scrolling to sentence number: "+pos);
+	if(getCurrentLearnMode()=="learnMode"){
+        $('#nav-learn').scrollTop(pos);
+    }
+    else if(getCurrentLearnMode()=="editMode"){
+        $('#editText').scrollTop(pos);
+    }
 }
 
 
 function getCurrentScroll(){
-	return 0;
+    var currentScroll=0;
+    if(getCurrentLearnMode()=="learnMode"){
+        currentScroll = $('#nav-learn').scrollTop();
+    }
+    else if(getCurrentLearnMode()=="editMode"){
+        currentScroll = $('#editText').scrollTop();
+    }
+    return currentScroll;
 }
+
