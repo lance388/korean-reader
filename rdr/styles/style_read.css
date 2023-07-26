@@ -114,7 +114,6 @@ html, body {
 #learnText, #editText {
     flex-direction: row;
     border: 1px solid #ddd;
-    border: 1px solid #ddd;
     border-radius: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     box-sizing: border-box; /* add this line */
@@ -127,27 +126,9 @@ html, body {
     line-height: 1.6; /* More space between lines for easier reading */
     color: #333; /* Dark grey color for the text */
     background-color: #f9f9f9; /* Light grey color for the background */
-	line-height: 1.6; /* More space between lines for easier reading */
 	 
   
 }
-
-#editText {
-    height:100%;
-}
-
-
-
-.page {
-
-}
-
-
-
-
-
-
-
 
 .nav-link:hover {
     background-color: #f8f9fa; /* Background color on hover */
