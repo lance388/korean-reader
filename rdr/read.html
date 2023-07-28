@@ -58,29 +58,30 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav2">
-            <!-- Tab links -->
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link d-flex align-items-center justify-content-center" id="nav-learn-tab" data-bs-toggle="tab" href="#nav-learn" role="tab" aria-controls="nav-learn" aria-selected="false"><i class="fas fa-book-open"></i></a>
-                <a class="nav-item nav-link active d-flex align-items-center justify-content-center" id="nav-edit-tab" data-bs-toggle="tab" href="#nav-edit" role="tab" aria-controls="nav-edit" aria-selected="true"><i class="fas fa-edit"></i></a>
-            </div>
-            <div class="vertical-line mx-3"></div>
-            <div class="d-none d-md-flex align-items-center justify-content-center flex-grow-1">
-                <span id="textarea-navbar-title"></span>
-            </div>
-            
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link toggle-tab active d-flex align-items-center justify-content-center" id="dictionary-tab" data-bs-toggle="tab" href="#dictionary-content-area" role="tab" aria-controls="dictionary-content-area" aria-selected="true"><i class="fas fa-book"></i></a>
-                <a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="wordlist-tab" data-bs-toggle="tab" href="#wordlist-content-area" role="tab" aria-controls="wordlist-content-area" aria-selected="false"><i class="fas fa-list-ul"></i></a>
-                <a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="sentences-tab" data-bs-toggle="tab" href="#sentences-content-area" role="tab" aria-controls="sentences-content-area" aria-selected="false"><i class="fas fa-align-justify"></i></a>
-            </div>
-            <div class="vertical-line mx-3"></div>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <button class="btn nav-item nav-link btn-outline-secondary align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#settings-modal"><i class="fas fa-cog"></i></button>
-                </li>
-            </ul>
-        </div>
+			   <div class="collapse navbar-collapse" id="navbarNav2">
+			<!-- New Edit Button -->
+			<button id="edit-button" class="btn nav-item nav-link d-flex align-items-center justify-content-center"><i class="fas fa-edit"></i></button>
+			
+			<!-- Remove the old tab links -->
+
+			<div class="vertical-line mx-3"></div>
+			<div class="d-none d-md-flex align-items-center justify-content-center flex-grow-1">
+				<span id="textarea-navbar-title"></span>
+			</div>
+			
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<a class="nav-item nav-link toggle-tab active d-flex align-items-center justify-content-center" id="dictionary-tab" data-bs-toggle="tab" href="#dictionary-content-area" role="tab" aria-controls="dictionary-content-area" aria-selected="true"><i class="fas fa-book"></i></a>
+				<a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="wordlist-tab" data-bs-toggle="tab" href="#wordlist-content-area" role="tab" aria-controls="wordlist-content-area" aria-selected="false"><i class="fas fa-list-ul"></i></a>
+				<a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="sentences-tab" data-bs-toggle="tab" href="#sentences-content-area" role="tab" aria-controls="sentences-content-area" aria-selected="false"><i class="fas fa-align-justify"></i></a>
+			</div>
+			<div class="vertical-line mx-3"></div>
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item">
+					<button class="btn nav-item nav-link btn-outline-secondary align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#settings-modal"><i class="fas fa-cog"></i></button>
+				</li>
+			</ul>
+		</div>
+
     </div>
 </nav>
 
@@ -161,10 +162,10 @@
 	
 	<!-- Tab content -->
 	<div class="textarea-tab-content tab-content" id="nav-tabContent">
-		<div class="tab-pane fade learn-textarea" id="nav-learn" role="tabpanel" aria-labelledby="nav-learn-tab">
-			<div id="learnText"></div>
+		<div class="tab-pane fade learn-textarea show active" id="nav-learn" role="tabpanel" aria-labelledby="nav-learn-tab">
+			<div id="learnText" contenteditable="false"></div>
 		</div>
-		<div class="tab-pane fade show active" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
+		<div class="tab-pane fade" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
 		<!--	<textarea class="form-control edit-textarea" id="editText" placeholder="Write your text here..."></textarea> -->
 			<div id="editText" contenteditable="true"></div>
 		</div>

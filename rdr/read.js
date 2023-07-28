@@ -4,12 +4,12 @@ var dbfire;
 const wordsPerPage = 100;
 const pagesToLookAheadBehind = 2;
 var scrollLearnTabDebounceTimer = null;
-var scrollEditTabDebounceTimer = null;
+//var scrollEditTabDebounceTimer = null;
 const scrollLearnTabDebounceTimeout = 40;
-const scrollEditTabDebounceTimeout = 40;
+//const scrollEditTabDebounceTimeout = 40;
 const colouriseTimeout = 5;
-const saveVocabularyTimeout = 4000;
-const saveTextTimeout = 5000;
+const saveVocabularyTimeout = 2000;
+const saveTextTimeout = 2000;
 var pageMax;
 var wordlistTable;
 var colourisePending;
@@ -43,6 +43,7 @@ var initialisationComplete = false;
 var voiceSelection;
 var settingsDebounceTimeout;
 var lastScroll;
+var learnMode;
 
 
 const firebaseConfig = {
@@ -91,6 +92,7 @@ function initialise(){
 	initialisationComplete = false;
 	voiceSelection="";
 	lastScroll=0;
+	learnMode="learn";
 	
 	resetJump();
 
@@ -101,9 +103,9 @@ function initialise(){
 	if (scrollLearnTabDebounceTimer !== null) {
             clearTimeout(scrollLearnTabDebounceTimer);
     }
-	if (scrollEditTabDebounceTimer !== null) {
-            clearTimeout(scrollEditTabDebounceTimer);
-    }
+//	if (scrollEditTabDebounceTimer !== null) {
+ //           clearTimeout(scrollEditTabDebounceTimer);
+ //   }
 	if (saveVocabularyTimer !== null) {
             clearTimeout(saveVocabularyTimer);
     }
@@ -151,12 +153,12 @@ function initialiseScroll(){
 }
 
 function initialiseLearnMode(){
-	if(document.getElementById('editText').innerText == ''){
+	if(document.getElementById('learnText').innerText == ''){
 		// If activateEditTab is async function then return its promise
 		// else wrap it in a Promise.resolve
-		return Promise.resolve(activateEditTab());
+		return Promise.resolve(activateEditMode());
 	} else {
-		return loadLastLearnMode();
+		return Promise.resolve(loadLastLearnMode());
 	}
 }
 
@@ -165,18 +167,18 @@ function loadLastLearnMode() {
     return getSettings().then((settings) => {
         var mode = settings.lastOpenedLearnMode;
 		if(!mode){
-			activateLearnTab();
+			activateLearnMode();
 		}
 		else{
 			switch(mode) {
-				case "editMode": 
-					activateEditTab(); 
+				case "edit": 
+					activateEditMode(); 
 					break;
-				case "learnMode": 
-					activateLearnTab(); 
+				case "learn": 
+					activateLearnMode(); 
 					break;
 				default:
-					activateLearnTab(); 
+					activateLearnMode(); 
 			}
 		}
     }).catch((error) => {
@@ -227,38 +229,52 @@ function checkWordInVocabularies(word) {
 
 
 function onTextareaInput() {
-	if (saveTextTimer !== null) {
-			clearTimeout(saveTextTimer);
-		}
+    if (saveTextTimer !== null) {
+        clearTimeout(saveTextTimer);
+    }
 
-		saveTextTimer = setTimeout(() => {
-			if(lessonSavingEnabled){
-				var lesson = {
-					title: lessonID,
-					text: document.getElementById('editText').innerHTML
-				};
-				
-				saveCustomLessonToIndexedDB(lesson);
-				p("lesson saved");
-			}
-			saveTextTimer = null;
-		}, saveTextTimeout);
+    saveTextTimer = setTimeout(() => {
+        if(lessonSavingEnabled) {
+
+            let learnTextDiv = document.getElementById('learnText');
+
+            // Clone the original div
+            let clone = learnTextDiv.cloneNode(true);
+
+            let spans = clone.getElementsByTagName('span');
+
+            // Create a copy of the clone's innerHTML
+            let newHTML = clone.innerHTML;
+
+            // Loop through the selected elements
+            for (let i = 0; i < spans.length; i++) {
+                // Replace each span in the copy of the clone's innerHTML with its own text content
+                newHTML = newHTML.replace(spans[i].outerHTML, spans[i].textContent);
+            }
+
+            // Update the innerHTML of the clone
+            clone.innerHTML = newHTML;
+
+            var lesson = {
+                title: lessonID,
+                text: clone.innerHTML
+            };
+
+            saveCustomLessonToIndexedDB(lesson);
+
+            console.log("lesson saved");
+        }
+        saveTextTimer = null;
+    }, saveTextTimeout);
 }
 
 
-function initialiseTextSaving(){
-	//const textarea = document.getElementById('editText');
-	
-	
-	// Remove the existing listener, if it exists
-    //textarea.removeEventListener('input', onTextareaInput);
 
-    // Add the listener
-    //textarea.addEventListener('input', onTextareaInput);
-	
+function initialiseTextSaving(){
 	$(function() {
-		$('#editText').on('input', onTextareaInput);
+		$('#learnText').on('input paste', onTextareaInput);
 	});
+
 }
 
 /*
@@ -446,6 +462,7 @@ function onNavLearnScroll(e) {
 		}, scrollLearnTabDebounceTimeout);
 }
 
+/*
 function onNavEditScroll(e) {
     if (scrollEditTabDebounceTimer !== null) {
             clearTimeout(scrollEditTabDebounceTimer);
@@ -455,6 +472,7 @@ function onNavEditScroll(e) {
 		}, scrollEditTabDebounceTimeout);
 		
 }
+*/
 
 function onTextareaFullscreenButtonClick() {
 	var textareaContainer = document.querySelector('.textarea-container');
@@ -485,7 +503,7 @@ function onSidebarFullscreenButtonClick() {
 				  textareaContainer.classList.remove('full-width');
 			}
 }
-
+/*
 function onNavLearnTabShowBsTab(e) {
     p("Opened learn tab");
 	//updateAndSaveSettings();
@@ -499,7 +517,8 @@ function onNavLearnTabShowBsTab(e) {
 			//	p("edit scroll pos: "+scrollPosition);
 			//$('#nav-learn').scrollTop(scrollPosition);
 }
-
+*/
+/*
 function onNavEditTabShowBsTab(e) {
     p("Opened edit tab");
 	//updateAndSaveSettings();
@@ -509,13 +528,13 @@ function onNavEditTabShowBsTab(e) {
 		//p("learn scroll pos: "+scrollPosition);
 		//$('#editText').scrollTop(scrollPosition);
 }
-
+*/
 function onClearTextButtonClick() {
     var result = confirm('Are you sure you want to clear the text?');
     
     if (result) {
-        document.getElementById('editText').innerText = '';
-        activateEditTab();
+        document.getElementById('learnText').innerText = '';
+        activateEditMode();
     }
 }
 
@@ -593,49 +612,66 @@ function initialiseUI(){
 		$('#wordlist-tab').on('click', onWordlistTabButtonClick);
 		$('#dictionary-tab').on('click', onDictionaryTabButtonClick);
 		$('#nav-learn').on('scroll', onNavLearnScroll);
-		$('#nav-edit').on('scroll', onNavEditScroll);
+		//$('#nav-edit').on('scroll', onNavEditScroll);
 		$('#textareaFullscreenButton').on('click', onTextareaFullscreenButtonClick);
 		$('#sideBarFullscreenButton').on('click', onSidebarFullscreenButtonClick);
-		$('#nav-learn-tab').on('show.bs.tab', function() {
-			lastScroll = getCurrentScroll();
-			onNavLearnTabShowBsTab();
-		});
-		$('#nav-edit-tab').on('show.bs.tab', function() {
-			lastScroll = getCurrentScroll();
-			onNavEditTabShowBsTab();
-		});
+		//$('#nav-learn-tab').on('show.bs.tab', function() {
+		//	lastScroll = getCurrentScroll();
+		//	onNavLearnTabShowBsTab();
+		//});
+		//$('#nav-edit-tab').on('show.bs.tab', function() {
+		//	lastScroll = getCurrentScroll();
+		//	onNavEditTabShowBsTab();
+		//});
 		$('#clear-text-button').on('click', onClearTextButtonClick);
 		$("#toggle-sidebar").click(function() {
 			switch(sidebarTab){
 				case "sentences":onSentencesTabButtonClick();break;
 				case "wordlist":onWordlistTabButtonClick();break;
 				case "dictionary":onDictionaryTabButtonClick();break;
-				default: console.log("SidebarTab not found.");
+			default: console.log("SidebarTab not found.");
 			}
 		});
+	
 		
-		$("#editText").on("paste", function(e) {
+		$("#learnText").on("paste", function(e) {
 			// prevent the default paste action
 			e.preventDefault();
 
 			// get the clipboard data as text
 			let text = e.originalEvent.clipboardData.getData("text/plain");
-			
+
 			// replace new line characters with <br> to maintain line breaks
 			text = text.replace(/\r?\n/g, '<br>');
 
-			// insert the text manually into the div
-			// Use jQuery's html() method to insert text
-			$(this).html(text);
+			// create a temporary div to hold the pasted HTML
+			let tempDiv = document.createElement("div");
+			tempDiv.innerHTML = text;
+
+			// get the current selection
+			let selection = window.getSelection();
+			if (!selection.rangeCount) return false;
+
+			selection.deleteFromDocument();
+
+			// insert each node from the temporary div at the cursor position
+			while (tempDiv.firstChild) {
+				selection.getRangeAt(0).insertNode(tempDiv.firstChild);
+			}
 		});
+
+
+
+
+		
 		
 		$(window).on('beforeunload', function(){
 			updateAndSaveSettings();
 		});
 
-
-
 		
+
+		/*
 		$('#nav-learn-tab').on('shown.bs.tab', function() {
 			scrollTo(lastScroll);
 			updateAndSaveSettings();
@@ -644,6 +680,7 @@ function initialiseUI(){
 			scrollTo(lastScroll);
 			updateAndSaveSettings();
 		});
+		*/
 		//$('#nav-learn-tab').on('shown.bs.tab', updateAndSaveSettings);
 		//$('#nav-edit-tab').on('shown.bs.tab', updateAndSaveSettings);
 		$("#enable-tts-checkbox").on("change", updateAndSaveSettings);
@@ -720,7 +757,13 @@ function initialiseUI(){
 		}
 
 		
-		
+	$('#edit-button').on('click', function() {
+        // Prevent the default button action
+        //e.preventDefault();
+
+        // Call the activateEditMode() function
+        toggleEditMode();
+    });	
 		
 	resolve();
     });
@@ -874,7 +917,7 @@ function logUser(user)
 function loadLesson() {
     return new Promise((resolve, reject) => {
         p("Loading lesson:", lessonID);
-        if (/^custom\d+$/.test(lessonID)) {
+        //if (/^custom\d+$/.test(lessonID)) {
             p("Custom lesson loading...");
             initCustomLesson()
                 .then(() => resolve())
@@ -882,7 +925,8 @@ function loadLesson() {
                     console.error('Error:', error);
                     reject(error);
                 });
-        }
+        //}
+		/*
         else{
             fetch(`lessons/${lessonID}.json`)
             .then(response => {
@@ -905,6 +949,7 @@ function loadLesson() {
                 reject(error);
             });
         }
+		*/
     });
 }
 
@@ -926,39 +971,24 @@ function activateDictionaryTab(){
 	*/
 }
 
-
+/*
 function activateEditTab(){
 	var editTab = new bootstrap.Tab(document.getElementById('nav-edit-tab'));
     editTab.show();
-  /*  if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
+    if (!document.getElementById('nav-edit-tab').classList.contains('active')) {
         document.getElementById('nav-edit-tab').classList.add('active');
         document.getElementById('nav-edit').classList.add('show', 'active');
 
         document.getElementById('nav-learn-tab').classList.remove('active');
         document.getElementById('nav-learn').classList.remove('show', 'active');
     }
-	*/
+	
 }
-
-function activateLearnTab(){
-	var learnTab = new bootstrap.Tab(document.getElementById('nav-learn-tab'));
-    learnTab.show();
-/*   
-   if (!document.getElementById('nav-learn-tab').classList.contains('active')) {
-
-        document.getElementById('nav-learn-tab').classList.add('active');
-        document.getElementById('nav-learn').classList.add('show', 'active');
-
-
-        document.getElementById('nav-edit-tab').classList.remove('active');
-        document.getElementById('nav-edit').classList.remove('show', 'active');
-    }
-    $('#nav-learn-tab').trigger('show.bs.tab');
 */
-    //document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
-}
 
 
+
+/*
 function initPremadeLesson(title, text){
     return new Promise((resolve, reject) => {
         document.getElementById('textarea-navbar-title').innerText = title;
@@ -970,6 +1000,7 @@ function initPremadeLesson(title, text){
         resolve();
     });
 }
+*/
 
 function formatTitle(title) {
     // Split the title into words (assuming the format is always "custom1", "custom2", etc.)
@@ -994,9 +1025,9 @@ function initCustomLesson(){
         if(signedInState=="offline"||signedInState=="signedOut"){
             getCustomLessonFromIndexedDB(lessonID, function(lesson) {
                 if(lesson){
-                    const textarea = document.getElementById('editText');
+                    const textarea = document.getElementById('learnText');
                     textarea.innerHTML = lesson.text;
-                    $('#editText').trigger('input');
+                   // $('#editText').trigger('input');
                     resolve();
                 } else {
                     console.log('Could not load custom lesson');
@@ -1006,9 +1037,9 @@ function initCustomLesson(){
         else{
             getCustomLessonFromIndexedDB(lessonID, function(lesson) {
                 if(lesson){
-                    const textarea = document.getElementById('editText');
+                    const textarea = document.getElementById('learnText');
                     textarea.innerText = lesson.text;
-                    $('#editText').trigger('input');
+                   // $('#editText').trigger('input');
                     resolve();
                 } else {
                     reject('Could not load custom lesson');
@@ -1068,7 +1099,7 @@ function loadTextIntoLearnTab(text, language) {
 		
         sentenceIndex++;
     });
-	chunks.push('<span class="non-text"><br></span>');
+	//chunks.push('<span class="non-text"><br></span>');
 
     // Divide the chunks into pages
     const pages = [];
@@ -1851,10 +1882,14 @@ function fillWordlistTable() {
 
 function fillSentencelistTable() {
     // Get the DataTable instance
-    var sentencelistTable = $('#sentencelistTable').DataTable();
-
-    // Clear any existing data
-    sentencelistTable.clear();
+    if ($.fn.dataTable.isDataTable('#sentencelistTable')) {
+        var sentencelistTable = $('#sentencelistTable').DataTable();
+        // Clear any existing data
+        sentencelistTable.clear();
+    } else {
+        // Initialize the DataTable
+        var sentencelistTable = $('#sentencelistTable').DataTable();
+    }
 
 
 sentences.forEach(function(item, index) {
@@ -1900,20 +1935,18 @@ sentences.forEach(function(item, index) {
 	colourSentences(sentencelistTable);
 
 
-$('#sentencelistTable').on('draw.dt', function () {
-    var table = $(this).DataTable();
-    colourSentences(table);
-});
+	$('#sentencelistTable').off('draw.dt').on('draw.dt', function () {
+        var table = $(this).DataTable();
+        colourSentences(table);
+    });
 
-
-    // Add a click event listener to the table rows
-	$('#sentencelistTable').on('click', 'tr:not(:first)', function() {
-		var rowData = sentencelistTable.row(this).data();
-		var thisSentence = sentences.find(item => item.validSentenceIndex === rowData["#"]);
-		pendingDictionaryLookup=thisSentence.sentence;
-		jumpToSentence(thisSentence);
-		playWordTTS(thisSentence.sentence);
-	});
+    $('#sentencelistTable').off('click', 'tr:not(:first)').on('click', 'tr:not(:first)', function() {
+        var rowData = sentencelistTable.row(this).data();
+        var thisSentence = sentences.find(item => item.validSentenceIndex === rowData["#"]);
+        pendingDictionaryLookup=thisSentence.sentence;
+        jumpToSentence(thisSentence);
+        playWordTTS(thisSentence.sentence);
+    });
 }
 
 function colourSentences(table){
@@ -2428,20 +2461,6 @@ function playWordTTS(word) {
 }
 
 
-function getCurrentLearnMode() {
-    var learnTab = document.querySelector("#nav-learn-tab");
-    var editTab = document.querySelector("#nav-edit-tab");
-
-    if(learnTab.classList.contains("active")) {
-        return "learnMode";
-    } else if(editTab.classList.contains("active")) {
-        return "editMode";
-    } else {
-        return "";
-    }
-}
-
-
 function updateAndSaveSettings() {
 	
 	if(!initialisationComplete){
@@ -2463,7 +2482,7 @@ function updateAndSaveSettings() {
 			pitch: $("#pitch-control").val(),
 			rate: $("#rate-control").val(),
 			lastOpenedLesson: lessonID,
-			lastOpenedLearnMode: getCurrentLearnMode(),
+			lastOpenedLearnMode: learnMode,
 			lastScrollArray: getLastScrollArray(),
 			sidebarVisible:isSidebarVisible(),
 		};
@@ -2577,7 +2596,7 @@ function saveSettings(settings) {
             };
 
             request.onsuccess = function(event) {
-                console.log("Settings saved successfully!");
+                console.log("Setting saved successfully!");
             };
         }
     }
@@ -2601,7 +2620,6 @@ function initialiseSettings() {
 		var rate = settings.rate;
 		var sidebarVisible = settings.sidebarVisible;
 	
-		console.log(sidebarVisible+ " **AND** "+isSidebarVisible());
 		if(sidebarVisible!=null)
 		{
 			if(sidebarVisible!=isSidebarVisible())
@@ -2658,23 +2676,59 @@ function initialiseSettings() {
 }
 
 function scrollTo(pos){
-	if(getCurrentLearnMode()=="learnMode"){
+	//if(getCurrentLearnMode()=="learnMode"){
         $('#nav-learn').scrollTop(pos);
-    }
-    else if(getCurrentLearnMode()=="editMode"){
-        $('#nav-edit').scrollTop(pos);
-    }
+    //}
+    //else if(getCurrentLearnMode()=="editMode"){
+   //     $('#nav-edit').scrollTop(pos);
+   // }
 }
 
 
 function getCurrentScroll(){
     var currentScroll=0;
-    if(getCurrentLearnMode()=="learnMode"){
+    //if(getCurrentLearnMode()=="learnMode"){
         currentScroll = $('#nav-learn').scrollTop();
-    }
-    else if(getCurrentLearnMode()=="editMode"){
-        currentScroll = $('#nav-edit').scrollTop();
-    }
+    //}
+    //else if(getCurrentLearnMode()=="editMode"){
+    //    currentScroll = $('#nav-edit').scrollTop();
+    //}
     return currentScroll;
 }
 
+function activateEditMode(){ 
+	console.log("Activate edit mode.");
+	learnMode="edit";
+	$('#edit-button').addClass('active'); // add the active class when the button is clicked
+	// Select all span elements inside the #learnText div
+		
+		
+		let spans = document.querySelectorAll('#learnText span');
+
+		// Loop through the selected elements
+		for (let i = 0; i < spans.length; i++) {
+			// Remove all classes
+			spans[i].className = '';
+		}
+
+	$("#learnText").attr('contenteditable', 'true');
+	updateAndSaveSettings();
+}
+
+function activateLearnMode(){
+	console.log("Activate learn mode.");
+	learnMode="learn";
+	$('#edit-button').removeClass('active');
+	loadTextIntoLearnTab(document.getElementById('learnText').innerText,lessonLanguage);
+	$('#nav-learn').trigger('scroll');
+	$("#learnText").attr('contenteditable', 'false');
+	updateAndSaveSettings();
+}
+
+function toggleEditMode() {
+    if ($('#edit-button').hasClass('active')) {
+		activateLearnMode();
+    } else {
+		activateEditMode();
+    }
+}

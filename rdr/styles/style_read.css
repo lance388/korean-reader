@@ -98,8 +98,7 @@ html, body {
 }
 
 
-#nav-learn,
-#nav-edit {
+#nav-learn{
     box-sizing: border-box; /* Add this */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
     background-color: #f9f9f9; /* Light grey color for the background */
@@ -107,27 +106,27 @@ html, body {
 	overflow-y: auto;
 	margin:0;
 	padding:0;
+	
 
 }
 
-
-#learnText, #editText {
+#learnText {
     flex-direction: row;
     border: 1px solid #ddd;
     border-radius: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     box-sizing: border-box; /* add this line */
-	margin:0;
-   padding:10px;
-   overflow-wrap: break-word;
-  word-wrap: break-word;
-  resize:none;
-  font-size: 1.5em; /* Adjust the font size to fit the container */
+    margin:0;
+    padding:10px;
+    overflow-wrap: normal;
+    word-wrap: normal;
+    resize:none;
+    font-size: 1.5em; /* Adjust the font size to fit the container */
     line-height: 1.6; /* More space between lines for easier reading */
     color: #333; /* Dark grey color for the text */
     background-color: #f9f9f9; /* Light grey color for the background */
-	 
-  
+	min-height:95vh;
+	
 }
 
 .nav-link:hover {
@@ -365,4 +364,10 @@ html, body {
     bottom: 20px; /* Positioning from the bottom */
     z-index: 1000; /* High z-index to overlay over other elements */
     display: none; /* Initially hidden for non-mobile screens */
+}
+
+#edit-button{
+	height:5vh;
+	width:5vw;
+	margin-left:5px;
 }
