@@ -9,17 +9,32 @@
 	--known-word-text-colour: #333;
 	--jump-word-text-colour: #333;
 	--nonword-text-colour: #333;
+	--dark-background-colour-primary: #222;
+	--dark-background-colour-secondary: #111;
+	--light-background-colour-primary: #eee;
+	--light-background-colour-secondary: #ddd;
 }
 
 html[data-bs-theme='light'] #learnText,
 html[data-bs-theme='light'] #sidebar
 {
-    background-color: #eee; /* or any off-white color you prefer */
+    background-color: var(--light-background-colour-primary); /* or any off-white color you prefer */
 }
 
 html[data-bs-theme='light'] .navbar
 {
-	 background-color: #ddd; /* or any off-white color you prefer */
+	  background-color: var(--light-background-colour-secondary); /* or any off-white color you prefer */
+}
+
+html[data-bs-theme='dark'] #learnText,
+html[data-bs-theme='dark'] #sidebar
+{
+     background-color: var(--dark-background-colour-primary); /* or any off-white color you prefer */
+}
+
+html[data-bs-theme='dark'] .navbar
+{
+	  background-color: var(--dark-background-colour-secondary); /* or any off-white color you prefer */
 }
 
 
@@ -139,7 +154,7 @@ html, body {`
     font-size: 1.5em; /* Adjust the font size to fit the container */
     line-height: 1.6; /* More space between lines for easier reading */
 	min-height:95vh;
-	
+	font-family: Arial, sans-serif;
 }
 
 .nav-link:hover {

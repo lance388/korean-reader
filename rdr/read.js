@@ -769,29 +769,39 @@ function initialiseUI(){
 
 		
 	$('#edit-button').on('click', function() {
-        // Prevent the default button action
-        //e.preventDefault();
-
-        // Call the activateEditMode() function
         toggleEditMode();
     });
 	
+	/*
+	$('#unknown-highlighting-checkbox').change(function() {
+		updateAndSaveSettings();
+	});
+
+	// Listen for changes to the learning words checkbox
+	$('#learning-highlighting-checkbox').change(function() {
+		updateAndSaveSettings();
+	});
+
+	// Listen for changes to the known words checkbox
+	$('#known-highlighting-checkbox').change(function() {
+		updateAndSaveSettings();
+	});
+	*/
 	
 	// Listen for changes to the unknown words checkbox
-	
+	/*
 	$('#unknown-highlighting-checkbox').change(function() {
 		// Update the global variable
 		enableHighlightingUnknown = $(this).is(':checked');
 		
 		// If the checkbox is not checked, remove the highlighting
 		if (!enableHighlightingUnknown) {
-			document.documentElement.style.setProperty('--unknown-word-bg', $('#learnText').css('background-color'));
+			document.documentElement.style.setProperty('--unknown-word-bg', $('body').css('background-color'));
 		} else {
 			// If it is checked, add the highlighting back
 			let oldColour=settings.unknownHighlightColour;
 			document.documentElement.style.setProperty('--unknown-word-bg', oldColour);
 		}
-		
 			let styles, colour, textColor;
 			styles = getComputedStyle(document.documentElement);
 			colour = styles.getPropertyValue('--unknown-word-bg').trim();
@@ -809,7 +819,7 @@ function initialiseUI(){
 		// Update the global variable
 		enableHighlightingLearning = $(this).is(':checked');
 		if (!enableHighlightingLearning) {
-			document.documentElement.style.setProperty('--learning-word-bg', $('#learnText').css('background-color'));
+			document.documentElement.style.setProperty('--learning-word-bg', $('body').css('background-color'));
 		} else {
 			let oldColour=settings.learningHighlightColour;
 			document.documentElement.style.setProperty('--learning-word-bg', oldColour);
@@ -831,7 +841,7 @@ function initialiseUI(){
 		// Update the global variable
 		enableHighlightingKnown = $(this).is(':checked');
 		if (!enableHighlightingKnown) {
-			document.documentElement.style.setProperty('--known-word-bg', $('#learnText').css('background-color'));
+			document.documentElement.style.setProperty('--known-word-bg', $('body').css('background-color'));
 		} else {
 			let oldColour=settings.knownHighlightColour;
 			document.documentElement.style.setProperty('--known-word-bg', oldColour);
@@ -847,7 +857,7 @@ function initialiseUI(){
 		// Run activateLearnMode()
 		//activateLearnMode();
 	});
-	
+	*/
 		// When the dropdown item is clicked, change the theme
 	document.getElementById('light-mode').addEventListener('click', function() {
 		setTheme('light');
@@ -878,6 +888,32 @@ function initialiseUI(){
 	resolve();
     });
 }
+
+function rgbaToHex(rgba) {
+    // Check if rgba color
+    if (!rgba || !rgba.includes('rgba')) {
+        return rgba; // return original color if it's not in rgba format
+    }
+
+    // Choose correct separator
+    let sep = rgba.indexOf(",") > -1 ? "," : " ";
+    // Turn "rgba(r, g, b, a)" into [r, g, b, a]
+    rgba = rgba.substr(5).split(")")[0].split(sep);
+
+    let r = (+rgba[0]).toString(16),
+        g = (+rgba[1]).toString(16),
+        b = (+rgba[2]).toString(16);
+
+    if (r.length == 1)
+        r = "0" + r;
+    if (g.length == 1)
+        g = "0" + g;
+    if (b.length == 1)
+        b = "0" + b;
+
+    return "#" + r + g + b;
+}
+
 
 // This function populates the voice-selection dropdown with the available voices
 function populateVoiceList() {
@@ -2296,7 +2332,6 @@ function initialiseDataTables(){
 		if (!hideKnownSentences){
 			return true;
 		}
-		//console.log("***HERE*** "+unknownWordsInSentence);
 		if (hideKnownSentences && unknownWordsInSentence != 0) {
 		  return true;
 		}
@@ -2744,7 +2779,7 @@ function saveSettings(settings) {
             };
 
             request.onsuccess = function(event) {
-                console.log("Setting saved successfully!");
+               // console.log("Setting saved successfully!");
             };
         }
     }
@@ -2879,24 +2914,79 @@ function setTheme(theme){
 		document.documentElement.setAttribute('data-bs-theme', theme);
 	}
 	
-	let styles, colour, textColor;
+	let styles, colour, textColor, bgColour;
+	
 	styles = getComputedStyle(document.documentElement);
-	colour = styles.getPropertyValue('--unknown-word-bg').trim();
+	
+	switch(theme){
+		case "light": bgColour=styles.getPropertyValue('--light-background-colour-primary'); break;
+		case "dark": bgColour=styles.getPropertyValue('--dark-background-colour-primary'); break;
+		default: console.log("Theme not found."); return;
+	}
+	
+	textColor = getContrastColor(bgColour);
+    document.documentElement.style.setProperty('--nonword-text-colour', textColor);
+	
+	/*
+	//colour = styles.getPropertyValue('--unknown-word-bg').trim();
+	colour=settings.unknownHighlightColour;
 	textColor = getContrastColor(colour);
     document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
 	
-	colour = styles.getPropertyValue('--learning-word-bg').trim();
+	//colour = styles.getPropertyValue('--learning-word-bg').trim();
+	colour=settings.learningHighlightColour;
 	textColor = getContrastColor(colour);
     document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
 			
-	colour = styles.getPropertyValue('--known-word-bg').trim();
+	//colour = styles.getPropertyValue('--known-word-bg').trim();
+	colour=settings.knownHighlightColour;
 	textColor = getContrastColor(colour);
     document.documentElement.style.setProperty('--known-word-text-colour', textColor);
 	
-	colour = styles.getPropertyValue('--bs-body-bg').trim();
-	textColor = getContrastColor(colour);
+	//colour = styles.getPropertyValue('--bs-body-bg').trim();
+	textColor = getContrastColor(bgColour);
     document.documentElement.style.setProperty('--nonword-text-colour', textColor);
 	
+	
+	
+	console.log("***HERE0 "+settings.unknownHighlighting +" "+settings.learningHighlighting+" "+settings.knownHighlighting);
+	console.log($('#unknown-highlighting-checkbox').is(':checked'));
+	
+	if (settings.unknownHighlighting!=null) {
+			//$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
+			if (!settings.unknownHighlighting) {
+				//colour = $('body').css('background-color');
+				console.log("***HERE1 ");
+				document.documentElement.style.setProperty('--unknown-word-bg', bgColour);
+				textColor = getContrastColor(bgColour);
+				document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+			}
+		}
+
+		if (settings.learningHighlighting!=null) {
+			//$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
+			if (!settings.learningHighlighting) {
+				console.log("***HERE2 ");
+				//colour = $('body').css('background-color');
+				document.documentElement.style.setProperty('--learning-word-bg', bgColour);
+				textColor = getContrastColor(bgColour);
+				document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+			}
+		}
+
+		if (settings.knownHighlighting!=null) {
+			//$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
+			if (!settings.knownHighlighting) {
+				console.log("***HERE3 ");
+				//colour = $('body').css('background-color');
+				document.documentElement.style.setProperty('--known-word-bg', bgColour);
+				textColor = getContrastColor(bgColour);
+				document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+			}
+		}
+	
+	
+	*/
 	updateAndSaveSettings();
 }
 
@@ -2999,10 +3089,11 @@ function initialiseSettings() {
 			document.documentElement.style.setProperty('--jump-word-text-colour', textColor);
         }
 		
+		/*
 		if ('unknownHighlighting' in settings) {
 			$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
 			if (!settings.unknownHighlighting) {
-				let colour = $('#learnText').css('background-color');
+				let colour = $('body').css('background-color');
 				document.documentElement.style.setProperty('--unknown-word-bg', colour);
 				let textColor = getContrastColor(colour);
 				document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
@@ -3012,7 +3103,7 @@ function initialiseSettings() {
 		if ('learningHighlighting' in settings) {
 			$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
 			if (!settings.learningHighlighting) {
-				let colour = $('#learnText').css('background-color');
+				let colour = $('body').css('background-color');
 				document.documentElement.style.setProperty('--learning-word-bg', colour);
 				let textColor = getContrastColor(colour);
 				document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
@@ -3022,19 +3113,37 @@ function initialiseSettings() {
 		if ('knownHighlighting' in settings) {
 			$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
 			if (!settings.knownHighlighting) {
-				let colour = $('#learnText').css('background-color');
+				let colour = $('body').css('background-color');
 				document.documentElement.style.setProperty('--known-word-bg', colour);
 				let textColor = getContrastColor(settings.knownHighlightColour);
 				document.documentElement.style.setProperty('--known-word-text-colour', textColor);
 			}
 		}
+		*/
+		/*
+		if ('unknownHighlighting' in settings) {
+			$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
+		}
+		if ('knownHighlighting'  in settings) {
+			$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
+		}
+		if ('learningHighlighting' in settings) {
+			$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
+		}
+		*/
 		
 		if ('theme' in settings) {
+			//document.documentElement.setAttribute('data-bs-theme', settings.theme);
 			setTheme(settings.theme);
 		}
 		else{
+			//document.documentElement.setAttribute('data-bs-theme', getPreferredTheme());
 			setTheme(getPreferredTheme());
 		}
+		
+		
+		
+		
 
 
 //		if ('jumpHighlighting' in settings) {
@@ -3076,13 +3185,13 @@ function updateAndSaveSettings() {
 			learningHighlightColour:$('#learning-color').val(),
 			knownHighlightColour:$('#known-color').val(),
 			jumpHighlightColour:$('#jump-color').val(),
-			unknownHighlighting: $("#unknown-highlighting-checkbox").is(":checked"),
-			learningHighlighting: $("#learning-highlighting-checkbox").is(":checked"),
-			knownHighlighting: $("#known-highlighting-checkbox").is(":checked"),
 			theme: getTheme(),
+			font: $("#font-selection").val(),
+			textSize: $("#text-size").val(),
 			//jumpHighlighting: $("#jump-highlighting-checkbox").is(":checked"),
 		};
 
+		//console.log(JSON.stringify(settings, null, 2));
 		// Save settings to the database
 		saveSettings(settings);
 
