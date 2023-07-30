@@ -30,8 +30,8 @@
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
   
     <!-- DataTables Library -->
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"/>
-	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"/>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 	<!-- DataTables Responsive Extension -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"/>
@@ -52,7 +52,7 @@
 <body>
 
 
-<nav class="navbar navbar-expand navbar-light bg-light">
+<nav class="navbar navbar-expand">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -127,6 +127,64 @@
 					<br><br>
 
 				</div>
+				<hr>
+				<h2>Colour</h2>
+				<div class="color-picker">
+					<button class="btn btn-secondary" onclick="resetColors()">Reset Colors</button>
+					<br><br>
+					<div class="color-setting">
+						<div class="label-and-input">
+							<input type="color" id="unknown-color" name="unknown-color" value="#F5A9E1" onchange="applyColorChange('--unknown-word-bg', this.value)">
+							<label for="unknown-color">Unknown Words Highlight Colour</label>
+						</div>
+						<div class="checkbox-column">
+							<input type="checkbox" id="unknown-highlighting-checkbox" class="colour-checkbox" name="unknown-checkbox" checked>
+							<label for="unknown-highlighting-checkbox">Show Highlighting</label>
+						</div>
+					</div>
+					<div class="color-setting">
+						<div class="label-and-input">
+							<input type="color" id="learning-color" name="learning-color" value="#FFFF66" onchange="applyColorChange('--learning-word-bg', this.value)">
+							<label for="learning-color">Learning Words Highlight Colour</label>
+						</div>
+						<div class="checkbox-column">
+							<input type="checkbox" id="learning-highlighting-checkbox" class="colour-checkbox" name="learning-checkbox" checked>
+							<label for="learning-highlighting-checkbox">Show Highlighting</label>
+						</div>
+					</div>
+					<div class="color-setting">
+						<div class="label-and-input">
+							<input type="color" id="known-color" name="known-color" value="#99FF00" onchange="applyColorChange('--known-word-bg', this.value)">
+							<label for="known-color">Known Words Highlight Colour</label>
+						</div>
+						<div class="checkbox-column">
+							<input type="checkbox" id="known-highlighting-checkbox" class="colour-checkbox" name="known-checkbox" checked>
+							<label for="known-highlighting-checkbox">Show Highlighting</label>
+						</div>
+					</div>
+					<div class="color-setting">
+						<div class="label-and-input">
+							<input type="color" id="jump-color" name="jump-color" value="#5a96e0" onchange="applyColorChange('--jump-word-bg', this.value)">
+							<label for="jump-color">Jump Highlight Colour</label>
+						</div>
+						<div class="checkbox-column">
+						</div>
+					</div>
+				</div>
+				<br><br>
+				<!-- dropdown menu for theme selection -->
+				<div class="dropdown">
+				  <button class="btn btn-secondary dropdown-toggle" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+					Select Theme
+				  </button>
+				  <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+					<li><a class="dropdown-item" id="light-mode" href="#">Light Mode</a></li>
+					<li><a class="dropdown-item" id="dark-mode" href="#">Dark Mode</a></li>
+				  </ul>
+				</div>
+
+
+
 
 
 				<hr>

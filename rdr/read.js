@@ -44,6 +44,10 @@ var voiceSelection;
 var settingsDebounceTimeout;
 var lastScroll;
 var learnMode;
+const DEFAULT_JUMP_HIGHLIGHT='#5a96e0';
+const DEFAULT_UNKNOWN_HIGHLIGHT='#F5A9E1';
+const DEFAULT_KNOWN_HIGHLIGHT='#99FF00';
+const DEFAULT_LEARNING_HIGHLIGHT='#FFFF66';
 
 
 const firebaseConfig = {
@@ -93,6 +97,8 @@ function initialise(){
 	voiceSelection="";
 	lastScroll=0;
 	learnMode="learn";
+	
+
 	
 	resetJump();
 
@@ -237,7 +243,7 @@ function onTextareaInput() {
         if(lessonSavingEnabled) {
 
             let learnTextDiv = document.getElementById('learnText');
-
+			/*
             // Clone the original div
             let clone = learnTextDiv.cloneNode(true);
 
@@ -254,10 +260,11 @@ function onTextareaInput() {
 
             // Update the innerHTML of the clone
             clone.innerHTML = newHTML;
-
+			*/
+			
             var lesson = {
                 title: lessonID,
-                text: clone.innerHTML
+                text: learnTextDiv.innerText
             };
 
             saveCustomLessonToIndexedDB(lesson);
@@ -658,7 +665,11 @@ function initialiseUI(){
 			while (tempDiv.firstChild) {
 				selection.getRangeAt(0).insertNode(tempDiv.firstChild);
 			}
+
+			// Clear the selection after pasting
+			window.getSelection().removeAllRanges();
 		});
+
 
 
 
@@ -763,7 +774,106 @@ function initialiseUI(){
 
         // Call the activateEditMode() function
         toggleEditMode();
-    });	
+    });
+	
+	
+	// Listen for changes to the unknown words checkbox
+	
+	$('#unknown-highlighting-checkbox').change(function() {
+		// Update the global variable
+		enableHighlightingUnknown = $(this).is(':checked');
+		
+		// If the checkbox is not checked, remove the highlighting
+		if (!enableHighlightingUnknown) {
+			document.documentElement.style.setProperty('--unknown-word-bg', $('#learnText').css('background-color'));
+		} else {
+			// If it is checked, add the highlighting back
+			let oldColour=settings.unknownHighlightColour;
+			document.documentElement.style.setProperty('--unknown-word-bg', oldColour);
+		}
+		
+			let styles, colour, textColor;
+			styles = getComputedStyle(document.documentElement);
+			colour = styles.getPropertyValue('--unknown-word-bg').trim();
+			textColor = getContrastColor(colour);
+			document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+		
+		
+		updateAndSaveSettings();
+		// Run activateLearnMode()
+		//activateLearnMode();
+	});
+
+	// Listen for changes to the learning words checkbox
+	$('#learning-highlighting-checkbox').change(function() {
+		// Update the global variable
+		enableHighlightingLearning = $(this).is(':checked');
+		if (!enableHighlightingLearning) {
+			document.documentElement.style.setProperty('--learning-word-bg', $('#learnText').css('background-color'));
+		} else {
+			let oldColour=settings.learningHighlightColour;
+			document.documentElement.style.setProperty('--learning-word-bg', oldColour);
+		}
+		
+			let styles, colour, textColor;
+			styles = getComputedStyle(document.documentElement);
+			colour = styles.getPropertyValue('--learning-word-bg').trim();
+			textColor = getContrastColor(colour);
+			document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+			
+		updateAndSaveSettings();
+		// Run activateLearnMode()
+		//activateLearnMode();
+	});
+
+	// Listen for changes to the known words checkbox
+	$('#known-highlighting-checkbox').change(function() {
+		// Update the global variable
+		enableHighlightingKnown = $(this).is(':checked');
+		if (!enableHighlightingKnown) {
+			document.documentElement.style.setProperty('--known-word-bg', $('#learnText').css('background-color'));
+		} else {
+			let oldColour=settings.knownHighlightColour;
+			document.documentElement.style.setProperty('--known-word-bg', oldColour);
+		}
+		
+					let styles, colour, textColor;
+			styles = getComputedStyle(document.documentElement);
+			colour = styles.getPropertyValue('--known-word-bg').trim();
+			textColor = getContrastColor(colour);
+			document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+		
+		updateAndSaveSettings();
+		// Run activateLearnMode()
+		//activateLearnMode();
+	});
+	
+		// When the dropdown item is clicked, change the theme
+	document.getElementById('light-mode').addEventListener('click', function() {
+		setTheme('light');
+	});
+
+	document.getElementById('dark-mode').addEventListener('click', function() {
+		setTheme('dark');
+	});
+
+
+	// Listen for changes to the jump words checkbox
+	/*
+	$('#jump-highlighting-checkbox').change(function() {
+		// Update the global variable
+		enableHighlightingJump = $(this).is(':checked');
+		if (!enableHighlightingJump) {
+			document.documentElement.style.setProperty('--jump-word-bg', $('#learnText').css('background-color'));
+		} else {
+			let oldColour=settings.jumpHighlightColour;
+			document.documentElement.style.setProperty('--jump-word-bg', oldColour);
+		}
+		updateAndSaveSettings();
+		// Run activateLearnMode()
+		//activateLearnMode();
+	});
+	*/
 		
 	resolve();
     });
@@ -1026,7 +1136,7 @@ function initCustomLesson(){
             getCustomLessonFromIndexedDB(lessonID, function(lesson) {
                 if(lesson){
                     const textarea = document.getElementById('learnText');
-                    textarea.innerHTML = lesson.text;
+                    textarea.innerText = lesson.text;
                    // $('#editText').trigger('input');
                     resolve();
                 } else {
@@ -1181,9 +1291,15 @@ function onWordRightClick(e) {
 	pendingDictionaryLookup=wordText;
 	handleDictionaryLookup();
 	playWordTTS(wordText);
-	
-	if(!isSidebarVisible()){
-		toggleSidebarTab(sidebarTab);
+	if(isSidebarVisible()){
+		if(sidebarTab != "dictionary"){
+			activateDictionaryTab();
+		}
+	}
+	else{
+		activateDictionaryTab();
+		//sidebarTab = "dictionary";
+		//toggleSidebarTab(sidebarTab);
 	}
 }
 
@@ -2461,39 +2577,7 @@ function playWordTTS(word) {
 }
 
 
-function updateAndSaveSettings() {
-	
-	if(!initialisationComplete){
-			return;
-	}
-	
-	// If a timeout is already scheduled, cancel it
-	if (settingsDebounceTimeout) {
-		clearTimeout(settingsDebounceTimeout);
-	}
 
-	// Schedule a new timeout
-	settingsDebounceTimeout = setTimeout(function() {
-		// Get the current settings.
-		var settings = {
-			enableTTS: $("#enable-tts-checkbox").is(":checked"),
-			voiceSelection: getVoiceSelection(),
-			volume: $("#volume-control").val(),
-			pitch: $("#pitch-control").val(),
-			rate: $("#rate-control").val(),
-			lastOpenedLesson: lessonID,
-			lastOpenedLearnMode: learnMode,
-			lastScrollArray: getLastScrollArray(),
-			sidebarVisible:isSidebarVisible(),
-		};
-
-		// Save settings to the database
-		saveSettings(settings);
-
-		// Clear the timeout
-		settingsDebounceTimeout = null;
-	}, 1000); // Wait for 500ms since the last invocation to actually execute
-}
 
 
 
@@ -2542,6 +2626,70 @@ function getVoiceSelection(){
         }
     } else {
         return $("#voice-selection").val();
+    }
+}
+
+
+function scrollTo(pos){
+	//if(getCurrentLearnMode()=="learnMode"){
+        $('#nav-learn').scrollTop(pos);
+    //}
+    //else if(getCurrentLearnMode()=="editMode"){
+   //     $('#nav-edit').scrollTop(pos);
+   // }
+}
+
+
+function getCurrentScroll(){
+    var currentScroll=0;
+    //if(getCurrentLearnMode()=="learnMode"){
+        currentScroll = $('#nav-learn').scrollTop();
+    //}
+    //else if(getCurrentLearnMode()=="editMode"){
+    //    currentScroll = $('#nav-edit').scrollTop();
+    //}
+    return currentScroll;
+}
+
+function activateEditMode(){ 
+    console.log("Activate edit mode.");
+    learnMode="edit";
+    $('#edit-button').addClass('active'); // add the active class when the button is clicked
+
+    // Select all span elements inside the #learnText div
+    let spans = document.querySelectorAll('#learnText span');
+
+    // Loop through the selected elements
+    for (let i = 0; i < spans.length; i++) {
+        // Remove all classes
+        spans[i].className = '';
+
+        // Remove click and contextmenu event handlers
+        $(spans[i]).off('click', onWordClick);
+        $(spans[i]).off('contextmenu', onWordRightClick);
+    }
+	$('#learnText').off('contextmenu');
+    $("#learnText").attr('contenteditable', 'true');
+    updateAndSaveSettings();
+}
+
+
+function activateLearnMode(){
+	console.log("Activate learn mode.");
+	learnMode="learn";
+	$('#edit-button').removeClass('active');
+	loadTextIntoLearnTab(document.getElementById('learnText').innerText,lessonLanguage);
+	$('#nav-learn').trigger('scroll');
+	$('#learnText').on('contextmenu');
+	$("#learnText").attr('contenteditable', 'false');
+	updateAndSaveSettings();
+}
+
+function toggleEditMode() {
+    if ($('#edit-button').hasClass('active')) {
+		activateLearnMode();
+    } else {
+		activateEditMode();
     }
 }
 
@@ -2601,6 +2749,157 @@ function saveSettings(settings) {
         }
     }
 }
+
+function resetColors() {
+    // Reset CSS variables
+	
+	if(settings.unknownHighlighting){
+		document.documentElement.style.setProperty('--unknown-word-bg', DEFAULT_UNKNOWN_HIGHLIGHT);
+	}
+	if(settings.learningHighlighting){
+		document.documentElement.style.setProperty('--learning-word-bg', DEFAULT_LEARNING_HIGHLIGHT);
+	}
+	if(settings.knownHighlighting){
+		document.documentElement.style.setProperty('--known-word-bg', DEFAULT_KNOWN_HIGHLIGHT);
+	}
+	document.documentElement.style.setProperty('--jump-word-bg', DEFAULT_JUMP_HIGHLIGHT);
+
+    // Reset color picker values
+    document.getElementById('unknown-color').value = DEFAULT_UNKNOWN_HIGHLIGHT;
+    document.getElementById('learning-color').value = DEFAULT_LEARNING_HIGHLIGHT;
+    document.getElementById('known-color').value = DEFAULT_KNOWN_HIGHLIGHT;
+    document.getElementById('jump-color').value = DEFAULT_JUMP_HIGHLIGHT;
+	
+	//reset word colour
+	let styles, colour, textColor;
+	styles = getComputedStyle(document.documentElement);
+	colour = styles.getPropertyValue('--unknown-word-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+	
+	colour = styles.getPropertyValue('--learning-word-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+			
+	colour = styles.getPropertyValue('--known-word-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+	
+	//let textColor = getContrastColor(settings.unknownHighlightColour);
+	//document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+	
+	updateAndSaveSettings();
+}
+
+
+function applyColorChange(cssVar, colorValue) {
+    // Set the new value for the CSS variable
+    document.documentElement.style.setProperty(cssVar, colorValue);
+	
+	let styles, colour, textColor;
+    // Update the settings object and save it to storage
+	
+    switch(cssVar) {
+        case '--unknown-word-bg':
+			styles = getComputedStyle(document.documentElement);
+			colour = styles.getPropertyValue('--unknown-word-bg').trim();
+			textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+            break;
+        case '--learning-word-bg':
+            styles = getComputedStyle(document.documentElement);
+			colour = styles.getPropertyValue('--learning-word-bg').trim();
+			textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+            break;
+        case '--known-word-bg':
+            styles = getComputedStyle(document.documentElement);
+			colour = styles.getPropertyValue('--known-word-bg').trim();
+			textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+            break;
+        default:
+            console.error(`Invalid CSS variable name: ${cssVar}`);
+            return;
+    }
+	
+	
+    updateAndSaveSettings();
+}
+
+
+function getContrastColor(color) {
+    // Create a temporary div to apply color and get the computed style
+    let tempDiv = document.createElement("div");
+    tempDiv.style.color = color;
+    document.body.appendChild(tempDiv);
+
+    // Get computed color value, will always be in "rgb(r, g, b)" format
+    let computedColor = window.getComputedStyle(tempDiv).color;
+
+    // Clean up temp element
+    document.body.removeChild(tempDiv);
+
+    // Parse rgb values
+    let colorMatch = computedColor.match(/\((\d+),\s*(\d+),\s*(\d+)\)/);
+    let r = parseInt(colorMatch[1]);
+    let g = parseInt(colorMatch[2]);
+    let b = parseInt(colorMatch[3]);
+
+    // Calculate luminance (perceived brightness)
+    let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    // Return contrasting color, based on perceived brightness
+    return (luminance > 0.5) ? '#333333' : '#cccccc';
+}
+
+
+
+
+
+function getPreferredTheme(){
+	let theme;
+
+	// Check if the OS prefers a dark theme
+	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+		theme = 'dark';
+	} else {
+		theme = 'light';
+	}
+	return theme;
+}
+
+function getTheme(){
+	let theme = document.documentElement.getAttribute('data-bs-theme');
+	return theme;
+}
+
+function setTheme(theme){
+	if(theme){
+		document.documentElement.setAttribute('data-bs-theme', theme);
+	}
+	
+	let styles, colour, textColor;
+	styles = getComputedStyle(document.documentElement);
+	colour = styles.getPropertyValue('--unknown-word-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+	
+	colour = styles.getPropertyValue('--learning-word-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+			
+	colour = styles.getPropertyValue('--known-word-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+	
+	colour = styles.getPropertyValue('--bs-body-bg').trim();
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--nonword-text-colour', textColor);
+	
+	updateAndSaveSettings();
+}
+
 
 function initialiseSettings() {
     return getSettings().then(settings => {
@@ -2671,64 +2970,123 @@ function initialiseSettings() {
 			 rateValue.text(rateControl.val());
         }
 		
+		 // Set highlight colors
+        if (settings.unknownHighlightColour) {
+            document.documentElement.style.setProperty('--unknown-word-bg', settings.unknownHighlightColour);
+            $('#unknown-color').val(settings.unknownHighlightColour);
+			let textColor = getContrastColor(settings.unknownHighlightColour);
+			document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+        }
+
+        if (settings.learningHighlightColour) {
+            document.documentElement.style.setProperty('--learning-word-bg', settings.learningHighlightColour);
+            $('#learning-color').val(settings.learningHighlightColour);
+			let textColor = getContrastColor(settings.learningHighlightColour);
+			document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+        }
+
+        if (settings.knownHighlightColour) {
+            document.documentElement.style.setProperty('--known-word-bg', settings.knownHighlightColour);
+            $('#known-color').val(settings.knownHighlightColour);
+			let textColor = getContrastColor(settings.knownHighlightColour);
+			document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+        }
+
+        if (settings.jumpHighlightColour) {
+            document.documentElement.style.setProperty('--jump-word-bg', settings.jumpHighlightColour);
+            $('#jump-color').val(settings.jumpHighlightColour);
+			let textColor = getContrastColor(settings.jumpHighlightColour);
+			document.documentElement.style.setProperty('--jump-word-text-colour', textColor);
+        }
+		
+		if ('unknownHighlighting' in settings) {
+			$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
+			if (!settings.unknownHighlighting) {
+				let colour = $('#learnText').css('background-color');
+				document.documentElement.style.setProperty('--unknown-word-bg', colour);
+				let textColor = getContrastColor(colour);
+				document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+			}
+		}
+
+		if ('learningHighlighting' in settings) {
+			$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
+			if (!settings.learningHighlighting) {
+				let colour = $('#learnText').css('background-color');
+				document.documentElement.style.setProperty('--learning-word-bg', colour);
+				let textColor = getContrastColor(colour);
+				document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+			}
+		}
+
+		if ('knownHighlighting' in settings) {
+			$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
+			if (!settings.knownHighlighting) {
+				let colour = $('#learnText').css('background-color');
+				document.documentElement.style.setProperty('--known-word-bg', colour);
+				let textColor = getContrastColor(settings.knownHighlightColour);
+				document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+			}
+		}
+		
+		if ('theme' in settings) {
+			setTheme(settings.theme);
+		}
+		else{
+			setTheme(getPreferredTheme());
+		}
+
+
+//		if ('jumpHighlighting' in settings) {
+//			$("#jump-highlighting-checkbox").prop('checked', settings.jumpHighlighting);
+//			if (!settings.jumpHighlighting) {
+//				document.documentElement.style.setProperty('--jump-word-bg', $('#learnText').css('background-color'));
+//			}
+//		}
+
 
 	});
 }
 
-function scrollTo(pos){
-	//if(getCurrentLearnMode()=="learnMode"){
-        $('#nav-learn').scrollTop(pos);
-    //}
-    //else if(getCurrentLearnMode()=="editMode"){
-   //     $('#nav-edit').scrollTop(pos);
-   // }
-}
+function updateAndSaveSettings() {
+	
+	if(!initialisationComplete){
+			return;
+	}
+	
+	// If a timeout is already scheduled, cancel it
+	if (settingsDebounceTimeout) {
+		clearTimeout(settingsDebounceTimeout);
+	}
 
+	// Schedule a new timeout
+	settingsDebounceTimeout = setTimeout(function() {
+		// Get the current settings.
+		var settings = {
+			enableTTS: $("#enable-tts-checkbox").is(":checked"),
+			voiceSelection: getVoiceSelection(),
+			volume: $("#volume-control").val(),
+			pitch: $("#pitch-control").val(),
+			rate: $("#rate-control").val(),
+			lastOpenedLesson: lessonID,
+			lastOpenedLearnMode: learnMode,
+			lastScrollArray: getLastScrollArray(),
+			sidebarVisible:isSidebarVisible(),
+			unknownHighlightColour:$('#unknown-color').val(),
+			learningHighlightColour:$('#learning-color').val(),
+			knownHighlightColour:$('#known-color').val(),
+			jumpHighlightColour:$('#jump-color').val(),
+			unknownHighlighting: $("#unknown-highlighting-checkbox").is(":checked"),
+			learningHighlighting: $("#learning-highlighting-checkbox").is(":checked"),
+			knownHighlighting: $("#known-highlighting-checkbox").is(":checked"),
+			theme: getTheme(),
+			//jumpHighlighting: $("#jump-highlighting-checkbox").is(":checked"),
+		};
 
-function getCurrentScroll(){
-    var currentScroll=0;
-    //if(getCurrentLearnMode()=="learnMode"){
-        currentScroll = $('#nav-learn').scrollTop();
-    //}
-    //else if(getCurrentLearnMode()=="editMode"){
-    //    currentScroll = $('#nav-edit').scrollTop();
-    //}
-    return currentScroll;
-}
+		// Save settings to the database
+		saveSettings(settings);
 
-function activateEditMode(){ 
-	console.log("Activate edit mode.");
-	learnMode="edit";
-	$('#edit-button').addClass('active'); // add the active class when the button is clicked
-	// Select all span elements inside the #learnText div
-		
-		
-		let spans = document.querySelectorAll('#learnText span');
-
-		// Loop through the selected elements
-		for (let i = 0; i < spans.length; i++) {
-			// Remove all classes
-			spans[i].className = '';
-		}
-
-	$("#learnText").attr('contenteditable', 'true');
-	updateAndSaveSettings();
-}
-
-function activateLearnMode(){
-	console.log("Activate learn mode.");
-	learnMode="learn";
-	$('#edit-button').removeClass('active');
-	loadTextIntoLearnTab(document.getElementById('learnText').innerText,lessonLanguage);
-	$('#nav-learn').trigger('scroll');
-	$("#learnText").attr('contenteditable', 'false');
-	updateAndSaveSettings();
-}
-
-function toggleEditMode() {
-    if ($('#edit-button').hasClass('active')) {
-		activateLearnMode();
-    } else {
-		activateEditMode();
-    }
+		// Clear the timeout
+		settingsDebounceTimeout = null;
+	}, 1000); // Wait for 500ms since the last invocation to actually execute
 }
