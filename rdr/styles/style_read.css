@@ -1,9 +1,9 @@
 :root
 {
-	--unknown-word-bg: #F5A9E1;
-	--learning-word-bg: #FFFF66;
-	--known-word-bg: #99FF00;
-	--jump-word-bg: #5a96e0;
+	--unknown-word-bg: rgba(245, 169, 225, 1);
+	--learning-word-bg: rgba(255, 255, 102, 1);
+	--known-word-bg: rgba(153, 255, 0, 1);
+	--jump-word-bg: rgba(90, 150, 224, 1);
 	--unknown-word-text-colour: #333;
 	--learning-word-text-colour: #333;
 	--known-word-text-colour: #333;
@@ -151,7 +151,7 @@ html, body {`
     overflow-wrap: normal;
     word-wrap: normal;
     resize:none;
-    font-size: 1.5em; /* Adjust the font size to fit the container */
+    font-size: 2em; /* Adjust the font size to fit the container */
     line-height: 1.6; /* More space between lines for easier reading */
 	min-height:95vh;
 	font-family: Arial, sans-serif;
@@ -398,6 +398,6 @@ html, body {`
     margin-bottom: 1em;
 }
 
-.label-and-input, .checkbox-column {
+.checkbox-column {
     flex: 1;
 }

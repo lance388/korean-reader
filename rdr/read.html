@@ -130,16 +130,26 @@
 				<hr>
 				<h2>Text</h2>
 				<div class="text-setting">
-					<label for="text-size">Text Size:</label>
-					<input type="number" id="text-size" name="text-size" min="1">
+						<label for="text-size">Text Size</label>
+						<input type="number" id="text-size" name="text-size" value = 2 min=0.5 step=0.5 onchange="changeTextSize()">
 					<br><br>
-					<label for="font-selection">Select a font:</label>
-					<select id="font-selection" name="font-selection">
-						<option value="Arial">Arial</option>
-						<option value="Verdana">Verdana</option>
-						<option value="Times New Roman">Times New Roman</option>
-						<!-- Add more font options as needed -->
-					</select>
+						<label for="font-selection">Font</label>
+						<!--<select id="font-selection" name="font-selection" onchange="changeFont()">
+							<option value="Arial">Arial</option>
+							<option value="Verdana">Verdana</option>
+							<option value="Times New Roman">Times New Roman</option>
+
+						</select> -->
+						
+						<select id="font-selection" name="font-selection" onchange="changeFont()">
+							<option value="Arial">Arial</option>
+							<option value="Malgun Gothic">Malgun Gothic</option>
+							<option value="Dotum">Dotum</option>
+							<option value="Gulim">Gulim</option>
+							<option value="Gungsuh">Gungsuh</option>
+							<option value="Batang">Batang</option>
+						</select>
+
 				</div>
 				<hr>
 				<h2>Colour</h2>
@@ -147,45 +157,43 @@
     <button class="btn btn-secondary" onclick="resetColors()">Reset Colors</button>
     <br><br>
     <div class="color-setting">
-        <div class="label-and-input">
-            <input type="color" id="unknown-color" name="unknown-color" value="#F5A9E1" onchange="applyColorChange('--unknown-word-bg', this.value)">
-            <label for="unknown-color">Unknown Words Highlight Colour</label>
-			</div>
-			<div class="checkbox-column">
-            <input type="range" id="unknown-opacity" name="unknown-opacity" min="0" max="1" step="0.01" value="1" onchange="applyOpacityChange('--unknown-word-bg', this.value)">
-            <label for="unknown-opacity">Opacity</label>
-			
-        </div>
-    </div>
+		<div class="checkbox-column">
+			<input type="color" id="unknown-color" name="unknown-color" value="#F5A9E1" onchange="applyColorChange('--unknown-word-bg')">
+			<label for="unknown-color">Unknown Words Highlight Colour</label>
+		</div>
+		<div class="checkbox-column">
+			<input type="range" id="unknown-opacity" name="unknown-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--unknown-word-bg')">
+			<label for="unknown-opacity">Opacity</label>
+		</div>
+	</div>
     <div class="color-setting">
-        <div class="label-and-input">
-            <input type="color" id="learning-color" name="learning-color" value="#FFFF66" onchange="applyColorChange('--learning-word-bg', this.value)">
+        <div class="checkbox-column">
+            <input type="color" id="learning-color" name="learning-color" value="#FFFF66" onchange="applyColorChange('--learning-word-bg')">
             <label for="learning-color">Learning Words Highlight Colour</label>
 			</div>
 			<div class="checkbox-column">
-            <input type="range" id="learning-opacity" name="learning-opacity" min="0" max="1" step="0.01" value="1" onchange="applyOpacityChange('--learning-word-bg', this.value)">
-            <label for="learning-opacity">Opacity</label>
-			
+            <input type="range" id="learning-opacity" name="learning-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--learning-word-bg')">
+            <label for="learning-opacity">Opacity</label>	
         </div>
     </div>
     <div class="color-setting">
-        <div class="label-and-input">
-            <input type="color" id="known-color" name="known-color" value="#99FF00" onchange="applyColorChange('--known-word-bg', this.value)">
+        <div class="checkbox-column">
+            <input type="color" id="known-color" name="known-color" value="#99FF00" onchange="applyColorChange('--known-word-bg')">
             <label for="known-color">Known Words Highlight Colour</label>
 			</div>
 			<div class="checkbox-column">
-            <input type="range" id="known-opacity" name="known-opacity" min="0" max="1" step="0.01" value="1" onchange="applyOpacityChange('--known-word-bg', this.value)">
+            <input type="range" id="known-opacity" name="known-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--known-word-bg')">
             <label for="known-opacity">Opacity</label>
 			
         </div>
     </div>
     <div class="color-setting">
-        <div class="label-and-input">
-            <input type="color" id="jump-color" name="jump-color" value="#5a96e0" onchange="applyColorChange('--jump-word-bg', this.value)">
+        <div class="checkbox-column">
+            <input type="color" id="jump-color" name="jump-color" value="#5a96e0" onchange="applyColorChange('--jump-word-bg')">
             <label for="jump-color">Jump Highlight Colour</label>
 			</div>
 			<div class="checkbox-column">
-            <input type="range" id="jump-opacity" name="jump-opacity" min="0" max="1" step="0.01" value="1" onchange="applyOpacityChange('--jump-word-bg', this.value)">
+            <input type="range" id="jump-opacity" name="jump-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--jump-word-bg')">
             <label for="jump-opacity">Opacity</label>
 			</div>
         
@@ -210,8 +218,21 @@
 
 				<hr>
                 <!-- Settings Section -->
-                <h2>Settings</h2>
+                <h2>Dictionary</h2>
                 <!-- Add your settings here -->
+				<label for="dictionary-language-selection">Dictionary language</label>
+						<!--<select id="font-selection" name="font-selection" onchange="changeFont()">
+							<option value="Arial">Arial</option>
+							<option value="Verdana">Verdana</option>
+							<option value="Times New Roman">Times New Roman</option>
+
+						</select> -->
+						
+						<select id="dictionary-language-selection" name="dictionary-language-selection" onchange="onChangeDictionaryLanguage()">
+							<option value="en">English</option>
+							<option value="vn">Vietnamese</option>
+							<option value="jp">Japanese</option>
+						</select>
 				<hr>
 				 <!-- Account Section -->
                 <h2>Account</h2>

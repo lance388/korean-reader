@@ -746,13 +746,7 @@ function initialiseUI(){
 		//TTS
 		var enableTTSCheckbox = document.querySelector('#enable-tts-checkbox');
 
-		// Call the function to populate the dropdown
 		speechSynthesis.voiceschanged = populateVoiceList;
-	//	window.speechSynthesis.addEventListener('voiceschanged', function() {
-	//				//voices = window.speechSynthesis.getVoices();
-	//				//PopulateVoiceDropDown(voices);
-	//				populateVoiceList();
-	//			});
 		 
 		enableTTSCheckbox.onchange = function() {
 			var ttsControls = document.getElementById('tts-controls');
@@ -771,93 +765,7 @@ function initialiseUI(){
 	$('#edit-button').on('click', function() {
         toggleEditMode();
     });
-	
-	/*
-	$('#unknown-highlighting-checkbox').change(function() {
-		updateAndSaveSettings();
-	});
 
-	// Listen for changes to the learning words checkbox
-	$('#learning-highlighting-checkbox').change(function() {
-		updateAndSaveSettings();
-	});
-
-	// Listen for changes to the known words checkbox
-	$('#known-highlighting-checkbox').change(function() {
-		updateAndSaveSettings();
-	});
-	*/
-	
-	// Listen for changes to the unknown words checkbox
-	/*
-	$('#unknown-highlighting-checkbox').change(function() {
-		// Update the global variable
-		enableHighlightingUnknown = $(this).is(':checked');
-		
-		// If the checkbox is not checked, remove the highlighting
-		if (!enableHighlightingUnknown) {
-			document.documentElement.style.setProperty('--unknown-word-bg', $('body').css('background-color'));
-		} else {
-			// If it is checked, add the highlighting back
-			let oldColour=settings.unknownHighlightColour;
-			document.documentElement.style.setProperty('--unknown-word-bg', oldColour);
-		}
-			let styles, colour, textColor;
-			styles = getComputedStyle(document.documentElement);
-			colour = styles.getPropertyValue('--unknown-word-bg').trim();
-			textColor = getContrastColor(colour);
-			document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
-		
-		
-		updateAndSaveSettings();
-		// Run activateLearnMode()
-		//activateLearnMode();
-	});
-
-	// Listen for changes to the learning words checkbox
-	$('#learning-highlighting-checkbox').change(function() {
-		// Update the global variable
-		enableHighlightingLearning = $(this).is(':checked');
-		if (!enableHighlightingLearning) {
-			document.documentElement.style.setProperty('--learning-word-bg', $('body').css('background-color'));
-		} else {
-			let oldColour=settings.learningHighlightColour;
-			document.documentElement.style.setProperty('--learning-word-bg', oldColour);
-		}
-		
-			let styles, colour, textColor;
-			styles = getComputedStyle(document.documentElement);
-			colour = styles.getPropertyValue('--learning-word-bg').trim();
-			textColor = getContrastColor(colour);
-			document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
-			
-		updateAndSaveSettings();
-		// Run activateLearnMode()
-		//activateLearnMode();
-	});
-
-	// Listen for changes to the known words checkbox
-	$('#known-highlighting-checkbox').change(function() {
-		// Update the global variable
-		enableHighlightingKnown = $(this).is(':checked');
-		if (!enableHighlightingKnown) {
-			document.documentElement.style.setProperty('--known-word-bg', $('body').css('background-color'));
-		} else {
-			let oldColour=settings.knownHighlightColour;
-			document.documentElement.style.setProperty('--known-word-bg', oldColour);
-		}
-		
-					let styles, colour, textColor;
-			styles = getComputedStyle(document.documentElement);
-			colour = styles.getPropertyValue('--known-word-bg').trim();
-			textColor = getContrastColor(colour);
-			document.documentElement.style.setProperty('--known-word-text-colour', textColor);
-		
-		updateAndSaveSettings();
-		// Run activateLearnMode()
-		//activateLearnMode();
-	});
-	*/
 		// When the dropdown item is clicked, change the theme
 	document.getElementById('light-mode').addEventListener('click', function() {
 		setTheme('light');
@@ -866,53 +774,12 @@ function initialiseUI(){
 	document.getElementById('dark-mode').addEventListener('click', function() {
 		setTheme('dark');
 	});
-
-
-	// Listen for changes to the jump words checkbox
-	/*
-	$('#jump-highlighting-checkbox').change(function() {
-		// Update the global variable
-		enableHighlightingJump = $(this).is(':checked');
-		if (!enableHighlightingJump) {
-			document.documentElement.style.setProperty('--jump-word-bg', $('#learnText').css('background-color'));
-		} else {
-			let oldColour=settings.jumpHighlightColour;
-			document.documentElement.style.setProperty('--jump-word-bg', oldColour);
-		}
-		updateAndSaveSettings();
-		// Run activateLearnMode()
-		//activateLearnMode();
-	});
-	*/
 		
 	resolve();
     });
 }
 
-function rgbaToHex(rgba) {
-    // Check if rgba color
-    if (!rgba || !rgba.includes('rgba')) {
-        return rgba; // return original color if it's not in rgba format
-    }
 
-    // Choose correct separator
-    let sep = rgba.indexOf(",") > -1 ? "," : " ";
-    // Turn "rgba(r, g, b, a)" into [r, g, b, a]
-    rgba = rgba.substr(5).split(")")[0].split(sep);
-
-    let r = (+rgba[0]).toString(16),
-        g = (+rgba[1]).toString(16),
-        b = (+rgba[2]).toString(16);
-
-    if (r.length == 1)
-        r = "0" + r;
-    if (g.length == 1)
-        g = "0" + g;
-    if (b.length == 1)
-        b = "0" + b;
-
-    return "#" + r + g + b;
-}
 
 
 // This function populates the voice-selection dropdown with the available voices
@@ -2099,6 +1966,9 @@ sentences.forEach(function(item, index) {
         jumpToSentence(thisSentence);
         playWordTTS(thisSentence.sentence);
     });
+	
+
+
 }
 
 function colourSentences(table){
@@ -2405,6 +2275,8 @@ function initialiseDataTables(){
 		jumpToWord(word);
 		playWordTTS(word);
 	});
+	
+	
 
 
 	
@@ -2789,15 +2661,17 @@ function resetColors() {
     // Reset CSS variables
 	
 	if(settings.unknownHighlighting){
-		document.documentElement.style.setProperty('--unknown-word-bg', DEFAULT_UNKNOWN_HIGHLIGHT);
+		document.documentElement.style.setProperty('--unknown-word-bg', hexToRGBA(DEFAULT_UNKNOWN_HIGHLIGHT,1));
 	}
 	if(settings.learningHighlighting){
-		document.documentElement.style.setProperty('--learning-word-bg', DEFAULT_LEARNING_HIGHLIGHT);
+		document.documentElement.style.setProperty('--learning-word-bg', hexToRGBA(DEFAULT_LEARNING_HIGHLIGHT,1));
 	}
 	if(settings.knownHighlighting){
-		document.documentElement.style.setProperty('--known-word-bg', DEFAULT_KNOWN_HIGHLIGHT);
+		document.documentElement.style.setProperty('--known-word-bg', hexToRGBA(DEFAULT_KNOWN_HIGHLIGHT,1));
 	}
-	document.documentElement.style.setProperty('--jump-word-bg', DEFAULT_JUMP_HIGHLIGHT);
+	document.documentElement.style.setProperty('--jump-word-bg', hexToRGBA(DEFAULT_JUMP_HIGHLIGHT,1));
+
+	
 
     // Reset color picker values
     document.getElementById('unknown-color').value = DEFAULT_UNKNOWN_HIGHLIGHT;
@@ -2805,20 +2679,31 @@ function resetColors() {
     document.getElementById('known-color').value = DEFAULT_KNOWN_HIGHLIGHT;
     document.getElementById('jump-color').value = DEFAULT_JUMP_HIGHLIGHT;
 	
+	document.getElementById('unknown-opacity').value = 1;
+    document.getElementById('learning-opacity').value = 1;
+    document.getElementById('known-opacity').value = 1;
+    document.getElementById('jump-opacity').value = 1;
+	
 	//reset word colour
 	let styles, colour, textColor;
 	styles = getComputedStyle(document.documentElement);
-	colour = styles.getPropertyValue('--unknown-word-bg').trim();
+	
+	
+	colour = rgbaToHex(styles.getPropertyValue('--unknown-word-bg').trim());
 	textColor = getContrastColor(colour);
     document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
 	
-	colour = styles.getPropertyValue('--learning-word-bg').trim();
+	colour = rgbaToHex(styles.getPropertyValue('--learning-word-bg').trim());
 	textColor = getContrastColor(colour);
     document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
 			
-	colour = styles.getPropertyValue('--known-word-bg').trim();
+	colour = rgbaToHex(styles.getPropertyValue('--known-word-bg').trim());
 	textColor = getContrastColor(colour);
     document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+	
+	colour = rgbaToHex(styles.getPropertyValue('--jump-word-bg').trim());
+	textColor = getContrastColor(colour);
+    document.documentElement.style.setProperty('--jump-word-text-colour', textColor);
 	
 	//let textColor = getContrastColor(settings.unknownHighlightColour);
 	//document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
@@ -2827,40 +2712,189 @@ function resetColors() {
 }
 
 
-function applyColorChange(cssVar, colorValue) {
+function applyColorChange(cssVar) {
     // Set the new value for the CSS variable
-    document.documentElement.style.setProperty(cssVar, colorValue);
+    //document.documentElement.style.setProperty(cssVar, rgbaColor);
 	
-	let styles, colour, textColor;
-    // Update the settings object and save it to storage
-	
-    switch(cssVar) {
+	let colorInput, opacityInput, bgColour, opacity, rgbaColour;
+	switch (cssVar) {
         case '--unknown-word-bg':
-			styles = getComputedStyle(document.documentElement);
-			colour = styles.getPropertyValue('--unknown-word-bg').trim();
-			textColor = getContrastColor(colour);
-            document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+            colorInput = $(`#unknown-color`);
+			opacityInput = $(`#unknown-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
             break;
         case '--learning-word-bg':
-            styles = getComputedStyle(document.documentElement);
-			colour = styles.getPropertyValue('--learning-word-bg').trim();
-			textColor = getContrastColor(colour);
-            document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+            colorInput = $(`#learning-color`);
+			opacityInput = $(`#learning-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
             break;
         case '--known-word-bg':
-            styles = getComputedStyle(document.documentElement);
-			colour = styles.getPropertyValue('--known-word-bg').trim();
-			textColor = getContrastColor(colour);
-            document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+            colorInput = $(`#known-color`);
+			opacityInput = $(`#known-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
             break;
+		case '--jump-word-bg':
+            colorInput = $(`#jump-color`);
+			opacityInput = $(`#jump-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
+            break;	
         default:
             console.error(`Invalid CSS variable name: ${cssVar}`);
             return;
     }
 	
 	
+
+    let styles, colour, textColor;
+    // Update the settings object and save it to storage
+    switch (cssVar) {
+        case '--unknown-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--unknown-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+            break;
+        case '--learning-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--learning-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+            break;
+        case '--known-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--known-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+            break;
+		case '--jump-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--jump-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--jump-word-text-colour', textColor);
+            break;	
+        default:
+            console.error(`Invalid CSS variable name: ${cssVar}`);
+            return;
+    }
+
     updateAndSaveSettings();
 }
+/*
+function applyColorChangeWithHex(cssVar, hex, opacity){
+	let colorInput, opacityInput, bgColour, opacity, rgbaColour;
+	switch (cssVar) {
+        case '--unknown-word-bg':
+            colorInput = $(`#unknown-color`);
+			opacityInput = $(`#unknown-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
+            break;
+        case '--learning-word-bg':
+            colorInput = $(`#learning-color`);
+			opacityInput = $(`#learning-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
+            break;
+        case '--known-word-bg':
+            colorInput = $(`#known-color`);
+			opacityInput = $(`#known-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
+            break;
+		case '--jump-word-bg':
+            colorInput = $(`#jump-color`);
+			opacityInput = $(`#jump-opacity`);
+			bgColour = colorInput.val();
+			opacity = opacityInput.val();
+			rgbaColour = hexToRGBA(bgColour, opacity);
+			document.documentElement.style.setProperty(cssVar, rgbaColour);
+            break;	
+        default:
+            console.error(`Invalid CSS variable name: ${cssVar}`);
+            return;
+    }
+	
+	
+
+    let styles, colour, textColor;
+    // Update the settings object and save it to storage
+    switch (cssVar) {
+        case '--unknown-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--unknown-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
+            break;
+        case '--learning-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--learning-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
+            break;
+        case '--known-word-bg':
+            styles = getComputedStyle(document.documentElement);
+            colour = rgbaToHex(styles.getPropertyValue('--known-word-bg').trim());
+            textColor = getContrastColor(colour);
+            document.documentElement.style.setProperty('--known-word-text-colour', textColor);
+            break;
+        default:
+            console.error(`Invalid CSS variable name: ${cssVar}`);
+            return;
+    }
+}
+*/
+function rgbaToHex(rgba) {
+    // Check if rgba color
+    if (!rgba || !rgba.includes('rgba')) {
+        return rgba; // return original color if it's not in rgba format
+    }
+
+    // Choose correct separator
+    let sep = rgba.indexOf(",") > -1 ? "," : " ";
+    // Turn "rgba(r, g, b, a)" into [r, g, b, a]
+    rgba = rgba.substr(5).split(")")[0].split(sep);
+
+    let r = (+rgba[0]).toString(16),
+        g = (+rgba[1]).toString(16),
+        b = (+rgba[2]).toString(16);
+
+    if (r.length == 1)
+        r = "0" + r;
+    if (g.length == 1)
+        g = "0" + g;
+    if (b.length == 1)
+        b = "0" + b;
+
+    return "#" + r + g + b;
+}
+
+function hexToRGBA(hex, opacity) {
+    const hexValue = hex.replace('#', '');
+    const r = parseInt(hexValue.substring(0, 2), 16);
+    const g = parseInt(hexValue.substring(2, 4), 16);
+    const b = parseInt(hexValue.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+
 
 
 function getContrastColor(color) {
@@ -2927,69 +2961,32 @@ function setTheme(theme){
 	textColor = getContrastColor(bgColour);
     document.documentElement.style.setProperty('--nonword-text-colour', textColor);
 	
-	/*
-	//colour = styles.getPropertyValue('--unknown-word-bg').trim();
-	colour=settings.unknownHighlightColour;
-	textColor = getContrastColor(colour);
-    document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
-	
-	//colour = styles.getPropertyValue('--learning-word-bg').trim();
-	colour=settings.learningHighlightColour;
-	textColor = getContrastColor(colour);
-    document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
-			
-	//colour = styles.getPropertyValue('--known-word-bg').trim();
-	colour=settings.knownHighlightColour;
-	textColor = getContrastColor(colour);
-    document.documentElement.style.setProperty('--known-word-text-colour', textColor);
-	
-	//colour = styles.getPropertyValue('--bs-body-bg').trim();
-	textColor = getContrastColor(bgColour);
-    document.documentElement.style.setProperty('--nonword-text-colour', textColor);
-	
-	
-	
-	console.log("***HERE0 "+settings.unknownHighlighting +" "+settings.learningHighlighting+" "+settings.knownHighlighting);
-	console.log($('#unknown-highlighting-checkbox').is(':checked'));
-	
-	if (settings.unknownHighlighting!=null) {
-			//$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
-			if (!settings.unknownHighlighting) {
-				//colour = $('body').css('background-color');
-				console.log("***HERE1 ");
-				document.documentElement.style.setProperty('--unknown-word-bg', bgColour);
-				textColor = getContrastColor(bgColour);
-				document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
-			}
-		}
-
-		if (settings.learningHighlighting!=null) {
-			//$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
-			if (!settings.learningHighlighting) {
-				console.log("***HERE2 ");
-				//colour = $('body').css('background-color');
-				document.documentElement.style.setProperty('--learning-word-bg', bgColour);
-				textColor = getContrastColor(bgColour);
-				document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
-			}
-		}
-
-		if (settings.knownHighlighting!=null) {
-			//$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
-			if (!settings.knownHighlighting) {
-				console.log("***HERE3 ");
-				//colour = $('body').css('background-color');
-				document.documentElement.style.setProperty('--known-word-bg', bgColour);
-				textColor = getContrastColor(bgColour);
-				document.documentElement.style.setProperty('--known-word-text-colour', textColor);
-			}
-		}
-	
-	
-	*/
 	updateAndSaveSettings();
 }
 
+
+function changeTextSize(){
+	let textSize = $('#text-size').val();
+	$('#learnText').css('font-size', textSize + 'em');
+	activateLearnMode();
+	updateAndSaveSettings();
+}
+
+function changeFont(){
+	let font = $('#font-selection').val();
+	$('#learnText').css('font-family', font);
+	updateAndSaveSettings();
+}
+
+function onChangeDictionaryLanguage(){
+	let dictLang = $('#dictionary-language-selection').val();
+	setDictionaryLanguage(dictLang);
+	updateAndSaveSettings();
+}
+
+function setDictionaryLanguage(lang){
+	//TODO
+}
 
 function initialiseSettings() {
     return getSettings().then(settings => {
@@ -3030,10 +3027,6 @@ function initialiseSettings() {
             $('#voice-selection').val(voiceSelection);
         }
 		
-			
-    
-	 
-    
 
         // Set volume, pitch, and rate sliders' values
         if (volume) {
@@ -3060,8 +3053,25 @@ function initialiseSettings() {
 			 rateValue.text(rateControl.val());
         }
 		
-		 // Set highlight colors
-        if (settings.unknownHighlightColour) {
+		
+		if (settings.unknownOpacity) {
+            $("#unknown-opacity").val(settings.unknownOpacity);
+        }
+		
+		if (settings.learningOpacity) {
+            $("#learning-opacity").val(settings.learningOpacity);
+        }
+		
+		if (settings.knownOpacity) {
+            $("#known-opacity").val(settings.knownOpacity);
+        }
+		
+		if (settings.jumpOpacity) {
+            $("#jump-opacity").val(settings.jumpOpacity);
+        }
+		
+		
+		if (settings.unknownHighlightColour) {
             document.documentElement.style.setProperty('--unknown-word-bg', settings.unknownHighlightColour);
             $('#unknown-color').val(settings.unknownHighlightColour);
 			let textColor = getContrastColor(settings.unknownHighlightColour);
@@ -3089,71 +3099,48 @@ function initialiseSettings() {
 			document.documentElement.style.setProperty('--jump-word-text-colour', textColor);
         }
 		
-		/*
-		if ('unknownHighlighting' in settings) {
-			$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
-			if (!settings.unknownHighlighting) {
-				let colour = $('body').css('background-color');
-				document.documentElement.style.setProperty('--unknown-word-bg', colour);
-				let textColor = getContrastColor(colour);
-				document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
-			}
-		}
+		 // Set highlight colors
+        if (settings.unknownHighlightColour && settings.unknownOpacity) {
+			applyColorChange('--unknown-word-bg');
+        }
 
-		if ('learningHighlighting' in settings) {
-			$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
-			if (!settings.learningHighlighting) {
-				let colour = $('body').css('background-color');
-				document.documentElement.style.setProperty('--learning-word-bg', colour);
-				let textColor = getContrastColor(colour);
-				document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
-			}
-		}
+        if (settings.learningHighlightColour && settings.learningOpacity) {
+			applyColorChange('--learning-word-bg');
+        }
 
-		if ('knownHighlighting' in settings) {
-			$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
-			if (!settings.knownHighlighting) {
-				let colour = $('body').css('background-color');
-				document.documentElement.style.setProperty('--known-word-bg', colour);
-				let textColor = getContrastColor(settings.knownHighlightColour);
-				document.documentElement.style.setProperty('--known-word-text-colour', textColor);
-			}
-		}
-		*/
-		/*
-		if ('unknownHighlighting' in settings) {
-			$("#unknown-highlighting-checkbox").prop('checked', settings.unknownHighlighting);
-		}
-		if ('knownHighlighting'  in settings) {
-			$("#known-highlighting-checkbox").prop('checked', settings.knownHighlighting);
-		}
-		if ('learningHighlighting' in settings) {
-			$("#learning-highlighting-checkbox").prop('checked', settings.learningHighlighting);
-		}
-		*/
+        if (settings.knownHighlightColour && settings.knownOpacity) {
+			applyColorChange('--known-word-bg');
+        }
+
+        if (settings.jumpHighlightColour && settings.jumpOpacity) {
+			applyColorChange('--jump-word-bg');
+        }
 		
-		if ('theme' in settings) {
-			//document.documentElement.setAttribute('data-bs-theme', settings.theme);
+		if(settings.font){
+			$('#font-selection').val(settings.font);
+			$('#learnText').css('font-family', settings.font);
+		}
+
+		if(settings.textSize){
+			let textSize = settings.textSize;
+			$('#text-size').val(textSize);
+			$('#learnText').css('font-size', textSize + 'em');
+		}
+		
+		if(settings.dictionaryLanguage){
+			$('#dictionary-language-selection').val(settings.dictionaryLanguage);
+			setDictionaryLanguage(settings.dictionaryLanguage);
+		}
+
+
+		
+		if (settings.theme) {
 			setTheme(settings.theme);
 		}
 		else{
-			//document.documentElement.setAttribute('data-bs-theme', getPreferredTheme());
 			setTheme(getPreferredTheme());
 		}
 		
-		
-		
-		
-
-
-//		if ('jumpHighlighting' in settings) {
-//			$("#jump-highlighting-checkbox").prop('checked', settings.jumpHighlighting);
-//			if (!settings.jumpHighlighting) {
-//				document.documentElement.style.setProperty('--jump-word-bg', $('#learnText').css('background-color'));
-//			}
-//		}
-
-
 	});
 }
 
@@ -3188,10 +3175,14 @@ function updateAndSaveSettings() {
 			theme: getTheme(),
 			font: $("#font-selection").val(),
 			textSize: $("#text-size").val(),
-			//jumpHighlighting: $("#jump-highlighting-checkbox").is(":checked"),
+			unknownOpacity: $("#unknown-opacity").val(),
+			learningOpacity: $("#learning-opacity").val(),
+			knownOpacity: $("#known-opacity").val(),
+			jumpOpacity: $("#jump-opacity").val(),
+			dictionaryLanguage:$("#dictionary-language-selection").val()
 		};
 
-		//console.log(JSON.stringify(settings, null, 2));
+		console.log("Saving settings.");
 		// Save settings to the database
 		saveSettings(settings);
 
