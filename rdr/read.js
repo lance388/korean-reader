@@ -1823,21 +1823,34 @@ function saveLastOpenedLessonID() {
 }
 */
 
-function handleDictionaryLookup(){
-	if(sidebarTab === "dictionary"){
-		if(pendingDictionaryLookup!=""){
-			//document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/mini/search?query="+pendingDictionaryLookup;
-			switch(naverDictionaryLanguage){
-				case "en": document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko"+naverDictionaryLanguage+"dict/#/search?query="+pendingDictionaryLookup;
-				break;
-				case "ja","zh-TW","zh-CN","de","hi","id","it","pt","ru","es","th": document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/search?query="+pendingDictionaryLookup;
-				case "vi","fr": document.querySelector('#dictionary-iframe').src = "https://dict.naver.com/"+naverDictionaryLanguage+"kodict/#/search?query="+pendingDictionaryLookup;
-				break;
-				default: console.error("Dictionary language not found.");
-			}
-		}
-	}
+function handleDictionaryLookup() {
+    if (sidebarTab === "dictionary") {
+        if (pendingDictionaryLookup != "") {
+            switch (naverDictionaryLanguage) {
+                case "en":
+				case "zh":
+					document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko"+naverDictionaryLanguage+"dict/#/search?query="+pendingDictionaryLookup;
+                    break;
+                case "ja":
+                case "de":
+                case "hi":
+                case "id":
+                case "pt":
+                case "ru":
+                case "es":
+                case "th":
+                case "vi":
+                case "fr":
+                case "it":
+                    document.querySelector('#dictionary-iframe').src = "https://dict.naver.com/" + naverDictionaryLanguage + "kodict/#/search?query=" + pendingDictionaryLookup;
+                    break;
+                default:
+                    console.error("Dictionary language not found " + naverDictionaryLanguage);
+            }
+        }
+    }
 }
+
 
 /*
 <option value="zh-CN">Chinese (Simplified)</option>
