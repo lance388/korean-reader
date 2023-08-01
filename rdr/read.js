@@ -1827,10 +1827,34 @@ function handleDictionaryLookup(){
 	if(sidebarTab === "dictionary"){
 		if(pendingDictionaryLookup!=""){
 			//document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/mini/search?query="+pendingDictionaryLookup;
-			document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko"+naverDictionaryLanguage+"dict/#/search?query="+pendingDictionaryLookup;
+			switch(naverDictionaryLanguage){
+				case "en": document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko"+naverDictionaryLanguage+"dict/#/search?query="+pendingDictionaryLookup;
+				break;
+				case "ja","zh-TW","zh-CN","de","hi","id","it","pt","ru","es","th": document.querySelector('#dictionary-iframe').src = "https://"+naverDictionaryLanguage+".dict.naver.com/#/search?query="+pendingDictionaryLookup;
+				case "vi","fr": document.querySelector('#dictionary-iframe').src = "https://dict.naver.com/"+naverDictionaryLanguage+"kodict/#/search?query="+pendingDictionaryLookup;
+				break;
+				default: console.error("Dictionary language not found.");
+			}
 		}
 	}
 }
+
+/*
+<option value="zh-CN">Chinese (Simplified)</option>
+							<option value="zh-TW">Chinese (Traditional)</option>
+							<option selected value="en">English</option>
+							<option value="fr">French</option>
+							<option value="de">German</option>
+							<option value="hi">Hindi</option>
+							<option value="id">Indonesian</option>
+							<option value="it">Italian</option>
+							<option value="ja">Japanese</option>
+							<option value="pt">Portuguese</option>
+							<option value="ru">Russian</option>
+							<option value="es">Spanish</option>
+							<option value="th">Thai</option>
+							<option value="vi">Vietnamese</option>
+*/
 
 
 function fillWordlistTable() {
@@ -2985,7 +3009,12 @@ function onChangeDictionaryLanguage(){
 }
 
 function setDictionaryLanguage(lang){
-	//TODO
+	if(lang!=naverDictionaryLanguage){
+		naverDictionaryLanguage=lang;
+		if(sidebarTab == "dictionary"){
+			handleDictionaryLookup();
+		}
+	}
 }
 
 function initialiseSettings() {
