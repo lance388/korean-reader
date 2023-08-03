@@ -1646,7 +1646,8 @@ function saveVocabulary(){
 		}		
     });
 	
-	
+	checkWordInDB("제공", "learning", user.uid, lessonLanguage);
+	checkWordInDB("제공", "known", user.uid, lessonLanguage);
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
@@ -1777,6 +1778,33 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
     Promise.all([handleWordList('learning'), handleWordList('known')]).finally(() => {
         vocabularySaveInProgress = false;
+    });
+}
+
+
+function checkWordInDB(word, type, uid, lang) {
+    return new Promise((resolve, reject) => {
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", type);
+
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let docData = doc.data();
+                    if (docData[type].includes(word)) {
+                        console.log(`Word "${word}" found in ${type}`);
+                    } else {
+                        console.log(`Word "${word}" not found in ${type}`);
+                    }
+                });
+                resolve();
+            })
+            .catch((error) => {
+                console.log("Error getting document:", error);
+                reject(error);
+            });
     });
 }
 
