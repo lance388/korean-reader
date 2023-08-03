@@ -1660,7 +1660,7 @@ function saveVocabulary(){
 	
 }
 
-
+/*
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let newWords = {
         "learning": [],
@@ -1721,6 +1721,75 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         })
         .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
     vocabularySaveInProgress = false;
+}
+*/
+
+function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
+    let newWords = {
+        "learning": [],
+        "known": [],
+        "unknown": []    
+    };
+
+    wordsToSave.forEach((wordObj) => {
+        newWords[wordObj.level].push(wordObj.word);
+    });
+
+    const handleWordList = (type) => {
+        return new Promise((resolve, reject) => {
+            let docRef = dbfire.collection('vocabulary')
+                .where("author_uid", "==", uid)
+                .where("language", "==", lang)
+                .where("type", "==", type)
+                .limit(1);
+
+            docRef.get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        let doc = querySnapshot.docs[0];
+                        let updateObject = {};
+
+                        if (newWords["unknown"].length > 0) {
+                            updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
+                        }
+                        if (newWords[type].length > 0) {
+                            updateObject[type] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
+                        }
+
+                        dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true })
+                            .then(resolve)
+                            .catch((error) => {
+                                console.error(`Error updating vocabulary in Fire DB:`, error);
+                                reject(error);
+                            });
+                    } else {
+                        let updateObject = {
+                            author_uid: uid,
+                            language: lang,
+                            type: type,
+                        };
+                        if (newWords[type].length > 0) {
+                            updateObject[type] = newWords[type];
+                        }
+
+                        dbfire.collection('vocabulary').add(updateObject)
+                            .then(resolve)
+                            .catch((error) => {
+                                console.error(`Error adding vocabulary in Fire DB:`, error);
+                                reject(error);
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error(`Error retrieving vocabulary document:`, error);
+                    reject(error);
+                });
+        });
+    };
+
+    Promise.all([handleWordList('learning'), handleWordList('known')]).finally(() => {
+        vocabularySaveInProgress = false;
+    });
 }
 
 
