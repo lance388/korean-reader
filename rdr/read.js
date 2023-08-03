@@ -1646,8 +1646,8 @@ function saveVocabulary(){
 		}		
     });
 	
-	checkWordInDB("제공", "learning", user.uid, lessonLanguage);
-	checkWordInDB("제공", "known", user.uid, lessonLanguage);
+	checkWordInDB("제공", "learning", firebase.auth().currentUser.uid, lessonLanguage);
+	checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
