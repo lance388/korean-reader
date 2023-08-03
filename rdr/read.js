@@ -1479,7 +1479,7 @@ function createFireDBDocument(collection, type, lang, uid, w) {
     }, { merge: true });
 }
 
-
+/*
 function loadVocabularyFromFireDB(lang, uid) {
     return new Promise((resolve, reject) => {
         let docRef = dbfire.collection('vocabulary')
@@ -1503,6 +1503,57 @@ function loadVocabularyFromFireDB(lang, uid) {
             });
     });
 }
+*/
+
+
+function loadVocabularyFromFireDB(lang, uid) {
+    let loadLearning = new Promise((resolve, reject) => {
+        dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", "learning")
+            .limit(1)
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let docData = doc.data();
+                    docData.words.forEach(word => vocabularyLearning.add(word));
+                });
+                resolve();
+            })
+            .catch((error) => {
+                console.log("Error getting learning vocabulary:", error);
+                reject(error);
+            });
+    });
+
+    let loadKnown = new Promise((resolve, reject) => {
+        dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", "known")
+            .limit(1)
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let docData = doc.data();
+                    docData.words.forEach(word => vocabularyKnown.add(word));
+                });
+                resolve();
+            })
+            .catch((error) => {
+                console.log("Error getting known vocabulary:", error);
+                reject(error);
+            });
+    });
+
+    // Return a Promise that resolves when both learning and known vocabularies are loaded
+    return Promise.all([loadLearning, loadKnown]);
+}
+
+
+
+
 
 function printVocabulary() {
     console.log("Known vocabulary:");
