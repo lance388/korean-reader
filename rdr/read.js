@@ -1745,43 +1745,26 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
             docRef.get()
                 .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        let doc = querySnapshot.docs[0];
-                        let updateObject = {};
+                    let doc = querySnapshot.docs[0];
+                    let updateObject = {};
 
-                        if (newWords["unknown"].length > 0) {
-                            updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
-                        }
-                        if (newWords[type].length > 0) {
-                            updateObject[type] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
-                        }
-
-                        dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true })
-                            .then(resolve)
-                            .catch((error) => {
-                                console.error(`Error updating vocabulary in Fire DB:`, error);
-                                reject(error);
-                            });
-                    } else {
-                        let updateObject = {
-                            author_uid: uid,
-                            language: lang,
-                            type: type,
-                        };
-                        if (newWords[type].length > 0) {
-                            updateObject[type] = newWords[type];
-                        }
-
-                        dbfire.collection('vocabulary').add(updateObject)
-                            .then(resolve)
-                            .catch((error) => {
-                                console.error(`Error adding vocabulary in Fire DB:`, error);
-                                reject(error);
-                            });
+                    if (newWords["unknown"].length > 0) {
+                        updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
                     }
+
+                    if (newWords[type].length > 0) {
+                        updateObject[type] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
+                    }
+
+                    // Remove the added word from the other document (known or learning)
+                    let otherType = type === "known" ? "learning" : "known";
+                    updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[type]);
+
+                    return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
                 })
+                .then(resolve)
                 .catch((error) => {
-                    console.error(`Error retrieving vocabulary document:`, error);
+                    console.error(`Error updating vocabulary in Fire DB:`, error);
                     reject(error);
                 });
         });
@@ -1791,6 +1774,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         vocabularySaveInProgress = false;
     });
 }
+
 
 
 
