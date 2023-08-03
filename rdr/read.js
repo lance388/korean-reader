@@ -1758,9 +1758,14 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
                     // Remove the added word from the other document (known or learning)
                     let otherType = type === "known" ? "learning" : "known";
-                    updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[type]);
+                    if (newWords[type].length > 0) {
+                        updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[type]);
+                    }
 
-                    return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
+                    // Check if we have anything to update
+                    if (Object.keys(updateObject).length > 0) {
+                        return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
+                    }
                 })
                 .then(resolve)
                 .catch((error) => {
@@ -1774,6 +1779,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         vocabularySaveInProgress = false;
     });
 }
+
 
 
 
