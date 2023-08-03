@@ -1646,8 +1646,7 @@ function saveVocabulary(){
 		}		
     });
 	
-	checkWordInDB("제공", "learning", firebase.auth().currentUser.uid, lessonLanguage);
-	checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
+	
 	
 	if(signedInState=="offline"||signedInState=="signedOut"){
 		putVocabularyIntoIndexedDB(wordsToSave);
@@ -1655,11 +1654,76 @@ function saveVocabulary(){
 	}
 	else{
 		let user = firebase.auth().currentUser;
+		
+		checkWordInDB("제공", "learning", firebase.auth().currentUser.uid, lessonLanguage);
+		checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
+		
 		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
+		
+		console.log("2");
+		checkWordInDB("제공", "learning", firebase.auth().currentUser.uid, lessonLanguage);
+		checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
 		//deleteVocabularyFromFireDB(wordsToDelete, lessonLanguage, user.uid);
 	}
 	
 }
+
+function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
+    let newWords = {
+        "learning": [],
+        "known": [],
+        "unknown": []    
+    };
+
+    wordsToSave.forEach((wordObj) => {
+        newWords[wordObj.level].push(wordObj.word);
+    });
+
+    const handleWordList = (type) => {
+        return new Promise((resolve, reject) => {
+            let docRef = dbfire.collection('vocabulary')
+                .where("author_uid", "==", uid)
+                .where("language", "==", lang)
+                .where("type", "==", type)
+                .limit(1);
+
+            docRef.get()
+                .then((querySnapshot) => {
+                    let doc = querySnapshot.docs[0];
+                    let updateObject = {};
+
+                    if (newWords["unknown"].length > 0) {
+                        updateObject["words"] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
+                    }
+
+                    if (newWords[type].length > 0) {
+                        updateObject["words"] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
+                    }
+
+                    // Remove the added word from the other document (known or learning)
+                    let otherType = type === "known" ? "learning" : "known";
+                    if (newWords[otherType].length > 0) {
+                        updateObject["words"] = firebase.firestore.FieldValue.arrayRemove(...newWords[otherType]);
+                    }
+
+                    // Check if we have anything to update
+                    if (Object.keys(updateObject).length > 0) {
+                        return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
+                    }
+                })
+                .then(resolve)
+                .catch((error) => {
+                    console.error(`Error updating vocabulary in Fire DB:`, error);
+                    reject(error);
+                });
+        });
+    };
+
+    Promise.all([handleWordList('learning'), handleWordList('known')]).finally(() => {
+        vocabularySaveInProgress = false;
+    });
+}
+
 
 /*
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
@@ -1725,6 +1789,9 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 }
 */
 
+
+/*
+
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let newWords = {
         "learning": [],
@@ -1746,22 +1813,26 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
             docRef.get()
                 .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        let doc = querySnapshot.docs[0];
-                        let updateObject = {};
+                    let doc = querySnapshot.docs[0];
+                    let updateObject = {};
 
-                        if (newWords["unknown"].length > 0) {
-                            updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
-                        }
+                    if (newWords["unknown"].length > 0) {
+                        updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
+                    }
 
-                        if (newWords[type].length > 0) {
-                            updateObject[type] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
-                        }
+                    if (newWords[type].length > 0) {
+                        updateObject[type] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
+                    }
 
-                        // Check if we have anything to update
-                        if (Object.keys(updateObject).length > 0) {
-                            return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
-                        }
+                    // Remove the added word from the other document (known or learning)
+                    let otherType = type === "known" ? "learning" : "known";
+                    if (newWords[type].length > 0) {
+                        updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[type]);
+                    }
+
+                    // Check if we have anything to update
+                    if (Object.keys(updateObject).length > 0) {
+                        return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
                     }
                 })
                 .then(resolve)
@@ -1772,49 +1843,14 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         });
     };
 
-    const removeFromOtherList = (type) => {
-        return new Promise((resolve, reject) => {
-            let docRef = dbfire.collection('vocabulary')
-                .where("author_uid", "==", uid)
-                .where("language", "==", lang)
-                .where("type", "==", type)
-                .limit(1);
-
-            docRef.get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        let doc = querySnapshot.docs[0];
-                        let updateObject = {};
-
-                        let otherType = type === "known" ? "learning" : "known";
-
-                        if (newWords[otherType].length > 0) {
-                            updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords[otherType]);
-                        }
-
-                        // Check if we have anything to update
-                        if (Object.keys(updateObject).length > 0) {
-                            return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
-                        }
-                    }
-                })
-                .then(resolve)
-                .catch((error) => {
-                    console.error(`Error removing vocabulary from the other list in Fire DB:`, error);
-                    reject(error);
-                });
-        });
-    };
-
-    Promise.all([
-        handleWordList('learning'), 
-        handleWordList('known'), 
-        removeFromOtherList('known'), 
-        removeFromOtherList('learning')
-    ]).finally(() => {
+    Promise.all([handleWordList('learning'), handleWordList('known')]).finally(() => {
         vocabularySaveInProgress = false;
     });
 }
+
+*/
+
+
 
 
 
