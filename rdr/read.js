@@ -1858,7 +1858,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 
 
 
-
+/*
 function checkWordInDB(word, type, uid, lang) {
     return new Promise((resolve, reject) => {
         let docRef = dbfire.collection('vocabulary')
@@ -1884,9 +1884,33 @@ function checkWordInDB(word, type, uid, lang) {
             });
     });
 }
+*/
 
+function checkWordInDB(word, type, uid, lang) {
+    return new Promise((resolve, reject) => {
+        let docRef = dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", type);
 
-
+        docRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let docData = doc.data();
+                    if (docData['words'] && docData['words'].includes(word)) {
+                        console.log(`Word "${word}" found in ${type}`);
+                    } else {
+                        console.log(`Word "${word}" not found in ${type}`);
+                    }
+                });
+                resolve();
+            })
+            .catch((error) => {
+                console.log("Error getting document:", error);
+                reject(error);
+            });
+    });
+}
 
 
 
