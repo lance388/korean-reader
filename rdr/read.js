@@ -1720,7 +1720,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     let newWords = {
         "learning": [],
         "known": [],
-        "unknown": []    
+        "unknown": []
     };
 
     wordsToSave.forEach((wordObj) => {
@@ -1740,10 +1740,11 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
                     if (!querySnapshot.empty) {
                         let doc = querySnapshot.docs[0];
                         let updateObject = {};
-                        
-                        // Remove unknown words
-                        if (newWords["unknown"].length > 0) {
-                            updateObject['words'] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
+
+                        // Remove unknown words and words from the opposite category
+                        let wordsToRemove = newWords["unknown"].concat(newWords[type === "learning" ? "known" : "learning"]);
+                        if (wordsToRemove.length > 0) {
+                            updateObject['words'] = firebase.firestore.FieldValue.arrayRemove(...wordsToRemove);
                         }
 
                         // Add learning or known words
@@ -1771,6 +1772,7 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
         vocabularySaveInProgress = false;
     });
 }
+
 
 
 
