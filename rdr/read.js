@@ -1659,10 +1659,6 @@ function saveVocabulary(){
 		checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
 		
 		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
-		
-		console.log("2");
-		checkWordInDB("제공", "learning", firebase.auth().currentUser.uid, lessonLanguage);
-		checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
 		//deleteVocabularyFromFireDB(wordsToDelete, lessonLanguage, user.uid);
 	}
 	
