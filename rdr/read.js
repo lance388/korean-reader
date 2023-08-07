@@ -1469,6 +1469,7 @@ function initialiseVocabulary(){
     });
 }
 
+/*
 function createFireDBDocument(collection, type, lang, uid, w) {
     p("creating document "+type);
     return dbfire.collection(collection).add({
@@ -1478,6 +1479,7 @@ function createFireDBDocument(collection, type, lang, uid, w) {
         author_uid: uid
     }, { merge: true });
 }
+*/
 
 /*
 function loadVocabularyFromFireDB(lang, uid) {
@@ -1505,7 +1507,7 @@ function loadVocabularyFromFireDB(lang, uid) {
 }
 */
 
-
+/*
 function loadVocabularyFromFireDB(lang, uid) {
     let loadLearning = new Promise((resolve, reject) => {
         dbfire.collection('vocabulary')
@@ -1550,8 +1552,45 @@ function loadVocabularyFromFireDB(lang, uid) {
     // Return a Promise that resolves when both learning and known vocabularies are loaded
     return Promise.all([loadLearning, loadKnown]);
 }
+*/
 
 
+function loadVocabularyFromFireDB(lang, uid) {
+    return Promise.all([loadVocabulary("learning", lang, uid), loadVocabulary("known", lang, uid)]);
+}
+
+function loadVocabulary(type, lang, uid) {
+    return new Promise((resolve, reject) => {
+        dbfire.collection('vocabulary')
+            .where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", type)
+            .limit(1)
+            .get()
+            .then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    console.log(`No ${type} vocabulary found! Creating a new one...`);
+                    return createVocabularyDocument(type, lang, uid);
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        let docData = doc.data();
+                        docData.words.forEach(word => {
+                            if (type === "learning") {
+                                vocabularyLearning.add(word);
+                            } else {
+                                vocabularyKnown.add(word);
+                            }
+                        });
+                    });
+                    resolve();
+                }
+            })
+            .catch((error) => {
+                console.log(`Error getting ${type} vocabulary:`, error);
+                reject(error);
+            });
+    });
+}
 
 
 
@@ -1574,7 +1613,14 @@ function initialiseVocabularyFromFireDB() {
     });
 }
 
-
+function createVocabularyDocument(type, lang, uid) {
+    return dbfire.collection('vocabulary').add({
+        author_uid: uid,
+        language: lang,
+        type: type,
+        words: []
+    });
+}
 
 
 
