@@ -1619,8 +1619,13 @@ function createVocabularyDocument(type, lang, uid) {
         language: lang,
         type: type,
         words: []
+    }).then(docRef => {
+        console.log(`Document created with ID: ${docRef.id}`);
+    }).catch(error => {
+        console.error(`Error creating document: ${error}`);
     });
 }
+
 
 
 
