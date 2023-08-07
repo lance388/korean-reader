@@ -1726,53 +1726,52 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
     wordsToSave.forEach((wordObj) => {
         newWords[wordObj.level].push(wordObj.word);
     });
-    
-    let docRefLearning = dbfire.collection('vocabulary')
-    .where("author_uid", "==", uid)
-    .where("language", "==", lang)
-    .where("type", "==", "learning")
-    .limit(1);
 
-	let docRefKnown = dbfire.collection('vocabulary')
-		.where("author_uid", "==", uid)
-		.where("language", "==", lang)
-		.where("type", "==", "known")
-		.limit(1);
+    const updateWordsInDB = (type) => {
+        return new Promise((resolve, reject) => {
+            let docRef = dbfire.collection('vocabulary')
+                .where("author_uid", "==", uid)
+                .where("language", "==", lang)
+                .where("type", "==", type)
+                .limit(1);
 
-	const removeUnknownWords = (docRef) => {
-		return new Promise((resolve, reject) => {
-			docRef.get()
-				.then((querySnapshot) => {
-					if (!querySnapshot.empty) {
-						let doc = querySnapshot.docs[0];
-						let updateObject = {};
-						
-						// Remove unknown words
-						if (newWords["unknown"].length > 0) {
-							updateObject['words'] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
-						}
+            docRef.get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        let doc = querySnapshot.docs[0];
+                        let updateObject = {};
+                        
+                        // Remove unknown words
+                        if (newWords["unknown"].length > 0) {
+                            updateObject['words'] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
+                        }
 
-						// Check if we have anything to update
-						if (Object.keys(updateObject).length > 0) {
-							return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
-						}
-					} else {
-						console.log("No such document!");
-					}
-				})
-				.then(resolve)
-				.catch((error) => {
-					console.error(`Error updating vocabulary in Fire DB:`, error);
-					reject(error);
-				});
-		});
-	};
+                        // Add learning or known words
+                        if (newWords[type].length > 0) {
+                            updateObject['words'] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
+                        }
 
-	Promise.all([removeUnknownWords(docRefLearning), removeUnknownWords(docRefKnown)]).finally(() => {
-		vocabularySaveInProgress = false;
-	});
-		
+                        // Check if we have anything to update
+                        if (Object.keys(updateObject).length > 0) {
+                            return dbfire.collection('vocabulary').doc(doc.id).update(updateObject);
+                        }
+                    } else {
+                        console.log("No such document!");
+                    }
+                })
+                .then(resolve)
+                .catch((error) => {
+                    console.error(`Error updating vocabulary in Fire DB:`, error);
+                    reject(error);
+                });
+        });
+    };
+
+    Promise.all([updateWordsInDB("learning"), updateWordsInDB("known")]).finally(() => {
+        vocabularySaveInProgress = false;
+    });
 }
+
 
 
 
