@@ -254,23 +254,21 @@ function initialiseUI()
   const lessonLinks = document.querySelectorAll('.lesson-link');
 
   // Add a click event listener to each lesson link
-  lessonLinks.forEach(lessonLink => {
-    lessonLink.addEventListener('click', function(event) {
-      // Prevent the default link click behavior
-      event.preventDefault();
+	lessonLinks.forEach(lessonLink => {
+	  lessonLink.addEventListener('click', function(event) {
+		// Prevent the default link click behavior
+		event.preventDefault();
 
-      // Get the lesson name from the data-lesson attribute of the clicked card
-      const lessonID = this.querySelector('.lesson-card').dataset.lesson;
+		// Get the lesson name from the data-lesson attribute of the clicked card
+		const lessonID = this.closest('.lesson-card').dataset.lesson;
 
-      // Store the lesson name in sessionStorage
-      sessionStorage.setItem('lessonID', lessonID);
-	  
-	  //p('Stored lessonID:', sessionStorage.getItem('lessonID'));
-	  //alert('Stored lessonID:'+ sessionStorage.getItem('lessonID')+' lessonID: '+lessonID);
-      // Navigate to the new page
-      window.location.href = this.href;
-    });
-  });
+		// Store the lesson name in sessionStorage
+		sessionStorage.setItem('lessonID', lessonID);
+
+		// Navigate to the new page
+		window.location.href = this.href;
+	  });
+	});
 }
 
 
