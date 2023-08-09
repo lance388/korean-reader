@@ -8,6 +8,7 @@
 }
 
 .lesson-card:hover {
+	z-index: 2;
     transform: scale(1.05); /* enlarge the card a bit */
     transition: transform .2s; /* animate the transformation */
 }
@@ -19,6 +20,7 @@
 }
 
 .lesson-card {
+	z-index: 1;
     display: inline-block;
     width: 100%; /* Adjust this as needed to fit 5 cards on the screen */
     height: 100%; /* Makes the cards full height */
@@ -72,3 +74,4 @@
 .card-menu .dropdown-toggle {
     visibility: hidden; /* Hide the three dots by default */
 }
+
