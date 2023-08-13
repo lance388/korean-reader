@@ -48,30 +48,13 @@
   color: #fff;  /* Change this to your preferred active text color */
   background-color: #666;  /* Change this to your preferred active background color */
 }
-
-.card-menu {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
-.card-menu .dropdown-toggle {
-    color: #000; /* Set the color of the three dots */
-    font-size: 18px; /* Set the size of the three dots */
+.editable-title {
     border: none;
     background: none;
-    padding: 0;
+    font-size: 1rem; /* adjust as needed */
 }
 
-.card-body {
-    position: relative; /* Make sure the dropdown is positioned relative to the card body */
-}
-
-.card:hover .card-menu .dropdown-toggle {
-    visibility: visible; /* Show the three dots on hover */
-}
-
-.card-menu .dropdown-toggle {
-    visibility: hidden; /* Hide the three dots by default */
+.learning-language-select {
+    /* Add styling to match your design */
 }
 

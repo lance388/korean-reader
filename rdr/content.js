@@ -50,50 +50,20 @@ function initialise(){
         p("Completed initialise Indexed DB");
 		initialiseUI();
 		saveLastEditMode("");
-		loadLessonBlurbs();
+		loadLessonCards();
 		p("Initialisation complete");
         document.getElementById('loading-overlay').style.display = 'none';
     });
 }
 
-function loadLessonBlurbs() {
-    const lessonCards = document.querySelectorAll('.lesson-card');
 
-    lessonCards.forEach(card => {
-        const lessonID = card.getAttribute('data-lesson');
-
-        if (/^custom\d+$/.test(lessonID)) {
-            console.log("Custom lesson loading...");
-
-            getCustomLessonFromIndexedDB(lessonID, function(lesson) {
-                // Set the description on the card
-				if(lesson.text==""){
-					card.querySelector('.card-text.description').textContent = "EMPTY";
-				}
-				else{
-					card.querySelector('.card-text.description').textContent = lesson.text;
-				}
-		
-                console.log(`Custom lesson ${lessonID} loaded`);
-            });
-        } else {
-            fetch(`lessons/${lessonID}.json`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Lesson failed to load');
-                    }
-                    return response.json();
-                })
-                .then(lesson => {
-                    console.log("Premade lesson loading...");
-                    card.querySelector('.card-text.description').textContent = lesson.text;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-    });
+function loadLessonCards(){
+	loadLessonBlurbs();
 }
+
+
+
+
 
 function getCustomLessonFromIndexedDB(i, callback) {
     var transaction = db.transaction(["lessonsdb"], "readwrite");
@@ -249,7 +219,7 @@ function initialiseUI()
 		p("user is offline");
 	});
 	
-	
+/*	
 	  // Get all the lesson links
   const lessonLinks = document.querySelectorAll('.lesson-link');
 
@@ -269,8 +239,27 @@ function initialiseUI()
 		window.location.href = this.href;
 	  });
 	});
-}
 
+*/
+
+	const lessonLinks = document.querySelectorAll('.lesson-link');
+
+	lessonLinks.forEach(lessonLink => {
+		lessonLink.addEventListener('click', function(event) {
+			// Prevent the default link click behavior
+			event.preventDefault();
+
+			// Get the lesson name from the data-lesson attribute of the clicked card
+			const lessonID = this.querySelector('.lesson-card').dataset.lesson;
+
+			// Store the lesson name in sessionStorage
+			sessionStorage.setItem('lessonID', lessonID);
+
+			// Navigate to the new page
+			window.location.href = this.href;
+		});
+	});
+}
 
 
 window.handleCredentialResponse = (response) => {
@@ -392,5 +381,70 @@ function logUser(user)
 		console.error("Error writing document: ", error);
 	});
 }
+
+function loadLessonBlurbs() {
+    const lessonCards = document.querySelectorAll('.lesson-card');
+
+    lessonCards.forEach(card => {
+        const lessonID = card.getAttribute('data-lesson');
+
+        if (/^custom\d+$/.test(lessonID)) {
+            console.log("Custom lesson loading...");
+
+            getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+				
+				console.log(lesson);
+				
+                // Set the description on the card
+                if (lesson.text == "") {
+                    card.querySelector('.card-text.description').textContent = "EMPTY";
+                } else {
+                    card.querySelector('.card-text.description').textContent = lesson.text;
+                }
+
+                // Set the title on the card
+                if (lesson.title) {
+                    card.querySelector('.editable-title').value = lesson.title;
+                }
+
+                // Set the language on the card
+                if (lesson.language) {
+                    card.querySelector('.learning-language-select').value = lesson.language;
+                }
+
+                console.log(`Custom lesson ${lessonID} loaded`);
+            });
+        } else {
+			//TODO unblock error messages when i want to use this
+            fetch(`lessons/${lessonID}.json`)
+                .then(response => {
+                    if (!response.ok) {
+                        //throw new Error('Lesson failed to load');
+                    }
+                    return response.json();
+                })
+                .then(lesson => {
+                    //console.log("Premade lesson loading...");
+                    card.querySelector('.card-text.description').textContent = lesson.text;
+                })
+                .catch(error => {
+                    //console.error('Error:', error);
+                });
+        }
+    });
+}
+
+
+document.querySelectorAll('.editable-title').forEach(input => {
+    input.addEventListener('blur', function() {
+        // Code to save the new title
+    });
+});
+
+document.querySelectorAll('.learning-language-select').forEach(select => {
+    select.addEventListener('change', function() {
+        // Code to save the new learning language
+    });
+});
 
 

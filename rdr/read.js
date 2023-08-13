@@ -24,6 +24,7 @@ var lessonWordArray;
 var lessonTotalWordCount;
 var lessonSavingEnabled;
 var lessonID;
+var lessonTitle;
 var saveTextTimer = null;
 var saveVocabularyTimer = null;
 var colourisePageTimeout = null;
@@ -44,6 +45,8 @@ var voiceSelection;
 var settingsDebounceTimeout;
 var lastScroll;
 var learnMode;
+const DEFAULT_LESSON_LANGUAGE="korean";
+const DEFAULT_LESSON_TITLE="Custom Lesson";
 const DEFAULT_JUMP_HIGHLIGHT='#5a96e0';
 const DEFAULT_UNKNOWN_HIGHLIGHT='#F5A9E1';
 const DEFAULT_KNOWN_HIGHLIGHT='#99FF00';
@@ -84,7 +87,9 @@ function initialise(){
 	uniqueCounts=[];
 	sentences=[];
 	pageMax=0;
-	lessonLanguage = "korean";
+	lessonLanguage = "";
+	lessonID="";
+	lessonTitle="";
 	naverDictionaryLanguage="en";
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
@@ -119,9 +124,12 @@ function initialise(){
             clearTimeout(colourisePageTimeout);
     }
 	
+	//initialiseIndexedDB().then(() => {
+		//return initialiseLesson();
+	//})
 	initialiseIndexedDB().then(() => {
-    p("Completed initialise Indexed DB");
-    return initialiseVocabulary();
+		p("Completed initialise Indexed DB");
+		return initialiseVocabulary();
 	}).then(() => {
 		p("Completed initialise Vocabulary");
 		return initialiseUI();
@@ -131,10 +139,7 @@ function initialise(){
 		initialiseDataTables();
 		return initialiseSettings();
 	}).then(() => {
-		p("Completed initialise settings");
-		return initialiseLesson();
-	}).then(() => {
-		p("Completed initialise lesson");
+		p("Completed initialise Settings");
 		return initialiseLearnMode();
 	}).then(() => {
 		initialiseScroll();
@@ -263,7 +268,9 @@ function onTextareaInput() {
 			*/
 			
             var lesson = {
-                title: lessonID,
+                id: lessonID,
+				title: lessonTitle,
+				language: lessonLanguage,
                 text: learnTextDiv.innerText
             };
 
@@ -797,7 +804,7 @@ function populateVoiceList() {
 	switch(lessonLanguage){
 		case "korean":selectedLanguage="ko";break;
 		case "cn":selectedLanguage="zh";break;
-		case "en":selectedLanguage="ko";break;
+		case "en":selectedLanguage="en";break;
 		default:console.log("Language not found");
 	}
 
@@ -1015,7 +1022,7 @@ function initPremadeLesson(title, text){
 }
 */
 
-function formatTitle(title) {
+/*function formatTitle(title) {
     // Split the title into words (assuming the format is always "custom1", "custom2", etc.)
     let words = title.split(/(\d+)/);  // This will split the title into ["custom", "1"]
 
@@ -1027,27 +1034,56 @@ function formatTitle(title) {
 
     return formattedTitle;
 }
+*/
+/*
+function extractNumberFromID(id) {
+    // Use a regular expression to match the numerical part of the ID
+    let match = id.match(/\d+/);
+
+    // If there is a match, the result will be an array where the first element is the numerical part
+    // Convert it to a number using parseInt and return it
+    if (match) {
+        return parseInt(match[0], 10);
+    }
+
+    // If there's no match, return undefined or any suitable default value
+    return undefined;
+}
+*/
 
 function initCustomLesson(){
     return new Promise((resolve, reject) => {
-        var title = formatTitle(lessonID);
-        document.getElementById('textarea-navbar-title').innerText = title;
-        $('#current-lesson-title').text(title);
+       /* var title = formatTitle(lessonID);
+		
+		
+		var idNumber = extractNumberFromID(lessonID);
+        
+		
+		*/
+		
+		
         lessonSavingEnabled=true;
         
-        if(signedInState=="offline"||signedInState=="signedOut"){
+     //   if(signedInState=="offline"||signedInState=="signedOut"){
             getCustomLessonFromIndexedDB(lessonID, function(lesson) {
                 if(lesson){
+					console.log("***HERE*** "+lesson.language);
+					lessonTitle=lesson.title;
+					lessonLanguage=lesson.language;
+					
+					document.getElementById('textarea-navbar-title').innerText = lessonTitle+"("+lessonLanguage+")";
+					$('#current-lesson-title').text(lessonTitle+"("+lessonLanguage+")");
+					
                     const textarea = document.getElementById('learnText');
                     textarea.innerText = lesson.text;
-                   // $('#editText').trigger('input');
+					
                     resolve();
                 } else {
                     console.log('Could not load custom lesson');
                 }
             });
-        }
-        else{
+     //   }
+      /*  else{
             getCustomLessonFromIndexedDB(lessonID, function(lesson) {
                 if(lesson){
                     const textarea = document.getElementById('learnText');
@@ -1058,7 +1094,7 @@ function initCustomLesson(){
                     reject('Could not load custom lesson');
                 }
             });
-        }
+        } */
     });
 }
 
@@ -2016,30 +2052,42 @@ function getCustomLessonFromIndexedDB(i, callback) {
         alert("Unable to retrieve data from database!");
     };
 
-    request.onsuccess = function(event) {  
-        if(request.result) {
-            callback(request.result);
-        } else {
-            console.log("No data record found for the title: " + i + ". Creating new record.");
+    request.onsuccess = function(event) {
+		if(request.result) {
+			//console.log("***HERE*** "+request.result.language);
+			// Check if the title exists, if not set it to DEFAULT_LESSON_TITLE
+			if (typeof request.result.title === 'undefined' || request.result.title === null) {
+				request.result.title = DEFAULT_LESSON_TITLE;
+			}
 
-            var newLesson = {
-                id: i,
-                title: i, // Update as per your requirement
-                text: "" // Update as per your requirement
-            };
+			// Check if the language exists, if not set it to DEFAULT_LESSON_LANGUAGE
+			if (typeof request.result.language === 'undefined' || request.result.language === null) {
+				request.result.language = DEFAULT_LESSON_LANGUAGE;
+			}
 
-            var addRequest = objectStore.add(newLesson);
+			callback(request.result);
+		} else {
+			console.log("No data record found for the title: " + i + ". Creating new record.");
 
-            addRequest.onerror = function(event) {
-                console.log("Failed to create new record: " + event.target.error);
-            };
+			var newLesson = {
+				id: i,
+				title: DEFAULT_LESSON_TITLE,
+				text: "",
+				language: DEFAULT_LESSON_LANGUAGE
+			};
 
-            addRequest.onsuccess = function(event) {
-                console.log("New record has been created with id: " + event.target.result);
-                callback(newLesson);
-            };
-        }
-    };
+			var addRequest = objectStore.add(newLesson);
+
+			addRequest.onerror = function(event) {
+				console.log("Failed to create new record: " + event.target.error);
+			};
+
+			addRequest.onsuccess = function(event) {
+				console.log("New record has been created with id: " + event.target.result);
+				callback(newLesson);
+			};
+		}
+	};
 }
 
 
@@ -3319,9 +3367,15 @@ function setDictionaryLanguage(lang){
 }
 
 function initialiseSettings() {
-    return getSettings().then(settings => {
-        // Assign to a global variable
-        window.settings = settings;
+    return getSettings().then(async (settings) => { // Use async inside the then() block
+	
+		window.settings = settings; // Assign to a global variable
+		
+        // Call initialiseLesson() and wait for it to complete
+        await initialiseLesson(); // Use await here
+
+        
+        
 
          //Log each setting
         for (let key in settings) {
