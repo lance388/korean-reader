@@ -128,18 +128,14 @@ function initialise(){
 		//return initialiseLesson();
 	//})
 	initialiseIndexedDB().then(() => {
-		p("Completed initialise Indexed DB");
-		return initialiseVocabulary();
-	}).then(() => {
-		p("Completed initialise Vocabulary");
 		return initialiseUI();
 	}).then(() => {
-		p("Completed initialise UI");
 		initialiseTextSaving();
 		initialiseDataTables();
 		return initialiseSettings();
 	}).then(() => {
-		p("Completed initialise Settings");
+		return initialiseVocabulary();
+	}).then(() => {
 		return initialiseLearnMode();
 	}).then(() => {
 		initialiseScroll();
