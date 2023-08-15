@@ -64,7 +64,7 @@ function loadLessonCards(){
 
 
 
-
+/*
 function getCustomLessonFromIndexedDB(i, callback) {
     var transaction = db.transaction(["lessonsdb"], "readwrite");
     var objectStore = transaction.objectStore("lessonsdb");
@@ -99,7 +99,7 @@ function getCustomLessonFromIndexedDB(i, callback) {
         }
     };
 }
-
+*/
 
 
 
@@ -387,52 +387,67 @@ function loadLessonBlurbs() {
 
     lessonCards.forEach(card => {
         const lessonID = card.getAttribute('data-lesson');
+        getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+            console.log(lesson);
+            
+            // Set the description on the card
+            if (lesson.text == "") {
+                card.querySelector('.card-text.description').textContent = "EMPTY";
+            } else {
+                card.querySelector('.card-text.description').textContent = lesson.text;
+            }
 
-        if (/^custom\d+$/.test(lessonID)) {
-            console.log("Custom lesson loading...");
+            // Set the title on the card
+            if (lesson.title) {
+                card.querySelector('.editable-title').value = lesson.title;
+            }
 
-            getCustomLessonFromIndexedDB(lessonID, function(lesson) {
-				
-				console.log(lesson);
-				
-                // Set the description on the card
-                if (lesson.text == "") {
-                    card.querySelector('.card-text.description').textContent = "EMPTY";
-                } else {
-                    card.querySelector('.card-text.description').textContent = lesson.text;
-                }
+            // Set the language on the card
+            if (lesson.language) {
+                card.querySelector('.learning-language-select').value = lesson.language;
+            }
 
-                // Set the title on the card
-                if (lesson.title) {
-                    card.querySelector('.editable-title').value = lesson.title;
-                }
-
-                // Set the language on the card
-                if (lesson.language) {
-                    card.querySelector('.learning-language-select').value = lesson.language;
-                }
-
-                console.log(`Custom lesson ${lessonID} loaded`);
-            });
-        } else {
-			//TODO unblock error messages when i want to use this
-            fetch(`lessons/${lessonID}.json`)
-                .then(response => {
-                    if (!response.ok) {
-                        //throw new Error('Lesson failed to load');
-                    }
-                    return response.json();
-                })
-                .then(lesson => {
-                    //console.log("Premade lesson loading...");
-                    card.querySelector('.card-text.description').textContent = lesson.text;
-                })
-                .catch(error => {
-                    //console.error('Error:', error);
-                });
-        }
+            console.log(`Custom lesson ${lessonID} loaded`);
+        });
     });
 }
+
+function getCustomLessonFromIndexedDB(lessonID, callback) {
+    var transaction = db.transaction(["lessonsdb"], "readwrite");
+    var objectStore = transaction.objectStore("lessonsdb");
+    var request = objectStore.get(lessonID);
+
+    request.onerror = function (event) {
+        alert("Unable to retrieve data from database!");
+    };
+
+    request.onsuccess = function (event) {
+        if (request.result) {
+            callback(request.result);
+        } else {
+            console.log("No data record found. Creating new record.");
+            var lessonNumber = parseInt(lessonID.replace('custom', ''));
+            var newLesson = {
+                id: lessonID,
+                title: "Custom " + lessonNumber, // Set default title
+                text: "", // Set default text
+                language: "korean" // Set default language
+            };
+
+            var addRequest = objectStore.add(newLesson);
+
+            addRequest.onerror = function (event) {
+                console.log("Failed to create new record: " + event.target.error);
+            };
+
+            addRequest.onsuccess = function (event) {
+                console.log("New record has been created with id: " + event.target.result);
+                callback(newLesson);
+            };
+        }
+    };
+}
+
 
 
 document.querySelectorAll('.editable-title').forEach(input => {

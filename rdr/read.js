@@ -664,14 +664,21 @@ function initialiseUI(){
 
 			selection.deleteFromDocument();
 
-			// insert each node from the temporary div at the cursor position
+			// create a document fragment to hold the nodes
+			let fragment = document.createDocumentFragment();
+
+			// append all child nodes to the fragment
 			while (tempDiv.firstChild) {
-				selection.getRangeAt(0).insertNode(tempDiv.firstChild);
+				fragment.appendChild(tempDiv.firstChild);
 			}
+
+			// insert the fragment at the cursor position
+			selection.getRangeAt(0).insertNode(fragment);
 
 			// Clear the selection after pasting
 			window.getSelection().removeAllRanges();
 		});
+
 
 
 
