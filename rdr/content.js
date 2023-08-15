@@ -452,14 +452,49 @@ function getCustomLessonFromIndexedDB(lessonID, callback) {
 
 document.querySelectorAll('.editable-title').forEach(input => {
     input.addEventListener('blur', function() {
-        // Code to save the new title
+        const lessonID = input.closest('.lesson-card').getAttribute('data-lesson');
+        updateLessonInIndexedDB(lessonID, { title: input.value });
     });
 });
 
 document.querySelectorAll('.learning-language-select').forEach(select => {
     select.addEventListener('change', function() {
-        // Code to save the new learning language
+        const lessonID = select.closest('.lesson-card').getAttribute('data-lesson');
+        updateLessonInIndexedDB(lessonID, { language: select.value });
     });
 });
+
+function updateLessonInIndexedDB(lessonID, updateData) {
+    var transaction = db.transaction(["lessonsdb"], "readwrite");
+    var objectStore = transaction.objectStore("lessonsdb");
+    var request = objectStore.get(lessonID);
+
+    request.onerror = function(event) {
+        console.log("Unable to retrieve data from database!");
+    };
+
+    request.onsuccess = function(event) {
+        if (request.result) {
+            var lesson = request.result;
+            
+            // Update the relevant properties
+            if (updateData.title) lesson.title = updateData.title;
+            if (updateData.language) lesson.language = updateData.language;
+
+            // Put the updated object back into the database
+            var updateRequest = objectStore.put(lesson);
+
+            updateRequest.onerror = function(event) {
+                console.log("Failed to update record: " + event.target.error);
+            };
+
+            updateRequest.onsuccess = function(event) {
+                console.log(`Record with id ${lessonID} has been updated`);
+            };
+        } else {
+            console.log("Record not found. Unable to update.");
+        }
+    };
+}
 
 
