@@ -242,15 +242,12 @@ function initialiseUI()
 
 */
 
-	const lessonLinks = document.querySelectorAll('.lesson-link');
-
-	lessonLinks.forEach(lessonLink => {
-		lessonLink.addEventListener('click', function(event) {
+		$('.lesson-title-link').on('click', function(event) {
 			// Prevent the default link click behavior
 			event.preventDefault();
 
-			// Get the lesson name from the data-lesson attribute of the clicked card
-			const lessonID = this.querySelector('.lesson-card').dataset.lesson;
+			// Get the lesson name from the data-lesson attribute of the parent card
+			const lessonID = $(this).closest('.lesson-card').data('lesson');
 
 			// Store the lesson name in sessionStorage
 			sessionStorage.setItem('lessonID', lessonID);
@@ -258,7 +255,18 @@ function initialiseUI()
 			// Navigate to the new page
 			window.location.href = this.href;
 		});
-	});
+
+		$('.editable-title').on('blur', function() {
+			const lessonID = $(this).closest('.lesson-card').attr('data-lesson');
+			updateLessonInIndexedDB(lessonID, { title: this.value });
+		});
+
+		$('.learning-language-select').on('change', function() {
+			const lessonID = $(this).closest('.lesson-card').attr('data-lesson');
+			updateLessonInIndexedDB(lessonID, { language: this.value });
+		});
+
+
 }
 
 
@@ -389,28 +397,39 @@ function loadLessonBlurbs() {
         const lessonID = card.getAttribute('data-lesson');
         getCustomLessonFromIndexedDB(lessonID, function(lesson) {
             console.log(lesson);
-            
+
             // Set the description on the card
-            if (lesson.text == "") {
+            if (lesson && lesson.text == "") {
                 card.querySelector('.card-text.description').textContent = "EMPTY";
-            } else {
+            } else if (lesson && lesson.text) {
                 card.querySelector('.card-text.description').textContent = lesson.text;
             }
 
             // Set the title on the card
-            if (lesson.title) {
-                card.querySelector('.editable-title').value = lesson.title;
+            if (lesson && lesson.title) {
+                const titleElement = card.querySelector('.editable-title');
+                if (titleElement) {
+                    titleElement.value = lesson.title;
+                } else {
+                    console.error(`Title element not found for lesson ID ${lessonID}`);
+                }
             }
 
             // Set the language on the card
-            if (lesson.language) {
-                card.querySelector('.learning-language-select').value = lesson.language;
+            if (lesson && lesson.language) {
+                const selectElement = card.querySelector('.learning-language-select');
+                if (selectElement) {
+                    selectElement.value = lesson.language;
+                } else {
+                    console.error(`Language select element not found for lesson ID ${lessonID}`);
+                }
             }
 
             console.log(`Custom lesson ${lessonID} loaded`);
         });
     });
 }
+
 
 function getCustomLessonFromIndexedDB(lessonID, callback) {
     var transaction = db.transaction(["lessonsdb"], "readwrite");
@@ -450,21 +469,13 @@ function getCustomLessonFromIndexedDB(lessonID, callback) {
 
 
 
-document.querySelectorAll('.editable-title').forEach(input => {
-    input.addEventListener('blur', function() {
-        const lessonID = input.closest('.lesson-card').getAttribute('data-lesson');
-        updateLessonInIndexedDB(lessonID, { title: input.value });
-    });
-});
 
-document.querySelectorAll('.learning-language-select').forEach(select => {
-    select.addEventListener('change', function() {
-        const lessonID = select.closest('.lesson-card').getAttribute('data-lesson');
-        updateLessonInIndexedDB(lessonID, { language: select.value });
-    });
-});
+
 
 function updateLessonInIndexedDB(lessonID, updateData) {
+	
+	console.log("***UPDATING DATA "+lessonID+" "+updateData.title);
+	
     var transaction = db.transaction(["lessonsdb"], "readwrite");
     var objectStore = transaction.objectStore("lessonsdb");
     var request = objectStore.get(lessonID);

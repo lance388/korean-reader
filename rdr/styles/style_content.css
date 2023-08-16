@@ -58,3 +58,12 @@
     /* Add styling to match your design */
 }
 
+.lesson-title-link {
+    text-decoration: none; /* Remove underlining */
+    color: inherit; /* Use the same color as the parent element */
+}
+
+.lesson-title-link:hover {
+    text-decoration: none; /* Ensure that hovering over the link doesn't underline it either */
+}
+
