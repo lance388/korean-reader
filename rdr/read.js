@@ -807,7 +807,7 @@ function populateVoiceList() {
 	switch(lessonLanguage){
 		case "korean":selectedLanguage="ko";break;
 		case "cn":selectedLanguage="zh";break;
-		case "en":selectedLanguage="en";break;
+		case "english":selectedLanguage="en";break;
 		default:console.log("Language not found");
 	}
 
@@ -1070,12 +1070,11 @@ function initCustomLesson(){
      //   if(signedInState=="offline"||signedInState=="signedOut"){
             getCustomLessonFromIndexedDB(lessonID, function(lesson) {
                 if(lesson){
-					console.log("***HERE*** "+lesson.language);
 					lessonTitle=lesson.title;
 					lessonLanguage=lesson.language;
 					
-					document.getElementById('textarea-navbar-title').innerText = lessonTitle+"("+lessonLanguage+")";
-					$('#current-lesson-title').text(lessonTitle+"("+lessonLanguage+")");
+					document.getElementById('textarea-navbar-title').innerText = lessonTitle+" ("+capitalizeFirstLetter(lessonLanguage)+")";
+					$('#current-lesson-title').text(lessonTitle+" ("+ capitalizeFirstLetter(lessonLanguage)+")");
 					
                     const textarea = document.getElementById('learnText');
                     textarea.innerText = lesson.text;
@@ -1101,6 +1100,11 @@ function initCustomLesson(){
     });
 }
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
 
 
 
@@ -1115,10 +1119,12 @@ function loadTextIntoLearnTab(text, language) {
         let sentenceChunks = sentence.split(/(\s|\n)/).flatMap((chunk) => {
             if(/\n/.test(chunk)) {
                 // If the chunk is a newline, return a <br> element
-                return '<span class="non-text"><br></span>';
+				return '<br>';
+                //return '<span class="non-text"><br></span>';
             } else if (/\s/.test(chunk)) {
                 // If the chunk is whitespace, return it as-is
-                return `<span class="non-text" data-sentence="${sentenceIndex}">&nbsp;</span>`;
+				//return ` `;
+                return `<span class="non-text" data-sentence="${sentenceIndex}"> </span>`;
             } else {
                 let subChunks;
                 // Further split the chunk into Korean and non-Korean text
@@ -1126,7 +1132,7 @@ function loadTextIntoLearnTab(text, language) {
                     subChunks = chunk.split(/([\uAC00-\uD7AF]+)/).filter(Boolean);
                 } 
                 // For English, include only latin letters
-                else if (language == "en") {
+                else if (language == "english") {
                     subChunks = chunk.split(/([a-zA-Z]+)/).filter(Boolean);
                 }
                 // For Chinese, include only Chinese characters
@@ -1135,7 +1141,7 @@ function loadTextIntoLearnTab(text, language) {
                 }
                 return subChunks.map((subChunk) => {
                     if ((language == "korean" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
-                        (language == "en" && /[a-zA-Z]/.test(subChunk)) ||
+                        (language == "english" && /[a-zA-Z]/.test(subChunk)) ||
                         (language == "cn" && /[\p{Script=Han}]/u.test(subChunk))) {
                         // If the subChunk is in the appropriate language, wrap it in a span with a 'sentence' data attribute
                         return `<span class="clickable-word" data-sentence="${sentenceIndex}">${subChunk}</span>`;
@@ -1213,6 +1219,7 @@ function loadTextIntoLearnTab(text, language) {
 			delete sentences[index]; // Remove the sentence from the array
 		}
 });
+	
 	sentences = sentences.filter(Boolean);
 	fillSentencelistTable();
 
@@ -1425,7 +1432,7 @@ function initialiseIndexedDB() {
             p(errorMessage);
             reject(new Error(errorMessage));
         } else {
-            var request = indexedDB.open("wordsdb", 9);
+            var request = indexedDB.open("wordsdb", 10);
             request.onupgradeneeded = function() {
                 db = request.result;
                 if (!db.objectStoreNames.contains('wordsdb')) {
@@ -1433,7 +1440,7 @@ function initialiseIndexedDB() {
                     //var appearancesIndex = store.createIndex("by_appearance", "appearance");
                 }
                 if (!db.objectStoreNames.contains('lessonsdb')) {
-                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
+                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "id"});
                 }
                 if (!db.objectStoreNames.contains('settings')) {
                     var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
@@ -2288,6 +2295,7 @@ function fillSentencelistTable() {
 
 
 sentences.forEach(function(item, index) {
+	
     let sentenceHtml = item.sentence;
 	let sentenceLength = item.clickableWords.length;
 	let questionCount=0;
@@ -2308,6 +2316,7 @@ sentences.forEach(function(item, index) {
 				questionCount++;
 			}
             sentenceHtml = sentenceHtml.replace(word, wordHtml);
+			
         }
     });
 	
@@ -2347,6 +2356,57 @@ sentences.forEach(function(item, index) {
 
 }
 
+
+function colourSentences(table) {
+  let currentPageRows = table.rows({ page: 'current' });
+  currentPageRows.every(function() {
+    let rowData = this.data();
+    let index = rowData["#"];
+    let thisSentence = sentences.find(item => item.validSentenceIndex === index);
+    let sentenceHtml = thisSentence.sentence;
+
+    let regex;
+    switch (lessonLanguage) {
+      case "english":
+        regex = /([a-zA-Z]+)/g;
+        break;
+      case "korean":
+        regex = /([\uAC00-\uD7AF]+)/g;
+        break;
+      default:
+        regex = /(\w+)/g;
+    }
+
+    sentenceHtml = sentenceHtml.replace(regex, function(match) {
+      let matchingWord = lessonWordArray.find(function(lessonWord) {
+        return lessonWord.word === match;
+      });
+
+      if (matchingWord) {
+        if (matchingWord.level === "known") {
+          return `<span class="known">${match}</span>`;
+        } else if (matchingWord.level === "learning") {
+          return `<span class="learning">${match}</span>`;
+        } else {
+          return `<span class="unknown">${match}</span>`;
+        }
+      } else {
+        return match;
+      }
+    });
+
+    // Update the "Sentence" field in the current rowData
+    rowData["Sentence"] = sentenceHtml;
+
+    // Update the data for the current row
+    this.data(rowData).invalidate();
+  });
+}
+
+
+
+
+/*
 function colourSentences(table){
 	
   let currentPageRows = table.rows({ page: 'current' });
@@ -2356,7 +2416,22 @@ function colourSentences(table){
 	  let index = rowData["#"];
 	  let thisSentence = sentences.find(item => item.validSentenceIndex === index);
 	  let sentenceHtml = thisSentence.sentence;
-
+	
+	let delimiters;
+		switch (lessonLanguage) {
+		  case "english":
+			delimiters = '(^|\\s|[^a-zA-Z])';
+			break;
+		  case "korean":
+			delimiters = '(^|\\s|[^\\uAC00-\\uD7AF])';
+			break;
+		  default:
+			delimiters = '(^|\\s|\\W)';
+		}
+		
+		console.log("***HERE*** "+thisSentence.clickableWords);
+		console.log("***HERE2*** "+sentenceHtml);
+	  
 	  thisSentence.clickableWords.forEach(function(word) {
 		const matchingWord = lessonWordArray.find(function(lessonWord) {
 		  return lessonWord.word === word;
@@ -2371,7 +2446,14 @@ function colourSentences(table){
 		  } else {
 			wordHtml = `<span class="unknown">${word}</span>`;
 		  }
-		  sentenceHtml = sentenceHtml.replace(word, wordHtml);
+		  
+		 
+		 const regex = new RegExp(`${delimiters}${word}${delimiters}`, 'g');
+		sentenceHtml = sentenceHtml.replace(regex, `$1${wordHtml}$2`);
+
+
+		  
+		  
 		}
 	  });
 
@@ -2385,6 +2467,7 @@ function colourSentences(table){
 	// Redraw only the affected rows
 	//currentPageRows.draw();
 }
+*/
 
 function colourWordTable(table) {
     let currentPageRows = table.rows({ page: 'current' });
@@ -2832,19 +2915,16 @@ function playWordTTS(word) {
         speechSynthesis.cancel();
 
         var utterance = new SpeechSynthesisUtterance(word);
-
+		if(!voiceSelect)
+		{
+			voiceSelect = document.querySelector('#voice-selection');
+		}
         // Get the selected voice from the dropdown
 		if(!voiceSelect.selectedOptions){
 			return;
 		}
-        var selectedOption = voiceSelect.selectedOptions[0].value;
-        voices.forEach(function(voice) {
-            if(voice.name === selectedOption) {
-                utterance.voice = voice;
-            }
-        });
-
-        // Get volume, rate, and pitch from the respective input controls
+		
+		// Get volume, rate, and pitch from the respective input controls
         var volume = document.getElementById('volume-control').value;
         var rate = document.getElementById('rate-control').value;
         var pitch = document.getElementById('pitch-control').value;
@@ -2853,9 +2933,26 @@ function playWordTTS(word) {
         utterance.volume = parseFloat(volume); // Volume value is between 0 and 1
         utterance.rate = parseFloat(rate); // Rate value is between 0.1 and 10
         utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
+		
+		if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
+			var selectedOption = voiceSelect.selectedOptions[0].value;
+			var selectedOption = voiceSelect.selectedOptions[0].value;
+			voices.forEach(function(voice) {
+				if(voice.name === selectedOption) {
+					utterance.voice = voice;
+				}
+			});
 
-        // Speak the utterance
-        speechSynthesis.speak(utterance);
+			
+
+			// Speak the utterance
+			speechSynthesis.speak(utterance);
+		} else {
+			console.warn('No selected option found');
+			return; // Exit the function if no option is selected
+		}
+		
+        
     }
 }
 

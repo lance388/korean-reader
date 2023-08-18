@@ -148,8 +148,7 @@ html, body {`
     box-sizing: border-box; /* add this line */
     margin:0;
     padding:10px;
-    overflow-wrap: normal;
-    word-wrap: normal;
+	word-break: keep-all;
     resize:none;
     font-size: 2em; /* Adjust the font size to fit the container */
     line-height: 1.6; /* More space between lines for easier reading */
@@ -402,5 +401,7 @@ html, body {`
     flex: 1;
 	
 }
+
+
 
 

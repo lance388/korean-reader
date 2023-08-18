@@ -51,6 +51,8 @@ function initialise(){
 		initialiseUI();
 		saveLastEditMode("");
 		loadLessonCards();
+		
+		
 		p("Initialisation complete");
         document.getElementById('loading-overlay').style.display = 'none';
     });
@@ -125,15 +127,16 @@ function initialiseIndexedDB() {
             p(errorMessage);
             reject(new Error(errorMessage));
         } else {
-            var request = indexedDB.open("wordsdb", 9);
+            var request = indexedDB.open("wordsdb", 10);
             request.onupgradeneeded = function() {
                 db = request.result;
+				
                 if (!db.objectStoreNames.contains('wordsdb')) {
                     var store = db.createObjectStore("wordsdb", {keyPath: "word"});
                     //var appearancesIndex = store.createIndex("by_appearance", "appearance");
                 }
                 if (!db.objectStoreNames.contains('lessonsdb')) {
-                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
+                    var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "id"});
                 }
                 if (!db.objectStoreNames.contains('settings')) {
                     var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
@@ -258,13 +261,42 @@ function initialiseUI()
 
 		$('.editable-title').on('blur', function() {
 			const lessonID = $(this).closest('.lesson-card').attr('data-lesson');
-			updateLessonInIndexedDB(lessonID, { title: this.value });
+			const newTitle = $(this).val();
+
+			getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+				// Check if the lesson exists
+				if (lesson) {
+					// Update the language property
+					lesson.title = newTitle;
+
+					// Save the updated lesson back to the database
+					saveCustomLessonToIndexedDB(lesson);
+				} else {
+					console.error(`Lesson with ID ${lessonID} not found`);
+				}
+			});
 		});
+
 
 		$('.learning-language-select').on('change', function() {
 			const lessonID = $(this).closest('.lesson-card').attr('data-lesson');
-			updateLessonInIndexedDB(lessonID, { language: this.value });
+			const newLanguageValue = $(this).val();
+
+			getCustomLessonFromIndexedDB(lessonID, function(lesson) {
+				// Check if the lesson exists
+				if (lesson) {
+					// Update the language property
+					lesson.language = newLanguageValue;
+
+					// Save the updated lesson back to the database
+					saveCustomLessonToIndexedDB(lesson);
+				} else {
+					console.error(`Lesson with ID ${lessonID} not found`);
+				}
+			});
 		});
+
+
 
 
 }
@@ -396,7 +428,6 @@ function loadLessonBlurbs() {
     lessonCards.forEach(card => {
         const lessonID = card.getAttribute('data-lesson');
         getCustomLessonFromIndexedDB(lessonID, function(lesson) {
-            console.log(lesson);
 
             // Set the description on the card
             if (lesson && lesson.text == "") {
@@ -429,6 +460,7 @@ function loadLessonBlurbs() {
         });
     });
 }
+
 
 
 function getCustomLessonFromIndexedDB(lessonID, callback) {
@@ -472,39 +504,17 @@ function getCustomLessonFromIndexedDB(lessonID, callback) {
 
 
 
-function updateLessonInIndexedDB(lessonID, updateData) {
-	
-	console.log("***UPDATING DATA "+lessonID+" "+updateData.title);
-	
+function saveCustomLessonToIndexedDB(lesson) {
     var transaction = db.transaction(["lessonsdb"], "readwrite");
     var objectStore = transaction.objectStore("lessonsdb");
-    var request = objectStore.get(lessonID);
+    var request = objectStore.put(lesson);
 
     request.onerror = function(event) {
-        console.log("Unable to retrieve data from database!");
+        alert("Unable to save data to database!");
     };
 
-    request.onsuccess = function(event) {
-        if (request.result) {
-            var lesson = request.result;
-            
-            // Update the relevant properties
-            if (updateData.title) lesson.title = updateData.title;
-            if (updateData.language) lesson.language = updateData.language;
-
-            // Put the updated object back into the database
-            var updateRequest = objectStore.put(lesson);
-
-            updateRequest.onerror = function(event) {
-                console.log("Failed to update record: " + event.target.error);
-            };
-
-            updateRequest.onsuccess = function(event) {
-                console.log(`Record with id ${lessonID} has been updated`);
-            };
-        } else {
-            console.log("Record not found. Unable to update.");
-        }
+    request.onsuccess = function(event) {  
+        console.log("Lesson saved successfully with the title: " + lesson.title);
     };
 }
 

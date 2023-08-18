@@ -908,7 +908,7 @@ This software uses the following plugins, please take note of their individual l
 		else
 		{			
 			
-			var request = indexedDB.open("wordsdb",9);
+			var request = indexedDB.open("wordsdb",10);
 			
 	
 			request.onupgradeneeded = function() {
@@ -918,7 +918,7 @@ This software uses the following plugins, please take note of their individual l
                 //var appearancesIndex = store.createIndex("by_appearance", "appearance");
             }
             if (!db.objectStoreNames.contains('lessonsdb')) {
-                var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "title"});
+                var lessonStore = db.createObjectStore("lessonsdb", {keyPath: "id"});
             }
             if (!db.objectStoreNames.contains('settings')) {
                 var settingsStore = db.createObjectStore("settings", {keyPath: "id"});
