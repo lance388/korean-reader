@@ -27,8 +27,7 @@ initializeFirebase();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    showSigninElements(false);
-	window.location.href = 'content.html';	
+    showSigninElements(false);	
   } else {
     // No user is signed in.;
     showSigninElements(true);
@@ -91,6 +90,7 @@ window.handleCredentialResponse = (response) => {
           p(error);
 		  p("Signed in with email");
 		  showSigninElements(false);
+		  window.location.href = 'content.html';
           // [END_EXCLUDE]
         });
         // [END authwithemail]
