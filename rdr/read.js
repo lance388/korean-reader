@@ -2996,7 +2996,7 @@ function getLastScrollArray() {
     return scrollArray;
 }
 
-
+/*
 function getVoiceSelection(){
     if($("#voice-selection").val() == "" || $("#voice-selection").val() == null){
         if(settings.voiceSelection){
@@ -3008,6 +3008,34 @@ function getVoiceSelection(){
         return $("#voice-selection").val();
     }
 }
+*/
+
+function getVoiceSelection() {
+    var selectedVoice = $("#voice-selection").val();
+    // If there's no selected voice, return the current settings or an empty array
+    if (!selectedVoice) {
+        return settings.voiceSelection || [];
+    }
+
+    // If voiceSelection is not already an array in settings, initialize it
+    if (!Array.isArray(settings.voiceSelection)) {
+        settings.voiceSelection = [];
+    }
+
+    // Find the object for the current lessonLanguage or create a new one
+    var languageVoiceSettings = settings.voiceSelection.find(item => item.language === lessonLanguage) || { language: lessonLanguage };
+    
+    // Update the voice selection for the current lessonLanguage
+    languageVoiceSettings.voice = selectedVoice;
+
+    // If the object was newly created, add it to the array
+    if (!settings.voiceSelection.includes(languageVoiceSettings)) {
+        settings.voiceSelection.push(languageVoiceSettings);
+    }
+
+    return settings.voiceSelection;
+}
+
 
 
 function scrollTo(pos){
@@ -3507,10 +3535,19 @@ function initialiseSettings() {
         }
 
         // Select the voice if it exists in the list
-        if (voiceSelection) {
-            $('#voice-selection').val(voiceSelection);
-        }
-		
+        //if (voiceSelection) {
+        //    $('#voice-selection').val(voiceSelection);
+       // }
+	   
+		var selectedVoice = voiceSelection.find(function(obj) {
+			return obj.language === lessonLanguage;
+		});
+
+		if (selectedVoice) {
+			$('#voice-selection').val(selectedVoice.voice);
+			console.log('Voice selection for ' + lessonLanguage + ':', selectedVoice.voice);
+		}
+
 
         // Set volume, pitch, and rate sliders' values
         if (volume) {
