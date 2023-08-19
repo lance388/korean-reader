@@ -642,6 +642,11 @@ function initialiseUI(){
 			default: console.log("SidebarTab not found.");
 			}
 		});
+		
+		  $('#login-button').click(function() {
+			window.location.href = 'login.html';
+			});
+
 	
 		
 		$("#learnText").on("paste", function(e) {
