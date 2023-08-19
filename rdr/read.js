@@ -3538,15 +3538,16 @@ function initialiseSettings() {
         //if (voiceSelection) {
         //    $('#voice-selection').val(voiceSelection);
        // }
-	   
-		var selectedVoice = voiceSelection.find(function(obj) {
-			return obj.language === lessonLanguage;
-		});
+	   if (voiceSelection) {
+			var selectedVoice = voiceSelection.find(function(obj) {
+				return obj.language === lessonLanguage;
+			});
 
-		if (selectedVoice) {
-			$('#voice-selection').val(selectedVoice.voice);
-			console.log('Voice selection for ' + lessonLanguage + ':', selectedVoice.voice);
-		}
+			if (selectedVoice) {
+				$('#voice-selection').val(selectedVoice.voice);
+				console.log('Voice selection for ' + lessonLanguage + ':', selectedVoice.voice);
+			}
+	   }
 
 
         // Set volume, pitch, and rate sliders' values
