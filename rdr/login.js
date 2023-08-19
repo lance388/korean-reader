@@ -234,7 +234,7 @@ function sendPasswordReset() {
 			{
 				logUser(user);
 			}
-			//
+			window.location.href = 'content.html';
 		}
 	}
 	
