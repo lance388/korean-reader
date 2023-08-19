@@ -27,7 +27,8 @@ initializeFirebase();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    showSigninElements(false); 
+    showSigninElements(false);
+	window.location.href = 'content.html';	
   } else {
     // No user is signed in.;
     showSigninElements(true);
@@ -234,7 +235,6 @@ function sendPasswordReset() {
 			{
 				logUser(user);
 			}
-			window.location.href = 'content.html';
 		}
 	}
 	
