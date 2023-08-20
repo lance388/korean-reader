@@ -222,9 +222,10 @@ function initialiseUI()
 		p("user is offline");
 	});
 	
-	$('#login-button').click(function() {
-				onLoginButtonPress();
-			});
+	$('#loginButton').click(function() {
+		onLoginButtonPress();
+	});
+
 	
 /*	
 	  // Get all the lesson links
