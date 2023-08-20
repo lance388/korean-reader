@@ -3108,11 +3108,6 @@ function getVoiceSelection() {
     return settings.voiceSelection;
 }
 
-
-function getDictionarySelection(){
-	
-}
-
 function getDictionarySelection() {
     var selectedDictionaryLanguage = $("#dictionary-language-selection").val();
     // If there's no selected dictionary language, return the current settings or an empty array
@@ -3766,7 +3761,7 @@ function initialiseSettings() {
 		populateDictionaryLanguageOptions();
 		
 		if (settings.dictionaryLanguage) {
-			console.log('settings.dictionaryLanguage:', settings.dictionaryLanguage);
+			//console.log('settings.dictionaryLanguage:', settings.dictionaryLanguage);
 		  var selectedDictionaryLanguage = settings.dictionaryLanguage.find(function(obj) {
 			return obj.lessonLanguage === lessonLanguage;
 		  });
