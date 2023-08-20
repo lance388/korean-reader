@@ -3766,6 +3766,7 @@ function initialiseSettings() {
 		populateDictionaryLanguageOptions();
 		
 		if (settings.dictionaryLanguage) {
+			console.log('settings.dictionaryLanguage:', settings.dictionaryLanguage);
 		  var selectedDictionaryLanguage = settings.dictionaryLanguage.find(function(obj) {
 			return obj.lessonLanguage === lessonLanguage;
 		  });
