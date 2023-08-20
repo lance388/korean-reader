@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Learn languages through reading. Look up words, track progress, and view statistics."/>
+	<meta name="keywords" content="Language, Reader, Texts, Read, Reading, Study, Studying, Learn, Learning"/>
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+	<meta name="msapplication-TileColor" content="#cc6600">
+	<meta name="msapplication-TileImage" content="img/icons/ms-icon-144x144.png">
+	<meta name="theme-color" content="#cc6600">
+		
+	<link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="img/icons/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="img/icons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+	<link rel="manifest" href="img/icons/manifest.json">
+  
+    <!-- jQuery Library -->
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  
+    <!-- DataTables Library -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"/>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+	<!-- DataTables Responsive Extension -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"/>
+	<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	
+    <title>Content</title>
+
+	<link rel="stylesheet" type="text/css" href="styles/style_read.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+			   <div class="collapse navbar-collapse" id="navbarNav2">
+			<!-- New Edit Button -->
+			<button id="edit-button" class="btn nav-item nav-link d-flex align-items-center justify-content-center"><i class="fas fa-edit"></i></button>
+			
+			<!-- Remove the old tab links -->
+
+			<div class="vertical-line mx-3"></div>
+			<div class="d-none d-md-flex align-items-center justify-content-center flex-grow-1">
+				<span id="textarea-navbar-title"></span>
+			</div>
+			
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<a class="nav-item nav-link toggle-tab active d-flex align-items-center justify-content-center" id="dictionary-tab" data-bs-toggle="tab" href="#dictionary-content-area" role="tab" aria-controls="dictionary-content-area" aria-selected="true"><i class="fas fa-book"></i></a>
+				<a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="wordlist-tab" data-bs-toggle="tab" href="#wordlist-content-area" role="tab" aria-controls="wordlist-content-area" aria-selected="false"><i class="fas fa-list-ul"></i></a>
+				<a class="nav-item nav-link toggle-tab d-flex align-items-center justify-content-center" id="sentences-tab" data-bs-toggle="tab" href="#sentences-content-area" role="tab" aria-controls="sentences-content-area" aria-selected="false"><i class="fas fa-align-justify"></i></a>
+			</div>
+			<div class="vertical-line mx-3"></div>
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item">
+					<button class="btn nav-item nav-link btn-outline-secondary align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#settings-modal"><i class="fas fa-cog"></i></button>
+				</li>
+			</ul>
+		</div>
+
+    </div>
+</nav>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+				<h2>Lesson</h2>
+				<span id="current-lesson-title"></span><br><br>
+                <button id="browse-lessons-button" class="btn btn-secondary">Browse Lessons</button>
+                <hr>
+                <!-- Actions Section -->
+                <h2>Actions</h2>
+                <button id="clear-text-button" class="btn btn-danger">Clear Text</button>
+                <hr> <!-- Horizontal bar -->
+				<h2>Text-to-speech</h2>
+				<label for="enable-tts-checkbox">Enable TTS</label>
+				<input type="checkbox" id="enable-tts-checkbox" />
+				<br>
+				<div id="tts-controls" class="tts-controls-disabled">
+				<br>
+					<select id="voice-selection" class="form-select">
+						<!-- Options will be added dynamically using JavaScript -->
+					</select>
+					<br><br>
+					<label for="volume-control">Volume</label>
+					<input type="range" id="volume-control" min="0" max="1" step="0.1" value="1">
+					<span id="volume-value"></span>
+					<br><br>
+					<label for="rate-control">Rate</label>
+					<input type="range" id="rate-control" min="0.1" max="2" step="0.1" value="1">
+					<span id="rate-value"></span>
+					<br><br>
+					<label for="pitch-control">Pitch</label>
+					<input type="range" id="pitch-control" min="0" max="2" step="0.1" value="1">
+					<span id="pitch-value"></span>
+					<br><br>
+
+				</div>
+				<hr>
+				<h2>Text</h2>
+				<div class="text-setting">
+						<label for="text-size">Text Size</label>
+						<input type="number" id="text-size" name="text-size" value = 2 min=0.5 step=0.5 onchange="changeTextSize()">
+					<br><br>
+						<label for="font-selection">Font</label>
+						<!--<select id="font-selection" name="font-selection" onchange="changeFont()">
+							<option value="Arial">Arial</option>
+							<option value="Verdana">Verdana</option>
+							<option value="Times New Roman">Times New Roman</option>
+
+						</select> -->
+						
+						<select id="font-selection" name="font-selection" onchange="changeFont()">
+							<option value="Arial">Arial</option>
+							<option value="Malgun Gothic">Malgun Gothic</option>
+							<option value="Dotum">Dotum</option>
+							<option value="Gulim">Gulim</option>
+							<option value="Gungsuh">Gungsuh</option>
+							<option value="Batang">Batang</option>
+						</select>
+
+				</div>
+				<hr>
+				<h2>Colour</h2>
+<div class="color-picker">
+    <button class="btn btn-secondary" onclick="resetColors()">Reset Colors</button>
+    <br><br>
+    <div class="color-setting">
+		<div class="checkbox-column">
+			<input type="color" id="unknown-color" name="unknown-color" value="#F5A9E1" onchange="applyColorChange('--unknown-word-bg')">
+			<label for="unknown-color">Unknown Words Highlight Colour</label>
+		</div>
+		<div class="checkbox-column">
+			<input type="range" id="unknown-opacity" name="unknown-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--unknown-word-bg')">
+			<label for="unknown-opacity">Opacity</label>
+		</div>
+	</div>
+    <div class="color-setting">
+        <div class="checkbox-column">
+            <input type="color" id="learning-color" name="learning-color" value="#FFFF66" onchange="applyColorChange('--learning-word-bg')">
+            <label for="learning-color">Learning Words Highlight Colour</label>
+			</div>
+			<div class="checkbox-column">
+            <input type="range" id="learning-opacity" name="learning-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--learning-word-bg')">
+            <label for="learning-opacity">Opacity</label>	
+        </div>
+    </div>
+    <div class="color-setting">
+        <div class="checkbox-column">
+            <input type="color" id="known-color" name="known-color" value="#99FF00" onchange="applyColorChange('--known-word-bg')">
+            <label for="known-color">Known Words Highlight Colour</label>
+			</div>
+			<div class="checkbox-column">
+            <input type="range" id="known-opacity" name="known-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--known-word-bg')">
+            <label for="known-opacity">Opacity</label>
+			
+        </div>
+    </div>
+    <div class="color-setting">
+        <div class="checkbox-column">
+            <input type="color" id="jump-color" name="jump-color" value="#5a96e0" onchange="applyColorChange('--jump-word-bg')">
+            <label for="jump-color">Jump Highlight Colour</label>
+			</div>
+			<div class="checkbox-column">
+            <input type="range" id="jump-opacity" name="jump-opacity" min="0" max="1" step="0.01" value="1" onchange="applyColorChange('--jump-word-bg')">
+            <label for="jump-opacity">Opacity</label>
+			</div>
+        
+    </div>
+</div>
+
+				<br><br>
+				<!-- dropdown menu for theme selection -->
+				<div class="dropdown">
+				  <button class="btn btn-secondary dropdown-toggle" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+					Select Theme
+				  </button>
+				  <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+					<li><a class="dropdown-item" id="light-mode" href="#">Light Mode</a></li>
+					<li><a class="dropdown-item" id="dark-mode" href="#">Dark Mode</a></li>
+				  </ul>
+				</div>
+
+
+
+
+
+				<hr>
+                <!-- Settings Section -->
+                <h2>Dictionary</h2>
+                <!-- Add your settings here -->
+				<label for="dictionary-language-selection">Dictionary language</label>
+						<select id="dictionary-language-selection" name="dictionary-language-selection" onchange="onChangeDictionaryLanguage()">
+						</select>
+				<hr>
+				 <!-- Account Section -->
+                <h2>Account</h2>
+                <button id="login-button" class="btn btn-primary">Login</button><br>
+                <span id="signin-state-text" class="mx-2">Working in offline mode</span>
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+	
+	
+    <div class="container-fluid">
+	
+		<div class="row">
+			
+			
+			<!-- Textarea part -->
+			<div class="textarea-container col-lg-8 col-md-8 col-1 flex-column" id="textarea">
+	
+	
+	<!-- Tab content -->
+	<div class="textarea-tab-content tab-content" id="nav-tabContent">
+		<div class="tab-pane fade learn-textarea show active" id="nav-learn" role="tabpanel" aria-labelledby="nav-learn-tab">
+			<div id="learnText" contenteditable="false"></div>
+		</div>
+		<div class="tab-pane fade" id="nav-edit" role="tabpanel" aria-labelledby="nav-edit-tab">
+		<!--	<textarea class="form-control edit-textarea" id="editText" placeholder="Write your text here..."></textarea> -->
+			<div id="editText" contenteditable="true"></div>
+		</div>
+	</div>	
+</div>
+
+		
+
+
+
+
+
+
+
+
+
+			<!-- Sidebar part -->
+		<div class="sidebar-container col-lg-4 col-md-4 col-11 flex-column" id="sidebar">
+				<div class="sidebararea-tab-content tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="dictionary-content-area" role="tabpanel" aria-labelledby="nav-dictionary-tab">
+					<iframe id="dictionary-iframe" allowfullscreen></iframe>
+					</div>
+					<div class="tab-pane fade" id="wordlist-content-area" role="tabpanel" aria-labelledby="nav-wordlist-tab">
+					<table id="wordlistTable" class="display">
+						<thead>
+							<tr>
+								<th>Count</th>
+								<th>Ratio</th>
+								<th>Word</th>
+								<th>Level</th>
+								<th>Frequency</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<br>
+					<div class="checkbox-container">
+					  <div class="checkbox-buttons">
+						<label for="unknownRadioButton">Unknown</label>
+						<input type="checkbox" id="unknownRadioButton" name="status" value="unknown">
+					  </div>
+					  
+					  <div class="checkbox-buttons">
+						<label for="learningRadioButton">Learning</label>
+						<input type="checkbox" id="learningRadioButton" name="status" value="learning">
+					  </div>
+
+					  <div class="checkbox-buttons">
+						<label for="knownRadioButton">Known</label>
+						<input type="checkbox" id="knownRadioButton" name="status" value="known">
+					  </div>
+					</div>
+					<br><br>
+					<div class="unique-words-container">
+						<h2>Unique Word Summary</h2>
+						<table id="uniqueWordsTable" class="display">
+							<thead>
+								<tr>
+									<th>Unknown</th>
+									<th>Learning</th>
+									<th>Known</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- Table data will go here -->
+							</tbody>
+						</table>
+					</div>
+					<br>
+					<div class="total-words-container">
+						<h2>Total Word Summary</h2>
+						<table id="totalWordsTable" class="display">
+							<thead>
+								<tr>
+									<th>Unknown</th>
+									<th>Learning</th>
+									<th>Known</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<br>
+					</div>
+					
+				
+					
+
+					</div>
+					<div class="tab-pane fade" id="sentences-content-area" role="tabpanel" aria-labelledby="nav-sentences-tab">
+					
+					<table id="sentencelistTable" class="display">
+						<thead>
+							<tr>
+								<th title="#: Sentence number.">#</th>
+								<th>Sentence</th>
+								<th title="n: Number of words in the sentence.">n</th>
+								<th title="x: Number of words that are not known.">x</th>
+								<th title="%: Percent known.">%</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<br>
+					<div class="checkbox-container">
+						  <div class="checkbox-buttons">
+							<label for="hideKnownSentencesRadioButton">Hide sentences that are 100% known.</label>
+							<input type="checkbox" id="hideKnownSentencesRadioButton" name="status" value=true>
+						  </div>
+					   </div>
+					
+					</div>
+					<br>
+				</div>	
+		</div>
+
+
+
+		</div>
+	</div>
+
+<button id="toggle-sidebar" class="btn btn-primary d-block d-md-none">Toggle Sidebar</button>
+
+
+
+
+
+
+
+
+	
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+	<script src="read.js"></script>
+	<script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
+	<div id="g_id_onload"
+    data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse"
+	style="display: none;">
+    </div>
+</body>
+
+<div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
+  <p>Loading...</p>
+</div>
+
+
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<?php require 'config.php'; ?>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Log in."/>
+	<meta name="keywords" content="Language, Reader, Texts, Read, Reading, Study, Studying, Learn, Learning"/>
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+	<meta name="msapplication-TileColor" content="#cc6600">
+	<meta name="msapplication-TileImage" content="img/icons/ms-icon-144x144.png">
+	<meta name="theme-color" content="#cc6600">
+
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="styles/style_login.css">
+
+
+	<link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="img/icons/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="img/icons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+	<link rel="manifest" href="img/icons/manifest.json">
+
+    <title>Login</title>
+  </head>
+  <body>
+
+	<div class="container">
+	<nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html">
+				<img src="img/icons/ms-icon-144x144.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+				Reader
+				</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                </div>
+            </div>
+        </nav>
+	</div>
+    <div class="container auth-container login-container">
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" id="fireLoginArea">
+
+							  <!-- Container for the demo -->
+							  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+								<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
+								  <h2 class="mdl-card__title-text">Login</h2>
+								</div>
+								<div class="mdl-card__supporting-text mdl-color-text--grey-600">
+								  <p id="fireSigninText">Sign in to an existing account below.</p>
+
+								  <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="signin-email" name="email" placeholder="Email"/>
+									<br>
+									<input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="signin-password" name="signin-password" placeholder="Password"/>
+									<br/><br/>
+								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in" name="signin">Sign In</button>
+								&nbsp;&nbsp;&nbsp;
+								  <br><br>
+								  
+								 <div class="g_id_signin" id="googleSignin" data-type="standard"></div>
+								  &nbsp;&nbsp;&nbsp;
+
+
+								  <a id="quickstart-password-reset" href="#">Can't remember your password? Click to reset.</a>
+									<br><br>      
+								  
+								  
+								<p id="fireSignupToggleText">New user? Sign up for a free account.</p>
+								</div>
+							  </div>
+
+		</div>
+    </div>
+	
+	<div class="container auth-container signup-container">
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" id="fireLoginArea">
+
+							  <!-- Container for the demo -->
+							  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+								<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">
+								  <h2 class="mdl-card__title-text">Sign Up</h2>
+								</div>
+								<div class="mdl-card__supporting-text mdl-color-text--grey-600">
+								  <p id="fireSigninText">Create a new account.</p>
+
+								  <input class="mdl-textfield__input" style="display:inline;width:auto;" type="text" id="signup-email" name="email" placeholder="Email"/>
+								  <br><br>
+								  <input class="mdl-textfield__input" style="display:inline;width:auto;" type="password" id="signup-password" name="password" placeholder="Password"/>
+								  <br/><br/><br>
+								  <button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-up" name="signup">Sign Up</button>
+								  <br>
+								  
+								 <div class="g_id_signin" id="googleSignin" data-type="standard"></div>
+								  &nbsp;&nbsp;&nbsp;
+									<br><br>      
+								  
+								  
+								  
+	
+								
+				
+								<p id="fireSigninToggleText">Already have an account? Log in with email.</p>
+								
+								</div>
+							  </div>
+
+		</div>
+    </div>
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+	<script src="login.js"></script>
+	<script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
+	<div id="g_id_onload"
+    data-client_id="641910980147-rulgj2ijv8pmhagni4v7v64clq0nndml.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse">
+    </div>
+  </body>
+</html>
+

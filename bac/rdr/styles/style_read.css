@@ -1,0 +1,407 @@
+:root
+{
+	--unknown-word-bg: rgba(245, 169, 225, 1);
+	--learning-word-bg: rgba(255, 255, 102, 1);
+	--known-word-bg: rgba(153, 255, 0, 1);
+	--jump-word-bg: rgba(90, 150, 224, 1);
+	--unknown-word-text-colour: #333;
+	--learning-word-text-colour: #333;
+	--known-word-text-colour: #333;
+	--jump-word-text-colour: #333;
+	--nonword-text-colour: #333;
+	--dark-background-colour-primary: #222;
+	--dark-background-colour-secondary: #111;
+	--light-background-colour-primary: #eee;
+	--light-background-colour-secondary: #ddd;
+}
+
+html[data-bs-theme='light'] #learnText,
+html[data-bs-theme='light'] #sidebar
+{
+    background-color: var(--light-background-colour-primary); /* or any off-white color you prefer */
+}
+
+html[data-bs-theme='light'] .navbar
+{
+	  background-color: var(--light-background-colour-secondary); /* or any off-white color you prefer */
+}
+
+html[data-bs-theme='dark'] #learnText,
+html[data-bs-theme='dark'] #sidebar
+{
+     background-color: var(--dark-background-colour-primary); /* or any off-white color you prefer */
+}
+
+html[data-bs-theme='dark'] .navbar
+{
+	  background-color: var(--dark-background-colour-secondary); /* or any off-white color you prefer */
+}
+
+
+
+html, body {`
+	height:100vh;
+	width:100vw;
+	display: flex;
+    flex-direction: column;
+	 margin:0;
+	 padding:0;
+}
+
+.container-fluid {
+   display: flex;
+   flex-grow: 1;
+   width:100%;
+   
+    margin:0;
+	padding:0;
+   
+}
+
+.row {
+	width:100vw;
+	 margin:0;
+	 padding:0;
+
+	 
+}
+
+.textarea-container,
+.sidebar-container{
+	display: flex;
+   flex-grow: 1;
+   margin:0;
+   padding-left:.3em;
+   padding-right:.3em;
+
+
+}
+
+
+
+
+#wordlist-content-area,
+#sentences-content-area,
+#statistics-content-area{
+	box-sizing: border-box; /* Add this */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
+	height:95vh;
+	overflow-y: auto;
+	margin:0;
+	padding:2%;
+}
+
+
+.textarea-tab-content,
+.sidebararea-tab-content{
+	display: flex;
+   flex-grow: 1;
+   
+   margin:0;
+   padding:0;
+}
+
+
+
+
+.custom-statsarea {
+    border-radius: 5px;
+    padding: 1em;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    flex-direction: column; /* Make its children stack vertically */
+	flex-grow: 1;
+	display: flex;
+
+}
+
+
+
+.sidebarContentArea{
+	margin:0;
+    padding:0;
+}
+
+#dictionary-iframe{
+	display: flex;
+	flex-grow:1;
+	border:0;
+	height:100%;
+	width:100%;
+}
+
+
+#nav-learn{
+    box-sizing: border-box; /* Add this */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
+
+	height:95vh;
+	overflow-y: auto;
+	margin:0;
+	padding:0;
+	
+
+}
+
+#learnText {
+    flex-direction: row;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box; /* add this line */
+    margin:0;
+    padding:10px;
+	word-break: keep-all;
+    resize:none;
+    font-size: 2em; /* Adjust the font size to fit the container */
+    line-height: 1.6; /* More space between lines for easier reading */
+	min-height:95vh;
+	font-family: Arial, sans-serif;
+}
+
+.nav-link:hover {
+    background-color: #f8f9fa; /* Background color on hover */
+}
+
+.nav-link.active {
+    background-color: #e9ecef; /* Background color for active tab */
+    color: #495057; /* Text color for active tab */
+}
+
+.navbar-toggler {
+    margin-left: auto; /* Push the hamburger to the right */
+}
+
+
+
+#nav-clear-tab {
+    margin-right: 4em; /* Adjust this value to suit your needs */
+}
+
+.nav-item.nav-link:hover {
+    background-color: #f0f0f0;
+}
+
+.nav-item.nav-link.active {
+    color: #fff;
+    background-color: #007bff;
+}
+
+
+
+
+
+.clickable-word {
+	 -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+
+	white-space: pre-wrap; 
+    cursor: pointer;
+	transition: color 0.1s ease-in-out;
+}
+.non-text {
+	 -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+
+.clickable-word:hover {
+    color: black;
+	font-weight: Medium;
+}
+
+
+
+
+.tab-pane{
+	display: flex;
+  flex-grow: 1;
+}
+
+
+.unknown {
+    background-color: var(--unknown-word-bg);
+	color: var(--unknown-word-text-colour);
+}
+
+.learning {
+    background-color: var(--learning-word-bg);
+	color: var(--learning-word-text-colour);
+}
+
+.known {
+    background-color: var(--known-word-bg);
+	color: var(--known-word-text-colour);
+}
+
+.jump {
+    background-color: var(--jump-word-bg);
+	color: var(--jump-word-text-colour);
+}
+
+.non-text{
+	color: var(--nonword-text-colour);
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkbox-buttons label, .checkbox-buttons input {
+  display: inline-block;
+}
+
+.checkbox-buttons label {
+  font-size: 2vh;
+}
+
+
+
+#wordlistTable {
+        width: 100%;  /* Adjust as necessary */
+}
+
+
+
+#wordlistTable tbody tr:hover,
+#wordlistTable tbody tr:hover td,
+#setencelistTable tbody tr:hover,
+#sentencelistTable tbody tr:hover td {
+
+    cursor: pointer;
+}
+
+.checkbox-buttons label, 
+.checkbox-buttons input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* Add a border around table cells and headers, and space out the columns */
+.unique-words-container table, .total-words-container table {
+    width: 100%; /* Make the table full width */
+    border-collapse: collapse; /* Combine borders */
+}
+
+.unique-words-container th, .unique-words-container td, 
+.total-words-container th, .total-words-container td {
+    border: 1px solid; /* Add a border */
+    text-align: center; /* Center the text */
+    padding: 8px; /* Add some padding */
+}
+
+/* Make the column headings bold */
+.unique-words-container th, .total-words-container th {
+    font-weight: bold;
+}
+
+/* Make the titles smaller */
+.unique-words-container h2, .total-words-container h2 {
+    font-size: 1.2em;
+}
+
+/* Make the mouse hover just be a regular arrow */
+.unique-words-container table, .total-words-container table {
+    cursor: default;
+}
+
+/* On small screens, make tables more compact */
+@media only screen and (max-width: 600px) {
+    .unique-words-container th, .unique-words-container td, 
+    .total-words-container th, .total-words-container td {
+        padding: 4px;
+    }
+}
+
+.textarea-container.full-width{
+	width: 100%;
+}
+
+.sidebar-container.full-width {
+    width: 100%;
+}
+
+.textarea-container.hidden {
+    display: none;
+}
+
+.sidebar-container.hidden {
+    display: none;
+}
+
+.navbar {
+    height:5vh;
+    flex-shrink: 0; /* This makes sure that the navbar doesn't shrink */
+    padding: 0; /* This creates a 10px gap on the top and bottom of the navbar */
+	margin: 0;
+}
+
+.nav-item.nav-link {
+    height:5vh;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: 2px solid; /* Border for button style */
+    display: flex; /* Added this */
+    align-items: center; /* Added this */
+    justify-content: center; /* Added this */
+}
+
+.vertical-line {
+    border-left: 1px solid;
+    height: 24px;
+}
+
+#textarea-navbar-title {
+    cursor: pointer;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#textarea-navbar-title:hover {
+    color: gray;   /* This is the color when you hover */
+}
+
+.tts-controls-disabled {
+    background-color: #ddd; /* Or whatever color you prefer */
+    pointer-events: none; /* Disables click events on child elements */
+    opacity: 0.5; /* Makes the div and its contents semi-transparent */
+}
+
+
+#toggle-sidebar {
+    position: fixed; /* Fixed positioning to stay in place when scrolling */
+    right: 20px; /* Positioning from the right */
+    bottom: 20px; /* Positioning from the bottom */
+    z-index: 1000; /* High z-index to overlay over other elements */
+    display: none; /* Initially hidden for non-mobile screens */
+}
+
+#edit-button{
+	height:5vh;
+	width:5vw;
+	margin-left:5px;
+}
+
+.color-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.checkbox-column {
+    flex: 1;
+	
+}
+
+
+
+

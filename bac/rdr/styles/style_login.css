@@ -1,0 +1,82 @@
+body {
+    background-color: #ffffff;  /* white background */
+    color: #343a40;  /* dark text */
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #f8f9fa;  /* light gray navbar */
+}
+
+.auth-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-custom {
+    background-color: #6c757d;  /* keep the button color */
+    color: #ffffff;  /* white text */
+    font-size: 1.5rem;
+    padding: 10px 30px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #5a6268;  /* slightly darker on hover */
+}
+
+.img-custom {
+    border: 1px solid #6c757d;  /* keep the border color */
+    border-radius: 5px;
+}
+
+a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #5a6268;
+}
+
+.form-label {
+    color: #343a40;
+}
+
+#quickstart-sign-up,
+#quickstart-sign-in {
+    font-size: 1rem;  /* increase font size */
+    padding: 10px 10px;  /* increase padding to make the button larger */
+    color: #ffffff;  /* white text */
+    background-color: #007bff;  /* change to a bright color */
+    border: none;
+    border-radius: 5px;  /* add a little bit of border radius */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);  /* add a box shadow for a "3D" effect */
+    transition: background-color 0.3s ease;  /* animate background color changes */
+}
+
+#quickstart-sign-up:hover,
+#quickstart-sign-in:hover{
+    background-color: #0056b3;  /* darken the color a bit on mouse hover */
+}
+
+#fireSignupToggleText,
+#fireSigninToggleText {
+    color: #007bff;  /* change the color to a bright color */
+    cursor: pointer;  /* change the cursor to a hand when hovering */
+    font-size: 1rem;  /* increase the font size */
+    text-decoration: underline;  /* add underline to make it obvious it's clickable */
+    transition: color 0.3s ease;  /* animate color changes */
+}
+
+#fireSignupToggleText:hover,
+#fireSigninToggleText:hover {
+    color: #0056b3;  /* darken the color a bit on mouse hover */
+}
+
+.signup-container {
+    display: none;
+    /* other styles */
+}
