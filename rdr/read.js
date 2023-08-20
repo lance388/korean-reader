@@ -28,7 +28,7 @@ var lessonTitle;
 var saveTextTimer = null;
 var saveVocabularyTimer = null;
 var colourisePageTimeout = null;
-var naverDictionaryLanguage;
+var currentDictionaryLanguage;
 var sidebarTab;
 var pendingDictionaryLookup ="";
 var currentJumpIndex = 0;  // to track current highlighted word
@@ -51,6 +51,10 @@ const DEFAULT_JUMP_HIGHLIGHT='#5a96e0';
 const DEFAULT_UNKNOWN_HIGHLIGHT='#F5A9E1';
 const DEFAULT_KNOWN_HIGHLIGHT='#99FF00';
 const DEFAULT_LEARNING_HIGHLIGHT='#FFFF66';
+const DEFAULT_DICTIONARY_LANGUAGE_ENGLISH = "ko";
+const DEFAULT_DICTIONARY_LANGUAGE_KOREAN = "en";
+const DEFAULT_DICTIONARY_URL_ENGLISH = "https://korean.dict.naver.com/koendict/#/main";
+const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/main";
 
 
 const firebaseConfig = {
@@ -90,10 +94,10 @@ function initialise(){
 	lessonLanguage = "";
 	lessonID="";
 	lessonTitle="";
-	naverDictionaryLanguage="en";
+	currentDictionaryLanguage="";
 	vocabularyLearning = new Set();
     vocabularyKnown = new Set();
-	document.querySelector('#dictionary-iframe').src = 'https://korean.dict.naver.com/koendict/#/main';
+	document.querySelector('#dictionary-iframe').src = '';
 	pendingDictionaryLookup ="";
 	enableVoice = false;
 	voiceSelect = document.querySelector('#voice-selection');
@@ -789,6 +793,8 @@ function initialiseUI(){
 	document.getElementById('dark-mode').addEventListener('click', function() {
 		setTheme('dark');
 	});
+	
+	
 		
 	resolve();
     });
@@ -2184,31 +2190,85 @@ function saveLastOpenedLessonID() {
 function handleDictionaryLookup() {
     if (sidebarTab === "dictionary") {
         if (pendingDictionaryLookup != "") {
-            switch (naverDictionaryLanguage) {
-                case "en":
-				case "zh":
-					document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko"+naverDictionaryLanguage+"dict/#/search?query="+pendingDictionaryLookup;
+            switch (lessonLanguage) {
+                case "korean":
+                    switch (currentDictionaryLanguage) {
+                        case "en":
+                        case "zh":
+                            document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+                            break;
+                        case "ja":
+                        case "de":
+                        case "hi":
+                        case "id":
+                        case "pt":
+                        case "ru":
+                        case "es":
+                        case "th":
+                        case "vi":
+                        case "fr":
+                        case "it":
+                            document.querySelector('#dictionary-iframe').src = "https://dict.naver.com/" + currentDictionaryLanguage + "kodict/#/search?query=" + pendingDictionaryLookup;
+                            break;
+                        default:
+                            console.error("Dictionary language not found " + currentDictionaryLanguage);
+                    }
                     break;
-                case "ja":
-                case "de":
-                case "hi":
-                case "id":
-                case "pt":
-                case "ru":
-                case "es":
-                case "th":
-                case "vi":
-                case "fr":
-                case "it":
-                    document.querySelector('#dictionary-iframe').src = "https://dict.naver.com/" + naverDictionaryLanguage + "kodict/#/search?query=" + pendingDictionaryLookup;
+                case "english":
+					switch (currentDictionaryLanguage) {
+							case "zh":
+								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
+								break;
+							case "ko":
+								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+								break;
+							default:
+                            console.error("Dictionary language not found " + currentDictionaryLanguage);
+						}
+					   // var langCode = convertLangCodeCambridge(currentDictionaryLanguage);
+						//var loc = "https://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
+						//document.querySelector('#dictionary-iframe').src = loc;
+						 
                     break;
                 default:
-                    console.error("Dictionary language not found " + naverDictionaryLanguage);
+                    console.error("Lesson language not found " + lessonLanguage);
             }
         }
     }
 }
 
+/*
+function convertLangCodeCambridge(dictionaryLanguage) {
+    var code;
+    switch(dictionaryLanguage) {
+        case "en": code = "english"; break;
+        case "en-learners": code = "learner-english"; break;
+        case "fr": code = "english-french"; break;
+        case "es": code = "english-spanish"; break;
+        case "de": code = "english-german-"; break;
+        case "zh-s": code = "english-chinese-simplified"; break;
+        case "zh-t": code = "english-chinese-traditional"; break;
+        case "id": code = "english-indonesian"; break;
+        case "it": code = "english-italian"; break;
+        case "ja": code = "english-japanese"; break;
+        case "pl": code = "english-polish"; break;
+        case "pt": code = "english-portuguese"; break;
+        case "ar": code = "english-arabic"; break;
+        case "ca": code = "english-catalan"; break;
+        case "cs": code = "english-czech"; break;
+        case "ko": code = "english-korean"; break;
+        case "da": code = "english-danish"; break;
+        case "ms": code = "english-malaysian"; break;
+        case "no": code = "english-norwegian"; break;
+        case "ru": code = "english-russian"; break;
+        case "th": code = "english-thai"; break;
+        case "tr": code = "english-turkish"; break;
+        case "vi": code = "english-vietnamese"; break;
+        default: console.error("Language code not found: "+dictionaryLanguage);
+    }
+    return code;
+}
+*/
 
 /*
 <option value="zh-CN">Chinese (Simplified)</option>
@@ -3049,6 +3109,38 @@ function getVoiceSelection() {
 }
 
 
+function getDictionarySelection(){
+	
+}
+
+function getDictionarySelection() {
+    var selectedDictionaryLanguage = $("#dictionary-language-selection").val();
+    // If there's no selected dictionary language, return the current settings or an empty array
+    if (!selectedDictionaryLanguage) {
+        return settings.dictionaryLanguage || [];
+    }
+
+    // If dictionaryLanguage is not already an array in settings, initialize it
+    if (!Array.isArray(settings.dictionaryLanguage)) {
+        settings.dictionaryLanguage = [];
+    }
+
+    // Find the object for the current lessonLanguage or create a new one
+    var languageDictionarySettings = settings.dictionaryLanguage.find(item => item.lessonLanguage === lessonLanguage) || { lessonLanguage: lessonLanguage };
+    
+    // Update the dictionary language selection for the current lessonLanguage
+    languageDictionarySettings.dictionaryLanguage = selectedDictionaryLanguage;
+
+    // If the object was newly created, add it to the array
+    if (!settings.dictionaryLanguage.includes(languageDictionarySettings)) {
+        settings.dictionaryLanguage.push(languageDictionarySettings);
+    }
+
+    return settings.dictionaryLanguage;
+}
+
+
+
 
 function scrollTo(pos){
 	//if(getCurrentLearnMode()=="learnMode"){
@@ -3497,14 +3589,17 @@ function onChangeDictionaryLanguage(){
 	updateAndSaveSettings();
 }
 
-function setDictionaryLanguage(lang){
-	if(lang!=naverDictionaryLanguage){
-		naverDictionaryLanguage=lang;
-		if(sidebarTab == "dictionary"){
-			handleDictionaryLookup();
-		}
-	}
+function setDictionaryLanguage(lang) {
+    if (lang != currentDictionaryLanguage) {
+        currentDictionaryLanguage = lang;
+        $("#dictionary-language-selection").val(lang); // Update the dropdown selection
+
+        if (sidebarTab == "dictionary") {
+            handleDictionaryLookup();
+        }
+    }
 }
+
 
 function initialiseSettings() {
     return getSettings().then(async (settings) => { // Use async inside the then() block
@@ -3661,10 +3756,44 @@ function initialiseSettings() {
 			$('#learnText').css('font-size', textSize + 'em');
 		}
 		
+		/*
 		if(settings.dictionaryLanguage){
 			$('#dictionary-language-selection').val(settings.dictionaryLanguage);
 			setDictionaryLanguage(settings.dictionaryLanguage);
 		}
+		*/
+		
+		populateDictionaryLanguageOptions();
+		
+		if (settings.dictionaryLanguage) {
+		  var selectedDictionaryLanguage = settings.dictionaryLanguage.find(function(obj) {
+			return obj.lessonLanguage === lessonLanguage;
+		  });
+
+		  if (selectedDictionaryLanguage && selectedDictionaryLanguage.dictionaryLanguage) {
+			$('#dictionary-language-selection').val(selectedDictionaryLanguage.dictionaryLanguage);
+			console.log('Dictionary language selection for ' + lessonLanguage + ':', selectedDictionaryLanguage.dictionaryLanguage);
+			setDictionaryLanguage(selectedDictionaryLanguage.dictionaryLanguage);
+		  }
+		}
+		if(!currentDictionaryLanguage)
+		{
+			switch(lessonLanguage)
+			{
+				case "english": setDictionaryLanguage(DEFAULT_DICTIONARY_LANGUAGE_ENGLISH); break;
+				case "korean": setDictionaryLanguage(DEFAULT_DICTIONARY_LANGUAGE_KOREAN); break;
+				default:console.error("Language not found");
+			}
+		}
+		
+		switch(lessonLanguage)
+		{
+				case "english": document.querySelector('#dictionary-iframe').src = DEFAULT_DICTIONARY_URL_ENGLISH; break;
+				case "korean": document.querySelector('#dictionary-iframe').src = DEFAULT_DICTIONARY_URL_KOREAN; break;
+				default:console.error("Language not found");
+		}
+
+
 
 
 		
@@ -3713,7 +3842,8 @@ function updateAndSaveSettings() {
 			learningOpacity: $("#learning-opacity").val(),
 			knownOpacity: $("#known-opacity").val(),
 			jumpOpacity: $("#jump-opacity").val(),
-			dictionaryLanguage:$("#dictionary-language-selection").val()
+			dictionaryLanguage:getDictionarySelection(),
+			//dictionaryLanguage:$("#dictionary-language-selection").val()
 		};
 
 		console.log("Saving settings.");
@@ -3735,3 +3865,49 @@ function onLoginButtonPress() {
 		window.location.href = 'login.html';
 	}
 }
+
+function populateDictionaryLanguageOptions() {
+    var selectElement = document.getElementById('dictionary-language-selection');
+
+    var englishLangCodeToNameMap = {
+        "zh": "Chinese",
+        "ko": "Korean",
+    };
+
+    var koreanLangCodeToNameMap = {
+        "zh": "Chinese",
+        "en": "English",
+        "fr": "French",
+        "de": "German",
+        "hi": "Hindi",
+        "id": "Indonesian",
+        "it": "Italian",
+        "ja": "Japanese",
+        "pt": "Portuguese",
+        "ru": "Russian",
+        "es": "Spanish",
+        "th": "Thai",
+        "vi": "Vietnamese",
+    };
+
+    var langCodeToNameMap = lessonLanguage === "english" ? englishLangCodeToNameMap : koreanLangCodeToNameMap;
+    var options = Object.keys(langCodeToNameMap);
+
+    // Remove all existing options
+    selectElement.innerHTML = "";
+
+    // Sort options alphabetically by name
+    options.sort(function(a, b) {
+        return langCodeToNameMap[a].localeCompare(langCodeToNameMap[b]);
+    });
+
+    // Add new options
+    options.forEach(function(langCode) {
+        var option = document.createElement('option');
+        option.value = langCode;
+        option.text = langCodeToNameMap[langCode]; // Using the mapping to convert language codes to human-readable names
+        selectElement.appendChild(option);
+    });
+}
+
+
