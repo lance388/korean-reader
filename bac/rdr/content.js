@@ -1,6 +1,7 @@
 let isDebugMode = true;
 var dbfire;
 var signedInState="signedOut";
+/*
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
@@ -10,29 +11,32 @@ const firebaseConfig = {
 		messagingSenderId: "410562108352",
 		appId: "1:410562108352:web:f42d6c8b329d8e54460625"
 };
+*/
 
 function p(...messages) {
   if (isDebugMode) {
     console.log(...messages);
   }
 }
-
+/*
 // Initialize Firebase
 function initializeFirebase() {
   firebase.initializeApp(firebaseConfig);
   dbfire = firebase.firestore();
 }
-
+*/
+/*
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
-	initialiseCredentials();
+	//initialiseCredentials();
 	//initialiseCredentials().then(() => {
 		//console.log("User's authentication state has been determined.");
 	//	initialise();
 	//});
 	
 });
-
+*/
+/*
 function initialiseCredentials() {
     firebase.initializeApp(firebaseConfig);
     dbfire = firebase.firestore();
@@ -40,7 +44,7 @@ function initialiseCredentials() {
         onAuthStateChanged(user);
     });
 }
-
+*/
 function initialise(){
     p("Start initialise");
 	document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
@@ -163,7 +167,7 @@ function initialiseIndexedDB() {
 }
 
 //initializeFirebase();
-
+/*
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     p("User has logged in.");
@@ -180,6 +184,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	}
   }
 });
+*/
 
 async function onAuthStateChanged(user) {
     if (user) {
