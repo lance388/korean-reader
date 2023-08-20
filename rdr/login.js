@@ -92,7 +92,6 @@ window.handleCredentialResponse = (response) => {
 		  p("Signed in with email");
 		  showSigninElements(false);
 		  
-		  window.location.href = 'content.html';
           // [END_EXCLUDE]
         });
         // [END authwithemail]
@@ -237,6 +236,7 @@ function sendPasswordReset() {
 			{
 				logUser(user);
 			}
+			window.location.href = 'content.html';
 		}
 	}
 	

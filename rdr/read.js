@@ -644,7 +644,7 @@ function initialiseUI(){
 		});
 		
 		  $('#login-button').click(function() {
-			window.location.href = 'login.html';
+				onLoginButtonPress();
 			});
 
 	
@@ -840,34 +840,40 @@ window.handleCredentialResponse = (response) => {
 }
 	
 	function toggleSignIn() {
-      if (firebase.auth().currentUser) {
-		handleSignOut();
-		displaySigninElements("signedOutMode");
-      } else {
-        var email = document.getElementById('signin-email').value;
-        var password = document.getElementById('signin-password').value;
-        if (email.length < 4) {
-          alert('Please enter an email address.');
-          return;
-        }
-        if (password.length < 4) {
-          alert('Please enter a password.');
-          return;
-        }
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-          } else {
-            alert(errorMessage);
-          }
-          p(error);
-		  p("Signed in with email");
-		  displaySigninElements("signedInMode");
-        });
-      }
-    }
+		if (firebase.auth().currentUser) {
+			handleSignOut().then(() => {
+				displaySigninElements("signedOutMode");
+			}).catch(error => {
+				console.error("An error occurred while signing out:", error);
+			});
+		} else {
+			var email = document.getElementById('signin-email').value;
+			var password = document.getElementById('signin-password').value;
+			if (email.length < 4) {
+				alert('Please enter an email address.');
+				return;
+			}
+			if (password.length < 4) {
+				alert('Please enter a password.');
+				return;
+			}
+			firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+				// If successful, handle signed-in mode.
+				p("Signed in with email");
+				displaySigninElements("signedInMode");
+			}).catch(function(error) {
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				if (errorCode === 'auth/wrong-password') {
+					alert('Wrong password.');
+				} else {
+					alert(errorMessage);
+				}
+				p(error);
+			});
+		}
+	}
+
 
 	function onSignIn(googleUser) {
 		p("at sign in");
@@ -890,12 +896,13 @@ window.handleCredentialResponse = (response) => {
     }
 	
 	function handleSignOut() {
-		firebase.auth().signOut().then(() => {
-		  displaySigninElements("signedOutMode");
+		return firebase.auth().signOut().then(() => {
+			displaySigninElements("signedOutMode");
 		}).catch((error) => {
-			
+			console.error("An error occurred while signing out:", error);
 		});
 	}
+
 
 function displaySigninElements(state)
 {
@@ -3716,4 +3723,15 @@ function updateAndSaveSettings() {
 		// Clear the timeout
 		settingsDebounceTimeout = null;
 	}, 1000); // Wait for 500ms since the last invocation to actually execute
+}
+
+function onLoginButtonPress() {
+	var user = firebase.auth().currentUser;
+	if (user) {
+		handleSignOut().then(() => {
+			window.location.href = 'login.html';
+		});
+	} else {
+		window.location.href = 'login.html';
+	}
 }
