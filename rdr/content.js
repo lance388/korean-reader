@@ -222,6 +222,10 @@ function initialiseUI()
 		p("user is offline");
 	});
 	
+	$('#login-button').click(function() {
+				onLoginButtonPress();
+			});
+	
 /*	
 	  // Get all the lesson links
   const lessonLinks = document.querySelectorAll('.lesson-link');
@@ -306,45 +310,40 @@ window.handleCredentialResponse = (response) => {
 	onSignIn(); 
 }
 	
-	function toggleSignIn() {
-      if (firebase.auth().currentUser) {
-        // [START signout]
-		handleSignOut();
-        //firebase.auth().signOut();
-		displaySigninElements("signedOutMode");
-        // [END signout]
-      } else {
-        var email = document.getElementById('signin-email').value;
-        var password = document.getElementById('signin-password').value;
-        if (email.length < 4) {
-          alert('Please enter an email address.');
-          return;
-        }
-        if (password.length < 4) {
-          alert('Please enter a password.');
-          return;
-        }
-        // Sign in with email and pass.
-        // [START authwithemail]
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-          // Handle Errors here.
-		  p("toggle sign in 2");
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // [START_EXCLUDE]
-          if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-          } else {
-            alert(errorMessage);
-          }
-          p(error);
-		  p("Signed in with email");
-		  displaySigninElements("signedInMode");
-          // [END_EXCLUDE]
-        });
-        // [END authwithemail]
-      }
-    }
+function toggleSignIn() {
+		if (firebase.auth().currentUser) {
+			handleSignOut().then(() => {
+				displaySigninElements("signedOutMode");
+			}).catch(error => {
+				console.error("An error occurred while signing out:", error);
+			});
+		} else {
+			var email = document.getElementById('signin-email').value;
+			var password = document.getElementById('signin-password').value;
+			if (email.length < 4) {
+				alert('Please enter an email address.');
+				return;
+			}
+			if (password.length < 4) {
+				alert('Please enter a password.');
+				return;
+			}
+			firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+				// If successful, handle signed-in mode.
+				p("Signed in with email");
+				displaySigninElements("signedInMode");
+			}).catch(function(error) {
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				if (errorCode === 'auth/wrong-password') {
+					alert('Wrong password.');
+				} else {
+					alert(errorMessage);
+				}
+				p(error);
+			});
+		}
+	}
 
 	function onSignIn(googleUser) {
 		p("at sign in");
@@ -375,12 +374,11 @@ window.handleCredentialResponse = (response) => {
 		  });
     }
 	
-	function handleSignOut() {
-		firebase.auth().signOut().then(() => {
-		  // Sign-out successful.
-		  displaySigninElements("signedOutMode");
+function handleSignOut() {
+		return firebase.auth().signOut().then(() => {
+			displaySigninElements("signedOutMode");
 		}).catch((error) => {
-		  // An error happened.
+			console.error("An error occurred while signing out:", error);
 		});
 	}
 
@@ -516,6 +514,17 @@ function saveCustomLessonToIndexedDB(lesson) {
     request.onsuccess = function(event) {  
         console.log("Lesson saved successfully with the title: " + lesson.title);
     };
+}
+
+function onLoginButtonPress() {
+	var user = firebase.auth().currentUser;
+	if (user) {
+		handleSignOut().then(() => {
+			window.location.href = 'login.html';
+		});
+	} else {
+		window.location.href = 'login.html';
+	}
 }
 
 
