@@ -17,6 +17,7 @@ function p(...messages) {
   }
 }
 
+
 //Initialize Firebase
 function initializeFirebase() {
 	firebase.initializeApp(firebaseConfig);
