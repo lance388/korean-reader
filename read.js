@@ -55,6 +55,7 @@ const DEFAULT_DICTIONARY_LANGUAGE_ENGLISH = "ko";
 const DEFAULT_DICTIONARY_LANGUAGE_KOREAN = "en";
 const DEFAULT_DICTIONARY_URL_ENGLISH = "https://korean.dict.naver.com/koendict/#/main";
 const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/main";
+const DEFAULT_FONT="Arial";
 
 
 const firebaseConfig = {
@@ -3149,6 +3150,31 @@ function getDictionarySelection() {
     return settings.dictionaryLanguage;
 }
 
+function getFont() {
+    var selectedFont = $("#font-selection").val();
+    // If there's no selected font, return the current settings or an empty array
+    if (!selectedFont) {
+        return settings.font || [];
+    }
+
+    // If font is not already an array in settings, initialize it
+    if (!Array.isArray(settings.font)) {
+        settings.font = [];
+    }
+
+    // Find the object for the current lessonLanguage or create a new one
+    var languageFontSettings = settings.font.find(item => item.lessonLanguage === lessonLanguage) || { lessonLanguage: lessonLanguage };
+    
+    // Update the font selection for the current lessonLanguage
+    languageFontSettings.font = selectedFont;
+
+    // If the object was newly created, add it to the array
+    if (!settings.font.includes(languageFontSettings)) {
+        settings.font.push(languageFontSettings);
+    }
+
+    return settings.font;
+}
 
 
 
@@ -3173,7 +3199,7 @@ function getCurrentScroll(){
     return currentScroll;
 }
 
-function activateEditMode(){ 
+function activateEditMode() {
     console.log("Activate edit mode.");
     learnMode="edit";
     $('#edit-button').addClass('active'); // add the active class when the button is clicked
@@ -3190,10 +3216,15 @@ function activateEditMode(){
         $(spans[i]).off('click', onWordClick);
         $(spans[i]).off('contextmenu', onWordRightClick);
     }
-	$('#learnText').off('contextmenu');
+    $('#learnText').off('contextmenu');
     $("#learnText").attr('contenteditable', 'true');
+
+    // Set focus to the learnText div
+    document.getElementById('learnText').focus();
+
     updateAndSaveSettings();
 }
+
 
 
 function activateLearnMode(){
@@ -3208,12 +3239,25 @@ function activateLearnMode(){
 }
 
 function toggleEditMode() {
+    // Check if the edit-button is active (in edit mode)
     if ($('#edit-button').hasClass('active')) {
-		activateLearnMode();
+        // Get the text content from the learnText div
+        var learnTextContent = document.getElementById('learnText').innerText.trim();
+
+        // If the learnText div is empty
+        if (learnTextContent === "") {
+            // Alert the user with a message
+            alert("Please paste or write text into the text area before proceeding.");
+        } else {
+            // Otherwise, activate learn mode
+            activateLearnMode();
+        }
     } else {
-		activateEditMode();
+        // Activate edit mode
+        activateEditMode();
     }
 }
+
 
 
 function getSettings() {
@@ -3610,6 +3654,25 @@ function setDictionaryLanguage(lang) {
     }
 }
 
+function populateFontOptions() {
+  var fontOptions;
+  if (lessonLanguage === "korean") {
+    fontOptions = `
+      <option value="Arial">Arial</option>
+      <option value="Malgun Gothic">Malgun Gothic</option>
+      <option value="Dotum">Dotum</option>
+      <option value="Gulim">Gulim</option>
+      <option value="Gungsuh">Gungsuh</option>
+      <option value="Batang">Batang</option>
+    `;
+  } else if (lessonLanguage === "english") {
+    fontOptions = `<option value="Arial">Arial</option>`;
+  }
+
+  $('#font-selection').html(fontOptions);
+}
+
+
 
 function initialiseSettings() {
     return getSettings().then(async (settings) => { // Use async inside the then() block
@@ -3755,10 +3818,7 @@ function initialiseSettings() {
 			applyColorChange('--jump-word-bg');
         }
 		
-		if(settings.font){
-			$('#font-selection').val(settings.font);
-			$('#learnText').css('font-family', settings.font);
-		}
+
 
 		if(settings.textSize){
 			let textSize = settings.textSize;
@@ -3787,6 +3847,9 @@ function initialiseSettings() {
 			setDictionaryLanguage(selectedDictionaryLanguage.dictionaryLanguage);
 		  }
 		}
+
+		
+		
 		if(!currentDictionaryLanguage)
 		{
 			switch(lessonLanguage)
@@ -3803,6 +3866,27 @@ function initialiseSettings() {
 				case "korean": document.querySelector('#dictionary-iframe').src = DEFAULT_DICTIONARY_URL_KOREAN; break;
 				default:console.error("Language not found");
 		}
+		
+		populateFontOptions();
+		
+		if (Array.isArray(settings.font) && settings.font.some(obj => obj.hasOwnProperty('font') && obj.hasOwnProperty('lessonLanguage'))) {
+			var selectedFont = settings.font.find(function(obj) {
+				return obj.lessonLanguage === lessonLanguage;
+			});
+
+			if (selectedFont && selectedFont.font) {
+				$('#font-selection').val(selectedFont.font);
+				console.log('Font selection for ' + lessonLanguage + ':', selectedFont.font);
+				$('#learnText').css('font-family', selectedFont.font);
+			} else {
+				$('#learnText').css('font-family', DEFAULT_FONT);
+			}
+		} else {
+			$('#learnText').css('font-family', DEFAULT_FONT);
+		}
+
+	
+			
 
 
 
@@ -3847,7 +3931,7 @@ function updateAndSaveSettings() {
 			knownHighlightColour:$('#known-color').val(),
 			jumpHighlightColour:$('#jump-color').val(),
 			theme: getTheme(),
-			font: $("#font-selection").val(),
+			font: getFont(),
 			textSize: $("#text-size").val(),
 			unknownOpacity: $("#unknown-opacity").val(),
 			learningOpacity: $("#learning-opacity").val(),
