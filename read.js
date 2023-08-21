@@ -53,8 +53,10 @@ const DEFAULT_KNOWN_HIGHLIGHT='#99FF00';
 const DEFAULT_LEARNING_HIGHLIGHT='#FFFF66';
 const DEFAULT_DICTIONARY_LANGUAGE_ENGLISH = "ko";
 const DEFAULT_DICTIONARY_LANGUAGE_KOREAN = "en";
+const DEFAULT_DICTIONARY_LANGUAGE_CHINESE = "en";
 const DEFAULT_DICTIONARY_URL_ENGLISH = "https://korean.dict.naver.com/koendict/#/main";
 const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/main";
+const DEFAULT_DICTIONARY_URL_CHINESE = "https://www.youdao.com/";
 const DEFAULT_FONT="Arial";
 
 
@@ -818,7 +820,7 @@ function populateVoiceList() {
     var selectedLanguage;
 	switch(lessonLanguage){
 		case "korean":selectedLanguage="ko";break;
-		case "cn":selectedLanguage="zh";break;
+		case "chinese":selectedLanguage="zh";break;
 		case "english":selectedLanguage="en";break;
 		default:console.log("Language not found");
 	}
@@ -1135,42 +1137,41 @@ function loadTextIntoLearnTab(text, language) {
 	sentences=[];
     let sentenceIndex = 0;
     rawSentences.forEach((sentence) => {
-        let sentenceChunks = sentence.split(/(\s|\n)/).flatMap((chunk) => {
-            if(/\n/.test(chunk)) {
-                // If the chunk is a newline, return a <br> element
+		let sentenceChunks = sentence.split(/(\s|\n)/).flatMap((chunk) => {
+			if (/\n/.test(chunk)) {
 				return '<br>';
-                //return '<span class="non-text"><br></span>';
-            } else if (/\s/.test(chunk)) {
-                // If the chunk is whitespace, return it as-is
-				//return ` `;
-                return `<span class="non-text" data-sentence="${sentenceIndex}"> </span>`;
-            } else {
-                let subChunks;
-                // Further split the chunk into Korean and non-Korean text
-                if (language == "korean") {
-                    subChunks = chunk.split(/([\uAC00-\uD7AF]+)/).filter(Boolean);
-                } 
-                // For English, include only latin letters
-                else if (language == "english") {
-                    subChunks = chunk.split(/([a-zA-Z]+)/).filter(Boolean);
-                }
-                // For Chinese, include only Chinese characters
-                else if (language == "cn") {
-                    subChunks = chunk.split(/([\p{Script=Han}]+)/u).filter(Boolean);
-                }
-                return subChunks.map((subChunk) => {
-                    if ((language == "korean" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
-                        (language == "english" && /[a-zA-Z]/.test(subChunk)) ||
-                        (language == "cn" && /[\p{Script=Han}]/u.test(subChunk))) {
-                        // If the subChunk is in the appropriate language, wrap it in a span with a 'sentence' data attribute
-                        return `<span class="clickable-word" data-sentence="${sentenceIndex}">${subChunk}</span>`;
-                    } else {
-                        // If the subChunk is not a word (or if the language is not correct), it's non-text
-                        return `<span class="non-text" data-sentence="${sentenceIndex}">${subChunk}</span>`;
-                    }
-                });
-            }
-        });
+			} else if (/\s/.test(chunk)) {
+				return `<span class="non-text" data-sentence="${sentenceIndex}"> </span>`;
+			} else {
+				let regex;
+				switch (language) {
+					case "korean":
+						regex = /([\uAC00-\uD7AF]+)/g;
+						break;
+					case "english":
+						regex = /([a-zA-Z]+)/g;
+						break;
+					case "chinese":
+						regex = /([\p{Script=Han}]+)/u;
+						break;
+					default:
+						regex = /(\w+)/g;
+				}
+
+				// Split the chunk into subChunks based on the regex
+				let subChunks = chunk.split(regex);
+
+				return subChunks.map((subChunk) => {
+					if ((language == "korean" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
+						(language == "english" && /[a-zA-Z]/.test(subChunk)) ||
+						(language == "chinese" && /[\p{Script=Han}]/u.test(subChunk))) {
+						return `<span class="clickable-word" data-sentence="${sentenceIndex}">${subChunk}</span>`;
+					} else {
+						return `<span class="non-text" data-sentence="${sentenceIndex}">${subChunk}</span>`;
+					}
+				});
+			}
+		});
 		//chunks+='<span class="non-text"><br></span>';
         chunks = chunks.concat(sentenceChunks);
 		
@@ -2243,6 +2244,38 @@ function handleDictionaryLookup() {
 						//document.querySelector('#dictionary-iframe').src = loc;
 						 
                     break;
+					case "english":
+					switch (currentDictionaryLanguage) {
+							case "zh":
+								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
+								break;
+							case "ko":
+								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+								break;
+							default:
+                            console.error("Dictionary language not found " + currentDictionaryLanguage);
+						}
+					   // var langCode = convertLangCodeCambridge(currentDictionaryLanguage);
+						//var loc = "https://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
+						//document.querySelector('#dictionary-iframe').src = loc;
+						 
+                    break;
+					case "chinese":
+					switch (currentDictionaryLanguage) {
+							case "en":
+								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
+								break;
+							case "ko":
+								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+								break;
+							default:
+                            console.error("Dictionary language not found " + currentDictionaryLanguage);
+						}
+					   // var langCode = convertLangCodeCambridge(currentDictionaryLanguage);
+						//var loc = "https://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
+						//document.querySelector('#dictionary-iframe').src = loc;
+						 
+                    break;
                 default:
                     console.error("Lesson language not found " + lessonLanguage);
             }
@@ -2458,6 +2491,9 @@ function colourSentences(table) {
         break;
       case "korean":
         regex = /([\uAC00-\uD7AF]+)/g;
+        break;
+	case "chinese":
+        regex = /([\p{Script=Han}]+)/gu;
         break;
       default:
         regex = /(\w+)/g;
@@ -3668,6 +3704,9 @@ function populateFontOptions() {
   } else if (lessonLanguage === "english") {
     fontOptions = `<option value="Arial">Arial</option>`;
   }
+  else if (lessonLanguage === "chinese") {
+    fontOptions = `<option value="Arial">Arial</option>`;
+  }
 
   $('#font-selection').html(fontOptions);
 }
@@ -3856,6 +3895,7 @@ function initialiseSettings() {
 			{
 				case "english": setDictionaryLanguage(DEFAULT_DICTIONARY_LANGUAGE_ENGLISH); break;
 				case "korean": setDictionaryLanguage(DEFAULT_DICTIONARY_LANGUAGE_KOREAN); break;
+				case "chinese": setDictionaryLanguage(DEFAULT_DICTIONARY_LANGUAGE_CHINESE); break;
 				default:console.error("Language not found");
 			}
 		}
@@ -3864,6 +3904,7 @@ function initialiseSettings() {
 		{
 				case "english": document.querySelector('#dictionary-iframe').src = DEFAULT_DICTIONARY_URL_ENGLISH; break;
 				case "korean": document.querySelector('#dictionary-iframe').src = DEFAULT_DICTIONARY_URL_KOREAN; break;
+				case "chinese": document.querySelector('#dictionary-iframe').src = DEFAULT_DICTIONARY_URL_CHINESE; break;
 				default:console.error("Language not found");
 		}
 		
@@ -3965,8 +4006,8 @@ function populateDictionaryLanguageOptions() {
     var selectElement = document.getElementById('dictionary-language-selection');
 
     var englishLangCodeToNameMap = {
-        "zh": "Chinese",
-        "ko": "Korean",
+        "zh": "Chinese (Youdao)",
+        "ko": "Korean (Naver)",
     };
 
     var koreanLangCodeToNameMap = {
@@ -3984,8 +4025,27 @@ function populateDictionaryLanguageOptions() {
         "th": "Thai",
         "vi": "Vietnamese",
     };
+	
+	var chineseLangCodeToNameMap = {
+        "en": "English (Youdao)",
+        "ko": "Korean (Naver)",
+    };
 
-    var langCodeToNameMap = lessonLanguage === "english" ? englishLangCodeToNameMap : koreanLangCodeToNameMap;
+    var langCodeToNameMap;
+    switch (lessonLanguage) {
+        case "english":
+            langCodeToNameMap = englishLangCodeToNameMap;
+            break;
+        case "korean":
+            langCodeToNameMap = koreanLangCodeToNameMap;
+            break;
+        case "chinese":
+            langCodeToNameMap = chineseLangCodeToNameMap;
+            break;
+        default:
+            console.error("Language code not found.");; // Default to an empty map or handle as needed
+    }
+	
     var options = Object.keys(langCodeToNameMap);
 
     // Remove all existing options
