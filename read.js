@@ -1310,8 +1310,8 @@ function handleWordClick(word) {
 	}
 	
 	playWordTTS(word);
-	
-    var newLevel = promoteOneLevel(word);
+	const lookupWord = lessonLanguage === "english" ? word.toLowerCase() : word;
+	var newLevel = promoteOneLevel(lookupWord); // Pass lookupWord here
 	//delete colourised class from all pages
 	const pages = document.querySelectorAll('.page.colourised');
 
@@ -1341,7 +1341,7 @@ function handleWordClick(word) {
 
 function promoteOneLevel(word){
 	var newLevel="";
-	let wordObj = lessonWordArray.find(w => w.word === word);
+	let wordObj = lessonWordArray.find(w => lessonLanguage === "english" ? w.word.toLowerCase() === word : w.word === word);
 	if(!wordObj){
 		console.error("Word "+word+" not found in lesson text.");
 	}
@@ -1392,16 +1392,21 @@ function setActiveText(firstVisible,lastVisible){
 function colourisePage() {
     if (colourisePending) {
 		const page = document.querySelector('.page.active:not(.colourised)');
-		if(page)
-		{
-			page.classList.add('colourised');
-			const clickableWords = page.querySelectorAll('span.clickable-word');
-			clickableWords.forEach(word => {
-				const wordText = word.textContent
-				let wordObj = lessonWordArray.find(w => w.word === wordText);
-				if(!wordObj){
-					console.error("Word "+wordText+" not found in lesson text.");
-				}
+		if (page) {
+        page.classList.add('colourised');
+        const clickableWords = page.querySelectorAll('span.clickable-word');
+        clickableWords.forEach(word => {
+            // Get the word's text content
+            const wordText = word.textContent;
+
+            // Convert to lowercase if lessonLanguage is "english"
+            const lookupWord = lessonLanguage == "english" ? wordText.toLowerCase() : wordText;
+
+            let wordObj = lessonWordArray.find(w => w.word === lookupWord);
+            if (!wordObj) {
+                console.error("Word " + wordText + " not found in lesson text.");
+                return; // Skip this word if not found
+            }
 				switch(wordObj.level){
 					case "known":
 						word.classList.add('known');
@@ -1707,7 +1712,13 @@ function initialiseVocabulary(callback){
 
 function initialiseLessonText(w) {
     lessonTotalWordCount = 0;
-	lessonUniqueWordCount = 0;
+    lessonUniqueWordCount = 0;
+
+    // If lessonLanguage is "english", convert all words to lowercase
+    if (lessonLanguage == "english") {
+        w = w.map(word => word.toLowerCase());
+    }
+
     let wordCountObj = w.reduce((acc, word) => {
         acc[word] = acc[word] ? acc[word] + 1 : 1;
         return acc;
@@ -1730,6 +1741,7 @@ function initialiseLessonText(w) {
     // calculate the number of unique words
     lessonUniqueWordCount = lessonWordArray.length;
 }
+
 
 function saveVocabulary(){
 	
@@ -2372,8 +2384,9 @@ sentences.forEach(function(item, index) {
 	let sentenceLength = item.clickableWords.length;
 	let questionCount=0;
     item.clickableWords.forEach(function(word) {
+        const lookupWord = lessonLanguage === "english" ? word.toLowerCase() : word;
         const matchingWord = lessonWordArray.find(function(lessonWord) {
-            return lessonWord.word === word;
+            return lessonLanguage === "english" ? lessonWord.word.toLowerCase() === lookupWord : lessonWord.word === word;
         });
         if (matchingWord) {
             let wordHtml = word;
@@ -2450,9 +2463,10 @@ function colourSentences(table) {
     }
 
     sentenceHtml = sentenceHtml.replace(regex, function(match) {
-      let matchingWord = lessonWordArray.find(function(lessonWord) {
-        return lessonWord.word === match;
-      });
+      const lookupMatch = lessonLanguage === "english" ? match.toLowerCase() : match;
+        let matchingWord = lessonWordArray.find(function(lessonWord) {
+            return lessonLanguage === "english" ? lessonWord.word.toLowerCase() === lookupMatch : lessonWord.word === match;
+        });
 
       if (matchingWord) {
         if (matchingWord.level === "known") {
@@ -2553,8 +2567,9 @@ function colourWordTable(table) {
         let word = tempElement.textContent;
 
         const matchingWord = lessonWordArray.find(function(lessonWord) {
-            return lessonWord.word === word;
-        });
+			return lessonLanguage === "english" ? lessonWord.word.toLowerCase() === word.toLowerCase() : lessonWord.word === word;
+		});
+
 
         if (matchingWord) {
             let wordHtml = word;
@@ -2592,7 +2607,7 @@ function updateWordInSentencesTable(word, newLevel){
 			let questionCount=0;
 			thisSentence.clickableWords.forEach(function(word) {
 				const matchingWord = lessonWordArray.find(function(lessonWord) {
-					return lessonWord.word === word;
+					return lessonLanguage === "english" ? lessonWord.word.toLowerCase() === word.toLowerCase() : lessonWord.word === word;
 				});
 				if (matchingWord) {
 					if (matchingWord.level === "known") {
@@ -2650,7 +2665,7 @@ function updateWordInWordTable(word, newLevel) {
         // Get the text content of the tempElement, which will be the word without any HTML tags
         var innerWord = tempElement.textContent;
         // If this row's Word matches the specified word
-        if (innerWord == word) {
+        if (lessonLanguage === "english" ? innerWord.toLowerCase() == word.toLowerCase() : innerWord == word) {
             // Update the Level of this row
             data.Level = newLevel;
             count = data.Count;
@@ -2896,17 +2911,17 @@ function jumpToSentence(sentenceObject) {
 
 
 function jumpToWord(word) {
-    p("Jumping to " + word);
-	
+     console.log("Jumping to " + word);
+
+    // Convert to lowercase if lessonLanguage is "english"
+    const lookupWord = lessonLanguage == "english" ? word.toLowerCase() : word;
+
     // Get all .clickable-word elements that contain the word
     var wordElements = $("#learnText .page .clickable-word").filter(function() {
-        return $(this).text() === word;
+        // Convert to lowercase if lessonLanguage is "english"
+        const elementText = lessonLanguage == "english" ? $(this).text().toLowerCase() : $(this).text();
+        return elementText === lookupWord;
     });
-
-    // If no matching elements, return
-    if (wordElements.length === 0) {
-        return;
-    }
 
     // If it's a new word, reset the currentIndex
     if (currentJumpWord !== word) {
