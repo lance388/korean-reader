@@ -3048,8 +3048,14 @@ function saveLastEditMode(mode) {
 
 function playWordTTS(word) {
     if(enableVoice) {
+		
         // Stop and remove any utterances currently speaking or in the queue
         speechSynthesis.cancel();
+		
+		if (lessonLanguage == "chinese") {
+			word = word.replace(/\s+/g, '');
+		  }
+		
 
         var utterance = new SpeechSynthesisUtterance(word);
 		if(!voiceSelect)
