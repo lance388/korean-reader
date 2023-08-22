@@ -45,6 +45,7 @@ var voiceSelection;
 var settingsDebounceTimeout;
 var lastScroll;
 var learnMode;
+var validChineseWords;
 const DEFAULT_LESSON_LANGUAGE="korean";
 const DEFAULT_LESSON_TITLE="Custom Lesson";
 const DEFAULT_JUMP_HIGHLIGHT='#5a96e0';
@@ -1136,7 +1137,19 @@ function loadTextIntoLearnTab(text, language) {
     let chunks = [];
 	sentences=[];
     let sentenceIndex = 0;
+	
+	let trie;
+    if (language === "chinese") {
+        trie = buildTrie(validChineseWords);
+    }
+	
     rawSentences.forEach((sentence) => {
+		
+		if (language === "chinese") {
+			sentence = segmentChineseText(sentence, trie);
+		}
+
+		
 		let sentenceChunks = sentence.split(/(\s|\n)/).flatMap((chunk) => {
 			if (/\n/.test(chunk)) {
 				return '<br>';
@@ -3711,6 +3724,68 @@ function populateFontOptions() {
   $('#font-selection').html(fontOptions);
 }
 
+function segmentChineseText(text, trie) {
+  let result = [];
+
+  while (text.length > 0) {
+    let found = false;
+    let node = trie;
+    let endIndex = 0;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (node[char]) {
+        node = node[char];
+        if (node.isWord) endIndex = i + 1;
+      } else break;
+    }
+
+    if (endIndex > 0) {
+      result.push(text.substring(0, endIndex) + " ");
+      text = text.substring(endIndex);
+      found = true;
+    }
+
+    if (!found) {
+      let char = text[0];
+      if (/[\u4e00-\u9fa5]/.test(char)) {
+        result.push(char + " ");
+      } else if (char === '\n') {
+        result.push("<br>");
+      } else {
+        result.push(char);
+      }
+      text = text.substring(1);
+    }
+  }
+  return result.join('').trim();
+}
+
+
+
+function buildTrie(words) {
+  const root = {};
+
+  for (const word of words) {
+    let node = root;
+    for (const char of word) {
+      if (!node[char]) node[char] = {};
+      node = node[char];
+    }
+    node.isWord = true;
+  }
+
+  return root;
+}
+
+
+
+
+
+
+
+
+
 
 
 function initialiseSettings() {
@@ -3729,6 +3804,18 @@ function initialiseSettings() {
             console.log(`Setting found ${key}: ${settings[key]}`);
         }
     
+		if (lessonLanguage === "chinese") {
+			var scriptElement = document.createElement("script");
+			scriptElement.type = "text/javascript";
+			scriptElement.src = "wordlists/zh/globalList.js";
+			scriptElement.onload = function() {
+				validChineseWords = globalList().map(obj => obj.w);
+				// You may want to call other functions here that depend on validChineseWords
+			};
+			document.getElementsByTagName("head")[0].appendChild(scriptElement);
+		}
+
+	
 	
 		var enableTTS = settings.enableTTS;
 		voiceSelection = settings.voiceSelection;
