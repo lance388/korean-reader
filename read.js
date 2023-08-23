@@ -3711,21 +3711,44 @@ function setDictionaryLanguage(lang) {
 
 function populateFontOptions() {
   var fontOptions;
-  if (lessonLanguage === "korean") {
-    fontOptions = `
-      <option value="Arial">Arial</option>
-      <option value="Malgun Gothic">Malgun Gothic</option>
-      <option value="Dotum">Dotum</option>
-      <option value="Gulim">Gulim</option>
-      <option value="Gungsuh">Gungsuh</option>
-      <option value="Batang">Batang</option>
-    `;
-  } else if (lessonLanguage === "english") {
-    fontOptions = `<option value="Arial">Arial</option>`;
-  }
-  else if (lessonLanguage === "chinese") {
-    fontOptions = `<option value="Arial">Arial</option>`;
-  }
+  let fontOptions = "";
+
+	switch (lessonLanguage) {
+	  case "korean":
+		fontOptions = `
+		  <option value="Arial">Arial</option>
+		  <option value="Malgun Gothic">Malgun Gothic</option>
+		  <option value="Dotum">Dotum</option>
+		  <option value="Gulim">Gulim</option>
+		  <option value="Gungsuh">Gungsuh</option>
+		  <option value="Batang">Batang</option>
+		`;
+		break;
+	  case "english":
+		fontOptions = `
+		  <option value="Arial">Arial</option>
+		  <option value="Times New Roman">Times New Roman</option>
+		  <option value="Georgia">Georgia</option>
+		  <option value="Verdana">Verdana</option>
+		  <option value="Trebuchet MS">Trebuchet MS</option>
+		  <option value="Courier New">Courier New</option>
+		`;
+		break;
+	  case "chinese":
+		fontOptions = `
+		  <option value="Arial">Arial</option>
+		  <option value="SimSun">SimSun</option>
+		  <option value="SimHei">SimHei</option>
+		  <option value="Microsoft YaHei">Microsoft YaHei</option>
+		  <option value="PMingLiU">PMingLiU</option>
+		`;
+		break;
+	  default:
+		// You can specify a default font option if needed
+		fontOptions = `<option value="Arial">Arial</option>`;
+	}
+
+
 
   $('#font-selection').html(fontOptions);
 }
