@@ -3711,7 +3711,6 @@ function setDictionaryLanguage(lang) {
 
 function populateFontOptions() {
   var fontOptions;
-  let fontOptions = "";
 
 	switch (lessonLanguage) {
 	  case "korean":
