@@ -59,6 +59,7 @@ const DEFAULT_DICTIONARY_URL_ENGLISH = "https://korean.dict.naver.com/koendict/#
 const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/main";
 const DEFAULT_DICTIONARY_URL_CHINESE = "https://www.youdao.com/";
 const DEFAULT_FONT="Arial";
+var trie;
 
 
 const firebaseConfig = {
@@ -1137,11 +1138,6 @@ function loadTextIntoLearnTab(text, language) {
     let chunks = [];
 	sentences=[];
     let sentenceIndex = 0;
-	
-	let trie;
-    if (language === "chinese") {
-        trie = buildTrie(validChineseWords);
-    }
 	
     rawSentences.forEach((sentence) => {
 		
@@ -3838,9 +3834,10 @@ function initialiseSettings() {
 			scriptElement.src = "wordlists/zh/globalList.js";
 			scriptElement.onload = function() {
 				validChineseWords = globalList().map(obj => obj.w);
-				// You may want to call other functions here that depend on validChineseWords
+				trie = buildTrie(validChineseWords);
 			};
 			document.getElementsByTagName("head")[0].appendChild(scriptElement);
+			
 		}
 
 	
