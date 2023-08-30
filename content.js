@@ -390,17 +390,17 @@ function displaySigninElements(state)
 	{
 			case "offlineMode":
 				document.getElementById('loginButton').style.display = 'none';
-				document.getElementById("loggedInState").innerText = "Working in offline mode";
+				document.getElementById("loggedInState").innerText = "Offline";
 				document.getElementById("loginButton").innerText = "Sign in";
 			break;
 			case "signedOutMode":
 				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Working in signed-out mode";
+				document.getElementById("loggedInState").innerText = "Signed out";
 				document.getElementById("loginButton").innerText = "Sign in";
 			break;
 			case "signedInMode":
 				document.getElementById('loginButton').style.display = '';
-				document.getElementById("loggedInState").innerText = "Signed in";
+				document.getElementById("loggedInState").innerText = "";
 				document.getElementById("loginButton").innerText = "Sign out";
 			break;
 	}

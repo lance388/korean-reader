@@ -924,17 +924,17 @@ function displaySigninElements(state)
     {
         case "offlineMode":
             loginButton.style.display = 'none';
-            signinStateText.innerText = "Working in offline mode";
+            signinStateText.innerText = "Offline";
             loginButton.innerText = "Sign in";
             break;
         case "signedOutMode":
             loginButton.style.display = '';
-            signinStateText.innerText = "Working in signed-out mode";
+            signinStateText.innerText = "Signed out";
             loginButton.innerText = "Sign in";
             break;
         case "signedInMode":
             loginButton.style.display = '';
-            signinStateText.innerText = "Signed in";
+            signinStateText.innerText = "";
             loginButton.innerText = "Sign out";
             break;
     }
