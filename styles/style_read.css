@@ -354,6 +354,7 @@ html, body {`
     display: flex; /* Added this */
     align-items: center; /* Added this */
     justify-content: center; /* Added this */
+	min-width: 30px; 
 }
 
 .vertical-line {
