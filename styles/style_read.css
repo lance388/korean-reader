@@ -73,7 +73,7 @@ html, body {`
    margin:0;
    padding-left:.3em;
    padding-right:.3em;
-
+	
 
 }
 
@@ -99,6 +99,7 @@ html, body {`
    
    margin:0;
    padding:0;
+   
 }
 
 
@@ -154,6 +155,7 @@ html, body {`
     line-height: 1.6; /* More space between lines for easier reading */
 	min-height:95vh;
 	font-family: Arial, sans-serif;
+	overflow-x: hidden;
 }
 
 .nav-link:hover {
