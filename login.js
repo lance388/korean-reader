@@ -35,7 +35,7 @@ function initialise(){
 
 
 
-
+/*
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     showSigninElements(false);
@@ -45,7 +45,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     showSigninElements(true);
   }
 });
-	
+*/	
 	
 function initializeUI()
 {
