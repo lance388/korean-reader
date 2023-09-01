@@ -934,7 +934,7 @@ function displaySigninElements(state)
             break;
         case "signedInMode":
             loginButton.style.display = '';
-            signinStateText.innerText = "";
+            signinStateText.innerText = "Signed in";
             loginButton.innerText = "Sign out";
             break;
     }

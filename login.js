@@ -17,12 +17,23 @@ function p(...messages) {
 }
 
 // Initialize Firebase
-function initializeFirebase() {
+function initialiseFirebase() {
   firebase.initializeApp(firebaseConfig);
   dbfire = firebase.firestore();
 }
 
-initializeFirebase();
+initialise();
+
+function initialise(){
+	initialiseFirebase();
+	window.onload = function() {
+		initializeUI();
+		handleRedirectResult();
+	};
+	
+}
+
+
 
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -51,10 +62,11 @@ function initializeUI()
 		});
 }
 
-initializeUI();
+
 
 window.handleCredentialResponse = (response) => {
-	onSignIn(); 
+	//onSignIn(); 
+	initiateSignInWithRedirect();
 }
 	
 	function toggleSignIn() {
@@ -169,14 +181,16 @@ function sendPasswordReset() {
   });
 }
 
+
 	
+/*	
 	function onSignIn(googleUser) {
 		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth()
 		  .signInWithPopup(provider)
 		  .then((result) => {
-			/** @type {firebase.auth.OAuthCredential} */
+			// @type {firebase.auth.OAuthCredential} 
 			var credential = result.credential;
 
 			// This gives you a Google Access Token. You can use it to access the Google API.
@@ -198,7 +212,8 @@ function sendPasswordReset() {
 			// ...
 		  });
     }
-	
+	*/
+
 	function handleSignOut() {
 		firebase.auth().signOut().then(() => {
 		  // Sign-out successful.
@@ -256,7 +271,31 @@ function logUser(user)
 	});
 }
 
+function initiateSignInWithRedirect() {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+}
 
 
+function handleRedirectResult() {
+    firebase.auth()
+      .getRedirectResult()
+      .then((result) => {
+        if (result.credential) {
+            var credential = result.credential;
+            var token = credential.accessToken; // Google Access Token
+        }
+        var user = result.user;
+        
+        p("Signed in with Google");
+        showSigninElements(false);
 
+    }).catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+        // Handle the errors as you see fit
+    });
+}
 
