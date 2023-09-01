@@ -28,7 +28,7 @@ function initialise(){
 	initialiseFirebase();
 	window.onload = function() {
 		initializeUI();
-		handleRedirectResult();
+		//handleRedirectResult();
 	};
 	
 }
@@ -65,8 +65,8 @@ function initializeUI()
 
 
 window.handleCredentialResponse = (response) => {
-	//onSignIn(); 
-	initiateSignInWithRedirect();
+	onSignIn(); 
+	//initiateSignInWithRedirect();
 }
 	
 	function toggleSignIn() {
@@ -183,7 +183,7 @@ function sendPasswordReset() {
 
 
 	
-/
+
 	function onSignIn(googleUser) {
 		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
@@ -270,13 +270,13 @@ function logUser(user)
 		p("Error writing document: ", error);
 	});
 }
-
+/*
 function initiateSignInWithRedirect() {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
 }
-
-
+*/
+/*
 function handleRedirectResult() {
     firebase.auth()
       .getRedirectResult()
@@ -299,3 +299,4 @@ function handleRedirectResult() {
     });
 }
 
+*/
