@@ -35,7 +35,7 @@ function initialise(){
 
 
 
-/*
+
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     showSigninElements(false);
@@ -45,7 +45,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     showSigninElements(true);
   }
 });
-*/	
+
 	
 function initializeUI()
 {
@@ -183,7 +183,7 @@ function sendPasswordReset() {
 
 
 	
-/*	
+/
 	function onSignIn(googleUser) {
 		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
@@ -212,7 +212,7 @@ function sendPasswordReset() {
 			// ...
 		  });
     }
-	*/
+	
 
 	function handleSignOut() {
 		firebase.auth().signOut().then(() => {
@@ -251,7 +251,7 @@ function sendPasswordReset() {
 			{
 				logUser(user);
 			}
-			//window.location.href = 'content.html';
+			window.location.href = 'content.html';
 		}
 	}
 	
