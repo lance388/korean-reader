@@ -3861,31 +3861,40 @@ function loadChineseWordList() {
 
 
 function initialiseSettings() {
-	   let settings = await getSettings();
+	   return getSettings().then((settings) => {
+	
+		window.settings = settings; // Assign to a global variable
+		
+        // Note: if initialiseLesson returns a Promise, you should return it here
+        return initialiseLesson().then(() => {
+            // Log each setting
+            for (let key in settings) {
+                console.log(`Setting found ${key}: ${settings[key]}`);
+            }
 
-		window.settings = settings;
-
-		await initialiseLesson();
-
-		for (let key in settings) {
-			console.log(`Setting found ${key}: ${settings[key]}`);
-		}
-
-		if (lessonLanguage === "chinese") {
-			try {
-				let validChineseWords = await loadChineseWordList();
-				trie = buildTrie(validChineseWords);
-			} catch (error) {
-				console.error(error);
-			}
-		}
-
-		var enableTTS = settings.enableTTS;
-		voiceSelection = settings.voiceSelection;
-		var volume = settings.volume;
-		var pitch = settings.pitch;
-		var rate = settings.rate;
-		var sidebarVisible = settings.sidebarVisible;
+            if (lessonLanguage === "chinese") {
+                // Return this promise to ensure that trie is built before the main promise is resolved
+                return loadChineseWordList()
+                    .then(validChineseWords => {
+                        trie = buildTrie(validChineseWords);
+                        // Continue with your code that depends on trie
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+            // If lessonLanguage is not "chinese", resolve the promise without further action
+            return Promise.resolve();
+        })
+        .then(() => {
+            // Handle the rest of your settings logic here
+            var enableTTS = settings.enableTTS;
+            voiceSelection = settings.voiceSelection;
+            var volume = settings.volume;
+            var pitch = settings.pitch;
+            var rate = settings.rate;
+            var sidebarVisible = settings.sidebarVisible;
+			
 	
 		if(sidebarVisible!=null)
 		{
@@ -4090,7 +4099,8 @@ function initialiseSettings() {
 			setTheme(getPreferredTheme());
 		}
 		
-	return;
+		});
+    });
 }
 
 function updateAndSaveSettings() {
