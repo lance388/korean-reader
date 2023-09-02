@@ -28,7 +28,7 @@ function initialise(){
 	initialiseFirebase();
 	window.onload = function() {
 		initializeUI();
-		handleRedirectResult();
+		//handleRedirectResult();
 	};
 	
 }
@@ -65,8 +65,8 @@ function initializeUI()
 
 
 window.handleCredentialResponse = (response) => {
-	//onSignIn(); 
-	initiateSignInWithRedirect();
+	onSignIn(); 
+	//initiateSignInWithRedirect();
 }
 	
 	function toggleSignIn() {
@@ -288,7 +288,7 @@ function handleRedirectResult() {
         var user = result.user;
         
         p("Signed in with Google");
-        //showSigninElements(false);
+        showSigninElements(false);
 
     }).catch((error) => {
         var errorCode = error.code;
