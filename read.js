@@ -1171,7 +1171,6 @@ function loadTextIntoLearnTab(text, language) {
     rawSentences.forEach((sentence) => {
 		
 		if (language === "chinese") {
-			console.log("TESTING TRIE "+trie);
 			sentence = segmentChineseText(sentence, trie);
 		}
 

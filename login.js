@@ -288,7 +288,7 @@ function handleRedirectResult() {
         var user = result.user;
         
         p("Signed in with Google");
-        showSigninElements(false);
+        //showSigninElements(false);
 
     }).catch((error) => {
         var errorCode = error.code;
