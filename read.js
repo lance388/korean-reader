@@ -147,26 +147,47 @@ function initialise(){
 	}).then(() => {
 		return initialiseLearnMode();
 	}).then(() => {
-		initialiseScroll();
+		return initialiseScroll().then(() => {
 		document.getElementById('loading-overlay').style.display = 'none';
 		initialisationComplete = true;
 		p("Initialisation complete");
+		
+		// Get a reference to the #nav-learn element
+		let navLearnElement = document.getElementById('nav-learn');
+
+		// Create a new Event object for a scroll event
+		let scrollEvent = new Event('scroll');
+
+		// Trigger the scroll event on the #nav-learn element
+		navLearnElement.dispatchEvent(scrollEvent);
+
+		
 		updateAndSaveSettings();
+	});
+		
 	}).catch((error) => {
 		console.error("An error occurred:", error);
 	});
 }
 
-function initialiseScroll(){
-	var lastScrollArray = settings.lastScrollArray;
-			if(lastScrollArray){
-			 var matchingItem = lastScrollArray.find(item => item.id == lessonID);
-			if(matchingItem) {
-				// if a matching item is found, call the function with its scroll as a parameter
-				scrollTo(matchingItem.scroll);
-			}
-		}
+function initialiseScroll() {
+    return new Promise((resolve, reject) => {
+        var lastScrollArray = settings.lastScrollArray;
+        if (lastScrollArray) {
+            var matchingItem = lastScrollArray.find(item => item.id == lessonID);
+            if (matchingItem) {
+                // If a matching item is found, call the function with its scroll as a parameter
+                scrollTo(matchingItem.scroll);
+                resolve(); // Resolve the promise when finished
+            } else {
+                resolve(); // Resolve the promise if there's no matching item
+            }
+        } else {
+            resolve(); // Resolve the promise if lastScrollArray is not defined
+        }
+    });
 }
+
 
 function initialiseLearnMode(){
 	if(document.getElementById('learnText').innerText == ''){
@@ -464,18 +485,26 @@ function printFireDBVocabItems(uid,lang) {
 
 
 function onNavLearnScroll(e) {
+	
+	
+	
     if (scrollLearnTabDebounceTimer !== null) {
             clearTimeout(scrollLearnTabDebounceTimer);
         }
 		
 		scrollLearnTabDebounceTimer = setTimeout(() => {
-			//console.log("nav-learn Scroll Top Position:", e.target.scrollTop);
-			let visibleSpans = findVisibleSpans();
-			setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
-			if (!colouriseInProgress) {
-                    colouriseInProgress = true;
-                    colourisePage();
-            }
+			
+			if(learnMode=="learn")
+			{
+		
+				//console.log("nav-learn Scroll Top Position:", e.target.scrollTop);
+				let visibleSpans = findVisibleSpans();
+				setActiveText(visibleSpans.firstVisible,visibleSpans.lastVisible);
+				if (!colouriseInProgress) {
+						colouriseInProgress = true;
+						colourisePage();
+				}
+			}
 			updateAndSaveSettings();
 			
 		}, scrollLearnTabDebounceTimeout);
