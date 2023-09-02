@@ -3835,7 +3835,22 @@ function buildTrie(words) {
 
 
 
-
+function loadChineseWordList() {
+  return new Promise((resolve, reject) => {
+    var scriptElement = document.createElement("script");
+    scriptElement.type = "text/javascript";
+    scriptElement.src = "wordlists/zh/globalList.js";
+    scriptElement.onload = function() {
+      // Once the script is loaded, resolve the promise
+      resolve(globalList().map(obj => obj.w));
+    };
+    scriptElement.onerror = function() {
+      // If there's an error loading the script, reject the promise
+      reject(new Error("Failed to load Chinese word list."));
+    };
+    document.getElementsByTagName("head")[0].appendChild(scriptElement);
+  });
+}
 
 
 
@@ -3858,15 +3873,16 @@ function initialiseSettings() {
         }
     
 		if (lessonLanguage === "chinese") {
-			var scriptElement = document.createElement("script");
-			scriptElement.type = "text/javascript";
-			scriptElement.src = "wordlists/zh/globalList.js";
-			scriptElement.onload = function() {
-				validChineseWords = globalList().map(obj => obj.w);
-				trie = buildTrie(validChineseWords);
-			};
-			document.getElementsByTagName("head")[0].appendChild(scriptElement);
-			
+		  loadChineseWordList()
+			.then(validChineseWords => {
+			  // The script has loaded, and you have the validChineseWords data here
+			  trie = buildTrie(validChineseWords);
+			  // Continue with your code that depends on trie
+			})
+			.catch(error => {
+			  // Handle errors if the script fails to load
+			  console.error(error);
+			});
 		}
 
 	
