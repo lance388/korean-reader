@@ -3861,36 +3861,25 @@ function loadChineseWordList() {
 
 
 function initialiseSettings() {
-    return getSettings().then(async (settings) => { // Use async inside the then() block
-	
-		window.settings = settings; // Assign to a global variable
-		
-        // Call initialiseLesson() and wait for it to complete
-        await initialiseLesson(); // Use await here
+	   let settings = await getSettings();
 
-        
-        
+		window.settings = settings;
 
-         //Log each setting
-        for (let key in settings) {
-            console.log(`Setting found ${key}: ${settings[key]}`);
-        }
-    
-		if (lessonLanguage === "chinese") {
-		  loadChineseWordList()
-			.then(validChineseWords => {
-			  // The script has loaded, and you have the validChineseWords data here
-			  trie = buildTrie(validChineseWords);
-			  // Continue with your code that depends on trie
-			})
-			.catch(error => {
-			  // Handle errors if the script fails to load
-			  console.error(error);
-			});
+		await initialiseLesson();
+
+		for (let key in settings) {
+			console.log(`Setting found ${key}: ${settings[key]}`);
 		}
 
-	
-	
+		if (lessonLanguage === "chinese") {
+			try {
+				let validChineseWords = await loadChineseWordList();
+				trie = buildTrie(validChineseWords);
+			} catch (error) {
+				console.error(error);
+			}
+		}
+
 		var enableTTS = settings.enableTTS;
 		voiceSelection = settings.voiceSelection;
 		var volume = settings.volume;
@@ -4101,7 +4090,7 @@ function initialiseSettings() {
 			setTheme(getPreferredTheme());
 		}
 		
-	});
+	return;
 }
 
 function updateAndSaveSettings() {
