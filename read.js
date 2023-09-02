@@ -1171,6 +1171,7 @@ function loadTextIntoLearnTab(text, language) {
     rawSentences.forEach((sentence) => {
 		
 		if (language === "chinese") {
+			console.log("TESTING TRIE "+trie);
 			sentence = segmentChineseText(sentence, trie);
 		}
 
@@ -3778,6 +3779,9 @@ function populateFontOptions() {
 }
 
 function segmentChineseText(text, trie) {
+	
+
+	
   let result = [];
 
   while (text.length > 0) {
