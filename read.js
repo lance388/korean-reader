@@ -148,6 +148,7 @@ function initialise(){
 		return initialiseLearnMode();
 	}).then(() => {
 		return initialiseScroll().then(() => {
+			initialiseShortcuts();
 		document.getElementById('loading-overlay').style.display = 'none';
 		initialisationComplete = true;
 		p("Initialisation complete");
@@ -168,6 +169,15 @@ function initialise(){
 	}).catch((error) => {
 		console.error("An error occurred:", error);
 	});
+}
+
+function initialiseShortcuts(){
+	$(document).keydown(function(event) {
+		if (event.ctrlKey && event.key === 'i') {
+			window.open("https://www.google.com/search?q="+pendingDictionaryLookup+"&sxsrf=ALeKk01CGhV9YShWwU3Knh1qjMdDQcYXHQ:1602295138342&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiS_K7E9qjsAhXhlEsFHS36BooQ_AUoAXoECA8QAw&cshid=1602295160675088&biw=1920&bih=937", '_blank');
+		}
+	});
+
 }
 
 function initialiseScroll() {
