@@ -84,6 +84,7 @@ function p(...messages) {
 }
 
 function initialise(){
+	
     p("Start initialise");
 	document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
 	lessonSavingEnabled=false;
@@ -137,11 +138,11 @@ function initialise(){
 		//return initialiseLesson();
 	//})
 	initialiseIndexedDB().then(() => {
-		return initialiseUI();
-	}).then(() => {
 		initialiseTextSaving();
 		initialiseDataTables();
 		return initialiseSettings();
+	}).then(() => {
+		return initialiseUI();
 	}).then(() => {
 		return initialiseVocabulary();
 	}).then(() => {
@@ -561,32 +562,7 @@ function onSidebarFullscreenButtonClick() {
 				  textareaContainer.classList.remove('full-width');
 			}
 }
-/*
-function onNavLearnTabShowBsTab(e) {
-    p("Opened learn tab");
-	//updateAndSaveSettings();
-	//saveLastEditMode("learnMode");
-	//currentLearnMode = "learnMode";
-				loadTextIntoLearnTab(document.getElementById('editText').innerText,lessonLanguage);
-				//document.getElementById('nav-learn').dispatchEvent(new Event('scroll'));
-				$('#nav-learn').trigger('scroll');
-				
-			//	var scrollPosition = $('#editText').scrollTop();
-			//	p("edit scroll pos: "+scrollPosition);
-			//$('#nav-learn').scrollTop(scrollPosition);
-}
-*/
-/*
-function onNavEditTabShowBsTab(e) {
-    p("Opened edit tab");
-	//updateAndSaveSettings();
-	//currentLearnMode = "editMode";
-	//saveLastEditMode("editMode");
-		//var scrollPosition = $('#nav-learn').scrollTop();
-		//p("learn scroll pos: "+scrollPosition);
-		//$('#editText').scrollTop(scrollPosition);
-}
-*/
+
 function onClearTextButtonClick() {
     var result = confirm('Are you sure you want to clear the text?');
     
@@ -838,7 +814,22 @@ function initialiseUI(){
 		setTheme('dark');
 	});
 	
+	if(lessonLanguage == "chinese"){
+		$("#chineseSettings").show();
+	}
+	else{
+		$("#chineseSettings").hide();
+	}
 	
+	$('#character-conversion-dropdown').on('change', function() {
+        if(lessonLanguage == "chinese"){
+			if(learnMode=="learn"){
+				activateLearnMode();
+			}
+			updateAndSaveSettings();
+			
+		}	
+    });
 		
 	resolve();
     });
@@ -3321,7 +3312,12 @@ function activateLearnMode(){
 	console.log("Activate learn mode.");
 	learnMode="learn";
 	$('#edit-button').removeClass('active');
-	loadTextIntoLearnTab(document.getElementById('learnText').innerText,lessonLanguage);
+	let text = document.getElementById('learnText').innerText;
+	//if(lessonLanguage=="chinese")
+	//{
+	//	text = getConvertedChineseCharacters(text,$("#character-conversion-dropdown").val());
+	//}
+	loadTextIntoLearnTab(text,lessonLanguage);
 	$('#nav-learn').trigger('scroll');
 	$('#learnText').on('contextmenu');
 	$("#learnText").attr('contenteditable', 'false');
@@ -3717,7 +3713,9 @@ function setTheme(theme){
 function changeTextSize(){
 	let textSize = $('#text-size').val();
 	$('#learnText').css('font-size', textSize + 'em');
-	activateLearnMode();
+	if(learnMode=="learn"){
+		activateLearnMode();
+	}
 	updateAndSaveSettings();
 }
 
@@ -3787,11 +3785,15 @@ function populateFontOptions() {
   $('#font-selection').html(fontOptions);
 }
 
-function segmentChineseText(text, trie) {
-	
+function segmentChineseText(originalText, trie) {
+  // Convert the entire text to simplified characters
+  let text = getConvertedChineseCharacters(originalText, "traditional-to-simplified");
 
-	
-  let result = [];
+  // This array will store the segmented simplified Chinese for processing
+  let simplifiedSegments = [];
+  
+  // This will store the segments in the original format
+  let originalSegments = [];
 
   while (text.length > 0) {
     let found = false;
@@ -3807,7 +3809,7 @@ function segmentChineseText(text, trie) {
     }
 
     if (endIndex > 0) {
-      result.push(text.substring(0, endIndex) + " ");
+      simplifiedSegments.push(text.substring(0, endIndex));
       text = text.substring(endIndex);
       found = true;
     }
@@ -3815,17 +3817,45 @@ function segmentChineseText(text, trie) {
     if (!found) {
       let char = text[0];
       if (/[\u4e00-\u9fa5]/.test(char)) {
-        result.push(char + " ");
+        simplifiedSegments.push(char);
       } else if (char === '\n') {
-        result.push("<br>");
+        simplifiedSegments.push("<br>");
       } else {
-        result.push(char);
+        simplifiedSegments.push(char);
       }
       text = text.substring(1);
     }
   }
-  return result.join('').trim();
+
+  // Now, map the simplified segments back to the original text
+  let currentIndex = 0;
+  simplifiedSegments.forEach(segment => {
+    const originalSegment = originalText.substring(currentIndex, currentIndex + segment.length);
+    if (segment === "<br>") {
+      originalSegments.push(segment);
+    } else {
+      originalSegments.push(originalSegment);
+    }
+    currentIndex += segment.length;
+  });
+
+  // Decide what to return based on dropdown value
+  let conversionType = $("#character-conversion-dropdown").val();
+  if (conversionType === "traditional-to-simplified") {
+    return simplifiedSegments.join(' ');
+  } else if (conversionType === "none") {
+    return originalSegments.join(' ');
+  } else if (conversionType === "simplified-to-traditional") {
+    return originalSegments.map(segment => {
+      return getConvertedChineseCharacters(segment, conversionType);
+    }).join(' ');
+  } else {
+    alert("Dropdown state not found.");
+    return originalText;
+  }
 }
+
+
 
 
 
@@ -4095,7 +4125,9 @@ function initialiseSettings() {
 		}
 
 	
-			
+		if(settings.chineseCharacterConversion){
+			$("#character-conversion-dropdown").val(settings.chineseCharacterConversion);
+		}	
 
 
 
@@ -4148,7 +4180,7 @@ function updateAndSaveSettings() {
 			knownOpacity: $("#known-opacity").val(),
 			jumpOpacity: $("#jump-opacity").val(),
 			dictionaryLanguage:getDictionarySelection(),
-			//dictionaryLanguage:$("#dictionary-language-selection").val()
+			chineseCharacterConversion:$("#character-conversion-dropdown").val(),
 		};
 
 		console.log("Saving settings.");
@@ -4157,7 +4189,7 @@ function updateAndSaveSettings() {
 
 		// Clear the timeout
 		settingsDebounceTimeout = null;
-	}, 1000); // Wait for 500ms since the last invocation to actually execute
+	}, 1000);
 }
 
 function onLoginButtonPress() {
@@ -4234,4 +4266,12 @@ function populateDictionaryLanguageOptions() {
     });
 }
 
-
+function getConvertedChineseCharacters(text,conversionType){
+	switch(conversionType){
+		case "none": return text;
+		case "simplified-to-traditional": return($.s2t(text));
+		case "traditional-to-simplified": return($.t2s(text));
+		default: alert("Dropdown state not found.");
+	}
+		
+}

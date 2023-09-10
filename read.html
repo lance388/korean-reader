@@ -28,6 +28,9 @@
   
     <!-- jQuery Library -->
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	
+	<script type="text/javascript" src="jquery-s2t-master/jquery.s2t.js"></script>
+
   
     <!-- DataTables Library -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"/>
@@ -99,10 +102,26 @@
 				<span id="current-lesson-title"></span><br><br>
                 <button id="browse-lessons-button" class="btn btn-secondary">Browse Lessons</button>
                 <hr>
+				
                 <!-- Actions Section -->
                 <h2>Actions</h2>
                 <button id="clear-text-button" class="btn btn-danger">Clear Text</button>
                 <hr> <!-- Horizontal bar -->
+				
+				<div style="display: none;" id="chineseSettings">
+					<h2>Chinese Settings</h2>
+					
+					<!-- Character Conversion dropdown -->
+					<label for="character-conversion-dropdown">Character Conversion</label>
+					<br>
+					<select id="character-conversion-dropdown">
+						<option value="none">No conversion</option>
+						<option value="simplified-to-traditional">Convert simplified to traditional</option>
+						<option value="traditional-to-simplified">Convert traditional to simplified</option>
+					</select>
+					<br><br>
+				</div>
+				
 				<h2>Text-to-speech</h2>
 				<label for="enable-tts-checkbox">Enable TTS</label>
 				<input type="checkbox" id="enable-tts-checkbox" />
