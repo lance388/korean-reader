@@ -140,9 +140,9 @@ function initialise(){
 	initialiseIndexedDB().then(() => {
 		initialiseTextSaving();
 		initialiseDataTables();
-		return initialiseSettings();
-	}).then(() => {
 		return initialiseUI();
+	}).then(() => {
+		return initialiseSettings();
 	}).then(() => {
 		return initialiseVocabulary();
 	}).then(() => {
@@ -814,12 +814,7 @@ function initialiseUI(){
 		setTheme('dark');
 	});
 	
-	if(lessonLanguage == "chinese"){
-		$("#chineseSettings").show();
-	}
-	else{
-		$("#chineseSettings").hide();
-	}
+	
 	
 	$('#character-conversion-dropdown').on('change', function() {
         if(lessonLanguage == "chinese"){
@@ -4128,7 +4123,13 @@ function initialiseSettings() {
 		if(settings.chineseCharacterConversion){
 			$("#character-conversion-dropdown").val(settings.chineseCharacterConversion);
 		}	
-
+		
+		if(lessonLanguage == "chinese"){
+			$("#chineseSettings").show();
+		}
+		else{
+			$("#chineseSettings").hide();
+		}
 
 
 
