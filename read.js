@@ -2262,6 +2262,7 @@ function handleDictionaryLookup() {
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
                     }
                     break;
+					/*
                 case "english":
 					switch (currentDictionaryLanguage) {
 							case "zh":
@@ -2278,6 +2279,7 @@ function handleDictionaryLookup() {
 						//document.querySelector('#dictionary-iframe').src = loc;
 						 
                     break;
+					*/
 					case "english":
 					switch (currentDictionaryLanguage) {
 							case "zh":
@@ -2300,7 +2302,7 @@ function handleDictionaryLookup() {
 								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
 								break;
 							case "ko":
-								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/" + currentDictionaryLanguage + "zhdict/#/search?query=" + pendingDictionaryLookup;
 								break;
 							default:
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
