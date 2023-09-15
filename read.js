@@ -2301,6 +2301,9 @@ function handleDictionaryLookup() {
 							case "en":
 								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
 								break;
+							case "en_mdbg":
+								document.querySelector('#dictionary-iframe').src = "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb="+pendingDictionaryLookup;
+								break;
 							case "ko":
 								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/" + currentDictionaryLanguage + "zhdict/#/search?query=" + pendingDictionaryLookup;
 								break;
@@ -4232,6 +4235,7 @@ function populateDictionaryLanguageOptions() {
 	
 	var chineseLangCodeToNameMap = {
         "en": "English (Youdao)",
+		"en_mdbg": "English (mdbg)",
         "ko": "Korean (Naver)",
     };
 
