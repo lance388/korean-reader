@@ -276,47 +276,36 @@ function checkWordInVocabularies(word) {
 }
 
 
-function onTextareaInput() {
+function onTextareaInput(immediate = false) {
     if (saveTextTimer !== null) {
         clearTimeout(saveTextTimer);
     }
 
-    saveTextTimer = setTimeout(() => {
-        if(lessonSavingEnabled) {
+    if (immediate) {
+        saveTextNow();
+    } else {
+        saveTextTimer = setTimeout(() => {
+            saveTextNow();
+        }, saveTextTimeout);
+    }
+}
 
-            let learnTextDiv = document.getElementById('learnText');
-			/*
-            // Clone the original div
-            let clone = learnTextDiv.cloneNode(true);
+function saveTextNow() {
+    if(lessonSavingEnabled) {
+        let learnTextDiv = document.getElementById('learnText');
+        
+        var lesson = {
+            id: lessonID,
+            title: lessonTitle,
+            language: lessonLanguage,
+            text: learnTextDiv.innerText
+        };
 
-            let spans = clone.getElementsByTagName('span');
+        saveCustomLessonToIndexedDB(lesson);
 
-            // Create a copy of the clone's innerHTML
-            let newHTML = clone.innerHTML;
-
-            // Loop through the selected elements
-            for (let i = 0; i < spans.length; i++) {
-                // Replace each span in the copy of the clone's innerHTML with its own text content
-                newHTML = newHTML.replace(spans[i].outerHTML, spans[i].textContent);
-            }
-
-            // Update the innerHTML of the clone
-            clone.innerHTML = newHTML;
-			*/
-			
-            var lesson = {
-                id: lessonID,
-				title: lessonTitle,
-				language: lessonLanguage,
-                text: learnTextDiv.innerText
-            };
-
-            saveCustomLessonToIndexedDB(lesson);
-
-            console.log("lesson saved");
-        }
-        saveTextTimer = null;
-    }, saveTextTimeout);
+        console.log("lesson saved");
+    }
+    saveTextTimer = null;
 }
 
 
@@ -716,7 +705,10 @@ function initialiseUI(){
 		
 		
 		$(window).on('beforeunload', function(){
-			updateAndSaveSettings();
+			onTextareaInput(true);
+			updateAndSaveSettings(true); // Pass true to execute immediately
+			vocabularySaveInProgress = true;
+			saveVocabulary(true);  // Perform an immediate save
 		});
 
 		
@@ -1779,54 +1771,50 @@ function initialiseLessonText(w) {
 }
 
 
-function saveVocabulary(){
-	
-	let wordsToSave=[];
-	let wordsToDelete=[];
-	let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
-    wordsToUpdate.forEach(wordObj => {
-		
-		
-		let wordText = wordObj.word;
-		let level = wordObj.level;
-		wordObj.initialLevel = level;
-		
-		//p("wordObj.level "+wordObj.level);
-	//p("wordObj.initialLevel "+wordObj.initialLevel);
-	
-		p("Updating word: "+wordText);
-		switch(level){
-			case "known":
-				wordsToSave.push({ word: wordText, level: "known" });
-				break;
-			case "learning":
-				wordsToSave.push({ word: wordText, level: "learning" });
-				break;
-			case "unknown":
-				wordsToSave.push({ word: wordText, level: "unknown" });
-				break;
-			default: console.error("Word "+wordText+" has an invalid level.");
-		}		
-    });
-	
-	
-	
-	if(signedInState=="offline"||signedInState=="signedOut"){
-		putVocabularyIntoIndexedDB(wordsToSave);
-		//deleteVocabularyFromIndexedDB(wordsToDelete);
-	}
-	else{
-		let user = firebase.auth().currentUser;
-		
-		//todo delete
-		//checkWordInDB("제공", "learning", firebase.auth().currentUser.uid, lessonLanguage);
-		//checkWordInDB("제공", "known", firebase.auth().currentUser.uid, lessonLanguage);
-		
-		putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
-		//deleteVocabularyFromFireDB(wordsToDelete, lessonLanguage, user.uid);
-	}
-	
+function saveVocabulary(immediate = false) {
+    if (immediate) {
+        executeVocabularySave();
+    } else {
+        if (saveVocabularyTimer !== null) {
+            clearTimeout(saveVocabularyTimer);
+        }
+        saveVocabularyTimer = setTimeout(executeVocabularySave, saveVocabularyTimeout); 
+    }
 }
+
+function executeVocabularySave() {
+    let wordsToSave = [];
+    let wordsToDelete = [];
+    let wordsToUpdate = lessonWordArray.filter(wordObj => wordObj.level !== wordObj.initialLevel);
+    
+    wordsToUpdate.forEach(wordObj => {
+        let wordText = wordObj.word;
+        let level = wordObj.level;
+        wordObj.initialLevel = level;
+
+        switch(level) {
+            case "known":
+                wordsToSave.push({ word: wordText, level: "known" });
+                break;
+            case "learning":
+                wordsToSave.push({ word: wordText, level: "learning" });
+                break;
+            case "unknown":
+                wordsToSave.push({ word: wordText, level: "unknown" });
+                break;
+            default: 
+                console.error("Word " + wordText + " has an invalid level.");
+        }
+    });
+
+    if(signedInState == "offline" || signedInState == "signedOut") {
+        putVocabularyIntoIndexedDB(wordsToSave);
+    } else {
+        let user = firebase.auth().currentUser;
+        putVocabularyIntoFireDB(wordsToSave, lessonLanguage, user.uid);
+    }
+}
+
 
 
 function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
@@ -1887,165 +1875,6 @@ function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
 }
 
 
-
-
-
-
-/*
-function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
-    let newWords = {
-        "learning": [],
-        "known": [],
-        "unknown": []    
-    };
-
-    wordsToSave.forEach((wordObj) => {
-        newWords[wordObj.level].push(wordObj.word);
-    });
-    
-    let docRef = dbfire.collection('vocabulary')
-        .where("author_uid", "==", uid)
-        .where("language", "==", lang)
-        .where("type", "==", "vocab_v2")
-        .limit(1);
-
-    docRef.get()
-        .then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-                let doc = querySnapshot.docs[0];
-                let updateObject = {};
-                Object.keys(newWords).forEach(wordType => {
-                    if (newWords[wordType].length > 0) {
-                        // Remove words from "known" and "learning" if it is marked as "unknown"
-                        if (wordType === "unknown") {
-                            updateObject["known"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
-                            updateObject["learning"] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
-                        } else {
-                            // Remove word from all other arrays before adding
-                            Object.keys(newWords).forEach(otherType => {
-                                if (otherType !== wordType) {
-                                    updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[wordType]);
-                                }
-                            });
-                            updateObject[wordType] = firebase.firestore.FieldValue.arrayUnion(...newWords[wordType]);
-                        }
-                    }
-                });
-
-                dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true })
-                    .catch((error) => console.error(`Error updating vocabulary in Fire DB:`, error));
-            } else {
-                let updateObject = {
-                    author_uid: uid,
-                    language: lang,
-                    type: "vocab_v2"
-                };
-                // Remove unknown from newWords
-                delete newWords["unknown"];
-                Object.keys(newWords).forEach(wordType => {
-                    updateObject[wordType] = newWords[wordType];
-                });
-
-                dbfire.collection('vocabulary').add(updateObject)
-                    .catch((error) => console.error(`Error adding vocabulary in Fire DB:`, error));
-            }
-        })
-        .catch((error) => console.error(`Error retrieving vocabulary document:`, error));
-    vocabularySaveInProgress = false;
-}
-*/
-
-
-/*
-
-function putVocabularyIntoFireDB(wordsToSave, lang, uid) {
-    let newWords = {
-        "learning": [],
-        "known": [],
-        "unknown": []    
-    };
-
-    wordsToSave.forEach((wordObj) => {
-        newWords[wordObj.level].push(wordObj.word);
-    });
-
-    const handleWordList = (type) => {
-        return new Promise((resolve, reject) => {
-            let docRef = dbfire.collection('vocabulary')
-                .where("author_uid", "==", uid)
-                .where("language", "==", lang)
-                .where("type", "==", type)
-                .limit(1);
-
-            docRef.get()
-                .then((querySnapshot) => {
-                    let doc = querySnapshot.docs[0];
-                    let updateObject = {};
-
-                    if (newWords["unknown"].length > 0) {
-                        updateObject[type] = firebase.firestore.FieldValue.arrayRemove(...newWords["unknown"]);
-                    }
-
-                    if (newWords[type].length > 0) {
-                        updateObject[type] = firebase.firestore.FieldValue.arrayUnion(...newWords[type]);
-                    }
-
-                    // Remove the added word from the other document (known or learning)
-                    let otherType = type === "known" ? "learning" : "known";
-                    if (newWords[type].length > 0) {
-                        updateObject[otherType] = firebase.firestore.FieldValue.arrayRemove(...newWords[type]);
-                    }
-
-                    // Check if we have anything to update
-                    if (Object.keys(updateObject).length > 0) {
-                        return dbfire.collection('vocabulary').doc(doc.id).set(updateObject, { merge: true });
-                    }
-                })
-                .then(resolve)
-                .catch((error) => {
-                    console.error(`Error updating vocabulary in Fire DB:`, error);
-                    reject(error);
-                });
-        });
-    };
-
-    Promise.all([handleWordList('learning'), handleWordList('known')]).finally(() => {
-        vocabularySaveInProgress = false;
-    });
-}
-
-*/
-
-
-
-
-/*
-function checkWordInDB(word, type, uid, lang) {
-    return new Promise((resolve, reject) => {
-        let docRef = dbfire.collection('vocabulary')
-            .where("author_uid", "==", uid)
-            .where("language", "==", lang)
-            .where("type", "==", type);
-
-        docRef.get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let docData = doc.data();
-                    if (docData[type].includes(word)) {
-                        console.log(`Word "${word}" found in ${type}`);
-                    } else {
-                        console.log(`Word "${word}" not found in ${type}`);
-                    }
-                });
-                resolve();
-            })
-            .catch((error) => {
-                console.log("Error getting document:", error);
-                reject(error);
-            });
-    });
-}
-*/
 
 function checkWordInDB(word, type, uid, lang) {
     return new Promise((resolve, reject) => {
@@ -4150,10 +3979,10 @@ function initialiseSettings() {
     });
 }
 
-function updateAndSaveSettings() {
+function updateAndSaveSettings(immediate = false) {
 	
 	if(!initialisationComplete){
-			return;
+		return;
 	}
 	
 	// If a timeout is already scheduled, cancel it
@@ -4161,41 +3990,49 @@ function updateAndSaveSettings() {
 		clearTimeout(settingsDebounceTimeout);
 	}
 
-	// Schedule a new timeout
-	settingsDebounceTimeout = setTimeout(function() {
-		// Get the current settings.
-		var settings = {
-			enableTTS: $("#enable-tts-checkbox").is(":checked"),
-			voiceSelection: getVoiceSelection(),
-			volume: $("#volume-control").val(),
-			pitch: $("#pitch-control").val(),
-			rate: $("#rate-control").val(),
-			lastOpenedLesson: lessonID,
-			lastOpenedLearnMode: learnMode,
-			lastScrollArray: getLastScrollArray(),
-			sidebarVisible:isSidebarVisible(),
-			unknownHighlightColour:$('#unknown-color').val(),
-			learningHighlightColour:$('#learning-color').val(),
-			knownHighlightColour:$('#known-color').val(),
-			jumpHighlightColour:$('#jump-color').val(),
-			theme: getTheme(),
-			font: getFont(),
-			textSize: $("#text-size").val(),
-			unknownOpacity: $("#unknown-opacity").val(),
-			learningOpacity: $("#learning-opacity").val(),
-			knownOpacity: $("#known-opacity").val(),
-			jumpOpacity: $("#jump-opacity").val(),
-			dictionaryLanguage:getDictionarySelection(),
-			chineseCharacterConversion:$("#character-conversion-dropdown").val(),
-		};
+	if (immediate) {
+		saveCurrentSettings();
+	} else {
+		// Schedule a new timeout
+		settingsDebounceTimeout = setTimeout(function() {
+			saveCurrentSettings();
+		}, 1000);
+	}
+}
 
-		console.log("Saving settings.");
-		// Save settings to the database
-		saveSettings(settings);
+function saveCurrentSettings() {
+	// Get the current settings.
+	var settings = {
+		enableTTS: $("#enable-tts-checkbox").is(":checked"),
+		voiceSelection: getVoiceSelection(),
+		volume: $("#volume-control").val(),
+		pitch: $("#pitch-control").val(),
+		rate: $("#rate-control").val(),
+		lastOpenedLesson: lessonID,
+		lastOpenedLearnMode: learnMode,
+		lastScrollArray: getLastScrollArray(),
+		sidebarVisible:isSidebarVisible(),
+		unknownHighlightColour:$('#unknown-color').val(),
+		learningHighlightColour:$('#learning-color').val(),
+		knownHighlightColour:$('#known-color').val(),
+		jumpHighlightColour:$('#jump-color').val(),
+		theme: getTheme(),
+		font: getFont(),
+		textSize: $("#text-size").val(),
+		unknownOpacity: $("#unknown-opacity").val(),
+		learningOpacity: $("#learning-opacity").val(),
+		knownOpacity: $("#known-opacity").val(),
+		jumpOpacity: $("#jump-opacity").val(),
+		dictionaryLanguage:getDictionarySelection(),
+		chineseCharacterConversion:$("#character-conversion-dropdown").val(),
+	};
 
-		// Clear the timeout
-		settingsDebounceTimeout = null;
-	}, 1000);
+	console.log("Saving settings.");
+	// Save settings to the database
+	saveSettings(settings);
+
+	// Clear the timeout
+	settingsDebounceTimeout = null;
 }
 
 function onLoginButtonPress() {
