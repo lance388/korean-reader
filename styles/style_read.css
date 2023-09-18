@@ -156,6 +156,7 @@ html, body {`
 	min-height:95vh;
 	font-family: Arial, sans-serif;
 	overflow-x: hidden;
+	word-spacing: normal;
 }
 
 .nav-link:hover {

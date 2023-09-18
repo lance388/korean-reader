@@ -817,6 +817,20 @@ function initialiseUI(){
 			
 		}	
     });
+
+    $("#spacing-slider").on("input", function() {
+        let spacingPercentage = $(this).val();
+        
+        // Calculate the word-spacing
+        // For 0%, we want negative spacing (approximately -0.25em), 
+        // and for 100%, we want normal spacing (0em), 
+        // and for 300%, we want triple the standard space width (0.5em).
+        let adjustedSpacing = (-0.25 + 0.5 * (spacingPercentage / 100)) + "em";
+
+        $("#learnText").css("word-spacing", adjustedSpacing);
+        $("#spacing-value").text(spacingPercentage + "%");
+    });
+
 		
 	resolve();
     });
@@ -3956,10 +3970,24 @@ function initialiseSettings() {
 	
 		if(settings.chineseCharacterConversion){
 			$("#character-conversion-dropdown").val(settings.chineseCharacterConversion);
+		}
+
+		if(settings.chineseWordSpacing){
+			$("#spacing-slider").val(settings.chineseWordSpacing);
+			
+			
 		}	
 		
 		if(lessonLanguage == "chinese"){
 			$("#chineseSettings").show();
+			
+			let spacingPercentage = $("#spacing-slider").val();
+        
+			let adjustedSpacing = (-0.25 + 0.5 * (spacingPercentage / 100)) + "em";
+
+			$("#learnText").css("word-spacing", adjustedSpacing);
+			$("#spacing-value").text(spacingPercentage + "%");
+			
 		}
 		else{
 			$("#chineseSettings").hide();
@@ -4025,6 +4053,7 @@ function saveCurrentSettings() {
 		jumpOpacity: $("#jump-opacity").val(),
 		dictionaryLanguage:getDictionarySelection(),
 		chineseCharacterConversion:$("#character-conversion-dropdown").val(),
+		chineseWordSpacing: $("#spacing-slider").val(),
 	};
 
 	console.log("Saving settings.");

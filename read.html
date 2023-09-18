@@ -109,18 +109,26 @@
                 <hr> <!-- Horizontal bar -->
 				
 				<div style="display: none;" id="chineseSettings">
-					<h2>Chinese Settings</h2>
-					
-					<!-- Character Conversion dropdown -->
-					<label for="character-conversion-dropdown">Character Conversion</label>
-					<br>
-					<select id="character-conversion-dropdown">
-						<option value="none">No conversion</option>
-						<option value="simplified-to-traditional">Convert simplified to traditional</option>
-						<option value="traditional-to-simplified">Convert traditional to simplified</option>
-					</select>
-					<br><br>
-				</div>
+				<h2>Chinese Settings</h2>
+				
+				<!-- Character Conversion dropdown -->
+				<label for="character-conversion-dropdown">Character Conversion</label>
+				<br>
+				<select id="character-conversion-dropdown">
+					<option value="none">No conversion</option>
+					<option value="simplified-to-traditional">Convert simplified to traditional</option>
+					<option value="traditional-to-simplified">Convert traditional to simplified</option>
+				</select>
+				<br><br>
+
+				<!-- Slider to adjust word spacing -->
+				<label for="spacing-slider">Adjust Spacing:</label>
+				<input type="range" id="spacing-slider" min="0" max="200" value="0">
+				<span id="spacing-value">0%</span>
+				
+				<br><br>
+			</div>
+
 				
 				<h2>Text-to-speech</h2>
 				<label for="enable-tts-checkbox">Enable TTS</label>
