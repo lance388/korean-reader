@@ -3648,6 +3648,26 @@ function segmentChineseText(originalText, trie) {
     let node = trie;
     let endIndex = 0;
 
+    // Handle non-Chinese characters: Add them as one segment
+    if (!/[\u4e00-\u9fa5]/.test(text[0])) {
+      let nonChineseSegment = '';
+      while (text.length > 0 && !/[\u4e00-\u9fa5]/.test(text[0])) {
+        if (text[0] === '\n') {
+          simplifiedSegments.push(nonChineseSegment);
+          simplifiedSegments.push("<br>");
+          nonChineseSegment = '';
+        } else {
+          nonChineseSegment += text[0];
+        }
+        text = text.substring(1);
+      }
+      if (nonChineseSegment.length > 0) {
+        simplifiedSegments.push(nonChineseSegment);
+      }
+      continue;
+    }
+
+    // Chinese character handling
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
       if (node[char]) {
@@ -3663,14 +3683,7 @@ function segmentChineseText(originalText, trie) {
     }
 
     if (!found) {
-      let char = text[0];
-      if (/[\u4e00-\u9fa5]/.test(char)) {
-        simplifiedSegments.push(char);
-      } else if (char === '\n') {
-        simplifiedSegments.push("<br>");
-      } else {
-        simplifiedSegments.push(char);
-      }
+      simplifiedSegments.push(text[0]);
       text = text.substring(1);
     }
   }
@@ -3702,6 +3715,7 @@ function segmentChineseText(originalText, trie) {
     return originalText;
   }
 }
+
 
 
 
