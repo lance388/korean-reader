@@ -1,7 +1,7 @@
 var isDebugMode = true;
 var lessonLanguage;
 var dbfire;
-const wordsPerPage = 100;
+const wordsPerPage = 400;
 const pagesToLookAheadBehind = 2;
 var scrollLearnTabDebounceTimer = null;
 //var scrollEditTabDebounceTimer = null;
@@ -1244,10 +1244,15 @@ function loadTextIntoLearnTab(text, language) {
 	words.forEach(word => {
 		lessonText.push(word.textContent);
 		$(function() {
-			$(word).on('click', onWordClick);
+			$(word).on('click', function(event) {
+				if(event.ctrlKey) {
+					onCtrlClick.call(this, event);
+				} else {
+					onWordClick.call(this, event);
+				}
+			});
 			$(word).on('contextmenu', onWordRightClick);
 		});
-
 	});
 	initialiseLessonText(lessonText);
 	fillWordlistTable();
@@ -4148,3 +4153,36 @@ function getConvertedChineseCharacters(text,conversionType){
 	}
 		
 }
+
+function onCtrlClick(event) {
+    event.preventDefault();
+    let currentWord = $(this);
+    let collectedWords = [];
+
+    while(currentWord.length > 0) {  // While there's an element to process
+        collectedWords.push(currentWord.text());
+
+        if (currentWord.next().length > 0) {
+            // If there's a next sibling, move to it
+            currentWord = currentWord.next();
+        } else {
+            // Otherwise, try to move to the next sibling of the parent
+            currentWord = currentWord.parent().next();
+        }
+    }
+
+    console.log(collectedWords.join(''));
+    playWordTTS(collectedWords.join(''));
+}
+
+
+
+
+
+
+
+
+
+
+
+
