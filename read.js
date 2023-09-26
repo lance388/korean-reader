@@ -3110,6 +3110,7 @@ function getFont() {
 function scrollTo(pos){
 	//if(getCurrentLearnMode()=="learnMode"){
         $('#nav-learn').scrollTop(pos);
+		console.log('Current scroll: '+pos);
     //}
     //else if(getCurrentLearnMode()=="editMode"){
    //     $('#nav-edit').scrollTop(pos);
