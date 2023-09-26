@@ -505,7 +505,7 @@ function onNavLearnScroll(e) {
 						colourisePage();
 				}
 			}
-			updateAndSaveSettings();
+			//updateAndSaveSettings();
 			
 		}, scrollLearnTabDebounceTimeout);
 }
