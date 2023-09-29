@@ -3618,10 +3618,6 @@ function populateFontOptions() {
 	  case "chinese":
 		fontOptions = `
 		  <option value="Arial">Arial</option>
-		  <option value="SimSun">SimSun</option>
-		  <option value="SimHei">SimHei</option>
-		  <option value="Microsoft YaHei">Microsoft YaHei</option>
-		  <option value="PMingLiU">PMingLiU</option>
 		`;
 		break;
 	  default:
