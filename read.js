@@ -137,39 +137,44 @@ function initialise(){
 	//initialiseIndexedDB().then(() => {
 		//return initialiseLesson();
 	//})
-	initialiseIndexedDB().then(() => {
-		initialiseTextSaving();
-		initialiseDataTables();
-		return initialiseUI();
-	}).then(() => {
-		return initialiseSettings();
-	}).then(() => {
-		return initialiseVocabulary();
-	}).then(() => {
-		return initialiseLearnMode();
-	}).then(() => {
-		return initialiseScroll().then(() => {
-			initialiseShortcuts();
-		document.getElementById('loading-overlay').style.display = 'none';
-		initialisationComplete = true;
-		p("Initialisation complete");
-		
-		// Get a reference to the #nav-learn element
-		let navLearnElement = document.getElementById('nav-learn');
+	initialiseIndexedDB()
+        .then(() => {
+            initialiseTextSaving();
+            initialiseDataTables();
+            return initialiseUI();
+        })
+        .then(() => {
+            return initialiseSettings();
+        })
+        .then(() => {
+            return initialiseVocabulary();
+        })
+        .then(() => {
+			return initialiseLearnMode();  
+        })
+        .then(() => {
+            return initialiseScroll();
+        })
+        .then(() => {
+            initialiseShortcuts();
+            document.getElementById('loading-overlay').style.display = 'none';
+            initialisationComplete = true;
+            console.log("Initialisation complete");
 
-		// Create a new Event object for a scroll event
-		let scrollEvent = new Event('scroll');
+            // Get a reference to the #nav-learn element
+            let navLearnElement = document.getElementById('nav-learn');
 
-		// Trigger the scroll event on the #nav-learn element
-		navLearnElement.dispatchEvent(scrollEvent);
+            // Create a new Event object for a scroll event
+            let scrollEvent = new Event('scroll');
 
-		
-		updateAndSaveSettings();
-	});
-		
-	}).catch((error) => {
-		console.error("An error occurred:", error);
-	});
+            // Trigger the scroll event on the #nav-learn element
+            navLearnElement.dispatchEvent(scrollEvent);
+
+            updateAndSaveSettings();
+        })
+        .catch((error) => {
+            console.error("An error occurred:", error);
+        });
 }
 
 function initialiseShortcuts(){
@@ -189,6 +194,7 @@ function initialiseScroll() {
             if (matchingItem) {
                 // If a matching item is found, call the function with its scroll as a parameter
                 scrollTo(matchingItem.scroll);
+				//console.log("Scrolling to: "+matchingItem.scroll);
                 resolve(); // Resolve the promise when finished
             } else {
                 resolve(); // Resolve the promise if there's no matching item
@@ -215,6 +221,7 @@ function loadLastLearnMode() {
     return getSettings().then((settings) => {
         var mode = settings.lastOpenedLearnMode;
 		if(!mode){
+			activateEditMode();
 			activateLearnMode();
 		}
 		else{
@@ -222,10 +229,12 @@ function loadLastLearnMode() {
 				case "edit": 
 					activateEditMode(); 
 					break;
-				case "learn": 
+				case "learn":
+					activateEditMode();
 					activateLearnMode(); 
 					break;
 				default:
+					activateEditMode();
 					activateLearnMode(); 
 			}
 		}
