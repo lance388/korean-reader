@@ -4191,7 +4191,7 @@ function onCtrlClick(event) {
         }
     }
 
-    console.log(collectedWords.join(''));
+   // console.log(collectedWords.join(''));
     playWordTTS(collectedWords.join(''));
 }
 
