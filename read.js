@@ -2255,7 +2255,7 @@ function fillWordlistTable() {
             "Ratio": ratio.toFixed(2) + "%", // Show ratio with 2 decimal points
             "Word": item.word,
             "Level": item.level,
-            "Frequency": ""
+           // "Frequency": ""
         });
     });
 
@@ -2720,7 +2720,7 @@ function initialiseDataTables(){
                 { data: "Ratio" },
                 { data: "Word"},
                 { data: "Level" },
-                { data: "Frequency" }
+               // { data: "Frequency" }
             ]
 
         });

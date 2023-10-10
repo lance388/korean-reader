@@ -67,14 +67,11 @@ html, body {`
 }
 
 .textarea-container,
-.sidebar-container{
-	display: flex;
-   flex-grow: 1;
-   margin:0;
-   padding-left:.3em;
-   padding-right:.3em;
-	
-
+.sidebar-container {
+    display: flex;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -106,7 +103,6 @@ html, body {`
 
 
 .custom-statsarea {
-    border-radius: 5px;
     padding: 1em;
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     flex-direction: column; /* Make its children stack vertically */
@@ -125,14 +121,12 @@ html, body {`
 #dictionary-iframe{
 	display: flex;
 	flex-grow:1;
-	border:0;
 	height:100%;
 	width:100%;
 }
 
 
 #nav-learn{
-    box-sizing: border-box; /* Add this */
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds a subtle shadow for a 3D effect */
 
 	height:95vh;
@@ -146,7 +140,6 @@ html, body {`
 #learnText {
     flex-direction: row;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    box-sizing: border-box; /* add this line */
     margin:0;
     padding:10px;
 	word-break: keep-all;
@@ -293,6 +286,7 @@ html, body {`
 .unique-words-container th, .unique-words-container td, 
 .total-words-container th, .total-words-container td {
     border: 1px solid; /* Add a border */
+	box-sizing: border-box;
     text-align: center; /* Center the text */
     padding: 8px; /* Add some padding */
 }
@@ -345,7 +339,7 @@ html, body {`
 
 .nav-item.nav-link {
     height:5vh;
-
+	box-sizing: border-box;
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 5px;
@@ -359,6 +353,7 @@ html, body {`
 }
 
 .vertical-line {
+	box-sizing: border-box;
     border-left: 1px solid;
     height: 24px;
 }
