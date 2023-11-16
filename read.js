@@ -3156,10 +3156,10 @@ function playWordTTS(word) {
 
 					// Add event listeners if needed
 					player.onAudioStart = function (_) {
-					  console.log("Audio playback started");
+					  //console.log("Audio playback started");
 					};
 					player.onAudioEnd = function (_) {
-					  console.log("Audio playback finished");
+					  //console.log("Audio playback finished");
 					  // You can enable buttons or other controls if needed here.
 					};
 
@@ -3175,7 +3175,7 @@ function playWordTTS(word) {
 					//var azure_pitch = "medium";
 					var azure_volume = volume*200;
 					
-					console.log(azure_rate,azure_pitch,azure_volume);
+					//console.log(azure_rate,azure_pitch,azure_volume);
 					
 					// Now, use the synthesizer to speak the SSML.
 					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
@@ -3190,7 +3190,7 @@ function playWordTTS(word) {
 					  ssml,
 					  function (result) {
 						// Handle successful synthesis here.
-						console.log("Speech synthesis succeeded.");
+						//console.log("Speech synthesis succeeded.");
 					  },
 					  function (err) {
 						// Handle synthesis error here.
