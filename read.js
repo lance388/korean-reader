@@ -3095,7 +3095,7 @@ function saveLastEditMode(mode) {
 
 function playWordTTS(word) {
 	
-    if(enableVoice) {
+    if(enableVoice&&learnMode=="learn") {
 		
         // Stop and remove any utterances currently speaking or in the queue
         speechSynthesis.cancel();
@@ -4367,10 +4367,10 @@ function onCtrlClick(event) {
     let sentenceNumber = currentSpan.data('sentence'); // The 'data-sentence' attribute
     let fullSentence = currentSpan.text(); // Start with the current span's text
 
-    // Loop through the next siblings
-    currentSpan.nextAll().each(function() {
+    // Loop through the next siblings excluding those with class "page"
+    currentSpan.nextAll().not('.page').each(function() {
         let nextSpan = $(this);
-        if(nextSpan.data('sentence') === sentenceNumber) {
+        if (nextSpan.data('sentence') === sentenceNumber) {
             // If the sentence number matches, add the text to the full sentence
             fullSentence += " " + nextSpan.text();
         } else {
