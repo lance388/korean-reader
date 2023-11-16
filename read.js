@@ -181,14 +181,19 @@ function initialise(){
         });
 }
 
-function initialiseShortcuts(){
-	$(document).keydown(function(event) {
-		if (event.ctrlKey && event.key === 'i') {
-			window.open("https://www.google.com/search?q="+pendingDictionaryLookup+"&sxsrf=ALeKk01CGhV9YShWwU3Knh1qjMdDQcYXHQ:1602295138342&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiS_K7E9qjsAhXhlEsFHS36BooQ_AUoAXoECA8QAw&cshid=1602295160675088&biw=1920&bih=937", '_blank');
-		}
-	});
+function initialiseShortcuts() {
+  // Ensure the variable is accessible in this scope
+  var pendingDictionaryLookup = "example"; // Replace 'example' with your term or ensure the variable is available
 
+  $(document).keydown(function(event) {
+    console.log(event.key); // Log the key to ensure the event is captured
+    if (event.ctrlKey && event.key.toLowerCase() === 'i') {
+      console.log("Ctrl+I was pressed");
+      window.open("https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(pendingDictionaryLookup), '_blank');
+    }
+  });
 }
+
 
 function initialiseScroll() {
     return new Promise((resolve, reject) => {
