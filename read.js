@@ -3171,7 +3171,7 @@ function playWordTTS(word) {
 					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
 					var azure_volume = volume*200;
 					
-					console.log(azure_rate,azure_pitch,azure_volume);
+					//console.log(azure_rate,azure_pitch,azure_volume);
 					
 					// Now, use the synthesizer to speak the SSML.
 					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
