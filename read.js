@@ -4338,7 +4338,8 @@ function getConvertedChineseCharacters(text,conversionType){
 		
 }
 
-function onCtrlClick(event) {
+/*
+function playAllFromClick(event) {
     event.preventDefault();
     let currentWord = $(this);
     let collectedWords = [];
@@ -4358,6 +4359,28 @@ function onCtrlClick(event) {
    // console.log(collectedWords.join(''));
     playWordTTS(collectedWords.join(''));
 }
+*/
+
+function onCtrlClick(event) {
+    event.preventDefault();
+    let currentSpan = $(this); // The clicked span element
+    let sentenceNumber = currentSpan.data('sentence'); // The 'data-sentence' attribute
+    let fullSentence = currentSpan.text(); // Start with the current span's text
+
+    // Loop through the next siblings
+    currentSpan.nextAll().each(function() {
+        let nextSpan = $(this);
+        if(nextSpan.data('sentence') === sentenceNumber) {
+            // If the sentence number matches, add the text to the full sentence
+            fullSentence += " " + nextSpan.text();
+        } else {
+            // If it doesn't match, stop the loop
+            return false;
+        }
+    });
+    playWordTTS(fullSentence); // Play the full sentence
+}
+
 
 function getAzureAPIKey(){
 	return($("#api-key-input").val());
