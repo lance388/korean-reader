@@ -829,6 +829,46 @@ function initialiseUI(){
         $("#learnText").css("word-spacing", adjustedSpacing);
         $("#spacing-value").text(spacingPercentage + "%");
     });
+	
+	
+	document.getElementById('check-api-key-button').addEventListener('click', function() {
+	  var subscriptionKey = document.getElementById('api-key-input').value; // Assume you have an input field with this id for the key
+	  var serviceRegion = document.getElementById('api-region-input').value; // Assume you have an input field with this id for the region
+
+	  var request = new XMLHttpRequest();
+	  request.open('GET', `https://${serviceRegion}.tts.speech.microsoft.com/cognitiveservices/voices/list`);
+
+	  // Set the subscription key header
+	  request.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey);
+
+	  request.onload = function() {
+		if (request.status >= 200 && request.status < 300) {
+		  // Success! The key and region are valid.
+		  alert("API key and region are valid.");
+		  console.log('API key and region are valid. Response:', request.responseText);
+		  populateVoiceList();
+		} else {
+		  // Failed. The key or region may be invalid, or there's another error.
+		  alert('Failed to connect with the provided key and region.');
+		  console.log('Failed to connect with the provided key and region. Status:', request.status);
+		  populateVoiceList();
+		}
+	  };
+
+	  request.onerror = function() {
+		// Failed. There was a network error.
+		alert('Network error while attempting to connect.');
+		console.error('Network error while attempting to connect.');
+		populateVoiceList();
+	  };
+
+	  request.send();
+	});
+	
+	document.getElementById('refresh-voices-button').addEventListener('click', function() {
+	  populateVoiceList();
+	});
+
 
 		
 	resolve();
