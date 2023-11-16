@@ -60,6 +60,7 @@ const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/
 const DEFAULT_DICTIONARY_URL_CHINESE = "https://www.youdao.com/";
 const DEFAULT_FONT="Arial";
 var trie;
+var synthesizer;
 var player;
 
 
@@ -3097,15 +3098,17 @@ function playWordTTS(word) {
     if(enableVoice) {
 		
         // Stop and remove any utterances currently speaking or in the queue
-        //speechSynthesis.cancel();
-		//if (synthesizer) {
-		//	synthesizer.close();
-		//}
-		//synthesizer = undefined;
+        speechSynthesis.cancel();
+		if (synthesizer) {
+			synthesizer.close();
+		}
+		synthesizer = null;
 		
 		if (player) {
 			player.pause();
+			//player.turnOff();
 		}
+		player=null;
 		
 		if (lessonLanguage == "chinese") {
 			word = word.replace(/\s+/g, '');
@@ -3164,14 +3167,15 @@ function playWordTTS(word) {
 					var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
 
 					// Initialize the synthesizer with the speech config and audio config.
-					var synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+					synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
 					
 					//var azure_rate = "medium";
 					var azure_rate = rate;
 					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
+					//var azure_pitch = "medium";
 					var azure_volume = volume*200;
 					
-					//console.log(azure_rate,azure_pitch,azure_volume);
+					console.log(azure_rate,azure_pitch,azure_volume);
 					
 					// Now, use the synthesizer to speak the SSML.
 					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
