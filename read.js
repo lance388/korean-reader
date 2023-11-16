@@ -60,6 +60,7 @@ const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/
 const DEFAULT_DICTIONARY_URL_CHINESE = "https://www.youdao.com/";
 const DEFAULT_FONT="Arial";
 var trie;
+var player;
 
 
 const firebaseConfig = {
@@ -171,6 +172,8 @@ function initialise(){
             navLearnElement.dispatchEvent(scrollEvent);
 
             updateAndSaveSettings();
+			
+			
         })
         .catch((error) => {
             console.error("An error occurred:", error);
@@ -644,17 +647,9 @@ function initialiseUI(){
 		$('#wordlist-tab').on('click', onWordlistTabButtonClick);
 		$('#dictionary-tab').on('click', onDictionaryTabButtonClick);
 		$('#nav-learn').on('scroll', onNavLearnScroll);
-		//$('#nav-edit').on('scroll', onNavEditScroll);
 		$('#textareaFullscreenButton').on('click', onTextareaFullscreenButtonClick);
 		$('#sideBarFullscreenButton').on('click', onSidebarFullscreenButtonClick);
-		//$('#nav-learn-tab').on('show.bs.tab', function() {
-		//	lastScroll = getCurrentScroll();
-		//	onNavLearnTabShowBsTab();
-		//});
-		//$('#nav-edit-tab').on('show.bs.tab', function() {
-		//	lastScroll = getCurrentScroll();
-		//	onNavEditTabShowBsTab();
-		//});
+
 		$('#clear-text-button').on('click', onClearTextButtonClick);
 		$("#toggle-sidebar").click(function() {
 			switch(sidebarTab){
@@ -721,19 +716,6 @@ function initialiseUI(){
 		});
 
 		
-
-		/*
-		$('#nav-learn-tab').on('shown.bs.tab', function() {
-			scrollTo(lastScroll);
-			updateAndSaveSettings();
-		});
-		$('#nav-edit-tab').on('shown.bs.tab', function() {
-			scrollTo(lastScroll);
-			updateAndSaveSettings();
-		});
-		*/
-		//$('#nav-learn-tab').on('shown.bs.tab', updateAndSaveSettings);
-		//$('#nav-edit-tab').on('shown.bs.tab', updateAndSaveSettings);
 		$("#enable-tts-checkbox").on("change", updateAndSaveSettings);
 		$("#voice-selection").on("change", updateAndSaveSettings);
 		$("#volume-control").on('input', function() {
@@ -751,6 +733,14 @@ function initialiseUI(){
 			rateValue.text(this.value);
 			updateAndSaveSettings();
 		});
+	});
+	
+	$("#api-key-input").on('input', function() {
+		updateAndSaveSettings();
+	});
+	
+	$("#api-region-input").on('input', function() {
+		updateAndSaveSettings();
 	});
 
 	$("#textarea-navbar-title").on("click", function() {
@@ -845,7 +835,90 @@ function initialiseUI(){
     });
 }
 
+/*
+function populateVoiceList() {
+    // Clear any existing options
+    voiceSelect.innerHTML = '';
 
+    // Get the selected language
+    var selectedLanguage;
+    switch (lessonLanguage) {
+        case "korean":
+            selectedLanguage = "ko";
+            break;
+        case "chinese":
+            selectedLanguage = "zh";
+            break;
+        case "english":
+            selectedLanguage = "en";
+            break;
+        default:
+            console.log("Language not found");
+            return; // Exit if no language is found
+    }
+
+    // Get the available native voices and filter them by the selected language
+    var voices = speechSynthesis.getVoices().filter(function(voice) {
+        return voice.lang.startsWith(selectedLanguage);
+    });
+
+    // Add filtered native voices to the dropdown
+    voices.forEach(function(voice) {
+        var option = document.createElement('option');
+        option.value = voice.name;
+        option.innerHTML = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+    });
+
+    // Set your Azure subscription key and service region
+    var _subscriptionKey = getAzureAPIKey();
+    var _serviceRegion = getAzureRegion();
+
+    // Retrieve and filter Azure voices
+    if (_subscriptionKey && _serviceRegion) {
+        var request = new XMLHttpRequest();
+        request.open('GET', `https://${_serviceRegion}.tts.speech.${_serviceRegion.startsWith("china") ? "azure.cn" : "microsoft.com"}/cognitiveservices/voices/list`, true);
+        request.setRequestHeader("Ocp-Apim-Subscription-Key", _subscriptionKey);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                var azureVoices = JSON.parse(this.response).filter(function(voice) {
+                    return voice.Locale.startsWith(selectedLanguage);
+                });
+
+                // Add filtered Azure voices to the dropdown
+                azureVoices.forEach(function(voice) {
+                    var option = document.createElement('option');
+                    option.value = voice.ShortName;
+                    option.innerHTML = `Azure - ${voice.DisplayName} (${voice.Locale})`;
+                    voiceSelect.appendChild(option);
+                });
+				
+				
+				//set the active item of the dropdown in settings
+				if (settings.voiceSelection) {
+					var selectedVoice = voiceSelection.find(function(obj) {
+						return obj.language === lessonLanguage;
+					});
+
+					if (selectedVoice) {
+						$('#voice-selection').val(selectedVoice.voice);
+					}
+			   }
+				
+            } else {
+                console.error("Failed to retrieve Azure voices list:", request.statusText);
+            }
+        };
+
+        request.onerror = function() {
+            console.error("Error fetching Azure voices list.");
+        };
+
+        request.send();
+    }
+}
+*/
 
 
 // This function populates the voice-selection dropdown with the available voices
@@ -882,7 +955,57 @@ function populateVoiceList() {
         }
         voiceSelect.appendChild(option);
     });
+	
+	// Set your Azure subscription key and service region
+    var _subscriptionKey = getAzureAPIKey();
+    var _serviceRegion = getAzureRegion();
+
+    // Retrieve and filter Azure voices
+    if (_subscriptionKey && _serviceRegion) {
+        var request = new XMLHttpRequest();
+        request.open('GET', `https://${_serviceRegion}.tts.speech.${_serviceRegion.startsWith("china") ? "azure.cn" : "microsoft.com"}/cognitiveservices/voices/list`, true);
+        request.setRequestHeader("Ocp-Apim-Subscription-Key", _subscriptionKey);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                var azureVoices = JSON.parse(this.response).filter(function(voice) {
+                    return voice.Locale.startsWith(selectedLanguage);
+                });
+
+                // Add filtered Azure voices to the dropdown
+                azureVoices.forEach(function(voice) {
+                    var option = document.createElement('option');
+                    option.value = voice.ShortName;
+                    option.innerHTML = `Azure - ${voice.DisplayName} (${voice.Locale})`;
+                    voiceSelect.appendChild(option);
+                });
+				
+				
+				//set the active item of the dropdown in settings
+				if (settings.voiceSelection) {
+					var selectedVoice = voiceSelection.find(function(obj) {
+						return obj.language === lessonLanguage;
+					});
+
+					if (selectedVoice) {
+						$('#voice-selection').val(selectedVoice.voice);
+					}
+			   }
+				
+            } else {
+                console.error("Failed to retrieve Azure voices list:", request.statusText);
+            }
+        };
+
+        request.onerror = function() {
+            console.error("Error fetching Azure voices list.");
+        };
+
+        request.send();
+    }
 }
+
+
 
 
 
@@ -2930,14 +3053,24 @@ function saveLastEditMode(mode) {
 */
 
 function playWordTTS(word) {
+	
     if(enableVoice) {
 		
         // Stop and remove any utterances currently speaking or in the queue
-        speechSynthesis.cancel();
+        //speechSynthesis.cancel();
+		//if (synthesizer) {
+		//	synthesizer.close();
+		//}
+		//synthesizer = undefined;
+		
+		if (player) {
+			player.pause();
+		}
 		
 		if (lessonLanguage == "chinese") {
 			word = word.replace(/\s+/g, '');
 		  }
+		
 		
 
         var utterance = new SpeechSynthesisUtterance(word);
@@ -2969,10 +3102,66 @@ function playWordTTS(word) {
 				}
 			});
 
+			//console.log("HERE "+voiceSelect.selectedOptions[0].innerHTML);
 			
+			if (window.SpeechSDK && voiceSelect.selectedOptions[0].innerHTML.startsWith("Azure - ")) { // Check if it's an Azure voice
+					var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(getAzureAPIKey(), getAzureRegion());
+					speechConfig.speechSynthesisVoiceName = voiceSelect.selectedOptions[0].value;
 
-			// Speak the utterance
-			speechSynthesis.speak(utterance);
+					// Create an instance of the audio player.
+					player = new SpeechSDK.SpeakerAudioDestination();
+
+					// Add event listeners if needed
+					player.onAudioStart = function (_) {
+					  console.log("Audio playback started");
+					};
+					player.onAudioEnd = function (_) {
+					  console.log("Audio playback finished");
+					  // You can enable buttons or other controls if needed here.
+					};
+
+					// Create an audio configuration instance from the audio player.
+					var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
+
+					// Initialize the synthesizer with the speech config and audio config.
+					var synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+					
+					//var azure_rate = "medium";
+					var azure_rate = rate;
+					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
+					var azure_volume = volume*200;
+					
+					console.log(azure_rate,azure_pitch,azure_volume);
+					
+					// Now, use the synthesizer to speak the SSML.
+					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+					  <voice name='${speechConfig.speechSynthesisVoiceName}'>
+						<prosody rate='${azure_rate}' pitch='${azure_pitch}' volume='${azure_volume}'>
+						  ${word}
+						</prosody>
+					  </voice>
+					</speak>`;
+
+					synthesizer.speakSsmlAsync(
+					  ssml,
+					  function (result) {
+						// Handle successful synthesis here.
+						console.log("Speech synthesis succeeded.");
+					  },
+					  function (err) {
+						// Handle synthesis error here.
+						console.error("Error during speech synthesis:", err);
+					  }
+					);
+
+			}
+			else
+			{
+				// Speak the non-azure utterance
+				speechSynthesis.speak(utterance);
+			}
+
+			
 		} else {
 			console.warn('No selected option found');
 			return; // Exit the function if no option is selected
@@ -3022,19 +3211,6 @@ function getLastScrollArray() {
     return scrollArray;
 }
 
-/*
-function getVoiceSelection(){
-    if($("#voice-selection").val() == "" || $("#voice-selection").val() == null){
-        if(settings.voiceSelection){
-            return settings.voiceSelection;
-        } else {
-            return "";
-        }
-    } else {
-        return $("#voice-selection").val();
-    }
-}
-*/
 
 function getVoiceSelection() {
     var selectedVoice = $("#voice-selection").val();
@@ -3051,6 +3227,7 @@ function getVoiceSelection() {
     // Find the object for the current lessonLanguage or create a new one
     var languageVoiceSettings = settings.voiceSelection.find(item => item.language === lessonLanguage) || { language: lessonLanguage };
     
+	
     // Update the voice selection for the current lessonLanguage
     languageVoiceSettings.voice = selectedVoice;
 
@@ -3058,7 +3235,6 @@ function getVoiceSelection() {
     if (!settings.voiceSelection.includes(languageVoiceSettings)) {
         settings.voiceSelection.push(languageVoiceSettings);
     }
-
     return settings.voiceSelection;
 }
 
@@ -3394,76 +3570,7 @@ function applyColorChange(cssVar) {
 
     updateAndSaveSettings();
 }
-/*
-function applyColorChangeWithHex(cssVar, hex, opacity){
-	let colorInput, opacityInput, bgColour, opacity, rgbaColour;
-	switch (cssVar) {
-        case '--unknown-word-bg':
-            colorInput = $(`#unknown-color`);
-			opacityInput = $(`#unknown-opacity`);
-			bgColour = colorInput.val();
-			opacity = opacityInput.val();
-			rgbaColour = hexToRGBA(bgColour, opacity);
-			document.documentElement.style.setProperty(cssVar, rgbaColour);
-            break;
-        case '--learning-word-bg':
-            colorInput = $(`#learning-color`);
-			opacityInput = $(`#learning-opacity`);
-			bgColour = colorInput.val();
-			opacity = opacityInput.val();
-			rgbaColour = hexToRGBA(bgColour, opacity);
-			document.documentElement.style.setProperty(cssVar, rgbaColour);
-            break;
-        case '--known-word-bg':
-            colorInput = $(`#known-color`);
-			opacityInput = $(`#known-opacity`);
-			bgColour = colorInput.val();
-			opacity = opacityInput.val();
-			rgbaColour = hexToRGBA(bgColour, opacity);
-			document.documentElement.style.setProperty(cssVar, rgbaColour);
-            break;
-		case '--jump-word-bg':
-            colorInput = $(`#jump-color`);
-			opacityInput = $(`#jump-opacity`);
-			bgColour = colorInput.val();
-			opacity = opacityInput.val();
-			rgbaColour = hexToRGBA(bgColour, opacity);
-			document.documentElement.style.setProperty(cssVar, rgbaColour);
-            break;	
-        default:
-            console.error(`Invalid CSS variable name: ${cssVar}`);
-            return;
-    }
-	
-	
 
-    let styles, colour, textColor;
-    // Update the settings object and save it to storage
-    switch (cssVar) {
-        case '--unknown-word-bg':
-            styles = getComputedStyle(document.documentElement);
-            colour = rgbaToHex(styles.getPropertyValue('--unknown-word-bg').trim());
-            textColor = getContrastColor(colour);
-            document.documentElement.style.setProperty('--unknown-word-text-colour', textColor);
-            break;
-        case '--learning-word-bg':
-            styles = getComputedStyle(document.documentElement);
-            colour = rgbaToHex(styles.getPropertyValue('--learning-word-bg').trim());
-            textColor = getContrastColor(colour);
-            document.documentElement.style.setProperty('--learning-word-text-colour', textColor);
-            break;
-        case '--known-word-bg':
-            styles = getComputedStyle(document.documentElement);
-            colour = rgbaToHex(styles.getPropertyValue('--known-word-bg').trim());
-            textColor = getContrastColor(colour);
-            document.documentElement.style.setProperty('--known-word-text-colour', textColor);
-            break;
-        default:
-            console.error(`Invalid CSS variable name: ${cssVar}`);
-            return;
-    }
-}
-*/
 function rgbaToHex(rgba) {
     // Check if rgba color
     if (!rgba || !rgba.includes('rgba')) {
@@ -3819,20 +3926,7 @@ function initialiseSettings() {
 			document.getElementById('enable-tts-checkbox').dispatchEvent(changeEvent);
         }
 
-        // Select the voice if it exists in the list
-        //if (voiceSelection) {
-        //    $('#voice-selection').val(voiceSelection);
-       // }
-	   if (voiceSelection) {
-			var selectedVoice = voiceSelection.find(function(obj) {
-				return obj.language === lessonLanguage;
-			});
-
-			if (selectedVoice) {
-				$('#voice-selection').val(selectedVoice.voice);
-				console.log('Voice selection for ' + lessonLanguage + ':', selectedVoice.voice);
-			}
-	   }
+	   
 
 
         // Set volume, pitch, and rate sliders' values
@@ -3930,6 +4024,30 @@ function initialiseSettings() {
 			$('#text-size').val(textSize);
 			$('#learnText').css('font-size', textSize + 'em');
 		}
+		
+		if(settings.azureSpeechKey){
+			$("#api-key-input").val(settings.azureSpeechKey);
+		}
+		if(settings.azureSpeechRegion){
+			$("#api-region-input").val(settings.azureSpeechRegion);
+		}
+		
+		if (enableVoice && $("#api-key-input").val() && $("#api-region-input").val()) {
+			populateVoiceList();
+		}
+		
+		
+		if (voiceSelection) {
+			var selectedVoice = voiceSelection.find(function(obj) {
+				return obj.language === lessonLanguage;
+			});
+
+			if (selectedVoice) {
+				$('#voice-selection').val(selectedVoice.voice);
+				console.log('Voice selection for ' + lessonLanguage + ':', selectedVoice.voice);
+			}
+	   }
+		
 		
 		/*
 		if(settings.dictionaryLanguage){
@@ -4079,6 +4197,8 @@ function saveCurrentSettings() {
 		dictionaryLanguage:getDictionarySelection(),
 		chineseCharacterConversion:$("#character-conversion-dropdown").val(),
 		chineseWordSpacing: $("#spacing-slider").val(),
+		azureSpeechKey: $("#api-key-input").val(),
+		azureSpeechRegion: $("#api-region-input").val(),
 	};
 
 	console.log("Saving settings.");
@@ -4195,14 +4315,10 @@ function onCtrlClick(event) {
     playWordTTS(collectedWords.join(''));
 }
 
+function getAzureAPIKey(){
+	return($("#api-key-input").val());
+}
 
-
-
-
-
-
-
-
-
-
-
+function getAzureRegion(){
+	return($("#api-region-input").val());
+}
