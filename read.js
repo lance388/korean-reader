@@ -874,97 +874,35 @@ function initialiseUI(){
 	document.getElementById('refresh-voices-button').addEventListener('click', function() {
 	  populateVoiceList();
 	});
+	
+	
+	$('#settings-modal').on('shown.bs.modal', function() {
+	  // Add a history state with some arbitrary data and a unique title
+	  history.pushState({ modalOpen: true }, 'ModalOpen');
+	});
+	
+	// Listen for the popstate event
+	window.addEventListener('popstate', function(event) {
+	  // Check if the modal is open
+	  if (event.state && event.state.modalOpen) {
+		// Close the modal with Bootstrap's modal method
+		$('#settings-modal').modal('hide');
+	  }
+	});
 
+	// When closing the modal, either via the user action or back button
+	$('#settings-modal').on('hidden.bs.modal', function() {
+	  // Check if the history state matches our custom state
+	  if (history.state && history.state.modalOpen) {
+		// Go back in history to clear the state
+		history.back();
+	  }
+	});
 
 		
 	resolve();
     });
 }
-
-/*
-function populateVoiceList() {
-    // Clear any existing options
-    voiceSelect.innerHTML = '';
-
-    // Get the selected language
-    var selectedLanguage;
-    switch (lessonLanguage) {
-        case "korean":
-            selectedLanguage = "ko";
-            break;
-        case "chinese":
-            selectedLanguage = "zh";
-            break;
-        case "english":
-            selectedLanguage = "en";
-            break;
-        default:
-            console.log("Language not found");
-            return; // Exit if no language is found
-    }
-
-    // Get the available native voices and filter them by the selected language
-    var voices = speechSynthesis.getVoices().filter(function(voice) {
-        return voice.lang.startsWith(selectedLanguage);
-    });
-
-    // Add filtered native voices to the dropdown
-    voices.forEach(function(voice) {
-        var option = document.createElement('option');
-        option.value = voice.name;
-        option.innerHTML = `${voice.name} (${voice.lang})`;
-        voiceSelect.appendChild(option);
-    });
-
-    // Set your Azure subscription key and service region
-    var _subscriptionKey = getAzureAPIKey();
-    var _serviceRegion = getAzureRegion();
-
-    // Retrieve and filter Azure voices
-    if (_subscriptionKey && _serviceRegion) {
-        var request = new XMLHttpRequest();
-        request.open('GET', `https://${_serviceRegion}.tts.speech.${_serviceRegion.startsWith("china") ? "azure.cn" : "microsoft.com"}/cognitiveservices/voices/list`, true);
-        request.setRequestHeader("Ocp-Apim-Subscription-Key", _subscriptionKey);
-
-        request.onload = function() {
-            if (request.status >= 200 && request.status < 400) {
-                var azureVoices = JSON.parse(this.response).filter(function(voice) {
-                    return voice.Locale.startsWith(selectedLanguage);
-                });
-
-                // Add filtered Azure voices to the dropdown
-                azureVoices.forEach(function(voice) {
-                    var option = document.createElement('option');
-                    option.value = voice.ShortName;
-                    option.innerHTML = `Azure - ${voice.DisplayName} (${voice.Locale})`;
-                    voiceSelect.appendChild(option);
-                });
-				
-				
-				//set the active item of the dropdown in settings
-				if (settings.voiceSelection) {
-					var selectedVoice = voiceSelection.find(function(obj) {
-						return obj.language === lessonLanguage;
-					});
-
-					if (selectedVoice) {
-						$('#voice-selection').val(selectedVoice.voice);
-					}
-			   }
-				
-            } else {
-                console.error("Failed to retrieve Azure voices list:", request.statusText);
-            }
-        };
-
-        request.onerror = function() {
-            console.error("Error fetching Azure voices list.");
-        };
-
-        request.send();
-    }
-}
-*/
 
 
 // This function populates the voice-selection dropdown with the available voices
@@ -1054,10 +992,11 @@ function populateVoiceList() {
 
 
 
-
+/*
 window.handleCredentialResponse = (response) => {
 	onSignIn(); 
 }
+*/
 	
 	function toggleSignIn() {
 		if (firebase.auth().currentUser) {
@@ -1094,14 +1033,16 @@ window.handleCredentialResponse = (response) => {
 		}
 	}
 
-
+/*
 	function onSignIn(googleUser) {
 		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth()
 		  .signInWithPopup(provider)
 		  .then((result) => {
+			  */
 			/** @type {firebase.auth.OAuthCredential} */
+			/*
 			var credential = result.credential;
 			var token = credential.accessToken;
 			var user = result.user;
@@ -1114,6 +1055,7 @@ window.handleCredentialResponse = (response) => {
 			var credential = error.credential;
 		  });
     }
+	*/
 	
 	function handleSignOut() {
 		return firebase.auth().signOut().then(() => {
