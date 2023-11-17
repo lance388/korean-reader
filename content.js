@@ -19,10 +19,10 @@ function p(...messages) {
 
 
 //Initialize Firebase
-function initializeFirebase() {
-	firebase.initializeApp(firebaseConfig);
-	dbfire = firebase.firestore();
-}
+//function initializeFirebase() {
+//	firebase.initializeApp(firebaseConfig);
+//	dbfire = firebase.firestore();
+//}
 
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('loading-overlay').style.display = 'flex'; // Show loading overlay
