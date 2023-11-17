@@ -307,10 +307,11 @@ function initialiseUI()
 
 }
 
-
+/*
 window.handleCredentialResponse = (response) => {
 	onSignIn(); 
 }
+*/
 	
 function toggleSignIn() {
 		if (firebase.auth().currentUser) {
@@ -347,13 +348,16 @@ function toggleSignIn() {
 		}
 	}
 
+/*
 	function onSignIn(googleUser) {
 		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth()
 		  .signInWithPopup(provider)
 		  .then((result) => {
+			  */
 			/** @type {firebase.auth.OAuthCredential} */
+			/*
 			var credential = result.credential;
 
 			// This gives you a Google Access Token. You can use it to access the Google API.
@@ -375,6 +379,7 @@ function toggleSignIn() {
 			// ...
 		  });
     }
+	*/
 	
 function handleSignOut() {
 		return firebase.auth().signOut().then(() => {

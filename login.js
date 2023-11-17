@@ -64,10 +64,10 @@ function initializeUI()
 
 
 
-window.handleCredentialResponse = (response) => {
-	onSignIn(); 
+//window.handleCredentialResponse = (response) => {
+//	onSignIn(); 
 	//initiateSignInWithRedirect();
-}
+//}
 	
 	function toggleSignIn() {
       if (firebase.auth().currentUser) {
@@ -183,7 +183,7 @@ function sendPasswordReset() {
 
 
 	
-
+/*
 	function onSignIn(googleUser) {
 		p("at sign in");
 		var provider = new firebase.auth.GoogleAuthProvider();
@@ -213,6 +213,8 @@ function sendPasswordReset() {
 		  });
     }
 	
+*/
+
 
 	function handleSignOut() {
 		firebase.auth().signOut().then(() => {
@@ -232,7 +234,7 @@ function sendPasswordReset() {
 			document.getElementById("quickstart-sign-up").style.display = 'block';
 			document.getElementById("quickstart-password-reset").style.display = 'block';
 			document.getElementById("fireSigninText").style.display = 'block';
-			document.getElementById("googleSignin").style.display = 'block';
+			//document.getElementById("googleSignin").style.display = 'block';
 			document.getElementById('quickstart-sign-in').textContent = 'Sign in';
 			document.getElementById('fireSignupToggleText').style.display = 'block';
 		}
@@ -243,7 +245,7 @@ function sendPasswordReset() {
 			document.getElementById("quickstart-sign-up").style.display = 'none'; 
 			document.getElementById("quickstart-password-reset").style.display = 'none'; 
 			document.getElementById("fireSigninText").style.display = 'none'; 
-			document.getElementById("googleSignin").style.display = 'none'; 
+			//document.getElementById("googleSignin").style.display = 'none'; 
 			document.getElementById('quickstart-sign-in').textContent = 'Sign out';	
 			document.getElementById('fireSignupToggleText').style.display = 'none';
 			var user = firebase.auth().currentUser;
@@ -271,6 +273,7 @@ function logUser(user)
 	});
 }
 
+/*
 function initiateSignInWithRedirect() {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
@@ -298,4 +301,5 @@ function handleRedirectResult() {
         // Handle the errors as you see fit
     });
 }
+*/
 

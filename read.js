@@ -186,7 +186,7 @@ function initialiseShortcuts() {
   var pendingDictionaryLookup = "example"; // Replace 'example' with your term or ensure the variable is available
 
   $(document).keydown(function(event) {
-    console.log(event.key); // Log the key to ensure the event is captured
+    //console.log(event.key); // Log the key to ensure the event is captured
     if (event.ctrlKey && event.key.toLowerCase() === 'i') {
       console.log("Ctrl+I was pressed");
       window.open("https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(pendingDictionaryLookup), '_blank');
