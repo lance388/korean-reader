@@ -908,7 +908,7 @@ function initialiseUI(){
 // This function populates the voice-selection dropdown with the available voices
 function populateVoiceList() {
     //var voiceSelect = document.querySelector('#voice-selection');
-	console.log("editing voice");
+	//console.log("editing voice");
     // Clear any existing options
     voiceSelect.innerHTML = '';
 
@@ -2998,47 +2998,8 @@ function resetJump(){
 	currentJumpIndex = 0;
     currentJumpWord = "";
 }
-/*
-function getLastEditMode() {
-    return new Promise((resolve, reject) => {
-        var transaction = db.transaction(["settings"], "readonly");
-        var store = transaction.objectStore("settings");
-        var request = store.get('lastOpenedMode');
-
-        request.onerror = function(event) {
-            console.log("Error retrieving last opened mode: ", event.target.error);
-            reject(event.target.error);
-        };
-
-        request.onsuccess = function(event) {  
-            if(request.result) {
-                p("Last used edit mode: "+request.result.mode);
-                resolve(request.result.mode);
-            } else {
-                console.log("No last opened mode found!");
-                resolve(""); // Returns an empty string if no mode found
-            }
-        };
-    });
-}
-*/
 
 
-/*
-function saveLastEditMode(mode) {
-    var transaction = db.transaction(["settings"], "readwrite");
-    var store = transaction.objectStore("settings");
-    var request = store.put({id: 'lastOpenedMode', mode: mode});
-
-    request.onerror = function(event) {
-        console.log("Error saving last opened mode: ", event.target.error);
-    };
-
-    request.onsuccess = function(event) {  
-        console.log("Last opened mode saved successfully!");
-    };
-}
-*/
 
 function playWordTTS(word) {
 	
@@ -3286,7 +3247,7 @@ function getFont() {
 function scrollTo(pos){
 	//if(getCurrentLearnMode()=="learnMode"){
         $('#nav-learn').scrollTop(pos);
-		console.log('Current scroll: '+pos);
+		console.log('Scroll to: '+pos);
     //}
     //else if(getCurrentLearnMode()=="editMode"){
    //     $('#nav-edit').scrollTop(pos);
@@ -3302,17 +3263,24 @@ function getCurrentScroll(){
     //else if(getCurrentLearnMode()=="editMode"){
     //    currentScroll = $('#nav-edit').scrollTop();
     //}
+	
+	console.log("Current scroll: "+currentScroll);
+	
     return currentScroll;
 }
 
 function activateEditMode() {
+	
     console.log("Activate edit mode.");
     learnMode="edit";
     $('#edit-button').addClass('active'); // add the active class when the button is clicked
 
     // Select all span elements inside the #learnText div
     let spans = document.querySelectorAll('#learnText span');
-
+	
+	
+	       
+	
     // Loop through the selected elements
     for (let i = 0; i < spans.length; i++) {
         // Remove all classes
@@ -3322,12 +3290,13 @@ function activateEditMode() {
         $(spans[i]).off('click', onWordClick);
         $(spans[i]).off('contextmenu', onWordRightClick);
     }
+	
     $('#learnText').off('contextmenu');
     $("#learnText").attr('contenteditable', 'true');
-
+	
     // Set focus to the learnText div
-    document.getElementById('learnText').focus();
-
+    //document.getElementById('learnText').focus();
+	
     updateAndSaveSettings();
 }
 
@@ -3364,7 +3333,6 @@ function toggleEditMode() {
             activateLearnMode();
         }
     } else {
-        // Activate edit mode
         activateEditMode();
     }
 }
