@@ -1285,7 +1285,7 @@ function capitalizeFirstLetter(string) {
 function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
     // Split the text into sentences
-    let rawSentences = text.split(/(?<=[.!?。？！\n])/);
+    let rawSentences = text.split(/(?<=[.!?。？！[]-~\n])/);
     let chunks = [];
 	sentences=[];
     let sentenceIndex = 0;
@@ -2158,56 +2158,6 @@ function saveCustomLessonToIndexedDB(lesson) {
     };
 }
 
-
-/*
-function saveCustomLesson(){
-	if(signedInState=="offline"||signedInState=="signedOut"){
-		saveCustomLessonInIndexedDB();
-	}
-	else{
-		//TODO instead of this, use the firedb
-		saveCustomLessonInIndexedDB();
-	}
-}
-*/
-
-/*
-function getLastOpenedLessonID(callback) {
-    var transaction = db.transaction(["settings"], "readonly");
-    var store = transaction.objectStore("settings");
-    var request = store.get('lastOpenedLesson');
-
-    request.onerror = function(event) {
-        console.log("Error retrieving last opened lesson ID: ", event.target.error);
-    };
-
-    request.onsuccess = function(event) {  
-        if(request.result) {
-            callback(request.result.lessonID);
-        } else {
-            p("No last opened lesson ID found!");
-			window.location.href = 'content.html';
-        }
-    };
-}
-*/
-
-/*
-function saveLastOpenedLessonID() {
-    var transaction = db.transaction(["settings"], "readwrite");
-    var store = transaction.objectStore("settings");
-    var request = store.put({id: 'lastOpenedLesson', lessonID: lessonID});
-
-    request.onerror = function(event) {
-        console.log("Error saving last opened lesson ID: ", event.target.error);
-    };
-
-    request.onsuccess = function(event) {  
-        console.log("Last opened lesson ID saved successfully!");
-    };
-}
-*/
-
 function handleDictionaryLookup() {
     if (sidebarTab === "dictionary") {
         if (pendingDictionaryLookup != "") {
@@ -2540,69 +2490,6 @@ function colourSentences(table) {
 
 
 
-
-/*
-function colourSentences(table){
-	
-  let currentPageRows = table.rows({ page: 'current' });
-
-	currentPageRows.every(function() {
-	  let rowData = this.data();
-	  let index = rowData["#"];
-	  let thisSentence = sentences.find(item => item.validSentenceIndex === index);
-	  let sentenceHtml = thisSentence.sentence;
-	
-	let delimiters;
-		switch (lessonLanguage) {
-		  case "english":
-			delimiters = '(^|\\s|[^a-zA-Z])';
-			break;
-		  case "korean":
-			delimiters = '(^|\\s|[^\\uAC00-\\uD7AF])';
-			break;
-		  default:
-			delimiters = '(^|\\s|\\W)';
-		}
-		
-		console.log("***HERE*** "+thisSentence.clickableWords);
-		console.log("***HERE2*** "+sentenceHtml);
-	  
-	  thisSentence.clickableWords.forEach(function(word) {
-		const matchingWord = lessonWordArray.find(function(lessonWord) {
-		  return lessonWord.word === word;
-		});
-
-		if (matchingWord) {
-		  let wordHtml = word;
-		  if (matchingWord.level === "known") {
-			wordHtml = `<span class="known">${word}</span>`;
-		  } else if (matchingWord.level === "learning") {
-			wordHtml = `<span class="learning">${word}</span>`;
-		  } else {
-			wordHtml = `<span class="unknown">${word}</span>`;
-		  }
-		  
-		 
-		 const regex = new RegExp(`${delimiters}${word}${delimiters}`, 'g');
-		sentenceHtml = sentenceHtml.replace(regex, `$1${wordHtml}$2`);
-
-
-		  
-		  
-		}
-	  });
-
-	  // Update the "Sentence" field in the current rowData
-	  rowData["Sentence"] = sentenceHtml;
-
-	  // Update the data for the current row
-	  this.data(rowData).invalidate();
-	});
-
-	// Redraw only the affected rows
-	//currentPageRows.draw();
-}
-*/
 
 function colourWordTable(table) {
     let currentPageRows = table.rows({ page: 'current' });
@@ -3505,6 +3392,7 @@ function setTheme(theme){
 	let styles, colour, textColor, bgColour;
 	
 	styles = getComputedStyle(document.documentElement);
+	console.log("theme: "+styles);
 	
 	switch(theme){
 		case "light": bgColour=styles.getPropertyValue('--light-background-colour-primary'); break;
