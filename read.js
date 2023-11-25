@@ -1285,7 +1285,7 @@ function capitalizeFirstLetter(string) {
 function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
     // Split the text into sentences
-    let rawSentences = text.split(/(?<=[.!?。？！[]-~\n])/);
+    let rawSentences = text.split(/(?<=[.!?。？！\n\[\]\-~])/);
     let chunks = [];
 	sentences=[];
     let sentenceIndex = 0;
