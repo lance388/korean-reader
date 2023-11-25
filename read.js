@@ -1362,17 +1362,22 @@ function loadTextIntoLearnTab(text, language) {
 	var words = learnTextElement.querySelectorAll('.clickable-word');
 	var lessonText = [];
 	words.forEach(word => {
-		lessonText.push(word.textContent);
-		$(function() {
-			$(word).on('click', function(event) {
-				if(event.ctrlKey) {
-					onCtrlClick.call(this, event);
-				} else {
-					onWordClick.call(this, event);
-				}
-			});
-			$(word).on('contextmenu', onWordRightClick);
+	  lessonText.push(word.textContent);
+	  $(function() {
+		$(word).on('click', function(event) {
+		  if (event.ctrlKey && event.shiftKey) {
+			// Handle Ctrl+Shift+Click
+			onCtrlShiftClick.call(this, event);
+		  } else if (event.ctrlKey) {
+			// Handle Ctrl+Click
+			onCtrlClick.call(this, event);
+		  } else {
+			// Handle Click
+			onWordClick.call(this, event);
+		  }
 		});
+		$(word).on('contextmenu', onWordRightClick);
+	  });
 	});
 	initialiseLessonText(lessonText);
 	fillWordlistTable();
@@ -3001,127 +3006,7 @@ function resetJump(){
 
 
 
-function playWordTTS(word) {
-	
-    if(enableVoice&&learnMode=="learn") {
-		
-        // Stop and remove any utterances currently speaking or in the queue
-        speechSynthesis.cancel();
-		if (synthesizer) {
-			synthesizer.close();
-		}
-		synthesizer = null;
-		
-		if (player) {
-			player.pause();
-			//player.turnOff();
-		}
-		player=null;
-		
-		if (lessonLanguage == "chinese") {
-			word = word.replace(/\s+/g, '');
-		  }
-		
-		
 
-        var utterance = new SpeechSynthesisUtterance(word);
-		if(!voiceSelect)
-		{
-			voiceSelect = document.querySelector('#voice-selection');
-		}
-        // Get the selected voice from the dropdown
-		if(!voiceSelect.selectedOptions){
-			return;
-		}
-		
-		// Get volume, rate, and pitch from the respective input controls
-        var volume = document.getElementById('volume-control').value;
-        var rate = document.getElementById('rate-control').value;
-        var pitch = document.getElementById('pitch-control').value;
-
-        // Set volume, rate, and pitch for the utterance
-        utterance.volume = parseFloat(volume); // Volume value is between 0 and 1
-        utterance.rate = parseFloat(rate); // Rate value is between 0.1 and 10
-        utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
-		
-		if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
-			var selectedOption = voiceSelect.selectedOptions[0].value;
-			var selectedOption = voiceSelect.selectedOptions[0].value;
-			voices.forEach(function(voice) {
-				if(voice.name === selectedOption) {
-					utterance.voice = voice;
-				}
-			});
-
-			//console.log("HERE "+voiceSelect.selectedOptions[0].innerHTML);
-			
-			if (window.SpeechSDK && voiceSelect.selectedOptions[0].innerHTML.startsWith("Azure - ")) { // Check if it's an Azure voice
-					var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(getAzureAPIKey(), getAzureRegion());
-					speechConfig.speechSynthesisVoiceName = voiceSelect.selectedOptions[0].value;
-
-					// Create an instance of the audio player.
-					player = new SpeechSDK.SpeakerAudioDestination();
-
-					// Add event listeners if needed
-					player.onAudioStart = function (_) {
-					  //console.log("Audio playback started");
-					};
-					player.onAudioEnd = function (_) {
-					  //console.log("Audio playback finished");
-					  // You can enable buttons or other controls if needed here.
-					};
-
-					// Create an audio configuration instance from the audio player.
-					var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
-
-					// Initialize the synthesizer with the speech config and audio config.
-					synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
-					
-					//var azure_rate = "medium";
-					var azure_rate = rate;
-					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
-					//var azure_pitch = "medium";
-					var azure_volume = volume*200;
-					
-					//console.log(azure_rate,azure_pitch,azure_volume);
-					
-					// Now, use the synthesizer to speak the SSML.
-					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
-					  <voice name='${speechConfig.speechSynthesisVoiceName}'>
-						<prosody rate='${azure_rate}' pitch='${azure_pitch}' volume='${azure_volume}'>
-						  ${word}
-						</prosody>
-					  </voice>
-					</speak>`;
-
-					synthesizer.speakSsmlAsync(
-					  ssml,
-					  function (result) {
-						// Handle successful synthesis here.
-						//console.log("Speech synthesis succeeded.");
-					  },
-					  function (err) {
-						// Handle synthesis error here.
-						console.error("Error during speech synthesis:", err);
-					  }
-					);
-
-			}
-			else
-			{
-				// Speak the non-azure utterance
-				speechSynthesis.speak(utterance);
-			}
-
-			
-		} else {
-			console.warn('No selected option found');
-			return; // Exit the function if no option is selected
-		}
-		
-        
-    }
-}
 
 
 
@@ -4280,21 +4165,74 @@ function onCtrlClick(event) {
     event.preventDefault();
     let currentSpan = $(this); // The clicked span element
     let sentenceNumber = currentSpan.data('sentence'); // The 'data-sentence' attribute
-    let fullSentence = currentSpan.text(); // Start with the current span's text
+    let fullSentence = currentSpan.text(); // Start with the text of the clicked span
 
-    // Loop through the next siblings excluding those with class "page"
-    currentSpan.nextAll().not('.page').each(function() {
-        let nextSpan = $(this);
-        if (nextSpan.data('sentence') === sentenceNumber) {
-            // If the sentence number matches, add the text to the full sentence
-            fullSentence += " " + nextSpan.text();
+    // Function to append text from spans with the same sentence number
+    function appendTextFromSpans(startSpan) {
+        startSpan.nextAll(`span[data-sentence='${sentenceNumber}']`).not('.page').each(function() {
+            fullSentence += " " + $(this).text();
+        });
+    }
+
+    // First, append text from the current span's siblings
+    appendTextFromSpans(currentSpan);
+
+    // Then, check and append text from subsequent outer spans
+    currentSpan.closest('.page').nextAll('.page').each(function() {
+        let firstSpanInNextPage = $(this).find(`span[data-sentence='${sentenceNumber}']:first`);
+        if (firstSpanInNextPage.length > 0) {
+            appendTextFromSpans(firstSpanInNextPage);
         } else {
-            // If it doesn't match, stop the loop
-            return false;
+            return false; // Break the loop if the sentence is not found in the next outer span
         }
     });
+
     playWordTTS(fullSentence); // Play the full sentence
 }
+
+function onCtrlShiftClick(event) {
+    event.preventDefault();
+    let currentSpan = $(this); // The clicked span element
+    let sentenceNumber = currentSpan.data('sentence'); // The 'data-sentence' attribute
+    let fullSentence = currentSpan.text(); // Start with the text of the clicked span
+	let sentencesArray=[];
+
+    // Function to append text from spans with the same sentence number
+    function appendTextFromSpans(startSpan) {
+        startSpan.nextAll(`span[data-sentence='${sentenceNumber}']`).not('.page').each(function() {
+            fullSentence += " " + $(this).text();
+        });
+    }
+
+    // First, append text from the current span's siblings
+    appendTextFromSpans(currentSpan);
+
+    // Then, check and append text from subsequent outer spans
+    currentSpan.closest('.page').nextAll('.page').each(function() {
+        let firstSpanInNextPage = $(this).find(`span[data-sentence='${sentenceNumber}']:first`);
+        if (firstSpanInNextPage.length > 0) {
+            appendTextFromSpans(firstSpanInNextPage);
+        } else {
+            return false; // Break the loop if the sentence is not found in the next outer span
+        }
+    });
+	sentencesArray.push(fullSentence);
+	
+	//console.log(sentences);
+	
+	for(var i=0;i<sentences.length;i++)
+	{
+		if(sentences[i].sentenceIndex>sentenceNumber){
+			sentencesArray.push(sentences[i].sentence);
+			//console.log(sentences[i].sentence);
+		}
+	}
+	//console.log(sentencesArray);
+	
+	playWordTTSFromArray(sentencesArray);
+}
+
+
 
 
 function getAzureAPIKey(){
@@ -4303,4 +4241,299 @@ function getAzureAPIKey(){
 
 function getAzureRegion(){
 	return($("#api-region-input").val());
+}
+
+/*
+function playWordTTS(word) {
+	
+    if(enableVoice&&learnMode=="learn") {
+		
+        // Stop and remove any utterances currently speaking or in the queue
+        speechSynthesis.cancel();
+		if (synthesizer) {
+			synthesizer.close();
+		}
+		synthesizer = null;
+		
+		if (player) {
+			player.pause();
+			//player.turnOff();
+		}
+		player=null;
+		
+		if (lessonLanguage == "chinese") {
+			word = word.replace(/\s+/g, '');
+		  }
+		
+		
+
+        var utterance = new SpeechSynthesisUtterance(word);
+		if(!voiceSelect)
+		{
+			voiceSelect = document.querySelector('#voice-selection');
+		}
+        // Get the selected voice from the dropdown
+		if(!voiceSelect.selectedOptions){
+			return;
+		}
+		
+		// Get volume, rate, and pitch from the respective input controls
+        var volume = document.getElementById('volume-control').value;
+        var rate = document.getElementById('rate-control').value;
+        var pitch = document.getElementById('pitch-control').value;
+
+        // Set volume, rate, and pitch for the utterance
+        utterance.volume = parseFloat(volume); // Volume value is between 0 and 1
+        utterance.rate = parseFloat(rate); // Rate value is between 0.1 and 10
+        utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
+		
+		if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
+			var selectedOption = voiceSelect.selectedOptions[0].value;
+			var selectedOption = voiceSelect.selectedOptions[0].value;
+			voices.forEach(function(voice) {
+				if(voice.name === selectedOption) {
+					utterance.voice = voice;
+				}
+			});
+
+			//console.log("HERE "+voiceSelect.selectedOptions[0].innerHTML);
+			
+			if (window.SpeechSDK && voiceSelect.selectedOptions[0].innerHTML.startsWith("Azure - ")) { // Check if it's an Azure voice
+					var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(getAzureAPIKey(), getAzureRegion());
+					speechConfig.speechSynthesisVoiceName = voiceSelect.selectedOptions[0].value;
+
+					// Create an instance of the audio player.
+					player = new SpeechSDK.SpeakerAudioDestination();
+
+					// Add event listeners if needed
+					player.onAudioStart = function (_) {
+					  //console.log("Audio playback started");
+					};
+					player.onAudioEnd = function (_) {
+						
+					  //console.log("Audio playback finished");
+					  // You can enable buttons or other controls if needed here.
+					};
+
+					// Create an audio configuration instance from the audio player.
+					var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
+
+					// Initialize the synthesizer with the speech config and audio config.
+					synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+					
+					//var azure_rate = "medium";
+					var azure_rate = rate;
+					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
+					//var azure_pitch = "medium";
+					var azure_volume = volume*200;
+					
+					//console.log(azure_rate,azure_pitch,azure_volume);
+					
+					// Now, use the synthesizer to speak the SSML.
+					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+					  <voice name='${speechConfig.speechSynthesisVoiceName}'>
+						<prosody rate='${azure_rate}' pitch='${azure_pitch}' volume='${azure_volume}'>
+						  ${word}
+						</prosody>
+					  </voice>
+					</speak>`;
+
+					synthesizer.speakSsmlAsync(
+					  ssml,
+					  function (result) {
+						// Handle successful synthesis here.
+						//console.log("Speech synthesis succeeded.");
+					  },
+					  function (err) {
+						// Handle synthesis error here.
+						console.error("Error during speech synthesis:", err);
+					  }
+					);
+
+			}
+			else
+			{
+				// Speak the non-azure utterance
+				speechSynthesis.speak(utterance);
+			}
+
+			
+		} else {
+			console.warn('No selected option found');
+			return; // Exit the function if no option is selected
+		}
+		
+        
+    }
+}
+*/
+
+
+function playWordTTS(word) {
+	playWordTTSFromArray([word]);
+}
+
+
+
+function playWordTTSFromArray(w, index = 0) {
+	if(enableVoice&&learnMode=="learn") {
+		
+		if (index >= w.length) {
+			// All sentences have been spoken
+			return;
+		}
+		
+        // Stop and remove any utterances currently speaking or in the queue
+        speechSynthesis.cancel();
+		if (synthesizer) {
+			synthesizer.close();
+		}
+		synthesizer = null;
+		
+		if (player) {
+			player.pause();
+			//player.turnOff();
+		}
+		player=null;
+		
+
+		// Prepare the sentence to be spoken
+		let word = w[index];
+		
+		//console.log(word);
+		
+		if (lessonLanguage == "chinese") {
+			word = word.replace(/\s+/g, '');
+		  }
+		
+		
+
+        var utterance = new SpeechSynthesisUtterance(word);
+		if(!voiceSelect)
+		{
+			voiceSelect = document.querySelector('#voice-selection');
+		}
+        // Get the selected voice from the dropdown
+		if(!voiceSelect.selectedOptions){
+			return;
+		}
+		
+		// Get volume, rate, and pitch from the respective input controls
+        var volume = document.getElementById('volume-control').value;
+        var rate = document.getElementById('rate-control').value;
+        var pitch = document.getElementById('pitch-control').value;
+
+        // Set volume, rate, and pitch for the utterance
+        utterance.volume = parseFloat(volume); // Volume value is between 0 and 1
+        utterance.rate = parseFloat(rate); // Rate value is between 0.1 and 10
+        utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
+		
+		if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
+			var selectedOption = voiceSelect.selectedOptions[0].value;
+			var selectedOption = voiceSelect.selectedOptions[0].value;
+			voices.forEach(function(voice) {
+				if(voice.name === selectedOption) {
+					utterance.voice = voice;
+				}
+			});
+			
+		
+
+			//console.log("HERE "+voiceSelect.selectedOptions[0].innerHTML);
+			
+			if (window.SpeechSDK && voiceSelect.selectedOptions[0].innerHTML.startsWith("Azure - ")) { // Check if it's an Azure voice
+					var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(getAzureAPIKey(), getAzureRegion());
+					speechConfig.speechSynthesisVoiceName = voiceSelect.selectedOptions[0].value;
+
+					// Create an instance of the audio player.
+					player = new SpeechSDK.SpeakerAudioDestination();
+
+					// Add event listeners if needed
+					player.onAudioStart = function (_) {
+					  //console.log("Audio playback started");
+					};
+					player.onAudioEnd = function (_) {
+					  //console.log("Audio playback finished");
+					  // You can enable buttons or other controls if needed here.
+						//console.log("Speech synthesis succeeded.");
+						 playWordTTSFromArray(w, index + 1);
+					};
+
+					// Create an audio configuration instance from the audio player.
+					var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
+
+					// Initialize the synthesizer with the speech config and audio config.
+					synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+					
+					//var azure_rate = "medium";
+					var azure_rate = rate;
+					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
+					//var azure_pitch = "medium";
+					var azure_volume = volume*200;
+					
+					//console.log(azure_rate,azure_pitch,azure_volume);
+					
+					// Now, use the synthesizer to speak the SSML.
+					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+					  <voice name='${speechConfig.speechSynthesisVoiceName}'>
+						<prosody rate='${azure_rate}' pitch='${azure_pitch}' volume='${azure_volume}'>
+						  ${word}
+						</prosody>
+					  </voice>
+					</speak>`;
+					
+					
+					//synthesizer.synthesisCompleted = function (s, e) {
+					//	console.log("yoooo");
+					//  playWordTTSFromArray(sentences, index + 1);
+					//};
+					
+					const complete_cb = function (result) {
+					if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
+					  //console.log("synthesis finished");
+					} else if (result.reason === SpeechSDK.ResultReason.Canceled) {
+					  console.log("synthesis failed. Error detail: " + result.errorDetails);
+					}
+					synthesizer.close();
+					synthesizer = undefined;
+				  };
+				  const err_cb = function (err) {
+					window.console.log(err);
+					synthesizer.close();
+					synthesizer = undefined;
+				  };
+					
+					
+					
+					synthesizer.speakSsmlAsync(
+					  ssml,
+					  complete_cb,
+					  function (err) {
+						// Handle synthesis error here.
+						console.error("Error during speech synthesis:", err);
+					  }
+					);
+
+			}
+			else
+			{
+				utterance.onend = function() {
+				// Recursively call to play the next sentence
+				playWordTTSFromArray(w, index + 1);
+			};	
+				
+				// Speak the non-azure utterance
+				speechSynthesis.speak(utterance);
+			}
+
+			
+		} else {
+			console.warn('No selected option found');
+			return; // Exit the function if no option is selected
+		}
+		
+        
+    }
+	
+
 }
