@@ -9,7 +9,7 @@ const scrollLearnTabDebounceTimeout = 40;
 //const scrollEditTabDebounceTimeout = 40;
 const colouriseTimeout = 5;
 const saveVocabularyTimeout = 2000;
-const saveTextTimeout = 2000;
+const saveTextTimeout = 5000;
 var pageMax;
 var wordlistTable;
 var colourisePending;
@@ -330,7 +330,7 @@ function saveTextNow() {
 
 function initialiseTextSaving(){
 	$(function() {
-		$('#learnText').on('input paste', onTextareaInput);
+		$('#learnText').on('input paste', onTextareaInput(false));
 	});
 
 }
@@ -1279,18 +1279,85 @@ function capitalizeFirstLetter(string) {
 }
 
 
+function findLastCharIndex(sentence,rgx) {
+
+  // Start from the end of the sentence and move backwards
+  for (let i = sentence.length - 1; i >= 0; i--) {
+    if (rgx.test(sentence[i])) {
+      return i; // Return the index of the last Korean character
+    }
+  }
+  return -1; // Return -1 if no Korean character is found
+}
+
 
 
 
 function loadTextIntoLearnTab(text, language) {
     const learnTextElement = document.getElementById('learnText');
     // Split the text into sentences
-    let rawSentences = text.split(/(?<=[.!?。？！\n\[\]\-~])/);
+    let rawSentences = text.split(/(?<=[!?。？！\n\[\]\~])(?<!\.\d)/);
+	
+	let trimmedSentences = [];
+	//split other language characters from the beginning and end of each sentence
+	
+	//console.log(rawSentences);
+	
+	let regex;
+	let regexAll;
+	
+	
+	switch (language) {
+		case "korean":
+			regex=/[\uAC00-\uD7AF]/;
+			regexAll=/([\uAC00-\uD7AF]+)/g;
+			break;
+		case "english":
+			regex=/[a-zA-Z]/;
+			regexAll=/([a-zA-Z]+)/g;
+			break;
+		case "chinese":
+			regex = /[\p{Script=Han}]/u;
+			regexAll=/([\p{Script=Han}]+)/u;
+			break;
+			
+		default:
+			console.log("Error getting language regex.");
+	}
+	
+	rawSentences.forEach(sentence => {
+						
+		let startIndex = sentence.search(regex);
+		let endIndex = findLastCharIndex(sentence,regex) + 1;
+		
+		// Extract the non-Korean prefix if it exists
+		if (startIndex > 0) {
+			let nonTargetPrefix = sentence.substring(0, startIndex);
+			if (nonTargetPrefix) {
+				trimmedSentences.push(nonTargetPrefix);
+			}
+		}
+		
+		let middleSentence = sentence.substring(startIndex, endIndex);
+		if (middleSentence) {
+			trimmedSentences.push(middleSentence);
+		}
+		
+		// Extract the non-Korean suffix if it exists
+		if (endIndex < sentence.length) {
+			let nonTargetSuffix = sentence.substring(endIndex);
+			if (nonTargetSuffix) {
+				trimmedSentences.push(nonTargetSuffix);
+			}
+		}
+	});
+	
+	
     let chunks = [];
 	sentences=[];
     let sentenceIndex = 0;
 	
-    rawSentences.forEach((sentence) => {
+    trimmedSentences.forEach((sentence) => {
 		
 		if (language === "chinese") {
 			sentence = segmentChineseText(sentence, trie);
@@ -1303,6 +1370,7 @@ function loadTextIntoLearnTab(text, language) {
 			} else if (/\s/.test(chunk)) {
 				return `<span class="non-text" data-sentence="${sentenceIndex}"> </span>`;
 			} else {
+				/*
 				let regex;
 				switch (language) {
 					case "korean":
@@ -1315,16 +1383,18 @@ function loadTextIntoLearnTab(text, language) {
 						regex = /([\p{Script=Han}]+)/u;
 						break;
 					default:
+						console.log("Error getting language regex.");
 						regex = /(\w+)/g;
 				}
+				*/
 
 				// Split the chunk into subChunks based on the regex
-				let subChunks = chunk.split(regex);
+				let subChunks = chunk.split(regexAll);
 
 				return subChunks.map((subChunk) => {
-					if ((language == "korean" && /[\uAC00-\uD7AF]/.test(subChunk)) ||
-						(language == "english" && /[a-zA-Z]/.test(subChunk)) ||
-						(language == "chinese" && /[\p{Script=Han}]/u.test(subChunk))) {
+					if ((language == "korean" && regex.test(subChunk)) ||
+						(language == "english" && regex.test(subChunk)) ||
+						(language == "chinese" && regex.test(subChunk))) {
 						return `<span class="clickable-word" data-sentence="${sentenceIndex}">${subChunk}</span>`;
 					} else {
 						return `<span class="non-text" data-sentence="${sentenceIndex}">${subChunk}</span>`;
