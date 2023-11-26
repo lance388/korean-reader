@@ -3130,6 +3130,8 @@ function activateEditMode() {
 
         // Remove click and contextmenu event handlers
         $(spans[i]).off('click', onWordClick);
+		$(spans[i]).off('click', onCtrlClick);
+		$(spans[i]).off('click', onCtrlShiftClick);
         $(spans[i]).off('contextmenu', onWordRightClick);
     }
 	
