@@ -3121,7 +3121,25 @@ function activateEditMode() {
     let spans = document.querySelectorAll('#learnText span');
 	
 	
-	       
+	
+	if(isSidebarVisible()){
+		if(sidebarTab != "dictionary"){
+			activateDictionaryTab();
+		}
+	}
+	else{
+		var dictionaryTab = new bootstrap.Tab(document.getElementById('dictionary-tab'));
+		dictionaryTab.show();
+		sidebarTab = "dictionary";
+	}
+	
+	
+	
+	$('#sentences-tab').addClass('disabled');
+	$('#wordlist-tab').addClass('disabled');
+	      
+	
+	
 	
     // Loop through the selected elements
     for (let i = 0; i < spans.length; i++) {
@@ -3155,6 +3173,10 @@ function activateLearnMode(){
 	//{
 	//	text = getConvertedChineseCharacters(text,$("#character-conversion-dropdown").val());
 	//}
+	
+	$('#sentences-tab').removeClass('disabled');
+	$('#wordlist-tab').removeClass('disabled');
+	
 	loadTextIntoLearnTab(text,lessonLanguage);
 	$('#nav-learn').trigger('scroll');
 	$('#learnText').on('contextmenu');
