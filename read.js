@@ -183,7 +183,7 @@ function initialise(){
 
 function initialiseShortcuts() {
   // Ensure the variable is accessible in this scope
-  var pendingDictionaryLookup = "example"; // Replace 'example' with your term or ensure the variable is available
+  //var pendingDictionaryLookup = "example"; // Replace 'example' with your term or ensure the variable is available
 
   $(document).keydown(function(event) {
     //console.log(event.key); // Log the key to ensure the event is captured
@@ -898,6 +898,22 @@ function initialiseUI(){
 		history.back();
 	  }
 	});
+	
+	
+	var instructionText1;
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // Mobile device
+        instructionText1 = "<b>SHORT PRESS:</b> promote word one level.";
+		instructionText1 += "<b>LONG PRESS:</b> look up word in dictionary.";
+    } else {
+        // Desktop
+        instructionText1 = "<b>LEFT MOUSE CLICK:</b> promote word one level.";
+		instructionText1 += "<br><b>RIGHT MOUSE CLICK:</b> look up word in dictionary.";
+		instructionText1 += "<br><b>CONTROL + LEFT MOUSE CLICK:</b> TTS speaks until the next sentence.";
+		instructionText1 += "<br><b>CONTROL + SHIFT + LEFT MOUSE CLICK:</b> TTS speaks until the end of the document.";
+    }
+    document.getElementById("shortcut-instruction1").innerHTML = instructionText1;
+	
 
 		
 	resolve();
@@ -2297,9 +2313,18 @@ function handleDictionaryLookup() {
 							case "en_mdbg":
 								document.querySelector('#dictionary-iframe').src = "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb="+pendingDictionaryLookup;
 								break;
-							case "ko":
-								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/" + currentDictionaryLanguage + "zhdict/#/search?query=" + pendingDictionaryLookup;
+							case "ko_naver":
+								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/" + "ko" + "zhdict/#/search?query=" + pendingDictionaryLookup;
 								break;
+							case "fr":
+								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=fr";
+								break
+							case "ko":
+								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=ko";
+								break
+							case "ja":
+								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=ja";
+								break								
 							default:
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
 						}
@@ -4071,9 +4096,12 @@ function populateDictionaryLanguageOptions() {
     };
 	
 	var chineseLangCodeToNameMap = {
-        "en": "English (Youdao)",
 		"en_mdbg": "English (mdbg)",
-        "ko": "Korean (Naver)",
+        "en": "English (Youdao)",
+		"fr": "French (Youdao)",
+		"ko": "Korean (Youdao)",
+		"ko_naver": "Korean (Naver)",
+		"ja": "Japanese (Youdao)",
     };
 
     var langCodeToNameMap;
