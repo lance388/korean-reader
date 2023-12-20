@@ -45,7 +45,7 @@ var voiceSelection;
 var settingsDebounceTimeout;
 var lastScroll;
 var learnMode;
-var validChineseWords;
+var wordListWords;
 const DEFAULT_LESSON_LANGUAGE="korean";
 const DEFAULT_LESSON_TITLE="Custom Lesson";
 const DEFAULT_JUMP_HIGHLIGHT='#5a96e0';
@@ -2405,7 +2405,12 @@ function fillWordlistTable() {
     lessonWordArray.forEach(function(item) {
         // Calculate ratio
         var ratio = 100 * item.count / lessonTotalWordCount;
-
+		if(lessonLanguage=="chinese"){
+			var globalFrequency = getGlobalFrequency(trie, getConvertedChineseCharacters(item.word, "traditional-to-simplified"));
+		}
+		else{
+			var globalFrequency = getGlobalFrequency(trie, item.word);
+		}
         // Increase the counts
         uniqueCounts[item.level]++;
         totalCounts[item.level] += item.count;
@@ -2416,6 +2421,7 @@ function fillWordlistTable() {
             "Ratio": ratio.toFixed(2) + "%", // Show ratio with 2 decimal points
             "Word": item.word,
             "Level": item.level,
+			"Glb Freq": globalFrequency,
            // "Frequency": ""
         });
     });
@@ -2451,6 +2457,32 @@ function fillWordlistTable() {
 	});
 	
 }
+
+function getGlobalFrequency(trie, word) {
+  const node = findNode(trie, word);
+
+  if (node && node.hasOwnProperty("index")) {
+    return node.index; // Return the index if the word is found
+  }
+
+  return ""; // Return an empty string if the word is not found or doesn't have an index
+}
+
+function findNode(trie, word) {
+  let node = trie;
+
+  for (const char of word) {
+    if (!node[char]) {
+      return null; // Word not found in the trie
+    }
+    node = node[char];
+  }
+
+  return node;
+}
+
+
+
 
 
 
@@ -2797,7 +2829,23 @@ function initialiseDataTables(){
 
 	
 
-	
+	jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+  "custom-frequency-asc": function (a, b) {
+    // Treat empty cells as larger than any number
+    a = a === "" ? Number.POSITIVE_INFINITY : parseInt(a, 10);
+    b = b === "" ? Number.POSITIVE_INFINITY : parseInt(b, 10);
+
+    return a - b;
+  },
+
+  "custom-frequency-desc": function (a, b) {
+    // Treat empty cells as smaller than any number
+    a = a === "" ? Number.NEGATIVE_INFINITY : parseInt(a, 10);
+    b = b === "" ? Number.NEGATIVE_INFINITY : parseInt(b, 10);
+
+    return b - a;
+  }
+});
 	
 	
     var table;
@@ -2818,6 +2866,7 @@ function initialiseDataTables(){
                 { data: "Ratio" },
                 { data: "Word"},
                 { data: "Level" },
+				{ data: "Glb Freq", type: "custom-frequency"  },
                // { data: "Frequency" }
             ]
 
@@ -3681,20 +3730,17 @@ function segmentChineseText(originalText, trie) {
 }
 
 
-
-
-
-
-function buildTrie(words) {
+function buildTrie(wordIndexPairs) {
   const root = {};
 
-  for (const word of words) {
+  for (const { word, index } of wordIndexPairs) {
     let node = root;
     for (const char of word) {
       if (!node[char]) node[char] = {};
       node = node[char];
     }
     node.isWord = true;
+    node.index = index; // Store the index
   }
 
   return root;
@@ -3702,17 +3748,68 @@ function buildTrie(words) {
 
 
 
-
-
-function loadChineseWordList() {
+function loadWordList(language) {
   return new Promise((resolve, reject) => {
     var scriptElement = document.createElement("script");
     scriptElement.type = "text/javascript";
-    scriptElement.src = "wordlists/zh/globalList.js";
-    scriptElement.onload = function() {
-      // Once the script is loaded, resolve the promise
-      resolve(globalList().map(obj => obj.w));
-    };
+	languageCode="";
+	switch(language){
+		case "chinese":languageCode="zh"; break;
+		case "korean":languageCode="ko"; break;
+		case "english":languageCode="en"; break;
+		default:alert("Language not found");
+  }
+	/*
+	switch(language){
+		case "chinese":
+			 scriptElement.src = "wordlists/zh/globalList_zh.js";
+			scriptElement.onload = function() {
+			  // Once the script is loaded, resolve the promise
+			  const wordListWithIndexes = globalList_zh().map((obj, index) => ({
+				word: obj.w,
+				index: index + 1, // 1-based index
+			  }));
+			  resolve(wordListWithIndexes);
+			};
+		break;
+		case "korean":
+			scriptElement.src = "wordlists/zh/globalList_ko.js";
+			scriptElement.onload = function() {
+			  // Once the script is loaded, resolve the promise
+			  const wordListWithIndexes = globalList_ko().map((obj, index) => ({
+				word: obj.w,
+				index: index + 1, // 1-based index
+			  }));
+			  resolve(wordListWithIndexes);
+			};
+		break;
+		case "english":
+			scriptElement.src = "wordlists/zh/globalList_en.js";
+			scriptElement.onload = function() {
+			  // Once the script is loaded, resolve the promise
+			  const wordListWithIndexes = globalList_en().map((obj, index) => ({
+				word: obj.w,
+				index: index + 1, // 1-based index
+			  }));
+			  resolve(wordListWithIndexes);
+			};
+		break;
+		default:alert("Language not found");
+	}
+	*/
+   
+	scriptElement.src = `wordlists/${languageCode}/globalList_${languageCode}.js`;
+        scriptElement.onload = function() {
+            // Get the right global list function based on the language
+            const globalListFunction = window[`globalList_${languageCode}`];
+            const wordListWithIndexes = globalListFunction().map((obj, index) => ({
+                word: obj.w,
+                index: index + 1, // 1-based index
+            }));
+            resolve(wordListWithIndexes);
+        };
+	
+	
     scriptElement.onerror = function() {
       // If there's an error loading the script, reject the promise
       reject(new Error("Failed to load Chinese word list."));
@@ -3720,8 +3817,6 @@ function loadChineseWordList() {
     document.getElementsByTagName("head")[0].appendChild(scriptElement);
   });
 }
-
-
 
 
 
@@ -3737,17 +3832,17 @@ function initialiseSettings() {
                 console.log(`Setting found ${key}: ${settings[key]}`);
             }
 
-            if (lessonLanguage === "chinese") {
+            //if (lessonLanguage === "chinese") {
                 // Return this promise to ensure that trie is built before the main promise is resolved
-                return loadChineseWordList()
-                    .then(validChineseWords => {
-                        trie = buildTrie(validChineseWords);
+                return loadWordList(lessonLanguage)
+                    .then(wordListWords => {
+                        trie = buildTrie(wordListWords);
                         // Continue with your code that depends on trie
                     })
                     .catch(error => {
                         console.error(error);
                     });
-            }
+            //}
             // If lessonLanguage is not "chinese", resolve the promise without further action
             return Promise.resolve();
         })
