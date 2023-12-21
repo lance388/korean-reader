@@ -3752,13 +3752,7 @@ function loadWordList(language) {
   return new Promise((resolve, reject) => {
     var scriptElement = document.createElement("script");
     scriptElement.type = "text/javascript";
-	languageCode="";
-	switch(language){
-		case "chinese":languageCode="zh"; break;
-		case "korean":languageCode="ko"; break;
-		case "english":languageCode="en"; break;
-		default:alert("Language not found");
-  }
+	
 	/*
 	switch(language){
 		case "chinese":
@@ -3798,14 +3792,45 @@ function loadWordList(language) {
 	}
 	*/
    
-	scriptElement.src = `wordlists/${languageCode}/globalList_${languageCode}.js`;
+   switch(language){
+		case "chinese":scriptElement.src = `wordlists/zh/globalList_zh.js`; break;
+		case "korean":scriptElement.src = `wordlists/ko/globalList_ko.js`; break;
+		case "english":scriptElement.src = `wordlists/en/globalList_en.js`; break;
+		default:alert("Language not found");
+  }
+   
+	
         scriptElement.onload = function() {
             // Get the right global list function based on the language
-            const globalListFunction = window[`globalList_${languageCode}`];
+            //const globalListFunction = window[`globalList_${languageCode}`];
+			var wordListWithIndexes;
+			switch(language){
+				case "chinese":
+					wordListWithIndexes = globalList_zh().map((obj, index) => ({
+						word: obj.w,
+						index: index + 1,
+					}));
+					break;
+				case "korean":
+					wordListWithIndexes = globalList_ko().map((obj, index) => ({
+						word: obj.w,
+						index: index + 1,
+					}));
+					break;
+				case "english":
+					wordListWithIndexes = globalList_en().map((obj, index) => ({
+						word: obj.w,
+						index: index + 1,
+					}));
+					break;
+				default:alert("Language not found");
+		  }
+			/*
             const wordListWithIndexes = globalListFunction().map((obj, index) => ({
                 word: obj.w,
                 index: index + 1, // 1-based index
             }));
+			*/
             resolve(wordListWithIndexes);
         };
 	
