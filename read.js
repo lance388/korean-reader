@@ -62,6 +62,7 @@ const DEFAULT_FONT="Arial";
 var trie;
 var synthesizer;
 var player;
+var isLoadingVocabulary = false;
 
 
 const firebaseConfig = {
@@ -1887,6 +1888,14 @@ function loadVocabularyFromFireDB(lang, uid) {
 }
 
 function loadVocabulary(type, lang, uid) {
+    // Check if a load operation is already in progress
+    if (isLoadingVocabulary) {
+        console.log('Vocabulary is already loading. Please wait.');
+        return Promise.reject('Vocabulary is already loading.');
+    }
+
+    isLoadingVocabulary = true; // Set the flag
+
     return new Promise((resolve, reject) => {
         dbfire.collection('vocabulary')
             .where("author_uid", "==", uid)
@@ -1895,6 +1904,8 @@ function loadVocabulary(type, lang, uid) {
             .limit(1)
             .get()
             .then((querySnapshot) => {
+                isLoadingVocabulary = false; // Clear the flag when done
+
                 if (querySnapshot.empty) {
                     console.log(`No ${type} vocabulary found! Creating a new one...`);
                     return createVocabularyDocument(type, lang, uid);
@@ -1913,6 +1924,7 @@ function loadVocabulary(type, lang, uid) {
                 }
             })
             .catch((error) => {
+                isLoadingVocabulary = false; // Ensure to clear the flag even if an error occurs
                 console.log(`Error getting ${type} vocabulary:`, error);
                 reject(error);
             });
@@ -1941,17 +1953,37 @@ function initialiseVocabularyFromFireDB() {
 }
 
 function createVocabularyDocument(type, lang, uid) {
-    return dbfire.collection('vocabulary').add({
-        author_uid: uid,
-        language: lang,
-        type: type,
-        words: []
-    }).then(docRef => {
-        console.log(`Document created with ID: ${docRef.id}`);
+    const vocabRef = dbfire.collection('vocabulary');
+
+    return dbfire.runTransaction(transaction => {
+        // Query to check if the document already exists
+        return transaction.get(vocabRef.where("author_uid", "==", uid)
+            .where("language", "==", lang)
+            .where("type", "==", type))
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    // Document doesn't exist, create a new one
+                    return transaction.set(vocabRef.doc(), {
+                        author_uid: uid,
+                        language: lang,
+                        type: type,
+                        words: []
+                    });
+                } else {
+                    // Document already exists
+                    console.log('Document already exists. No need to create a new one.');
+                    return Promise.resolve('Existing'); // Resolve with a value indicating no action was taken
+                }
+            });
+    }).then(result => {
+        if (result !== 'Existing') {
+            console.log(`Document created successfully.`);
+        }
     }).catch(error => {
-        console.error(`Error creating document: ${error}`);
+        console.error(`Error in transaction: ${error}`);
     });
 }
+
 
 
 
