@@ -63,6 +63,7 @@ var trie;
 var synthesizer;
 var player;
 var isLoadingVocabulary = false;
+var isInitialisingVocabulary  = false;
 
 
 const firebaseConfig = {
@@ -115,7 +116,8 @@ function initialise(){
 	voiceSelection="";
 	lastScroll=0;
 	learnMode="learn";
-	
+	isLoadingVocabulary = false;
+	isInitialisingVocabulary  = false;
 
 	
 	resetJump();
@@ -1787,12 +1789,28 @@ function initialiseVocabularyFromIndexedDB(){
 }
 
 function initialiseVocabulary(){
+    if(isInitialisingVocabulary){
+        console.log("Initialization is already in progress.");
+        return Promise.reject("Initialization is already in progress.");
+    }
+
+    isInitialisingVocabulary = true;
+
     return new Promise((resolve, reject) => {
+        const done = (result) => {
+            isInitialisingVocabulary = false;
+            resolve(result);
+        };
+        const fail = (error) => {
+            isInitialisingVocabulary = false;
+            reject(error);
+        };
+
         if(signedInState=="offline"||signedInState=="signedOut"){
-            initialiseVocabularyFromIndexedDB().then(resolve).catch(reject);
+            initialiseVocabularyFromIndexedDB().then(done).catch(fail);
         }
         else{
-            initialiseVocabularyFromFireDB().then(resolve).catch(reject);
+            initialiseVocabularyFromFireDB().then(done).catch(fail);
         }
     });
 }
@@ -1883,6 +1901,30 @@ function loadVocabularyFromFireDB(lang, uid) {
 */
 
 
+
+
+
+function printVocabulary() {
+    console.log("Known vocabulary:");
+    vocabularyKnown.forEach(word => console.log(word));
+
+    console.log("Learning vocabulary:");
+    vocabularyLearning.forEach(word => console.log(word));
+}
+
+function initialiseVocabularyFromFireDB() {
+    p("Loading vocabulary from Fire DB");
+    let user = firebase.auth().currentUser;
+    return Promise.all([
+        //checkAndMigrateData(lessonLanguage, user.uid),
+        loadVocabularyFromFireDB(lessonLanguage, user.uid)
+    ]).catch((error) => {
+        console.log("Error initializing vocabulary:", error);
+    });
+}
+
+
+
 function loadVocabularyFromFireDB(lang, uid) {
     return Promise.all([loadVocabulary("learning", lang, uid), loadVocabulary("known", lang, uid)]);
 }
@@ -1928,27 +1970,6 @@ function loadVocabulary(type, lang, uid) {
                 console.log(`Error getting ${type} vocabulary:`, error);
                 reject(error);
             });
-    });
-}
-
-
-
-function printVocabulary() {
-    console.log("Known vocabulary:");
-    vocabularyKnown.forEach(word => console.log(word));
-
-    console.log("Learning vocabulary:");
-    vocabularyLearning.forEach(word => console.log(word));
-}
-
-function initialiseVocabularyFromFireDB() {
-    p("Loading vocabulary from Fire DB");
-    let user = firebase.auth().currentUser;
-    return Promise.all([
-        //checkAndMigrateData(lessonLanguage, user.uid),
-        loadVocabularyFromFireDB(lessonLanguage, user.uid)
-    ]).catch((error) => {
-        console.log("Error initializing vocabulary:", error);
     });
 }
 
