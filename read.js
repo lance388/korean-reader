@@ -1926,9 +1926,16 @@ function initialiseVocabularyFromFireDB() {
 
 
 
-function loadVocabularyFromFireDB(lang, uid) {
-    return Promise.all([loadVocabulary("learning", lang, uid), loadVocabulary("known", lang, uid)]);
+async function loadVocabularyFromFireDB(lang, uid) {
+    try {
+        await loadVocabulary("learning", lang, uid); // Wait for the 'learning' vocabulary to load
+        await loadVocabulary("known", lang, uid);    // Then load the 'known' vocabulary
+    } catch (error) {
+        console.error("Error loading vocabulary:", error);
+        throw error; // Rethrow the error to be handled by the caller
+    }
 }
+
 
 function loadVocabulary(type, lang, uid) {
     // Check if a load operation is already in progress
