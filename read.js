@@ -1793,7 +1793,8 @@ function initialiseVocabulary(){
         console.log("Initialization is already in progress.");
         return Promise.reject("Initialization is already in progress.");
     }
-
+	
+	console.log("Initializating vocabulary.");
     isInitialisingVocabulary = true;
 
     return new Promise((resolve, reject) => {
