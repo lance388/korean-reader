@@ -4573,163 +4573,119 @@ function playWordTTS(word) {
 
 
 function playWordTTSFromArray(w, index = 0) {
-	if(enableVoice&&learnMode=="learn") {
-		
-		if (index >= w.length) {
-			// All sentences have been spoken
-			return;
-		}
-		
+    if (enableVoice && learnMode === "learn") {
+
+        if (index >= w.length) {
+            // All sentences have been spoken
+            return;
+        }
+
         // Stop and remove any utterances currently speaking or in the queue
         speechSynthesis.cancel();
-		if (synthesizer) {
-			synthesizer.close();
-		}
-		synthesizer = null;
-		
-		if (player) {
-			player.pause();
-			//player.turnOff();
-		}
-		player=null;
-		
+        if (synthesizer) {
+            synthesizer.close();
+        }
+        synthesizer = null;
 
-		// Prepare the sentence to be spoken
-		let word = w[index];
-		
-		//console.log(word);
-		
-		if (lessonLanguage == "chinese") {
-			word = word.replace(/\s+/g, '');
-		  }
-		
-		
+        if (player) {
+            player.pause();
+            player = null;
+        }
 
+        // Prepare the word to be spoken
+        let word = w[index];
+
+        // Strip spaces for Chinese language
+        if (lessonLanguage === "chinese") {
+            word = word.replace(/\s+/g, '');
+        }
+
+        // Set up SpeechSynthesisUtterance for browser voices
         var utterance = new SpeechSynthesisUtterance(word);
-		if(!voiceSelect)
-		{
-			voiceSelect = document.querySelector('#voice-selection');
-		}
+        if (!voiceSelect) {
+            voiceSelect = document.querySelector('#voice-selection');
+        }
+
         // Get the selected voice from the dropdown
-		if(!voiceSelect.selectedOptions){
-			return;
-		}
-		
-		// Get volume, rate, and pitch from the respective input controls
+        if (!voiceSelect.selectedOptions) {
+            return;
+        }
+
+        // Get volume, rate, and pitch values from controls
         var volume = document.getElementById('volume-control').value;
         var rate = document.getElementById('rate-control').value;
         var pitch = document.getElementById('pitch-control').value;
 
         // Set volume, rate, and pitch for the utterance
-        utterance.volume = parseFloat(volume); // Volume value is between 0 and 1
-        utterance.rate = parseFloat(rate); // Rate value is between 0.1 and 10
-        utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
-		
-		if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
-			var selectedOption = voiceSelect.selectedOptions[0].value;
-			voices.forEach(function(voice) {
-				if(voice.name === selectedOption) {
-					utterance.voice = voice;
-				}
-			});
-			
-		
+        utterance.volume = parseFloat(volume);
+        utterance.rate = parseFloat(rate);
+        utterance.pitch = parseFloat(pitch);
 
-			//console.log("HERE "+voiceSelect.selectedOptions[0].innerHTML);
-			
-			if (window.SpeechSDK && voiceSelect.selectedOptions[0].innerHTML.startsWith("Azure - ")) { // Check if it's an Azure voice
-					var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(getAzureAPIKey(), getAzureRegion());
-					speechConfig.speechSynthesisVoiceName = voiceSelect.selectedOptions[0].value;
+        // Set the selected voice from the dropdown
+        if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
+            var selectedOption = voiceSelect.selectedOptions[0].value;
+            voices.forEach(function (voice) {
+                if (voice.name === selectedOption) {
+                    utterance.voice = voice;
+                }
+            });
 
-					// Create an instance of the audio player.
-					player = new SpeechSDK.SpeakerAudioDestination();
+            // Handle Azure voices
+            if (window.SpeechSDK && voiceSelect.selectedOptions[0].innerHTML.startsWith("Azure - ")) {
+                var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(getAzureAPIKey(), getAzureRegion());
+                speechConfig.speechSynthesisVoiceName = voiceSelect.selectedOptions[0].value;
 
-					// Add event listeners if needed
-					player.onAudioStart = function (_) {
-					  //console.log("Audio playback started");
-					};
-					player.onAudioEnd = function (_) {
-					  //console.log("Audio playback finished");
-					  // You can enable buttons or other controls if needed here.
-						//console.log("Speech synthesis succeeded.");
-						 playWordTTSFromArray(w, index + 1);
-					};
+                // Create an audio player for Azure Speech
+                player = new SpeechSDK.SpeakerAudioDestination();
+                player.onAudioStart = function (_) { console.log("Audio playback started"); };
+                player.onAudioEnd = function (_) {
+                    console.log("Audio playback finished");
+                    playWordTTSFromArray(w, index + 1);
+                };
 
-					// Create an audio configuration instance from the audio player.
-					var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
+                var audioConfig = SpeechSDK.AudioConfig.fromSpeakerOutput(player);
+                synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
 
-					// Initialize the synthesizer with the speech config and audio config.
-					synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
-					
-					//var azure_rate = "medium";
-					var azure_rate = rate;
-					var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
-					//var azure_pitch = "medium";
-					var azure_volume = volume*200;
-					
-					//console.log(azure_rate,azure_pitch,azure_volume);
-					
-					// Now, use the synthesizer to speak the SSML.
-					var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
-					  <voice name='${speechConfig.speechSynthesisVoiceName}'>
-						<prosody rate='${azure_rate}' pitch='${azure_pitch}' volume='${azure_volume}'>
-						  ${word}
-						</prosody>
-					  </voice>
-					</speak>`;
-					
-					
-					//synthesizer.synthesisCompleted = function (s, e) {
-					//	console.log("yoooo");
-					//  playWordTTSFromArray(sentences, index + 1);
-					//};
-					
-					const complete_cb = function (result) {
-					if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
-					  //console.log("synthesis finished");
-					} else if (result.reason === SpeechSDK.ResultReason.Canceled) {
-					  console.log("synthesis failed. Error detail: " + result.errorDetails);
-					}
-					synthesizer.close();
-					synthesizer = undefined;
-				  };
-				  const err_cb = function (err) {
-					window.console.log(err);
-					synthesizer.close();
-					synthesizer = undefined;
-				  };
-					
-					
-					
-					synthesizer.speakSsmlAsync(
-					  ssml,
-					  complete_cb,
-					  function (err) {
-						// Handle synthesis error here.
-						console.error("Error during speech synthesis:", err);
-					  }
-					);
+                var azure_rate = rate;
+                var azure_pitch = (pitch * 2 - 2) >= 0 ? "+" + ((pitch * 2 - 2) + "st") : ((pitch * 2 - 2) + "st");
+                var azure_volume = volume * 200;
 
-			}
-			else
-			{
-				utterance.onend = function() {
-				// Recursively call to play the next sentence
-				playWordTTSFromArray(w, index + 1);
-			};	
-				
-				// Speak the non-azure utterance
-				speechSynthesis.speak(utterance);
-			}
+                var ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+                              <voice name='${speechConfig.speechSynthesisVoiceName}'>
+                                  <prosody rate='${azure_rate}' pitch='${azure_pitch}' volume='${azure_volume}'>
+                                      ${word}
+                                  </prosody>
+                              </voice>
+                          </speak>`;
 
-			
-		} else {
-			console.warn('No selected option found');
-			return; // Exit the function if no option is selected
-		}
-		
-        
+                const complete_cb = function (result) {
+                    if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
+                        console.log("Synthesis finished");
+                    } else if (result.reason === SpeechSDK.ResultReason.Canceled) {
+                        console.log("Synthesis failed. Error: " + result.errorDetails);
+                    }
+                    synthesizer.close();
+                    synthesizer = undefined;
+                };
+
+                synthesizer.speakSsmlAsync(
+                    ssml,
+                    complete_cb,
+                    function (err) { console.error("Error during speech synthesis:", err); }
+                );
+
+            } else {
+                // Use default SpeechSynthesis API for non-Azure voices
+                utterance.onend = function () {
+                    playWordTTSFromArray(w, index + 1); // Call next word after this finishes
+                };
+                speechSynthesis.speak(utterance);
+            }
+
+        } else {
+            console.warn('No voice option selected');
+            return;
+        }
     }
-	
-
 }
+
