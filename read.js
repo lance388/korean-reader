@@ -55,9 +55,9 @@ const DEFAULT_LEARNING_HIGHLIGHT='#FFFF66';
 const DEFAULT_DICTIONARY_LANGUAGE_ENGLISH = "ko";
 const DEFAULT_DICTIONARY_LANGUAGE_KOREAN = "en";
 const DEFAULT_DICTIONARY_LANGUAGE_CHINESE = "en_mdbg";
-const DEFAULT_DICTIONARY_URL_ENGLISH = "https://korean.dict.naver.com/koendict/#/main";
-const DEFAULT_DICTIONARY_URL_KOREAN = "https://korean.dict.naver.com/koendict/#/main";
-const DEFAULT_DICTIONARY_URL_CHINESE = "https://www.mdbg.net/chinese/dictionary";
+const DEFAULT_DICTIONARY_URL_ENGLISH = "http://korean.dict.naver.com/koendict/#/main";
+const DEFAULT_DICTIONARY_URL_KOREAN = "http://korean.dict.naver.com/koendict/#/main";
+const DEFAULT_DICTIONARY_URL_CHINESE = "http://www.mdbg.net/chinese/dictionary";
 const DEFAULT_FONT="Arial";
 var trie;
 var synthesizer;
@@ -69,7 +69,7 @@ var isInitialisingVocabulary  = false;
 const firebaseConfig = {
 		apiKey: "AIzaSyDOZA0ojbWAaeWwx0gL7kenlNm94Fo38BY",
 		authDomain: "korean-reader.firebaseapp.com",
-		databaseURL: "https://korean-reader.firebaseio.com",
+		databaseURL: "http://korean-reader.firebaseio.com",
 		projectId: "korean-reader",
 		storageBucket: "korean-reader.appspot.com",
 		messagingSenderId: "410562108352",
@@ -192,7 +192,7 @@ function initialiseShortcuts() {
     //console.log(event.key); // Log the key to ensure the event is captured
     if (event.ctrlKey && event.key.toLowerCase() === 'i') {
       console.log("Ctrl+I was pressed");
-      window.open("https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(pendingDictionaryLookup), '_blank');
+      window.open("http://www.google.com/search?tbm=isch&q=" + encodeURIComponent(pendingDictionaryLookup), '_blank');
     }
   });
 }
@@ -845,7 +845,7 @@ function initialiseUI(){
 	  var serviceRegion = document.getElementById('api-region-input').value; // Assume you have an input field with this id for the region
 
 	  var request = new XMLHttpRequest();
-	  request.open('GET', `https://${serviceRegion}.tts.speech.microsoft.com/cognitiveservices/voices/list`);
+	  request.open('GET', `http://${serviceRegion}.tts.speech.microsoft.com/cognitiveservices/voices/list`);
 
 	  // Set the subscription key header
 	  request.setRequestHeader('Ocp-Apim-Subscription-Key', subscriptionKey);
@@ -966,7 +966,7 @@ function populateVoiceList() {
     // Retrieve and filter Azure voices
     if (_subscriptionKey && _serviceRegion) {
         var request = new XMLHttpRequest();
-        request.open('GET', `https://${_serviceRegion}.tts.speech.${_serviceRegion.startsWith("china") ? "azure.cn" : "microsoft.com"}/cognitiveservices/voices/list`, true);
+        request.open('GET', `http://${_serviceRegion}.tts.speech.${_serviceRegion.startsWith("china") ? "azure.cn" : "microsoft.com"}/cognitiveservices/voices/list`, true);
         request.setRequestHeader("Ocp-Apim-Subscription-Key", _subscriptionKey);
 
         request.onload = function() {
@@ -1984,34 +1984,40 @@ function loadVocabulary(type, lang, uid) {
 function createVocabularyDocument(type, lang, uid) {
     const vocabRef = dbfire.collection('vocabulary');
 
-    return dbfire.runTransaction(transaction => {
-        // Query to check if the document already exists
-        return transaction.get(vocabRef.where("author_uid", "==", uid)
-            .where("language", "==", lang)
-            .where("type", "==", type))
-            .then(snapshot => {
-                if (snapshot.empty) {
-                    // Document doesn't exist, create a new one
-                    return transaction.set(vocabRef.doc(), {
+    // First, query outside the transaction
+    return vocabRef.where("author_uid", "==", uid)
+        .where("language", "==", lang)
+        .where("type", "==", type)
+        .get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                // Document doesn't exist, create inside transaction
+                return dbfire.runTransaction(transaction => {
+                    const newDocRef = vocabRef.doc();
+                    transaction.set(newDocRef, {
                         author_uid: uid,
                         language: lang,
                         type: type,
                         words: []
                     });
-                } else {
-                    // Document already exists
-                    console.log('Document already exists. No need to create a new one.');
-                    return Promise.resolve('Existing'); // Resolve with a value indicating no action was taken
-                }
-            });
-    }).then(result => {
-        if (result !== 'Existing') {
-            console.log(`Document created successfully.`);
-        }
-    }).catch(error => {
-        console.error(`Error in transaction: ${error}`);
-    });
+                    return Promise.resolve('Existing');
+                });
+            } else {
+                // Document already exists
+                console.log('Document already exists. No need to create a new one.');
+                return Promise.resolve('Existing');
+            }
+        })
+        .then(result => {
+            if (result !== 'Existing') {
+                console.log(`Document created successfully.`);
+            }
+        })
+        .catch(error => {
+            console.error(`Error in transaction: ${error}`);
+        });
 }
+
 
 
 
@@ -2313,7 +2319,7 @@ function handleDictionaryLookup() {
                     switch (currentDictionaryLanguage) {
                         case "en":
                         case "zh":
-                            document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+                            document.querySelector('#dictionary-iframe').src = "http://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
                             break;
                         case "ja":
                         case "de":
@@ -2326,7 +2332,7 @@ function handleDictionaryLookup() {
                         case "vi":
                         case "fr":
                         case "it":
-                            document.querySelector('#dictionary-iframe').src = "https://dict.naver.com/" + currentDictionaryLanguage + "kodict/#/search?query=" + pendingDictionaryLookup;
+                            document.querySelector('#dictionary-iframe').src = "http://dict.naver.com/" + currentDictionaryLanguage + "kodict/#/search?query=" + pendingDictionaryLookup;
                             break;
                         default:
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
@@ -2336,16 +2342,16 @@ function handleDictionaryLookup() {
                 case "english":
 					switch (currentDictionaryLanguage) {
 							case "zh":
-								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
+								document.querySelector('#dictionary-iframe').src = "http://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
 								break;
 							case "ko":
-								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+								document.querySelector('#dictionary-iframe').src = "http://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
 								break;
 							default:
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
 						}
 					   // var langCode = convertLangCodeCambridge(currentDictionaryLanguage);
-						//var loc = "https://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
+						//var loc = "http://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
 						//document.querySelector('#dictionary-iframe').src = loc;
 						 
                     break;
@@ -2353,44 +2359,44 @@ function handleDictionaryLookup() {
 					case "english":
 					switch (currentDictionaryLanguage) {
 							case "zh":
-								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
+								document.querySelector('#dictionary-iframe').src = "http://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
 								break;
 							case "ko":
-								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
+								document.querySelector('#dictionary-iframe').src = "http://korean.dict.naver.com/ko" + currentDictionaryLanguage + "dict/#/search?query=" + pendingDictionaryLookup;
 								break;
 							default:
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
 						}
 					   // var langCode = convertLangCodeCambridge(currentDictionaryLanguage);
-						//var loc = "https://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
+						//var loc = "http://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
 						//document.querySelector('#dictionary-iframe').src = loc;
 						 
                     break;
 					case "chinese":
 					switch (currentDictionaryLanguage) {
 							case "en":
-								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
+								document.querySelector('#dictionary-iframe').src = "http://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=en";
 								break;
 							case "en_mdbg":
-								document.querySelector('#dictionary-iframe').src = "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb="+pendingDictionaryLookup;
+								document.querySelector('#dictionary-iframe').src = "http://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb="+pendingDictionaryLookup;
 								break;
 							case "ko_naver":
-								document.querySelector('#dictionary-iframe').src = "https://korean.dict.naver.com/" + "ko" + "zhdict/#/search?query=" + pendingDictionaryLookup;
+								document.querySelector('#dictionary-iframe').src = "http://korean.dict.naver.com/" + "ko" + "zhdict/#/search?query=" + pendingDictionaryLookup;
 								break;
 							case "fr":
-								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=fr";
+								document.querySelector('#dictionary-iframe').src = "http://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=fr";
 								break
 							case "ko":
-								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=ko";
+								document.querySelector('#dictionary-iframe').src = "http://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=ko";
 								break
 							case "ja":
-								document.querySelector('#dictionary-iframe').src = "https://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=ja";
+								document.querySelector('#dictionary-iframe').src = "http://dict.youdao.com/result?word="+pendingDictionaryLookup+"&lang=ja";
 								break								
 							default:
                             console.error("Dictionary language not found " + currentDictionaryLanguage);
 						}
 					   // var langCode = convertLangCodeCambridge(currentDictionaryLanguage);
-						//var loc = "https://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
+						//var loc = "http://dictionary.cambridge.org/amp/" + langCode + "/" + pendingDictionaryLookup;
 						//document.querySelector('#dictionary-iframe').src = loc;
 						 
                     break;
@@ -4620,7 +4626,6 @@ function playWordTTSFromArray(w, index = 0) {
         utterance.pitch = parseFloat(pitch); // Pitch value is between 0 and 2
 		
 		if (voiceSelect && voiceSelect.selectedOptions && voiceSelect.selectedOptions.length > 0) {
-			var selectedOption = voiceSelect.selectedOptions[0].value;
 			var selectedOption = voiceSelect.selectedOptions[0].value;
 			voices.forEach(function(voice) {
 				if(voice.name === selectedOption) {
